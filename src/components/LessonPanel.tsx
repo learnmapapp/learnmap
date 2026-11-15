@@ -28,6 +28,11 @@ interface Tip {
   below: boolean;
 }
 
+/** With a mouse the tip shows on hover, so one click can open the lesson. */
+function canHover() {
+  return window.matchMedia('(hover: hover)').matches;
+}
+
 /** Keeps only the comparison snippet for the learner's language. */
 function visibleSegments(segments: Segment[], compare: string | null): Segment[] {
   return segments.filter((s) => s.kind !== 'compare' || (compare !== null && compare !== NO_COMPARE && s.lang === compare));
@@ -75,6 +80,10 @@ export function LessonPanel({ course, node, done, routeIds, compare, onComplete,
     const below = rect.top < 180;
     setTip({ entry, x: rect.left + rect.width / 2, y: below ? rect.bottom + 8 : rect.top - 8, below });
   };
+  /** The lesson a glossary term links to, unless it's the one you're reading. */
+  const linkedLesson = (entry: GlossaryEntry | undefined) =>
+    entry?.node && entry.node !== node.id ? course.nodeById.get(entry.node) : undefined;
+  const tipLesson = linkedLesson(tip?.entry);
   const hideTip = (e: MouseEvent | FocusEvent) => {
     if (e.target instanceof HTMLElement && e.target.classList.contains('term')) setTip(null);
   };
@@ -91,7 +100,8 @@ export function LessonPanel({ course, node, done, routeIds, compare, onComplete,
     if (link && /^https?:/.test(href)) link.setAttribute('target', '_blank');
     if (target instanceof HTMLElement && target.classList.contains('term')) {
       const entry = course.glossary.get(target.dataset.term ?? '');
-      if (entry?.node && tip?.entry === entry) navigate(course.id, entry.node);
+      const lesson = linkedLesson(entry);
+      if (lesson && (tip?.entry === entry || canHover())) navigate(course.id, lesson.id);
       else showTip(target);
     }
   };
@@ -246,7 +256,11 @@ export function LessonPanel({ course, node, done, routeIds, compare, onComplete,
           >
             <strong>{tip.entry.term}</strong>
             <span>{tip.entry.definition}</span>
-            {tip.entry.node && <em>Tap again to open the lesson</em>}
+            {tipLesson && (
+              <em>
+                {canHover() ? 'Click' : 'Tap again'} to open “{tipLesson.title}”
+              </em>
+            )}
           </div>,
           document.body,
         )}
