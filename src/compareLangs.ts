@@ -7,6 +7,7 @@ import type { CompareLang } from './types';
 export const COMPARE_LANGS: CompareLang[] = [
   { id: 'python', name: 'Python', short: 'Py', color: '#4b8bbe' },
   { id: 'javascript', name: 'JavaScript', short: 'JS', color: '#e8c33a' },
+  { id: 'typescript', name: 'TypeScript', short: 'TS', color: '#3178c6' },
   { id: 'java', name: 'Java', short: 'Jv', color: '#e76f51' },
   { id: 'kotlin', name: 'Kotlin', short: 'Kt', color: '#a97bff' },
   { id: 'go', name: 'Go', short: 'Go', color: '#00add8' },

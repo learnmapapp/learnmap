@@ -1,0 +1,37 @@
+name: React
+tagline: Describe the interface. Let state tell its story.
+logo: "⚛️"
+color: "#61dafb"
+syntax: jsx
+extension: jsx
+comparisons: [javascript, typescript]
+
+guide:
+  name: Rae the component guide
+  avatar: "🪁"
+  intro:
+    - "Hi! I'm Rae. Let's build interfaces out of small pieces that fit together."
+    - "We'll turn data into components, make them interactive, and learn where state should live. Then we'll connect to the outside world without tangling everything together."
+    - "Examples use function components and modern React, including React 19 form Actions. JavaScript basics help; TypeScript appears in its own later branch."
+  askGoal: "What would you like to build first?"
+
+branches:
+  - { id: core, title: React, color: "#61dafb" }
+  - { id: rendering, title: Describing the UI, color: "#e0b84f" }
+  - { id: interaction, title: State and events, color: "#6fc2a8" }
+  - { id: forms, title: Forms, color: "#d784b8" }
+  - { id: architecture, title: Sharing state, color: "#9b8cf0" }
+  - { id: effects, title: External systems, color: "#c9a27e" }
+  - { id: experience, title: User experience, color: "#7ebae4" }
+  - { id: performance, title: Responsive rendering, color: "#e98a6b" }
+  - { id: quality, title: Tests and types, color: "#a7c957" }
+
+goals:
+  - { id: first, title: Build my first interface, node: keys, icon: "👋", description: "Components, JSX, props, conditional rendering, and lists." }
+  - { id: interactive, title: Make it interactive, node: array-state, icon: "🖱️", description: "Events, state snapshots, and immutable updates." }
+  - { id: forms, title: Build an accessible form, node: accessibility, icon: "📝", description: "Controlled inputs, validation, labels, and focus." }
+  - { id: shared, title: Share complex state, node: reducer-context, icon: "🤝", description: "Lift state, design reducers, and distribute context." }
+  - { id: data, title: Connect to external data, node: custom-hooks, icon: "🌐", description: "Effects, cleanup, request races, and reusable synchronization." }
+  - { id: responsive, title: Keep an interface responsive, node: deferred-values, icon: "⚡", description: "Suspense, transitions, and deferred rendering." }
+  - { id: tested, title: Test user interactions, node: interaction-tests, icon: "🧪", description: "Test visible behavior through roles and user events." }
+  - { id: ship, title: Build a task board, node: capstone, icon: "🚢", description: "Compose components and state into a small working application." }

@@ -127,6 +127,30 @@ export const SYNTAX: Record<string, SyntaxDef> = {
   },
 };
 
+SYNTAX.typescript = {
+  ...SYNTAX.javascript,
+  keywords: [...SYNTAX.javascript.keywords, ...words('type interface declare namespace abstract implements public private protected readonly override keyof typeof infer extends is asserts satisfies as unknown never any void string number boolean symbol bigint unique constructor get set accessor')],
+  builtins: [...(SYNTAX.javascript.builtins ?? []), ...words('Array ReadonlyArray Partial Required Readonly Pick Omit Record Exclude Extract NonNullable Parameters ReturnType Awaited')],
+};
+
+const reactBuiltins = words('useState useReducer useContext createContext useRef useEffect useLayoutEffect useId useMemo useCallback useTransition useDeferredValue useActionState useOptimistic useFormStatus memo lazy Suspense StrictMode Component createRoot createPortal');
+const jsxTags: SyntaxDef['extra'] = [{ pattern: /<\/?[A-Za-z][\w.-]*/y, type: 'type' }];
+SYNTAX.jsx = {
+  ...SYNTAX.javascript,
+  builtins: [...(SYNTAX.javascript.builtins ?? []), ...reactBuiltins],
+  extra: jsxTags,
+};
+SYNTAX.tsx = {
+  ...SYNTAX.typescript,
+  builtins: [...(SYNTAX.typescript.builtins ?? []), ...reactBuiltins],
+  extra: jsxTags,
+};
+SYNTAX.ts = SYNTAX.typescript;
+SYNTAX.json = {
+  keywords: [],
+  constants: words('true false null'),
+  strings: ['"'],
+};
 SYNTAX.js = SYNTAX.javascript;
 SYNTAX.sh = SYNTAX.shell;
 SYNTAX.bash = SYNTAX.shell;

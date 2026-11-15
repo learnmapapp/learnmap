@@ -1,0 +1,75 @@
+component:
+  definition: "A reusable unit of UI, commonly a function that describes renderable output."
+  node: components
+jsx:
+  definition: "A syntax extension for describing UI inside JavaScript, transformed by a build tool."
+  node: jsx
+fragment:
+  definition: "A way to group children without adding a wrapper DOM element."
+  node: jsx
+props:
+  definition: "Read-only inputs passed from a parent to a component."
+  node: props
+composition:
+  definition: "Building larger interfaces by combining components and supplied content."
+  node: children
+key:
+  definition: "A stable sibling identity used by React to match list items across renders."
+  node: keys
+state:
+  definition: "Component memory whose updates can request a new render."
+  node: state
+snapshot:
+  definition: "The props and state values visible to one particular render and its closures."
+  node: state-snapshots
+controlled input:
+  definition: "A form control whose current value is supplied by React state and updated through an event."
+  node: controlled-inputs
+source of truth:
+  definition: "The single chosen owner of a value that other views derive or receive."
+  node: lifting-state
+reducer:
+  definition: "A pure function calculating next state from previous state and an action."
+  node: reducers
+context:
+  definition: "A mechanism for supplying a value to descendants through the React tree."
+  node: context
+ref:
+  definition: "A stable object with a mutable current field whose changes do not schedule rendering."
+  node: refs
+effect:
+  definition: "Synchronization with an external system after React commits, optionally paired with cleanup."
+  node: effects
+custom hook:
+  definition: "A use-prefixed function that composes Hooks to reuse stateful logic."
+  node: custom-hooks
+portal:
+  definition: "Children rendered into a different DOM container while retaining their React tree ancestry."
+  node: portals
+error boundary:
+  definition: "A component boundary that can show fallback UI for descendant rendering failures."
+  node: error-boundaries
+suspense:
+  definition: "A boundary that displays fallback content when supported descendant work suspends."
+  node: suspense
+transition:
+  definition: "A way to mark related state updates as non-urgent rendering work."
+  node: transitions
+memoization:
+  definition: "Reusing a calculation or render result when relevant inputs compare equal."
+  node: memoization
+commit:
+  definition: "The phase when React applies a calculated update and attaches DOM references."
+  node: dom-refs
+cleanup:
+  definition: "A function returned from an effect to undo its setup before replacement or removal."
+  node: effect-cleanup
+action:
+  definition: "A function used in a React action context to perform work with coordinated pending behavior."
+  node: form-actions
+tsx:
+  definition: "A TypeScript source format that also supports JSX syntax."
+  node: typescript-props
+derived value:
+  definition: "A value calculated from existing props or state rather than independently synchronized."
+  node: derived-state

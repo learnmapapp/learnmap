@@ -1,0 +1,37 @@
+name: TypeScript
+tagline: Keep JavaScript's reach. Make your assumptions visible.
+logo: "🔷"
+color: "#3178c6"
+syntax: typescript
+extension: ts
+comparisons: [javascript, python, java, kotlin, go, rust]
+
+guide:
+  name: Tess the type guide
+  avatar: "🦉"
+  intro:
+    - "Hi! I'm Tess. I like finding a mistaken assumption before it becomes a bug."
+    - "TypeScript adds a checking layer to JavaScript. We'll learn what that layer can prove, what disappears at runtime, and where real validation still belongs."
+    - "Start with typed values, or choose a route to generics, browser code, or a small typed API client. Familiarity with basic JavaScript helps."
+  askGoal: "What would you like your types to help you build?"
+
+branches:
+  - { id: core, title: TypeScript, color: "#3178c6" }
+  - { id: basics, title: Values and shapes, color: "#e0b84f" }
+  - { id: functions, title: Functions, color: "#6fc2a8" }
+  - { id: narrowing, title: Narrowing safely, color: "#d784b8" }
+  - { id: modeling, title: Modeling data, color: "#7ebae4" }
+  - { id: generics, title: Reusable types, color: "#9b8cf0" }
+  - { id: objects, title: Classes, color: "#c9a27e" }
+  - { id: tooling, title: Project tooling, color: "#a7c957" }
+  - { id: applications, title: Runtime boundaries, color: "#e98a6b" }
+
+goals:
+  - { id: first, title: Write typed JavaScript, node: rest-parameters, icon: "👋", description: "Configure the checker and type values, objects, and functions." }
+  - { id: safe, title: Model states safely, node: exhaustiveness, icon: "🚦", description: "Narrow unions and make unhandled states visible." }
+  - { id: design, title: Design reusable APIs, node: utility-types, icon: "🧩", description: "Generics, constraints, keys, and useful type transformations." }
+  - { id: advanced, title: Understand advanced types, node: infer, icon: "🔬", description: "Conditional types and inference inside type patterns." }
+  - { id: objects, title: Type a class interface, node: class-interfaces, icon: "🏗️", description: "Structural contracts, classes, and implementation checks." }
+  - { id: browser, title: Work with the DOM, node: dom, icon: "🌐", description: "Handle nullable elements and narrow browser objects." }
+  - { id: migrate, title: Migrate a JavaScript project, node: js-migration, icon: "🛠️", description: "Modules, declarations, and incremental checking." }
+  - { id: ship, title: Build a typed API client, node: capstone, icon: "🚢", description: "Validate unknown data and expose typed asynchronous results." }

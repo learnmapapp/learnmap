@@ -89,6 +89,24 @@ describe('highlighter', () => {
     expect(types).toContain('keyword');
     expect(types).toContain('string');
   });
+
+  it.each(['typescript', 'ts', 'tsx'])('highlights TypeScript contracts in %s', (lang) => {
+    const code = 'interface Lesson { readonly title: string }\nconst lesson = { title: "Types" } satisfies Lesson;';
+    const tokens = tokenize(code, lang);
+    expect(tokens.map((token) => token.text).join('')).toBe(code);
+    for (const word of ['interface', 'readonly', 'string', 'satisfies']) {
+      expect(tokens.some((token) => token.type === 'keyword' && token.text === word), word).toBe(true);
+    }
+  });
+
+  it.each(['jsx', 'tsx'])('preserves JSX and highlights tags and Hooks in %s', (lang) => {
+    const code = 'const [count, setCount] = useState(0);\nreturn <button onClick={() => setCount(count + 1)}>{count}</button>;';
+    const tokens = tokenize(code, lang);
+    expect(tokens.map((token) => token.text).join('')).toBe(code);
+    expect(tokens.some((token) => token.type === 'builtin' && token.text === 'useState')).toBe(true);
+    expect(tokens.some((token) => token.type === 'type' && token.text === '<button')).toBe(true);
+    expect(tokens.some((token) => token.type === 'type' && token.text === '</button')).toBe(true);
+  });
 });
 
 describe.each(courseIds)('course %s', (id) => {

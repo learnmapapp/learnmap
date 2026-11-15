@@ -1,0 +1,90 @@
+static type:
+  definition: "A compile-time description of the values and operations a program expects."
+  node: typescript
+compiler:
+  definition: "A tool that checks TypeScript and can emit JavaScript according to project settings."
+  node: toolchain
+strict mode:
+  definition: "A family of compiler checks, including strict null handling and rejecting implicit any."
+  node: tsconfig
+inference:
+  definition: "Deriving a type from an initializer, expression, or surrounding contract."
+  node: inference
+shape:
+  definition: "The properties and compatible member types required by an object contract."
+  node: object-types
+tuple:
+  definition: "An array type describing specific element positions and their types."
+  node: tuples
+union:
+  definition: "A type accepting values from any of its alternative member types."
+  node: unions
+narrowing:
+  definition: "Refining the possible type of a value using control flow and runtime checks."
+  node: narrowing
+unknown:
+  definition: "A top type that accepts any value but requires narrowing before specialized use."
+  node: unknown
+type guard:
+  definition: "A runtime check that provides a narrowing fact, often through a type predicate."
+  node: type-guards
+discriminated union:
+  definition: "A union of object variants distinguished by a shared property with literal values."
+  node: discriminated-unions
+never:
+  definition: "The type representing no possible value, useful for unreachable branches."
+  node: exhaustiveness
+type alias:
+  definition: "A name for a type expression; it creates no runtime implementation."
+  node: type-aliases
+interface:
+  definition: "A named object contract that can be extended or merged with compatible declarations."
+  node: interfaces
+structural typing:
+  definition: "Compatibility based primarily on required members rather than declaration names."
+  node: structural-typing
+intersection:
+  definition: "A type requiring all its member contracts to hold together."
+  node: intersections
+generic:
+  definition: "A type or function parameterized by types to preserve useful relationships."
+  node: generics
+constraint:
+  definition: "A requirement limiting the possible types represented by a type parameter."
+  node: generic-constraints
+keyof:
+  definition: "A type operator producing the known keys of a type."
+  node: keyof
+indexed access:
+  definition: "Selecting a property or element type from another type using bracket syntax."
+  node: indexed-access
+mapped type:
+  definition: "A type transformation that constructs properties by iterating over a union of keys."
+  node: mapped-types
+conditional type:
+  definition: "A type expression choosing between results based on an extends relationship."
+  node: conditional-types
+const assertion:
+  definition: "An assertion retaining literal precision and readonly literal structure without runtime freezing."
+  node: const-assertions
+satisfies:
+  definition: "An operator checking compatibility while retaining useful expression-specific inference."
+  node: satisfies
+declaration file:
+  definition: "A .d.ts file describing values and types implemented elsewhere."
+  node: declarations
+type erasure:
+  definition: "Removal of type-only syntax when producing executable JavaScript."
+  node: typescript
+nullish:
+  definition: "Either null or undefined; other falsy values are not nullish."
+  node: nullability
+runtime validation:
+  definition: "Executable checks that establish whether incoming data meets an application contract."
+  node: json-validation
+promise:
+  definition: "A JavaScript value representing eventual fulfillment or rejection of an operation."
+  node: promises
+type predicate:
+  definition: "A function return annotation such as value is string that declares a narrowing relationship."
+  node: type-guards
