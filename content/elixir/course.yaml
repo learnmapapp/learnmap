@@ -1,0 +1,63 @@
+name: Elixir
+tagline: Friendly, functional and built for systems that never go down.
+logo: "💧"
+color: "#a77bd1"
+syntax: elixir
+extension: ex
+pluginUrl: https://jetplugins.dev
+
+guide:
+  name: Drop
+  avatar: "💧"
+  intro:
+    - "Hello! I'm Drop. Small, but I run on a virtual machine that powers telecom switches and chat apps with millions of users."
+    - "Elixir looks a bit like Ruby, thinks like a functional language, and runs on the BEAM, where millions of tiny processes talk to each other."
+    - "Pick any dot on the map to start. Each one is short and has something to try."
+  askGoal: "What sounds most fun to you?"
+
+branches:
+  - { id: core, title: Elixir, color: "#a77bd1" }
+  - { id: basics, title: Basics, color: "#e0b84f" }
+  - { id: functional, title: Functional, color: "#6fc2a8" }
+  - { id: data, title: Data, color: "#7ebae4" }
+  - { id: control, title: Control flow, color: "#e98a6b" }
+  - { id: beam, title: Processes, color: "#d784b8" }
+  - { id: tooling, title: Mix and tooling, color: "#c9a27e" }
+  - { id: otp, title: OTP, color: "#9b8cf0" }
+
+goals:
+  - id: basics
+    title: Read Elixir code
+    node: pipe
+    icon: "📖"
+    description: Atoms, pattern matching, modules and the pipe.
+  - id: collections
+    title: Work with collections
+    node: enum
+    icon: "🧺"
+    description: Lists, recursion and the Enum module.
+  - id: data
+    title: Model my data
+    node: protocols
+    icon: "🗃️"
+    description: Maps, structs and protocols.
+  - id: control
+    title: Handle every case
+    node: with
+    icon: "🔀"
+    description: case, guards, multi-clause functions and with.
+  - id: processes
+    title: Spawn processes
+    node: links
+    icon: "🚀"
+    description: Tiny, isolated processes that send messages.
+  - id: otp
+    title: Build a supervised app
+    node: applications
+    icon: "🌳"
+    description: GenServers, supervisors and applications that heal themselves.
+  - id: tooling
+    title: Set up a real project
+    node: doctests
+    icon: "🧪"
+    description: Mix, dependencies and tests.

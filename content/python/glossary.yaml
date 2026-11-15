@@ -1,0 +1,111 @@
+interpreter:
+  definition: "The program that executes Python code and reports runtime errors."
+  node: running-python
+repl:
+  definition: "A read-evaluate-print loop for trying Python interactively."
+  node: running-python
+binding:
+  definition: "A connection between a name and an object; assignment can change that connection."
+  node: variables
+immutable:
+  definition: "Unable to change in place. Rebinding a name to a new value is still allowed."
+  node: strings
+mutable:
+  definition: "Able to change in place, so other references to the same object see the changes."
+  node: mutability
+list:
+  definition: "An ordered, mutable sequence of values, written with square brackets."
+  node: lists
+iterable:
+  definition: "An object that can supply an iterator, such as a list, range, or string."
+  node: iterators
+sentinel:
+  definition: "A distinguished value used to represent a special condition, such as None for absence."
+  node: none
+f-string:
+  definition: "A string prefixed with f that evaluates expressions inside braces."
+  node: formatting
+slice:
+  definition: "A selection of sequence positions using start:stop:step, with the stop excluded."
+  node: slicing
+tuple:
+  definition: "An immutable sequence, often used for a small group of related values."
+  node: tuples
+dictionary:
+  definition: "An insertion-ordered mapping from unique hashable keys to values."
+  node: dictionaries
+hashable:
+  definition: "Having a stable hash and compatible equality behavior, allowing use as a dictionary key or set element."
+  node: dictionaries
+set:
+  definition: "A collection of unique hashable values without a guaranteed iteration order."
+  node: sets
+comprehension:
+  definition: "An expression that builds a collection by transforming and optionally filtering iterable values."
+  node: comprehensions
+scope:
+  definition: "A region in which names are bound and looked up."
+  node: scope
+closure:
+  definition: "A function that retains access to names from an enclosing function scope."
+  node: scope
+lambda:
+  definition: "An anonymous function whose body is a single expression."
+  node: lambdas-sorting
+iterator:
+  definition: "A one-way stream whose next value is requested with next(); exhaustion signals StopIteration."
+  node: iterators
+generator:
+  definition: "An iterator produced by a function containing yield, or by a generator expression."
+  node: generators
+exception:
+  definition: "An object signaling a failure that interrupts execution until a matching handler is found."
+  node: exceptions
+traceback:
+  definition: "A report of the call frames leading to an exception, with its type and message."
+  node: debugging
+context manager:
+  definition: "An object implementing entry and exit behavior for a with block, commonly for reliable cleanup."
+  node: context-managers
+module:
+  definition: "An importable unit of Python code, commonly a single .py file."
+  node: modules
+package:
+  definition: "A module that can contain submodules; a regular package is a directory with __init__.py."
+  node: packages
+virtual environment:
+  definition: "A Python environment with its own installed third-party packages for a project."
+  node: virtual-environments
+class:
+  definition: "A definition that creates a type with attributes and behavior."
+  node: classes
+instance:
+  definition: "An individual object created from a class."
+  node: classes
+dataclass:
+  definition: "A class transformed by a decorator to generate methods from annotated data fields."
+  node: dataclasses
+property:
+  definition: "A managed attribute backed by getter and optional setter methods."
+  node: properties
+decorator:
+  definition: "A callable applied to a function or class definition using @ syntax to transform or wrap it."
+  node: properties
+inheritance:
+  definition: "Defining a class in terms of base classes and optionally overriding their behavior."
+  node: inheritance
+duck typing:
+  definition: "Using an object according to the operations it supports instead of requiring a particular concrete type."
+  node: protocols
+type hint:
+  definition: "An annotation describing expected types for readers and static tools, without automatic runtime enforcement."
+  node: type-hints
+protocol:
+  definition: "A structural interface that describes the members a compatible object must provide to a static checker."
+  node: protocols
+coroutine:
+  definition: "An awaitable object produced by calling an async function; its body runs when driven by an event loop."
+  node: asyncio
+event loop:
+  definition: "The scheduler that drives asynchronous tasks and resumes them as awaited operations complete."
+  node: asyncio

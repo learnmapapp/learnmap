@@ -1,0 +1,80 @@
+cargo:
+  definition: Rust's build tool and package manager. It creates projects, downloads dependencies, builds, tests and runs.
+  node: cargo
+crate:
+  definition: A Rust package or library. Published crates live on crates.io.
+  node: cargo
+macro:
+  definition: "Code that writes code at compile time. You can spot them by the !, like println! or vec!."
+binding:
+  definition: A name attached to a value with let. Immutable unless you add mut.
+  node: variables
+mutable:
+  definition: "Allowed to change. In Rust you opt in with mut."
+  node: variables
+expression:
+  definition: Something that produces a value. In Rust, blocks, if and match are expressions too.
+  node: functions
+struct:
+  definition: A custom type that groups named fields together.
+  node: structs
+enum:
+  definition: A type that is exactly one of several variants, each of which can carry data.
+  node: enums
+pattern matching:
+  definition: Checking a value against shapes, and pulling data out of it at the same time.
+  node: match
+ownership:
+  definition: Every value has exactly one owner. When the owner goes out of scope, the value is cleaned up.
+  node: ownership
+move:
+  definition: Handing ownership of a value to another variable or function. The old name can't be used anymore.
+  node: ownership
+borrow:
+  definition: "Using a value through a reference (&T or &mut T) without taking ownership."
+  node: borrowing
+borrow checker:
+  definition: The part of the compiler that makes sure references never outlive their data or conflict with each other.
+  node: borrowing
+option:
+  definition: "Option<T> is Some(value) or None. Rust's replacement for null."
+  node: option-result
+result:
+  definition: "Result<T, E> is Ok(value) or Err(error). Rust's replacement for exceptions."
+  node: option-result
+trait:
+  definition: A set of methods a type can implement. Like an interface.
+  node: traits
+vector:
+  definition: "Vec<T>, a list that can grow. The go-to collection in Rust."
+  node: vectors
+slice:
+  definition: "A borrowed view into part of an array, vector or string: &[T] or &str."
+  node: slices
+lifetime:
+  definition: How long a reference stays valid. The compiler checks that no reference outlives its data.
+  node: lifetimes
+closure:
+  definition: "An anonymous function that can capture variables from its surroundings, written |x| x + 1."
+  node: closures
+iterator:
+  definition: A value that hands out items one at a time through next(). Lazy until something consumes it.
+  node: iterators
+generic:
+  definition: "Code with a type parameter, like Vec<T>, that works for many types."
+  node: generics
+trait object:
+  definition: "dyn Trait: a value of some type implementing a trait, decided at runtime."
+  node: trait-objects
+thread:
+  definition: An independent path of execution that can run in parallel with others.
+  node: threads
+mutex:
+  definition: A lock that lets only one thread access the data inside at a time.
+  node: arc-mutex
+module:
+  definition: "A named group of items (functions, types) with its own privacy, declared with mod."
+  node: modules
+panic:
+  definition: Stopping the program because of a bug or an unrecoverable state.
+  node: panic

@@ -1,0 +1,14 @@
+# Every language we want a map for. Languages that already have a folder in
+# /content show up as playable; the rest are listed as "coming soon".
+languages:
+  - { id: nix, name: Nix, logo: "❄️", color: "#7ebae4", blurb: "Declarative builds and systems." }
+  - { id: rust, name: Rust, logo: "🦀", color: "#de7a4b", blurb: "Fast, safe systems programming." }
+  - { id: python, name: Python, logo: "🐍", color: "#4b8bbe", blurb: "Readable code, useful scripts, and a rich standard library." }
+  - { id: elixir, name: Elixir, logo: "💧", color: "#a77bd1", blurb: "Friendly functional code on the BEAM." }
+  - { id: mojo, name: Mojo, logo: "🔥", color: "#ff6a3d", blurb: "Python syntax with systems-level speed." }
+  - { id: zig, name: Zig, logo: "⚡", color: "#f7a41d", blurb: "Simple, explicit, no hidden control flow." }
+  - { id: swift, name: Swift, logo: "🐦", color: "#f05138", blurb: "Safe and expressive, from Apple." }
+  - { id: lua, name: Lua, logo: "🌙", color: "#4a6fd1", blurb: "Tiny, embeddable scripting." }
+  - { id: nim, name: Nim, logo: "👑", color: "#ffe953", blurb: "Python-like syntax, compiles to C." }
+  - { id: astro, name: Astro, logo: "🚀", color: "#ff5d01", blurb: "Content-first websites with islands." }
+  - { id: nuxt, name: Nuxt, logo: "💚", color: "#00dc82", blurb: "The full-stack Vue framework." }

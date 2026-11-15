@@ -1,0 +1,69 @@
+name: Python
+tagline: Small scripts, big ideas, and code you can read out loud.
+logo: "🐍"
+color: "#4b8bbe"
+syntax: python
+extension: py
+comparisons: [javascript, java, kotlin, go, rust]
+
+guide:
+  name: Pip the python
+  avatar: "🐍"
+  intro:
+    - "Hi! I'm Pip. I like short programs, useful little tools, and a good indentation level."
+    - "Python gets you from an idea to working code quickly. We'll start with the basics, then branch into data, automation, and projects you can trust."
+    - "Every dot is a small lesson with examples and something to try. The examples use Python 3.11 or newer."
+  askGoal: "What would you like to make? I'll find a route through the lessons you need."
+
+branches:
+  - { id: core, title: Python, color: "#4b8bbe" }
+  - { id: basics, title: First programs, color: "#e0b84f" }
+  - { id: collections, title: Working with data, color: "#6fc2a8" }
+  - { id: functions, title: Functions and iteration, color: "#9b8cf0" }
+  - { id: files, title: Files and automation, color: "#c9a27e" }
+  - { id: tooling, title: Real projects, color: "#7ebae4" }
+  - { id: objects, title: Objects and types, color: "#d784b8" }
+  - { id: quality, title: Tests and debugging, color: "#a7c957" }
+  - { id: concurrency, title: Async code, color: "#e98a6b" }
+
+goals:
+  - id: first-program
+    title: Write my first program
+    node: functions
+    icon: "👋"
+    description: Variables, decisions, loops, and reusable functions.
+  - id: data
+    title: Transform a collection
+    node: comprehensions
+    icon: "🧮"
+    description: Lists, dictionaries, sets, and readable data transformations.
+  - id: iteration
+    title: Process data lazily
+    node: generators
+    icon: "🌱"
+    description: Iterators and generators that produce values on demand.
+  - id: automation
+    title: Automate file processing
+    node: csv
+    icon: "📁"
+    description: Paths, safe file handling, JSON, and CSV reports.
+  - id: cli
+    title: Build a command-line tool
+    node: command-line
+    icon: "🛠️"
+    description: Modules, isolated environments, dependencies, and arguments.
+  - id: design
+    title: Model data with types
+    node: protocols
+    icon: "🧩"
+    description: Classes, dataclasses, type hints, and structural interfaces.
+  - id: testing
+    title: Test a real project
+    node: test-discovery
+    icon: "🧪"
+    description: Organize modules and run repeatable tests with unittest.
+  - id: async
+    title: Run async tasks
+    node: asyncio
+    icon: "⏳"
+    description: Coroutines, cooperative waiting, and concurrent tasks.

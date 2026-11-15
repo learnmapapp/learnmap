@@ -1,0 +1,42 @@
+expression: A piece of code that evaluates to a value. In Nix, everything is an expression, even a whole file.
+value:
+  definition: "The result of evaluating an expression: a number, a string, a list, an attribute set, a function…"
+attribute set:
+  definition: "Nix's key–value structure, written { name = value; }. Think dictionary, object or map."
+  node: attribute-sets
+attribute:
+  definition: One name = value; pair inside an attribute set.
+  node: attribute-sets
+binding:
+  definition: A name attached to a value, e.g. version = "1.0"; inside a let block. Bindings never change.
+  node: let-in
+interpolation:
+  definition: "Dropping a value into a string with ${ … }."
+  node: strings
+function:
+  definition: "A value that takes one argument and returns a result: x: x + 1."
+  node: functions
+lazy:
+  definition: Nix only evaluates a value when something actually needs it. Unused code never runs, even if it would fail.
+  node: laziness
+derivation:
+  definition: A precise recipe for building something, including every input it may use.
+  node: derivations
+store path:
+  definition: "A path like /nix/store/<hash>-hello-2.12. The hash is computed from everything that went into building it."
+  node: store
+nix store:
+  definition: The read-only folder /nix/store where every package and build result lives side by side.
+  node: store
+nixpkgs:
+  definition: The giant community collection of Nix package recipes. Over 100,000 packages.
+flake:
+  definition: A Nix project with a flake.nix (its inputs and outputs) and a flake.lock that pins exact versions.
+  node: flakes
+module:
+  definition: A NixOS building block. A function that returns configuration options, merged together with all other modules.
+  node: nixos-modules
+declarative:
+  definition: Describing the end result you want, instead of the steps to get there.
+reproducible:
+  definition: Same inputs, same result. On your laptop, on CI, or on a colleague's machine next year.

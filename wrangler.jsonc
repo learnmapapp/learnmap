@@ -1,0 +1,8 @@
+// Cloudflare deploy: a static site served from ./dist (run `npm run deploy`).
+{
+  "name": "learnmap",
+  "compatibility_date": "2026-11-13",
+  "assets": {
+    "directory": "./dist"
+  }
+}

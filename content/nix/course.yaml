@@ -1,0 +1,61 @@
+name: Nix
+tagline: Describe what you want; let Nix build exactly that, every time.
+logo: "❄️"
+color: "#7ebae4"
+syntax: nix
+extension: nix
+pluginUrl: https://jetplugins.dev
+
+guide:
+  name: Flake the fox
+  avatar: "🦊"
+  intro:
+    - "Hey there! I'm Flake. I've been poking around Nix for years and I still get excited about it."
+    - "Nix is a bit different from what you're used to. Instead of running commands one by one, you describe the result, and Nix builds it. Same input, same output. Always."
+    - "This map shows everything there is to explore. Each dot is a small lesson with something to try."
+  askGoal: "What would you like to get done first? I'll light up only the lessons that lead there."
+
+branches:
+  - { id: core, title: Nix, color: "#7ebae4" }
+  - { id: language, title: The language, color: "#e0b84f" }
+  - { id: tooling, title: Everyday Nix, color: "#c9a27e" }
+  - { id: build, title: Building, color: "#6fc2a8" }
+  - { id: flakes, title: Flakes, color: "#9b8cf0" }
+  - { id: systems, title: Systems, color: "#d784b8" }
+
+goals:
+  - id: language
+    title: Speak the Nix language
+    node: lib
+    icon: "🗣️"
+    description: Read and write Nix expressions with confidence.
+  - id: everyday
+    title: Use Nix every day
+    node: gc
+    icon: "🧰"
+    description: Try packages, install tools, roll back and clean up.
+  - id: devshell
+    title: Make a dev shell
+    node: direnv
+    icon: "🐚"
+    description: A per-project environment that loads when you cd in.
+  - id: package
+    title: Package my software
+    node: overlays
+    icon: "📦"
+    description: mkDerivation, fetchers, overrides and overlays.
+  - id: flakes
+    title: Write a flake
+    node: flake-systems
+    icon: "❄️"
+    description: Pin your inputs and share reproducible projects.
+  - id: nixos
+    title: Configure NixOS
+    node: services
+    icon: "🐧"
+    description: Your whole operating system in one file.
+  - id: home
+    title: Manage my dotfiles
+    node: home-manager
+    icon: "🏡"
+    description: Your user environment, declared and versioned.

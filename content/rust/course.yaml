@@ -1,0 +1,64 @@
+name: Rust
+tagline: Fast like C, safe like a seatbelt, and a compiler that actually helps.
+logo: "🦀"
+color: "#de7a4b"
+syntax: rust
+extension: rs
+pluginUrl: https://jetplugins.dev
+
+guide:
+  name: Ferrous the crab
+  avatar: "🦀"
+  intro:
+    - "Hi! I'm Ferrous. Sideways walker, memory-safety enthusiast."
+    - "Rust has a reputation for being hard. Honestly? It's mostly a few new ideas, and a compiler that explains them to you over and over until they click."
+    - "Every dot on this map is a small lesson. Read a bit, try a bit, move on."
+  askGoal: "Where do you want to end up? I'll light the path."
+
+branches:
+  - { id: core, title: Rust, color: "#de7a4b" }
+  - { id: basics, title: Basics, color: "#e0b84f" }
+  - { id: data, title: Data, color: "#6fc2a8" }
+  - { id: memory, title: Ownership, color: "#d784b8" }
+  - { id: collections, title: Collections, color: "#7ebae4" }
+  - { id: errors, title: Errors, color: "#e98a6b" }
+  - { id: traits, title: Traits and generics, color: "#a7c957" }
+  - { id: concurrency, title: Concurrency, color: "#9b8cf0" }
+  - { id: tooling, title: Tooling, color: "#c9a27e" }
+
+goals:
+  - id: basics
+    title: Write my first program
+    node: loops
+    icon: "👋"
+    description: Variables, functions, loops and printing.
+  - id: ownership
+    title: Understand ownership
+    node: lifetimes
+    icon: "🔑"
+    description: Moves, borrows and lifetimes, the ideas that make Rust Rust.
+  - id: errors
+    title: Handle errors properly
+    node: custom-errors
+    icon: "🛟"
+    description: No null, no exceptions. Something better.
+  - id: collections
+    title: Crunch data with iterators
+    node: iterator-adapters
+    icon: "🧮"
+    description: Vectors, maps, closures and iterator chains.
+  - id: traits
+    title: Design with traits
+    node: trait-objects
+    icon: "🧩"
+    description: Shared behaviour and generic code, without inheritance.
+  - id: concurrency
+    title: Write concurrent code
+    node: arc-mutex
+    icon: "🧵"
+    description: Threads, channels and shared state, without data races.
+  - id: tooling
+    title: Ship a real project
+    node: crates
+    icon: "🚢"
+    description: Modules, tests, dependencies and the tools around them.

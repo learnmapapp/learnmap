@@ -1,0 +1,80 @@
+iex:
+  definition: Interactive Elixir, the REPL. Start it with the iex command.
+  node: iex
+atom:
+  definition: "A constant whose value is its own name, written with a colon: :ok, :error. Like a symbol or a tiny enum value."
+  node: basic-types
+tuple:
+  definition: "A fixed-size group of values in curly braces, like {:ok, 42}. Often used to return a result plus a status."
+  node: basic-types
+match operator:
+  definition: "= in Elixir. It doesn't just assign: it checks that the left side's shape matches the right side."
+  node: pattern-matching
+pattern matching:
+  definition: Comparing a value against a shape, and binding variables to the parts of it.
+  node: pattern-matching
+pipe operator:
+  definition: "|> passes the result of the left side as the first argument to the function on the right."
+  node: pipe
+immutable:
+  definition: Can't be changed. Elixir data is never modified in place; functions return new data.
+  node: immutability
+arity:
+  definition: "The number of arguments a function takes. String.length/1 means 'length, with one argument'."
+  node: modules
+beam:
+  definition: The Erlang virtual machine that Elixir runs on. Famous for concurrency and fault tolerance.
+process:
+  definition: A lightweight, isolated unit of work on the BEAM. Not an OS process; you can have millions.
+  node: processes
+map:
+  definition: "A key-value structure, written %{key => value} or %{key: value} for atom keys."
+  node: maps
+keyword list:
+  definition: "A list of {atom, value} pairs, written [size: 10]. Ordered, allows duplicates; used for options."
+  node: keyword-lists
+struct:
+  definition: A map with a fixed set of fields and a name, defined with defstruct inside a module.
+  node: structs
+guard:
+  definition: "An extra condition on a pattern, written with when, like  when x > 0."
+  node: guards
+sigil:
+  definition: "A ~ shortcut for special literals: ~w for word lists, ~r for regexes, ~D for dates."
+  node: sigils
+binary:
+  definition: "A sequence of bytes, written <<...>>. Elixir strings are UTF-8 binaries."
+  node: binaries
+stream:
+  definition: A lazy, composable enumerable that only does work when its results are asked for.
+  node: streams
+anonymous function:
+  definition: "A function value without a name, written fn x -> ... end and called with a dot: f.(x)."
+  node: anonymous-functions
+protocol:
+  definition: A function with a separate implementation per data type. Elixir's polymorphism.
+  node: protocols
+behaviour:
+  definition: A set of callbacks a module promises to implement, like an interface for modules.
+  node: behaviours
+message:
+  definition: A value sent from one process to another with send/2. Processes share nothing else.
+  node: send-receive
+mailbox:
+  definition: The queue of messages waiting for a process to receive them.
+  node: send-receive
+otp:
+  definition: The Open Telecom Platform, a set of libraries and design patterns for robust concurrent systems.
+  node: genserver
+genserver:
+  definition: An OTP behaviour for a process that keeps state and handles calls and casts.
+  node: genserver
+supervisor:
+  definition: A process that starts, watches and restarts other processes when they crash.
+  node: supervisors
+mix:
+  definition: Elixir's build tool, for creating projects, compiling, testing and fetching dependencies.
+  node: mix
+hex:
+  definition: The package registry for Elixir and Erlang libraries, at hex.pm.
+  node: hex
