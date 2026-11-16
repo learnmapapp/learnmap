@@ -1,46 +1,97 @@
 ---
 title: Transform collections
-icon: 🌐
+icon: "🏭"
 branch: functions
-requires:
-  - closures
-summary: filter selects elements and map transforms each selected element.
+requires: [closures]
+summary: map, filter and compactMap replace most of the loops you'd otherwise write.
 ---
-
-filter selects elements and map transforms each selected element. These operations return new arrays and leave scores unchanged.
+**A translation exercise.** Here's a typical loop that builds a list of labels for the in-stock products:
 
 ```swift
-let scores = [1, 2, 3, 4]
-let doubledEvens = scores.filter { $0.isMultiple(of: 2) }.map { $0 * 2 }
-print(doubledEvens)
+var labels: [String] = []
+for product in products {
+    if product.stock > 0 {
+        labels.append(product.name.uppercased())
+    }
+}
 ```
 
-## Put it to work
+It works, but you have to read all six lines to understand what it produces. Here's the same thing as a pipeline:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```swift title=shop.swift
+struct Product { let name: String; let stock: Int }
+
+let products = [
+    Product(name: "Kettle", stock: 3),
+    Product(name: "Toaster", stock: 0),
+    Product(name: "Mug", stock: 12),
+]
+
+let labels = products
+    .filter { $0.stock > 0 }
+    .map { $0.name.uppercased() }
+
+print(labels)   // ["KETTLE", "MUG"]
+```
+
+Read it top to bottom: *keep the ones in stock, then turn each into an uppercased name.* And `labels` is a `let`, because nothing needs to change.
+
+The three workhorses:
+
+| Method | Does | Result size |
+| --- | --- | --- |
+| `filter { condition }` | keeps elements where the closure returns true | same or smaller |
+| `map { transform }` | turns each element into something else | same |
+| `compactMap { maybe }` | transforms, then drops the nils | same or smaller |
+
+`compactMap` deserves a closer look, because it's so handy with [optionals](node:optionals):
+
+```swift
+let input = ["4", "eight", "15", "16", "twenty"]
+let numbers = input.compactMap { Int($0) }
+print(numbers)   // [4, 15, 16]
+```
+
+`Int($0)` returns `Int?`, and `compactMap` quietly discards the ones that failed.
+
+A neat shortcut: when you just want a property, use a **key path** instead of a closure. `products.map(\.name)` means the same as `products.map { $0.name }`.
+
+**Should loops be banned now?** Not at all. A `for` loop is clearer when the body does several things, has side effects (printing, saving), or needs `break`. Use the pipeline when you're *computing a new collection from an old one*.
+
+```compare python
+labels = [p.name.upper() for p in products if p.stock > 0]
+```
+
+```compare javascript
+const labels = products.filter(p => p.stock > 0).map(p => p.name.toUpperCase());
+```
+
+```compare kotlin
+val labels = products.filter { it.stock > 0 }.map { it.name.uppercase() }
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about transform collections.
-lang: swift
+goal: "Rewrite the loop as a single `compactMap`: turn each text into an Int, and drop the ones that don't parse."
 code: |-
-  let scores = [1, 2, 3, 4]
-  let doubledEvens = scores.filter { $0.isMultiple(of: 2) }.map { $0 + 2 }
-  print(doubledEvens)
+  var ages: [Int] = []
+  for text in answers {
+      if let age = Int(text) {
+          ages.append(age)
+      }
+  }
 checks:
-  - match: \.map\s+\{\s+\$0\s+\*\s+2\s+\}
-    message: Use .map { $0 * 2 } for this step.
-  - notMatch: \.map\s+\{\s+\$0\s+\+\s+2\s+\}
-    message: Replace .map { $0 + 2 } in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'let\s+ages\s*=\s*answers\.compactMap\s*(\{\s*Int\(\$0\)\s*\}|\(\s*\{\s*Int\(\$0\)\s*\}\s*\)|\(Int\.init\))'
+    message: "Write let ages = answers.compactMap { Int($0) }"
+solution: |-
+  let ages = answers.compactMap { Int($0) }
 ```
 
 ```quiz
-question: "What is `[1, 2, 3, 4].filter { $0.isMultiple(of: 2) }.map { $0 * 2 }`?"
+question: "`[1, 2, 3, 4].filter { $0 > 2 }.map { $0 * 10 }` — what's the result?"
 options:
-  - "`[4, 8]`"
-  - "`[2, 4, 6, 8]`"
-  - "`[2, 4]`"
-answer: 0
-explain: Filter retains the even values; map then doubles those retained values.
+  - "[10, 20]"
+  - "[30, 40]"
+  - "[10, 20, 30, 40]"
+answer: 1
+explain: filter keeps 3 and 4, then map multiplies each by 10.
 ```

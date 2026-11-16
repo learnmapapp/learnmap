@@ -1,48 +1,98 @@
 ---
 title: Extend existing types
-icon: 🔧
+icon: "🔌"
 branch: types
-requires:
-  - protocols
-summary: Extensions add computed properties, methods, and conformances.
+requires: [protocols]
+summary: Add methods to any type, even String and Int, and give protocols default behaviour.
 ---
+Wouldn't it be nice if every `String` could tell you whether it's a palindrome? You can't edit Apple's `String` source code, but you don't have to. An **extension** adds new members to an existing type:
 
-Extensions add computed properties, methods, and conformances. They do not add stored instance properties to an existing type.
-
-```swift
-extension Int {
-  var isEven: Bool { self % 2 == 0 }
+```swift title=palindrome.swift
+extension String {
+    var isPalindrome: Bool {
+        let letters = lowercased().filter(\.isLetter)
+        return letters == String(letters.reversed())
+    }
 }
-print(4.isEven)
+
+print("Never odd or even".isPalindrome)  // true
+print("Swift".isPalindrome)              // false
 ```
 
-## Put it to work
+From now on, *every* String in your module has `isPalindrome`, and call sites read like it was always there.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Extensions can add **methods, computed properties, initializers, nested types and protocol conformances**. What they can't add is stored properties, because that would change the size of existing values.
+
+Three ways you'll see extensions used:
+
+**1. Little helpers on standard types**, as above. Keep them small and obvious, because every reader of your code sees them as part of the type.
+
+**2. Organising your own code.** Swift developers often put each protocol conformance in its own extension, so the type's main body stays short:
+
+```swift
+struct Track { let title: String; let seconds: Int }
+
+extension Track: CustomStringConvertible {
+    var description: String { "\(title) (\(seconds) seconds)" }
+}
+```
+
+**3. Default implementations for protocols.** This is the big one. A **protocol extension** gives every conforming type some behaviour for free:
+
+```swift
+protocol Greeter {
+    var name: String { get }
+}
+
+extension Greeter {
+    func greet() -> String { "Hello from \(name)!" }
+}
+
+struct Bot: Greeter { let name = "R2" }
+print(Bot().greet())   // Hello from R2!
+```
+
+`Bot` only provides `name`, and gets `greet()` thrown in. Much of Swift's standard library works like this: `map`, `filter`, `contains` and friends are written once, in extensions on the `Sequence` protocol, and every collection type gets them.
+
+```compare kotlin
+// Kotlin has extension functions too:
+val String.isPalindrome: Boolean get() = TODO()
+```
+
+```compare javascript
+// JS can patch prototypes, but it's global and risky:
+String.prototype.isPalindrome = function () { /* ... */ };
+```
+
+```compare rust
+// Rust uses a trait plus an impl for an existing type:
+trait Palindrome { fn is_palindrome(&self) -> bool; }
+impl Palindrome for str { /* ... */ }
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about extend existing types.
-lang: swift
+goal: "Add a computed property `isEven` to every Int, using an extension."
 code: |-
-  extension Int {
-    var isEven: Bool { self % 2 == 1 }
+  func isEven(_ n: Int) -> Bool {
+      n % 2 == 0
   }
-  print(4.isEven)
 checks:
-  - match: self\s+%\s+2\s+==\s+0
-    message: Use self % 2 == 0 for this step.
-  - notMatch: self\s+%\s+2\s+==\s+1
-    message: Replace self % 2 == 1 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'extension\s+Int\s*\{'
+    message: Start with extension Int {
+  - match: 'var\s+isEven\s*:\s*Bool\s*\{[^}]*(self\s*%\s*2\s*==\s*0|isMultiple\(of:\s*2\))'
+    message: 'Add var isEven: Bool { self % 2 == 0 }'
+solution: |-
+  extension Int {
+      var isEven: Bool { self % 2 == 0 }
+  }
 ```
 
 ```quiz
-question: Which addition is supported by an extension of `Int`?
+question: Which of these can an extension NOT add to a type?
 options:
-  - A new stored instance field.
-  - A replacement set of built-in integer values.
-  - A computed `isEven` property.
-answer: 2
-explain: Extensions can add behavior and computed properties without adding stored instance storage.
+  - A computed property
+  - A stored property
+  - A protocol conformance
+answer: 1
+explain: Extensions can't change the memory layout of a type, so stored properties are off limits.
 ```

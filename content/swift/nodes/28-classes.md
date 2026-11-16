@@ -1,50 +1,92 @@
 ---
 title: Reference identity
-icon: 💬
+icon: "🔗"
 branch: types
-requires:
-  - structs
-summary: Class instances have reference identity.
+requires: [structs]
+summary: Classes are shared by reference. When that's useful, and the === operator.
 ---
+Swap the word `struct` for `class` in the settings example from the [last lesson](node:copies), and the JavaScript-style surprise comes right back:
 
-Class instances have reference identity. A let class binding prevents rebinding while mutable properties of the object may still change.
+```swift title=account.swift
+class BankAccount {
+    let owner: String
+    var balance: Double
 
-```swift
-final class Counter { var value = 0 }
-let first = Counter()
-let second = first
-second.value = 9
-print(first === second, first.value)
+    init(owner: String, balance: Double) {
+        self.owner = owner
+        self.balance = balance
+    }
+}
+
+let joint = BankAccount(owner: "Sam & Alex", balance: 100)
+let samsCard = joint
+let alexsCard = joint
+
+samsCard.balance -= 30
+alexsCard.balance -= 20
+print(joint.balance)   // 50.0
 ```
 
-## Put it to work
+This time it's exactly what we want! There is **one** bank account, and three names that refer to it. Classes are **reference types**: assigning one copies the reference, not the object.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Compare the struct and class side by side:
+
+| | struct | class |
+| --- | --- | --- |
+| Assignment | copies the value | shares the instance |
+| Initializer | memberwise, free | you write `init` |
+| Changing a `var` property through a `let` | not allowed | allowed |
+| Methods that change properties | need `mutating` | don't |
+| Inheritance | no | yes |
+| Identity check `===` | no | yes |
+
+Notice the odd one: `let joint` and yet `joint.balance -= 30` works. For a class, `let` only freezes the *reference* (you can't point `joint` at another account), not the object.
+
+**Identity vs equality.** `===` asks "are these the very same instance?":
+
+```swift
+print(samsCard === joint)   // true: same account
+let other = BankAccount(owner: "Sam & Alex", balance: 50)
+print(other === joint)      // false: same contents, different account
+```
+
+**When to choose a class?** Start with a struct. Pick a class when the thing has a real identity that should be shared: a connection, a cache, a document that several screens edit, or when an Apple framework asks you to subclass. Mark classes `final` unless you plan to subclass them.
+
+```compare kotlin
+class BankAccount(val owner: String, var balance: Double)
+println(a === b)  // same identity operator
+```
+
+```compare python
+print(a is b)   # identity, like Swift's ===
+```
+
 
 ```exercise
-goal: Repair the starting example using what you learned about reference identity.
-lang: swift
+goal: "Several screens should share one live `Counter`. Make it a class, and give it the initializer classes need."
 code: |-
-  final class Counter { var value = 0 }
-  let first = Counter()
-  let second = first
-  second.value = 0
-  print(first === second, first.value)
+  struct Counter {
+      var count: Int
+  }
 checks:
-  - match: second\.value\s+=\s+9
-    message: Use second.value = 9 for this step.
-  - notMatch: second\.value\s+=\s+0
-    message: Replace second.value = 0 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '(final\s+)?class\s+Counter'
+    message: Change struct to class.
+  - match: 'init\(\s*count\s*:\s*Int\s*\)\s*\{\s*self\.count\s*=\s*count\s*\}'
+    message: "Add init(count: Int) { self.count = count }"
+solution: |-
+  final class Counter {
+      var count: Int
+
+      init(count: Int) { self.count = count }
+  }
 ```
 
 ```quiz
-question: After `let second = first` for a class instance, what does `first === second` mean?
+question: "`let a = Account(); let b = a; b.balance = 5`. If Account is a class, what is `a.balance`?"
 options:
-  - One reference contains a deep clone of the other.
-  - Both references identify the same instance.
-  - Both objects have equal fields but different identities.
-answer: 1
-explain: The identity operator checks whether class references point to one instance.
+  - "5, because a and b refer to the same instance"
+  - The original balance, because b is a copy
+  - A compile error, because a is a let
+answer: 0
+explain: Assigning a class copies the reference. Both names point at one object, and let doesn't freeze its properties.
 ```

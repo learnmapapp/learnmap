@@ -1,53 +1,95 @@
 ---
 title: Explicit Result values
-icon: 💬
+icon: "📬"
 branch: tools
-requires:
-  - errors
-  - associated
-summary: Result represents success or typed failure as a value that can be stored or passed.
+requires: [errors, associated]
+summary: Result holds either a success or a failure as a value you can store and pass around.
 ---
+`throws` is great when the caller handles the error right away. But what if the outcome needs to *wait*? You might want to store it in a list of upload results, pass it to another part of the app, or show it later.
 
-`Result` represents success or typed failure as a value that can be stored or passed. It complements throwing APIs.
+**`Result`** packs either outcome into a single value. It's simply an [enum with associated values](node:associated):
 
 ```swift
-enum LookupError: Error { case missing }
-let outcome: Result<Int, LookupError> = .success(8)
-switch outcome {
-case .success(let value): print(value)
-case .failure(let error): print(error)
+enum Result<Success, Failure: Error> {
+    case success(Success)
+    case failure(Failure)
 }
 ```
 
-## Put it to work
+(That's the shape of the standard library's version; you don't need to write it yourself.)
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Here's a batch of uploads, where every outcome is kept:
+
+```swift title=uploads.swift
+enum UploadError: Error { case tooLarge, offline }
+
+func upload(_ sizeMB: Int) -> Result<String, UploadError> {
+    if sizeMB > 10 { return .failure(.tooLarge) }
+    return .success("https://files.example/\(sizeMB)")
+}
+
+let results = [3, 25, 7].map(upload)
+
+for result in results {
+    switch result {
+    case .success(let url):
+        print("✅ \(url)")
+    case .failure(let error):
+        print("❌ \(error)")
+    }
+}
+```
+
+```repl shell
+> swift uploads.swift
+✅ https://files.example/3
+❌ tooLarge
+✅ https://files.example/7
+```
+
+**Converting between the two worlds** is a one-liner each way:
+
+- From throwing code to a Result: `Result { try parse(text) }` catches any error.
+- From a Result back to throwing: `try result.get()` returns the success value, or throws the failure.
+
+So which one should you use? In modern Swift, **`throws` is the default**: it's lighter to write, and since Swift 6 it can be typed too. Reach for `Result` when you need to **keep** an outcome as data: collections of outcomes, caching, or callback-based APIs. You'll still see it a lot in older code from before `async`/`await`, where completion handlers used to receive a `Result`.
+
+```compare rust
+fn upload(size_mb: u32) -> Result<String, UploadError> { }
+```
+
+```compare kotlin
+val outcome: Result<String> = runCatching { upload(3) }
+```
+
+```compare typescript
+type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about explicit result values.
-lang: swift
+goal: "This code uses do/catch only to turn a throwing call into a Result. Replace it with the one-line `Result { try ... }` initializer."
 code: |-
-  enum LookupError: Error { case missing }
-  let outcome: Result<Int, LookupError> = .success(0)
-  switch outcome {
-  case .success(let value): print(value)
-  case .failure(let error): print(error)
+  let outcome: Result<Data, Error>
+  do {
+      outcome = .success(try download())
+  } catch {
+      outcome = .failure(error)
   }
 checks:
-  - match: \.success\(8\)
-    message: Use .success(8) for this step.
-  - notMatch: \.success\(0\)
-    message: Replace .success(0) in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'let\s+outcome\s*(:\s*Result<Data,\s*(any\s+)?Error>\s*)?=\s*Result\s*\{\s*try\s+download\(\)\s*\}'
+    message: "Write let outcome = Result { try download() }"
+  - notMatch: '\bdo\s*\{'
+    message: The do/catch isn't needed any more.
+solution: |-
+  let outcome = Result { try download() }
 ```
 
 ```quiz
-question: What does `Result<Int, LookupError>` represent?
+question: "How do you get the success value out of a Result, throwing if it's a failure?"
 options:
-  - Both a success and failure active simultaneously.
-  - An integer success or a `LookupError` failure.
-  - An optional integer with no failure information.
+  - "`result.value!`"
+  - "`try result.get()`"
+  - "`result as! Success`"
 answer: 1
-explain: "`Result` stores one of two explicitly modeled outcomes."
+explain: get() returns the success value, or throws the stored error.
 ```

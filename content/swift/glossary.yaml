@@ -1,20 +1,24 @@
 optional:
-  definition: A value that explicitly represents either a wrapped value or nil, written T?.
+  definition: A value that might be missing. String? holds either a String or nil, and Swift makes you check before using it.
   node: optionals
 enum:
-  definition: A type whose values are selected from a declared set of cases.
+  definition: A type with a fixed list of cases, such as north, south, east and west. Cases can carry extra data.
   node: enums
 value semantics:
-  definition: A model where assigning or passing a value behaves as an independent value rather than
-    shared mutable identity.
-  node: structs
+  definition: Copying a value gives you an independent copy, so changing one never affects the other. Structs, enums, arrays and strings work this way.
+  node: copies
 protocol:
-  definition: A contract of requirements that a type can adopt and implement.
+  definition: A list of requirements (methods and properties) that a type promises to provide. Like an interface in Java or Kotlin.
   node: protocols
+closure:
+  definition: A function without a name, written in braces, that you can store in a variable or pass to another function.
+  node: closures
+argument label:
+  definition: The name a caller writes in front of an argument, as in greet(person:). It can differ from the parameter name used inside the function.
+  node: labels
 suspension point:
-  definition: A location where an asynchronous task may pause and allow other work to proceed.
+  definition: A spot marked with await, where an async function may pause and let other work run before it continues.
   node: async
 actor:
-  definition: A reference type that isolates its mutable state and coordinates access through Swift
-    concurrency.
+  definition: A type that protects its own data, so only one task can touch it at a time. You talk to it with await.
   node: actors

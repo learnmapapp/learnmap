@@ -1,46 +1,77 @@
 ---
 title: Optional chaining
-icon: 📦
+icon: "⛓️"
 branch: data
-requires:
-  - optionals
-summary: Optional chaining stops when a receiver is nil and returns an optional result.
+requires: [optionals]
+summary: "?. reaches through several maybes in one go, and stops quietly at the first nil."
 ---
+Imagine a contacts app. A person *may* have a company, the company *may* have an address, and the address *may* have a postcode. Getting the postcode with `if let` takes three steps. **Optional chaining** does it in one:
 
-`Optional` chaining stops when a receiver is `nil` and returns an optional result. Combine it with ?? for an explicit display fallback.
+```swift title=contacts.swift
+struct Address { var postcode: String? }
+struct Company { var address: Address? }
+struct Person { var name: String; var company: Company? }
 
-```swift
-struct Profile { let city: String }
-let profile: Profile? = Profile(city: "Sydney")
-print(profile?.city.uppercased() ?? "Unknown")
+let ada = Person(name: "Ada", company: Company(address: Address(postcode: "N1 9GU")))
+let bob = Person(name: "Bob", company: nil)
+
+print(ada.company?.address?.postcode ?? "unknown")  // N1 9GU
+print(bob.company?.address?.postcode ?? "unknown")  // unknown
 ```
 
-## Put it to work
+Read `?.` as "and if that exists, then...". The chain is evaluated left to right, and as soon as one link is `nil` the **whole expression becomes nil**. Nothing crashes, and the rest of the chain is skipped.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Two rules that trip people up:
+
+**1. The result is always optional**, even if the last property isn't. `ada.company?.address` is `Address?`, and `bob.name.count` is `Int` but `bob.company?.address?.postcode?.count` is `Int?`. One maybe anywhere in the chain makes the whole result a maybe. That's why chains so often end in `??`.
+
+**2. Method calls work too**, and are simply skipped on nil:
+
+```swift
+var playlist: [String]? = nil
+playlist?.append("Song")   // does nothing, no crash
+print(playlist?.count)     // nil
+```
+
+(Printing an optional shows `Optional(...)` or `nil`. Swift even warns you about printing optionals, because it's rarely what you meant.)
+
+Optional chaining with a fallback at the end, `a?.b?.c ?? default`, is one of the most common lines in Swift code. Combined with the operators from the last two lessons, you now have the full toolkit.
+
+```compare typescript
+const postcode = ada.company?.address?.postcode ?? "unknown";
+```
+
+```compare kotlin
+val postcode = ada.company?.address?.postcode ?: "unknown"
+```
+
+```compare python
+# No built-in chaining; you'd guard each step:
+postcode = ada.company and ada.company.address and ada.company.address.postcode
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about optional chaining.
-lang: swift
+goal: Collapse the nested if lets into a single optional chain with a fallback.
 code: |-
-  struct Profile { let city: String }
-  let profile: Profile? = Profile(city: "Sydney")
-  print(profile?.city.lowercased() ?? "Unknown")
+  var city = "nowhere"
+  if let home = user.home {
+      if let town = home.city {
+          city = town
+      }
+  }
 checks:
-  - match: profile\?\.city\.uppercased\(\)
-    message: Use profile?.city.uppercased() for this step.
-  - notMatch: profile\?\.city\.lowercased\(\)
-    message: Replace profile?.city.lowercased() in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'let\s+city\s*=\s*user\.home\?\.city\s*\?\?\s*"nowhere"'
+    message: 'Write: let city = user.home?.city ?? "nowhere"'
+solution: |-
+  let city = user.home?.city ?? "nowhere"
 ```
 
 ```quiz
-question: If `profile` is `nil`, what does `profile?.city` produce?
+question: "`name` is a `String` (not optional). What's the type of `user?.name`?"
 options:
-  - A forced-unwrapping trap.
-  - "`nil`."
-  - An empty `String`.
+  - "`String`"
+  - "`String?`"
+  - "`String!`"
 answer: 1
-explain: "`Optional` chaining stops at a missing receiver and produces an optional result."
+explain: A chain that passes through an optional can stop at nil, so its result is always optional.
 ```

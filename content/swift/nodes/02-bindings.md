@@ -1,68 +1,85 @@
 ---
 title: let and var
-icon: 🏷️
+icon: "📌"
 branch: basics
-requires:
-  - swift
-summary: let defines a constant binding; var permits reassignment.
+requires: [swift]
+summary: let for values that stay put, var for values that change. Prefer let.
 ---
+Swift has two ways to name a value:
 
-let defines a constant binding; var permits reassignment. Start with let and introduce mutation only where the program needs it.
+```swift title=game.swift
+let playerName = "Robin"
+var score = 0
+
+score += 10
+score += 5
+print("\(playerName) has \(score) points")  // Robin has 15 points
+```
+
+- **`let`** is a constant. Once set, it stays.
+- **`var`** is a variable. It can change as often as you like.
+
+Try to change a `let`, and the compiler stops you, with a fix ready:
+
+```repl shell
+> swift game.swift
+error: cannot assign to value: 'playerName' is a 'let' constant
+note: change 'let' to 'var' to make it mutable
+```
+
+It works the other way round too. Declare a `var` you never change, and Swift warns you: *variable 'score' was never mutated; consider changing to 'let'*.
+
+The Swift community's rule of thumb is simple: **use `let` until you need `var`**. Constants make code easier to follow, because you know a value is still what it was when it was created.
+
+A `let` doesn't need a value straight away, as long as it gets exactly one before it's used. That's handy with `if`:
 
 ```swift
-let step = 2
-var score = 1
-score += step
-print(score)
-```
-
-## Put it to work
-
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
-
-```compare python
-score = 1
-score += 2
-print(score)
-```
-
-```compare javascript
-let score = 1;
-score += 2;
-console.log(score);
-```
-
-```compare rust
-fn main() {
-    let mut score = 1;
-    score += 2;
-    println!("{score}");
+let greeting: String
+if hour < 12 {
+    greeting = "Good morning"
+} else {
+    greeting = "Good afternoon"
 }
 ```
 
+```compare javascript
+const playerName = "Robin";
+let score = 0;
+```
+
+```compare kotlin
+val playerName = "Robin"
+var score = 0
+```
+
+```compare rust
+let player_name = "Robin";
+let mut score = 0;
+```
+
 ```exercise
-goal: Repair the starting example using what you learned about let and var.
-lang: swift
+goal: The lives counter goes down when the player is hit, but the code doesn't compile. Fix the declaration.
 code: |-
-  let step = 2
-  var score = 1
-  score -= step
-  print(score)
+  let maxLives = 3
+  let lives = maxLives
+  lives -= 1
 checks:
-  - match: score\s+\+=\s+step
-    message: Use score += step for this step.
-  - notMatch: score\s+\-=\s+step
-    message: Replace score -= step in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'var\s+lives\s*=\s*maxLives'
+    message: lives changes, so it must be a var.
+  - match: 'let\s+maxLives\s*=\s*3'
+    message: maxLives never changes. Keep it a let.
+solution: |-
+  let maxLives = 3
+  var lives = maxLives
+  lives -= 1
 ```
 
 ```quiz
-question: Which declaration permits later reassignment of `score`?
+question: You declare `var total = 0` and never change it. What does Swift do?
 options:
-  - "`let score = 1`"
-  - "`let score: Int = 1`"
-  - "`var score = 1`"
-answer: 2
-explain: "`var` allows reassignment; both `let` forms declare constant bindings."
+  - Refuses to compile.
+  - Compiles it, with a warning suggesting let.
+  - Silently turns it into a let.
+answer: 1
+explain: It's a warning, not an error. Swift nudges you towards let, but doesn't insist.
 ```

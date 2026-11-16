@@ -1,48 +1,74 @@
 ---
 title: Default parameters
-icon: 🌐
+icon: "🎚️"
 branch: functions
-requires:
-  - functions
-summary: A default parameter lets a caller omit that argument.
+requires: [functions]
+summary: Give parameters default values, so callers only pass what they care about.
 ---
-
-A default parameter lets a caller omit that argument. Explicitly supplied values still override the default.
+Imagine a function for making coffee. Most people want a medium cup with milk, but some are particular. Without defaults, everyone has to spell out everything:
 
 ```swift
-func add(_ value: Int, amount: Int = 1) -> Int {
-  value + amount
-}
-print(add(4))
+makeCoffee(size: "medium", milk: true, sugar: 0, extraShot: false)
 ```
 
-## Put it to work
+With **default values**, callers only mention what's different:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```swift title=coffee.swift
+func makeCoffee(size: String = "medium", milk: Bool = true, sugar: Int = 0, extraShot: Bool = false) {
+    print("☕ \(size), milk: \(milk), sugar: \(sugar), extra shot: \(extraShot)")
+}
+
+makeCoffee()                              // the usual
+makeCoffee(sugar: 2)                      // sweet tooth
+makeCoffee(size: "large", extraShot: true) // long night
+```
+
+The arguments you *do* pass must stay in the declared order. `makeCoffee(extraShot: true, size: "large")` doesn't compile. Labels make the call readable; they don't make the order flexible.
+
+You use defaults all the time in Swift's own libraries, often without noticing. For example, `print` has two of them:
+
+```swift
+print("a", "b", "c")                         // a b c
+print("a", "b", "c", separator: "-")          // a-b-c
+print("loading", terminator: "")             // no newline at the end
+```
+
+A few guidelines for designing your own:
+
+- Put parameters with defaults **after** the ones without, so the common call stays short.
+- A default should be the answer for the majority, not an arbitrary value.
+- Defaults are evaluated at **each call**, so `date: Date = Date()` really gives the current time on every call (unlike Python's mutable-default trap).
+
+```compare python
+def make_coffee(size="medium", milk=True, sugar=0, extra_shot=False):
+    ...
+```
+
+```compare kotlin
+fun makeCoffee(size: String = "medium", milk: Boolean = true, sugar: Int = 0) { }
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about default parameters.
-lang: swift
+goal: "Most greetings start with \"Hello\". Give `greeting` a default, so `greet(name: \"Ana\")` works."
 code: |-
-  func add(_ value: Int, amount: Int = 0) -> Int {
-    value + amount
+  func greet(name: String, greeting: String) -> String {
+      "\(greeting), \(name)!"
   }
-  print(add(4))
 checks:
-  - match: amount:\s+Int\s+=\s+1
-    message: "Use amount: Int = 1 for this step."
-  - notMatch: amount:\s+Int\s+=\s+0
-    message: "Replace amount: Int = 0 in the starting code."
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'greeting\s*:\s*String\s*=\s*"Hello"'
+    message: 'Add = "Hello" after the type of greeting.'
+solution: |-
+  func greet(name: String, greeting: String = "Hello") -> String {
+      "\(greeting), \(name)!"
+  }
 ```
 
 ```quiz
-question: "For `func add(_ value: Int, amount: Int = 1)`, what does `add(4)` use for `amount`?"
+question: "With `func box(width: Int = 1, height: Int = 1)`, which call does NOT compile?"
 options:
-  - "`1`"
-  - "`0`"
-  - The value from the previous call.
-answer: 0
-explain: An omitted argument uses the default declared in the signature.
+  - "`box()`"
+  - "`box(height: 3)`"
+  - "`box(height: 3, width: 2)`"
+answer: 2
+explain: Arguments must keep their declared order, even when some are left out.
 ```

@@ -1,46 +1,74 @@
 ---
 title: Optional fallback
-icon: 🧩
+icon: "🪂"
 branch: data
-requires:
-  - optionals
-summary: The ?? operator supplies a fallback only when an optional is nil.
+requires: [optionals]
+summary: "?? gives you the value, or a sensible default when there isn't one."
 ---
+Lots of missing values have an obvious stand-in. No display name? Show "Anonymous". No saved volume? Use 50. For those cases, unwrapping with `if let` is overkill. Use the **nil-coalescing operator** `??`:
 
-The ?? operator supplies a fallback only when an optional is `nil`. It preserves a present empty string.
+```swift title=settings.swift
+let saved: [String: Int] = ["brightness": 80]
 
-```swift
-let requested: String? = nil
-let title = requested ?? "Untitled"
-print(title)
+let brightness = saved["brightness"] ?? 50
+let volume = saved["volume"] ?? 50
+
+print("Brightness \(brightness), volume \(volume)")
+// Brightness 80, volume 50
 ```
 
-## Put it to work
+`a ?? b` means "the value inside `a` if there is one, otherwise `b`". The result is **not** optional: `brightness` is a plain `Int`. That's the big win.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+The two sides need matching types. `optionalInt ?? "none"` won't compile, because the result has to be either an Int or a String, not sometimes one and sometimes the other. When you want text, convert first:
+
+```swift
+let label = saved["contrast"].map { "\($0)%" } ?? "auto"   // map converts the Int inside, if there is one
+```
+
+You can **chain** fallbacks, and Swift takes the first one that has a value:
+
+```swift
+let name = user.nickname ?? user.firstName ?? "friend"
+```
+
+The right side is only evaluated **when it's needed**. So `cache[key] ?? expensiveLookup(key)` won't do the expensive lookup when the cache already has the answer.
+
+A small warning: `??` makes things *quietly* fine. That's perfect for real defaults, but if a missing value actually means something went wrong, a silent `?? 0` can hide a bug. Then `guard` with an error message is the honest choice.
+
+```compare kotlin
+val volume = saved["volume"] ?: 50   // the "Elvis operator"
+```
+
+```compare javascript
+const volume = saved.volume ?? 50;
+```
+
+```compare python
+volume = saved.get("volume", 50)
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about optional fallback.
-lang: swift
+goal: Replace the four-line if let with a single line using ??.
 code: |-
-  let requested: String? = nil
-  let title = requested ?? ""
-  print(title)
+  var title = "Untitled"
+  if let given = doc.title {
+      title = given
+  }
 checks:
-  - match: requested\s+\?\?\s+"Untitled"
-    message: Use requested ?? "Untitled" for this step.
-  - notMatch: requested\s+\?\?\s+""
-    message: Replace requested ?? "" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'let\s+title\s*=\s*doc\.title\s*\?\?\s*"Untitled"'
+    message: 'Write: let title = doc.title ?? "Untitled"'
+  - notMatch: 'if\s+let'
+    message: The if let can go.
+solution: |-
+  let title = doc.title ?? "Untitled"
 ```
 
 ```quiz
-question: What does `name ?? "Guest"` return if `name` contains an empty string?
+question: "`let n: Int? = nil; let x = n ?? 7` — what's the type of `x`?"
 options:
-  - The empty string.
-  - '`"Guest"`.'
-  - "`nil`."
-answer: 0
-explain: Nil coalescing replaces absence, not a present empty value.
+  - "`Int?`"
+  - "`Int`"
+  - "`Int` or `nil`, depending on n"
+answer: 1
+explain: "?? always produces a value, so the result is a plain Int (7 here)."
 ```

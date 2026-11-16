@@ -1,56 +1,102 @@
 ---
 title: Enumerated cases
-icon: 🛠️
+icon: "🚥"
 branch: types
-requires:
-  - switch
-summary: An enum restricts a value to its declared cases.
+requires: [switch]
+summary: Model a fixed set of choices as a type, and let switch check you've handled them all.
 ---
+A traffic light is red, amber or green. Nothing else. If you store that as a `String`, nothing stops `"purple"` or `"Red"` sneaking in. An **[[enum]]** makes the set of possibilities part of the type:
 
-An enum restricts a value to its declared cases. A switch covering every case needs no default.
+```swift title=traffic.swift
+enum Light {
+    case red, amber, green
 
-A useful term here is [[enum]]: A type whose values are selected from a declared set of cases.
+    var next: Light {
+        switch self {
+        case .red: .green
+        case .green: .amber
+        case .amber: .red
+        }
+    }
+}
 
-```swift
-enum Status { case todo, doing, done }
-let status = Status.doing
-switch status {
-case .todo: print("Start")
-case .doing: print("Continue")
-case .done: print("Finished")
+var light = Light.red
+for _ in 1...4 {
+    print(light)
+    light = light.next
 }
 ```
 
-## Put it to work
+```repl shell
+> swift traffic.swift
+red
+green
+amber
+red
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Things worth noticing:
+
+- **Dot shorthand.** Once Swift knows the type, you can write `.green` instead of `Light.green`. You'll see this everywhere in Swift code.
+- **Enums have members.** `next` is a [computed property](node:properties) living right inside the enum.
+- **The switch has no `default`.** It doesn't need one, because all three cases are listed. And this is the real superpower: add `case flashing` later, and the compiler points at every switch that doesn't handle it yet.
+
+**Raw values** connect cases to a String or Int, which is handy for storage or display:
+
+```swift
+enum Planet: Int {
+    case mercury = 1, venus, earth   // venus = 2, earth = 3
+}
+print(Planet.earth.rawValue)          // 3
+print(Planet(rawValue: 2))            // Optional(venus) -- 9 would give nil
+```
+
+With a `String` raw type, each case's raw value defaults to its name. And add **`CaseIterable`** to get a list of all cases for free:
+
+```swift
+enum Size: String, CaseIterable { case small, medium, large }
+print(Size.allCases.map(\.rawValue))  // ["small", "medium", "large"]
+```
+
+```compare typescript
+type Light = "red" | "amber" | "green";
+```
+
+```compare kotlin
+enum class Light { RED, AMBER, GREEN }
+```
+
+```compare python
+from enum import Enum
+class Light(Enum):
+    RED = 1
+    AMBER = 2
+    GREEN = 3
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about enumerated cases.
-lang: swift
+goal: "Strings are too loose for a coffee size. Replace the variable with an enum `Size` with cases small, medium and large, and set `order` to `.medium`."
 code: |-
-  enum Status { case todo, doing, done }
-  let status = Status.todo
-  switch status {
-  case .todo: print("Start")
-  case .doing: print("Continue")
-  case .done: print("Finished")
-  }
+  var order = "medium"
 checks:
-  - match: Status\.doing
-    message: Use Status.doing for this step.
-  - notMatch: Status\.todo
-    message: Replace Status.todo in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'enum\s+Size\s*(:[^{]*)?\{[^}]*case\s+small\s*,\s*medium\s*,\s*large'
+    message: Declare enum Size { case small, medium, large }
+  - match: 'var\s+order(\s*:\s*Size)?\s*=\s*(Size)?\.medium'
+    message: "Set order to .medium (write var order: Size = .medium)."
+solution: |-
+  enum Size {
+      case small, medium, large
+  }
+
+  var order: Size = .medium
 ```
 
 ```quiz
-question: When can a `switch` over an enum omit `default`?
+question: Why can a switch over an enum often skip `default`?
 options:
-  - Whenever at least one case is covered.
-  - Only when the enum has associated values.
-  - When it explicitly covers every possible case.
-answer: 2
-explain: An exhaustive switch already handles every alternative.
+  - Because enums can't be compared.
+  - Because listing every case already makes it exhaustive, and the compiler warns when a new case appears.
+  - Because default is not allowed for enums.
+answer: 1
+explain: Skipping default is a feature. Adding a case later turns every incomplete switch into a compile error.
 ```

@@ -6,17 +6,18 @@ tagline: Clear, safe code from scripts to apps.
 comparisons:
   - python
   - javascript
+  - typescript
+  - kotlin
   - rust
 syntax: swift
 guide:
   name: Wren
   avatar: 🐦
   intro:
-    - Welcome! I'm Wren. Let's build something with Swift.
-    - These fifty lessons use Swift 6. Start with the foundations or pick a goal to follow a shorter
-      route.
-    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
-      here; use the local tools to run the examples.
+    - Hi, I'm Wren! Swift is the language behind iPhone and Mac apps, but it's also a pleasant,
+      safe general-purpose language that runs on Linux and Windows too.
+    - Each stop on the map has a short explanation, an exercise you solve right in the browser, and
+      a quick question. Got Swift installed? Then try the examples on your own machine as well.
   askGoal: What would you like to build first?
 branches:
   - id: core
@@ -47,20 +48,20 @@ goals:
   - id: guard
     node: guard
     title: Handle missing values
-    description: Use optionals and early exits safely.
-    icon: 🏷️
+    description: Work with optionals without crashes, using if let, guard and ??.
+    icon: 🛡️
   - id: protocols
     node: protocols
-    title: Design reusable types
-    description: Combine structs, protocols, and generics.
-    icon: 🔢
+    title: Design your own types
+    description: Model data with structs and enums, and share behaviour with protocols.
+    icon: 🧩
   - id: actors
     node: actors
-    title: Use structured concurrency
-    description: Understand async work and isolated state.
-    icon: 💬
+    title: Write concurrent code
+    description: Run work in parallel with async/await, tasks and actors.
+    icon: ⚡
   - id: capstone
     node: capstone
     title: Build a task model
-    description: Connect typed data, JSON, and tests.
-    icon: 🚦
+    description: Combine types, JSON and tests in one small, tidy program.
+    icon: 🏁

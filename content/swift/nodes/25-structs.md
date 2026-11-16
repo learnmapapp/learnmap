@@ -1,54 +1,94 @@
 ---
 title: Value structs
-icon: 🧪
+icon: "🧱"
 branch: types
-requires:
-  - types
-summary: A struct models data as a value type.
+requires: [types]
+summary: Group related data into your own type, with a free initializer and methods.
 ---
-
-A struct models data as a value type. Swift can synthesize a memberwise initializer for its stored properties.
-
-A useful term here is [[value semantics]]: A model where assigning or passing a value behaves as an independent value rather than shared mutable identity.
+**From tuple to struct, in three steps.** Say you're tracking books you've read. A tuple works at first:
 
 ```swift
-struct Task {
-  var title: String
-  var done = false
-}
-let task = Task(title: "Practice")
-print(task.title)
+let book = (title: "Dune", author: "Frank Herbert", pages: 412)
 ```
 
-## Put it to work
+But now you want the same shape in five functions, plus a method that says whether it's a long read. Time for a **struct**:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```swift title=books.swift
+struct Book {
+    let title: String
+    let author: String
+    var pages: Int
+    var rating: Int = 0
+
+    func isLongRead() -> Bool {
+        pages > 400
+    }
+}
+
+let dune = Book(title: "Dune", author: "Frank Herbert", pages: 412)
+print("\(dune.title): long read? \(dune.isLongRead())")  // Dune: long read? true
+```
+
+What you get for free:
+
+- **A memberwise initializer.** Swift writes `Book(title:author:pages:rating:)` for you, using the property names as labels. Properties with a default, like `rating`, can be left out of the call.
+- **Dot access** to properties: `dune.author`.
+- **Methods**, which are just functions inside the type. They can read the properties directly.
+
+`let` properties can never change after creation. `var` properties can, but only if the struct value itself is in a `var`:
+
+```swift
+var book = Book(title: "Emma", author: "Jane Austen", pages: 474)
+book.rating = 5     // fine
+let fixed = book
+fixed.rating = 4    // error: 'fixed' is a 'let' constant
+```
+
+That second rule surprises people coming from classes. A struct is a **value**, like an `Int`: a `let` struct is frozen as a whole. More on that in [value copies](node:copies).
+
+In Swift, structs are the default choice for your own types. `String`, `Array`, `Int` and `Dictionary` are all structs themselves. You reach for a [class](node:classes) only when you specifically need shared identity.
+
+```compare kotlin
+data class Book(val title: String, val author: String, var pages: Int, var rating: Int = 0)
+```
+
+```compare python
+@dataclass
+class Book:
+    title: str
+    author: str
+    pages: int
+    rating: int = 0
+```
+
+```compare rust
+struct Book { title: String, author: String, pages: u32, rating: u8 }
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about value structs.
-lang: swift
+goal: "Turn this tuple into a struct `Point` with two Double properties, `x` and `y`, then create `origin` with the memberwise initializer."
 code: |-
-  struct Task {
-    var title: String
-    var done = false
-  }
-  let task = Task(title: "Later")
-  print(task.title)
+  let origin = (x: 0.0, y: 0.0)
 checks:
-  - match: Task\(title:\s+"Practice"\)
-    message: 'Use Task(title: "Practice") for this step.'
-  - notMatch: Task\(title:\s+"Later"\)
-    message: 'Replace Task(title: "Later") in the starting code.'
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'struct\s+Point\s*\{[^}]*(let|var)\s+x\s*:\s*Double[^}]*(let|var)\s+y\s*:\s*Double'
+    message: "Declare struct Point { let x: Double; let y: Double }"
+  - match: 'let\s+origin\s*=\s*Point\(\s*x:\s*0(\.0)?\s*,\s*y:\s*0(\.0)?\s*\)'
+    message: "Create it with Point(x: 0, y: 0)."
+solution: |-
+  struct Point {
+      let x: Double
+      let y: Double
+  }
+
+  let origin = Point(x: 0, y: 0)
 ```
 
 ```quiz
-question: What kind of semantics does an ordinary Swift struct provide?
+question: "`struct Dog { var name: String }` and `let rex = Dog(name: \"Rex\")`. What happens with `rex.name = \"Max\"`?"
 options:
-  - Global singleton identity.
-  - Value semantics.
-  - Shared reference identity by default.
+  - It works, because name is a var.
+  - It's a compile error, because rex is a let.
+  - It changes the name of every Dog.
 answer: 1
-explain: A struct represents a value rather than an implicitly shared mutable object.
+explain: A struct in a let is completely immutable, even its var properties.
 ```
