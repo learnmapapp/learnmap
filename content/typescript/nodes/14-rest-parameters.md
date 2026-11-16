@@ -5,33 +5,69 @@ branch: "functions"
 requires: ["arrays", "optional-parameters"]
 summary: "Collect extra arguments into a typed array."
 ---
-
-A rest parameter gathers remaining arguments into an array. It must be the final parameter:
+`Math.max(3, 9, 4)` takes any number of arguments. Writing your own function like that takes a **rest parameter**: three dots in front of the last parameter, which collects every remaining argument into an array.
 
 ```typescript
 function total(...values: number[]): number {
   return values.reduce((sum, value) => sum + value, 0);
 }
-console.log(total(10, 20, 12)); // 42
+
+total();              // 0
+total(5);             // 5
+total(10, 20, 12);    // 42
 ```
 
-The empty call `total()` is valid and returns zero because the reduction has an initial accumulator. The element type checks every supplied argument.
-
-## Collect versus expand
-
-Rest collects values in a parameter list. Spread expands a collection at a call site:
+The type is the array type, `number[]`, because that's what `values` is inside the function. Every argument is checked against the element type:
 
 ```typescript
-const values = [10, 20, 12];
-console.log(total(...values));
+total(1, "2", 3);
+//       ~~~ Argument of type 'string' is not assignable
+//           to parameter of type 'number'.
 ```
 
-When calling a function with a fixed positional signature, an ordinary array may not prove the required argument count. A tuple can represent a known pair and spread safely into a two-parameter function.
+## The same dots, the other way round
 
-Use rest for a genuinely variable argument list. If the inputs represent named concepts rather than a sequence of similar values, an object parameter usually communicates intent better.
+Three dots also **spread** an existing array into separate arguments:
+
+```typescript
+const scores = [90, 85, 77];
+total(...scores);     // 252
+```
+
+So you see `...` in two roles:
+
+| Where | Name | What it does |
+| --- | --- | --- |
+| in a parameter list | rest | gathers arguments into an array |
+| in a call or literal | spread | expands an array into items |
+
+## Mixing with normal parameters
+
+The rest parameter goes last, and there can only be one:
+
+```typescript
+function log(level: "info" | "warn", ...parts: string[]): void {
+  console.log(`[${level}]`, ...parts);
+}
+
+log("warn", "disk", "almost", "full");
+```
+
+```tip
+If you find yourself spreading big arrays into a rest parameter, consider taking the array directly: `total(values: readonly number[])`. Rest parameters shine for calls written by hand.
+```
+
+```compare java
+int total(int... values) { /* values is an int[] */ }
+```
+
+```compare python
+def total(*values: int) -> int:
+    return sum(values)
+```
 
 ```exercise
-goal: "Collect all numeric arguments with a rest parameter."
+goal: "`total(10, 20, 12)` passes three separate numbers. Turn `values` into a rest parameter to collect them."
 lang: typescript
 code: |
   function total(values: number[]): number {
@@ -39,17 +75,22 @@ code: |
   }
   console.log(total(10, 20, 12));
 checks:
-  - match: "\\.\\.\\.values:\\s+number\\[\\]"
+  - match: '\.\.\.values:\s*number\[\]'
     message: "Add ... before values in the parameter list."
-hint: "Add ... before values in the parameter list."
+hint: The type stays number[]; only the dots are new.
+solution: |
+  function total(...values: number[]): number {
+    return values.reduce((sum, value) => sum + value, 0);
+  }
+  console.log(total(10, 20, 12));
 ```
 
 ```quiz
-question: "What type does `...values: number[]` have inside the function?"
+question: "Inside `function f(...names: string[])`, what is `names` when you call `f()`?"
 options:
-  - A number array.
-  - A single number.
-  - A tuple of exactly two numbers.
-answer: 0
-explain: Rest parameters collect the remaining arguments into an array.
+  - "`undefined`"
+  - "An empty array, `[]`"
+  - It's a compile error to call it with no arguments.
+answer: 1
+explain: A rest parameter is always an array. With no arguments, it's empty.
 ```

@@ -5,59 +5,88 @@ branch: "basics"
 requires: ["inference"]
 summary: "Use string, number, and boolean rather than wrapper-object types."
 ---
+TypeScript's everyday types are the JavaScript values you already know. Here's the full cast:
 
-The everyday primitive types use lowercase names:
+| Type | Example values |
+| --- | --- |
+| `string` | `"Ada"`, `` `Hi ${name}` `` |
+| `number` | `42`, `3.14`, `NaN` (one type for ints and floats) |
+| `boolean` | `true`, `false` |
+| `bigint` | `9007199254740993n` (huge integers) |
+| `null` and `undefined` | "nothing", in two flavours |
+| `symbol` | unique keys; rarely needed |
+
+All lowercase. `String` and `Number` with capitals also exist, but those are the wrapper objects: always use the lowercase versions in types.
 
 ```typescript
-const name: string = "Ada";
-const score: number = 42;
-const active: boolean = true;
-console.log(`${name}: ${score}, active=${active}`);
+const title: string = "Learn TypeScript";
+const lessons: number = 50;
+const published: boolean = true;
 ```
 
-`number` covers ordinary integer and floating-point values. TypeScript does not create a separate safe integer type automatically. JavaScript's `bigint` is distinct, and arithmetic cannot freely mix it with `number`.
+## Where types meet reality: user input
 
-## Types do not convert values
+Everything that comes from a form field, a URL or `process.argv` is a **string**, even when it looks like a number. JavaScript would happily "add" them:
 
-An annotation describes a value; it does not parse text. `Number("42")` performs a runtime conversion, while writing `: number` does not.
+```javascript
+"41" + 1   // "411"
+```
+
+TypeScript stops you mixing them up unnoticed:
 
 ```typescript
 const input = "42";
-const parsed = Number(input);
-console.log(Number.isFinite(parsed)); // true
+const score: number = input;
+//    ~~~~~ Type 'string' is not assignable to type 'number'.
 ```
 
-Capitalized `String`, `Number`, and `Boolean` describe wrapper objects and are almost never what you want for ordinary values. Use lowercase primitives in application contracts.
+You convert explicitly, at the point where the text comes in:
 
-`null` and `undefined` have their own types under strict `null` checking. A value that can be absent needs that possibility represented explicitly, rather than assuming every variable can silently hold anything.
+```typescript
+const score = Number(input);        // 42, or NaN for bad text
+if (Number.isNaN(score)) {
+  throw new Error(`Not a number: ${input}`);
+}
+```
+
+Note that `NaN` is still a `number`, so the checker can't catch bad text for you. That check is your job.
+
+## Escape hatches to avoid
+
+- **`any`** turns off checking for a value, and the "off" spreads to everything it touches.
+- **`unknown`** is the safe alternative for "I don't know yet". You must check it before using it, as [Unknown values](node:unknown) shows.
 
 ```compare python
-score: int = int("42")  # annotations alone do not convert here either
+score: int = int(text)   # Python converts the same way
 ```
 
-```compare javascript
-const score = Number("42");
+```compare go
+score, err := strconv.Atoi(input)   // conversion can fail
 ```
 
 ```exercise
-goal: Convert the text before assigning it to a number.
+goal: "`input` is text, so it can't be a `number` yet. Convert it with `Number(...)`."
 lang: typescript
 code: |
   const input = "42";
   const score: number = input;
   console.log(score + 1);
 checks:
-  - match: Number\(input\)
+  - match: 'Number\(\s*input\s*\)'
     message: Use Number(input) to convert the text.
-hint: Use `Number(input)` to convert the text.
+hint: Number(...) turns text into a number.
+solution: |
+  const input = "42";
+  const score: number = Number(input);
+  console.log(score + 1);
 ```
 
 ```quiz
-question: "Does a : number annotation parse a numeric string?"
+question: "What is the type of `Number(\"hello\")`?"
 options:
-  - "Yes."
-  - "No; conversion requires runtime code."
-  - "Only for constants."
-answer: 1
-explain: "Annotations describe expected types; Number or another parser performs conversion."
+  - "`number`, holding NaN"
+  - "`undefined`"
+  - It's a compile error.
+answer: 0
+explain: Number() always returns a number. For bad text that's NaN, which you have to check for yourself.
 ```

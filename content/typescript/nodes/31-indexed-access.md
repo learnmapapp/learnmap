@@ -5,34 +5,76 @@ branch: "generics"
 requires: ["keyof", "type-queries"]
 summary: "Reuse the type of a property or collection element."
 ---
-
-An indexed access type selects part of another type:
-
-```typescript
-type Learner = { name: string; score: number; active: boolean };
-type Score = Learner["score"];             // number
-type SummaryValue = Learner["name" | "score"]; // string | number
-const score: Score = 42;
-console.log(score.toFixed(0));
-```
-
-The index is a type-level key, not a runtime property lookup. An invalid key fails checking instead of inventing a field.
-
-## Select array elements
+You know `user["name"]` reads a property from a **value**. The same brackets on a **type** read a property's type:
 
 ```typescript
-const learners = [{ name: "Ada", score: 42 }];
-type LearnerItem = (typeof learners)[number];
-const next: LearnerItem = { name: "Grace", score: 37 };
-console.log(next);
+type User = {
+  id: string;
+  profile: { bio: string; avatarUrl: string };
+  roles: ("admin" | "editor" | "viewer")[];
+};
+
+type UserId = User["id"];             // string
+type Profile = User["profile"];  // { bio: string; avatarUrl: ... }
 ```
 
-`[number]` asks for the type of array elements. For a tuple, a specific numeric literal can select one position; indexing with `number` produces the union of its element types.
+That's an [[indexed access]] type. It's a way of saying "whatever type that property has", so it keeps up when `User` changes.
 
-This is useful when a response type already defines a nested contract and another function should reuse it. Avoid copying the same property type into several declarations, where one version can drift from the source.
+## Five tricks with brackets
+
+**1. Dig deeper**, by chaining:
+
+```typescript
+type Bio = User["profile"]["bio"];    // string
+```
+
+**2. Several keys at once**, with a union:
+
+```typescript
+type IdOrBio = User["id" | "profile"];   // string | { bio...; ... }
+```
+
+**3. All value types**, with [keyof](node:keyof):
+
+```typescript
+type Point = { x: number; y: number; label: string };
+type PointValue = Point[keyof Point];    // number | string
+```
+
+**4. The element type of an array**, with `number`:
+
+```typescript
+type Role = User["roles"][number]; // "admin" | "editor" | ...
+```
+
+Why `number`? Arrays are indexed by numbers, so "the type at any numeric index" is the element type. This one is really common.
+
+**5. In generics**, as in `T[K]` from the [keyof lesson](node:keyof): the type of property `K` of whatever `T` is.
+
+## Why bother?
+
+Without it, you'd repeat yourself:
+
+```typescript
+function setRole(user: User, role: "admin" | "editor" | "viewer") {}
+```
+
+Add a `"guest"` role to `User` and that function silently falls behind. With `role: User["roles"][number]`, there's one source of truth.
+
+```warn
+The brackets need a type inside, so it's `User["id"]` with quotes, a literal type. `User.id` with a dot is an error in a type position.
+```
+
+```compare java
+// No equivalent: Java has no way to refer to "the type of field id".
+```
+
+```compare kotlin
+// No equivalent either; you'd repeat the type.
+```
 
 ```exercise
-goal: "Derive Score from the score property rather than the name."
+goal: "`Score` should be the type of the `score` property, but it reads `name`. Index the right property."
 lang: typescript
 code: |
   type Learner = { name: string; score: number };
@@ -40,17 +82,22 @@ code: |
   const score: Score = 42;
   console.log(score);
 checks:
-  - match: "Learner\\[\"score\"\\]"
+  - match: 'Learner\["score"\]'
     message: "Index the type with \"score\"."
-hint: "Index the type with \"score\"."
+hint: Change the key inside the brackets.
+solution: |
+  type Learner = { name: string; score: number };
+  type Score = Learner["score"];
+  const score: Score = 42;
+  console.log(score);
 ```
 
 ```quiz
-question: "What does Learner[\"score\"] mean in a type alias?"
+question: "`type Tags = string[]`. What is `Tags[number]`?"
 options:
-  - "Read the runtime score immediately."
-  - "Select the static type of that property."
-  - "Make score optional."
+  - "`number`"
+  - "`string`"
+  - "`string[]`"
 answer: 1
-explain: "Indexed access reuses a property type without executing a lookup."
+explain: Indexing an array type with number gives the element type.
 ```

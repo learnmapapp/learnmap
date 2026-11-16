@@ -5,31 +5,66 @@ branch: "narrowing"
 requires: ["narrowing", "nullability"]
 summary: "Accept an untrusted value without giving up checking."
 ---
+TypeScript has two types for "I don't know what this is". They sound similar, and they're opposites.
 
-[[Unknown]] can hold any value, but operations require you to establish a more specific type first:
+**`any` says "don't check this".** Anything goes, in both directions:
+
+```typescript
+const data: any = JSON.parse(text);
+data.user.name.toUpperCase();   // compiles. Might crash.
+const n: number = data;         // compiles. Might be a lie.
+```
+
+Worse, `any` spreads: `data.user` is `any`, and so is everything you get from it.
+
+**`unknown` says "check this first".** You can store and pass it, but not use it:
+
+```typescript
+const data: unknown = JSON.parse(text);
+data.user;
+//^^^^ 'data' is of type 'unknown'.
+const n: number = data;
+//    ~ Type 'unknown' is not assignable to type 'number'.
+```
+
+To use it, you [narrow](node:narrowing) it, exactly as with a union:
 
 ```typescript
 function shout(value: unknown): string {
   if (typeof value !== "string") {
     throw new Error("Expected text");
   }
-  return value.toUpperCase();
+  return value.toUpperCase();     // value: string
 }
-console.log(shout("Ada"));
 ```
 
-This is a useful starting point for parsed JSON, messages, and other external input. `any` permits unchecked property access and calls; `unknown` makes you justify them.
+## Side by side
 
-## Check every layer
+| | `any` | `unknown` |
+| --- | --- | --- |
+| Can hold anything | yes | yes |
+| Can call methods on it | yes, unchecked | no, narrow first |
+| Can assign to a `number` | yes, unchecked | no, narrow first |
+| Safe | no | yes |
 
-Knowing a value is an object does not prove it has the properties your application needs. Start with object and `null` checks, then check required properties and their types.
+## When to use `unknown`
 
-An assertion such as `value as Learner` does not perform those checks. It asks the checker to trust your claim. If the source is untrusted, prefer a decoder function or a validation library that actually inspects the data.
+Whenever data comes from outside your program: `JSON.parse`, `fetch`, `localStorage`, `catch (error)` blocks, messages from other windows. You genuinely don't know what's in there, and `unknown` makes you prove it. [Validating JSON](node:json-validation) builds on this.
 
-Validation should return a useful typed result or report a clear error. Scattering broad assertions throughout rendering and business logic makes boundary mistakes much harder to find.
+```tip
+In strict mode, the variable in `catch (error)` is `unknown` too. [Typed errors](node:typed-errors) shows how to handle it.
+```
+
+```compare kotlin
+val data: Any = parse(text)  // like unknown: needs an is-check
+```
+
+```compare python
+data: object = json.loads(text)  # object, not Any, forces checks
+```
 
 ```exercise
-goal: Use `unknown` so the function must narrow its input.
+goal: "`any` turns off the checker, so the `typeof` check is optional. Use `unknown` so it's required."
 lang: typescript
 code: |
   function shout(value: any): string {
@@ -38,17 +73,23 @@ code: |
   }
   console.log(shout("Ada"));
 checks:
-  - match: value:\s+unknown
+  - match: 'value:\s*unknown'
     message: Replace any with unknown.
-hint: Replace any with `unknown`.
+hint: Only the parameter type changes; the check already narrows it.
+solution: |
+  function shout(value: unknown): string {
+    if (typeof value !== "string") throw new Error("Expected text");
+    return value.toUpperCase();
+  }
+  console.log(shout("Ada"));
 ```
 
 ```quiz
-question: Why is `unknown` safer than any at an external boundary?
+question: "`const x: unknown = 5`. Which line compiles?"
 options:
-  - It automatically validates a schema.
-  - It requires narrowing before specialized operations.
-  - It prevents all runtime errors.
+  - "`x + 1`"
+  - "`if (typeof x === \"number\") x + 1`"
+  - "`const y: number = x`"
 answer: 1
-explain: Unknown retains a checking obligation; it does not itself validate the input.
+explain: Inside the typeof check, x is narrowed to number. Without a check, unknown can't be used.
 ```

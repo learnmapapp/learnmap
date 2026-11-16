@@ -5,33 +5,71 @@ branch: "generics"
 requires: ["literal-types", "keyof"]
 summary: "Build finite string contracts from other literal types."
 ---
-
-Template literal types combine literal strings into a new set of possible strings:
-
-```typescript
-type Phase = "start" | "finish";
-type EventName = `lesson:${Phase}`;
-const event: EventName = "lesson:start";
-console.log(event);
-```
-
-The value still behaves like an ordinary string at runtime. The type constrains which strings checked callers can supply.
-
-## Connect names to object keys
+You know template strings: `` `user:${id}` ``. TypeScript has the same syntax **for types**, and it builds string literal types:
 
 ```typescript
-type ChangeEvent<T> = `${Extract<keyof T, string>}Changed`;
-type Learner = { name: string; score: number };
-const changeEvent: ChangeEvent<Learner> = "scoreChanged";
-console.log(changeEvent);
+type Size = "sm" | "md" | "lg";
+type Side = "top" | "bottom";
+
+type Margin = `margin-${Side}`;
+// "margin-top" | "margin-bottom"
+
+type Spacing = `${Side}-${Size}`;
+// "top-sm" | "top-md" | "top-lg" | "bottom-sm" | ...
 ```
 
-`Extract` excludes keys that cannot participate as string literals in this contract. Intrinsic types such as `Uppercase`, `Lowercase`, and `Capitalize` can transform literal strings further.
+Unions get **multiplied out**: every combination appears. Two sides and three sizes give six names.
 
-Keep the set comprehensible. Large unions can expand into many combinations and slow down tooling. A literal pattern is also not a runtime parser: external strings still need to be checked or decoded before being trusted as this contract.
+## A typed event system
+
+Here's where it's handy. Say an app emits events named `entity:action`:
+
+```typescript
+type Entity = "user" | "order";
+type Action = "created" | "deleted";
+type EventName = `${Entity}:${Action}`;
+
+function on(event: EventName, handler: () => void) { /* ... */ }
+
+on("user:created", refresh);      // fine, with autocomplete
+on("user:updated", refresh);
+//  ~~~~~~~~~~~~~ Argument of type '"user:updated"' is not
+//                assignable to parameter of type 'EventName'.
+```
+
+Add an entity, and every valid event name appears automatically.
+
+## Patterns, not just lists
+
+A template with a plain `string` or `number` inside matches a whole family:
+
+```typescript
+type CssPixels = `${number}px`;
+
+const ok: CssPixels = "12px";
+const bad: CssPixels = "12em";
+//    ~~~ Type '"12em"' is not assignable to type '`${number}px`'.
+
+type DataAttribute = `data-${string}`;
+```
+
+There are also four built-in helpers for case: `Uppercase`, `Lowercase`, `Capitalize` and `Uncapitalize`:
+
+```typescript
+type Handler = `on${Capitalize<EventName>}`;
+// "onUser:created" | ...
+```
+
+```compare java
+// No equivalent; you'd use an enum per event.
+```
+
+```compare python
+# No equivalent; Literal types can't be combined like this.
+```
 
 ```exercise
-goal: "Allow lesson:start as a valid event name."
+goal: "The events in this app start with `lesson:`, not `course:`. Fix the template so `\"lesson:start\"` is allowed."
 lang: typescript
 code: |
   type Phase = "start" | "finish";
@@ -39,17 +77,22 @@ code: |
   const event: EventName = "lesson:start";
   console.log(event);
 checks:
-  - match: "`lesson:\\$\\{Phase\\}`"
-    message: "Use the lesson: prefix in the template literal type."
-hint: "Use the lesson: prefix in the template literal type."
+  - match: '`lesson:\$\{Phase\}`'
+    message: "Use the lesson: prefix in the template type."
+hint: Only the text before ${Phase} changes.
+solution: |
+  type Phase = "start" | "finish";
+  type EventName = `lesson:${Phase}`;
+  const event: EventName = "lesson:start";
+  console.log(event);
 ```
 
 ```quiz
-question: "Does a template literal type validate an incoming network string at runtime?"
+question: "How many members does `` `${\"a\" | \"b\"}-${1 | 2 | 3}` `` have?"
 options:
-  - "Yes."
-  - "No, it is a static string constraint."
-  - "Only when the string contains a colon."
-answer: 1
-explain: "Template literal types are erased; runtime data still needs validation."
+  - "2"
+  - "5"
+  - "6"
+answer: 2
+explain: Every combination of the two unions is produced, so 2 × 3 = 6.
 ```

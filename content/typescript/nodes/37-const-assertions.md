@@ -5,34 +5,63 @@ branch: "generics"
 requires: ["readonly", "literal-types"]
 summary: "Retain literal precision and readonly structure for literal expressions."
 ---
+**Myth:** "I wrote `const`, so TypeScript knows these exact values."
 
-A [[const assertion]] keeps literal information that normal inference might widen:
+**Reality:** `const` only freezes the **variable**. What's inside an array or object can still change, so TypeScript widens the types:
+
+```typescript
+const directions = ["left", "right"];
+// string[]: someone could push("up") later
+
+const config = { mode: "dark", retries: 3 };
+// { mode: string; retries: number }
+```
+
+Most of the time that's what you want. But sometimes you mean "these exact values, forever". That's what `as const` says:
 
 ```typescript
 const directions = ["left", "right"] as const;
-type Direction = (typeof directions)[number];
-const direction: Direction = "left";
-console.log(direction);
+// readonly ["left", "right"]
+
+const config = { mode: "dark", retries: 3 } as const;
+// { readonly mode: "dark"; readonly retries: 3 }
 ```
 
-The array is inferred as a `readonly` tuple with those exact elements. Object literal properties also become `readonly` in the inferred type.
+A [[const assertion]] does three things at once: literal types instead of wide ones, `readonly` everywhere, and arrays become fixed [tuples](node:tuples).
 
-## Static precision, not a runtime freeze
+**Myth:** "`as const` is just for constants. It's a style thing."
+
+**Reality:** its killer use is deriving a union type from a list of values, so the list exists **once** and is usable at runtime too:
 
 ```typescript
-const settings = { mode: "read", retries: 3 } as const;
-function open(mode: "read" | "edit"): string {
-  return `Opening ${mode}`;
+const ROLES = ["admin", "editor", "viewer"] as const;
+type Role = (typeof ROLES)[number];   // "admin" | "editor" | "viewer"
+
+function isRole(value: string): value is Role {
+  return (ROLES as readonly string[]).includes(value);
 }
-console.log(open(settings.mode));
+
+for (const role of ROLES) {           // loop over them at runtime
+  console.log(role);
+}
 ```
 
-`as const` applies to suitable literal expressions. It does not recursively freeze independently referenced objects or call `Object.freeze`. An alias to shared mutable state can still change that state.
+That's [typeof](node:type-queries) plus [indexed access](node:indexed-access) with `number`. Without `as const`, `Role` would be plain `string`.
 
-Use const assertions for static lookup tables, literal menus, and fixed tuples. If the value must also conform to a named broader shape while preserving useful inference, combine the literal with [satisfies](node:satisfies).
+**Myth:** "`as const` freezes the object."
+
+**Reality:** like all types, it's gone at runtime. Nothing stops plain JavaScript from changing the array. Use `Object.freeze` if you need that.
+
+```compare java
+enum Role { ADMIN, EDITOR, VIEWER }   // values() gives the list
+```
+
+```compare kotlin
+enum class Role { ADMIN, EDITOR, VIEWER }  // entries gives the list
+```
 
 ```exercise
-goal: Preserve the exact direction values as a `readonly` tuple.
+goal: "`Direction` is just `string`, because the array was widened. Keep the exact values with a const assertion."
 lang: typescript
 code: |
   const directions = ["left", "right"];
@@ -40,17 +69,22 @@ code: |
   const direction: Direction = "left";
   console.log(direction);
 checks:
-  - match: \["left",\s+"right"\]\s+as\s+const;
+  - match: '\["left",\s*"right"\]\s+as\s+const;'
     message: Add as const after the array literal.
-hint: Add as const after the array literal.
+hint: as const goes right after the closing bracket.
+solution: |
+  const directions = ["left", "right"] as const;
+  type Direction = (typeof directions)[number];
+  const direction: Direction = "left";
+  console.log(direction);
 ```
 
 ```quiz
-question: What does `["left", "right"] as const` infer?
+question: "What is the type of `const x = [1, 2] as const`?"
 options:
-  - A mutable string array.
-  - A `readonly` tuple retaining both literal values.
-  - A runtime Set.
+  - "`number[]`"
+  - "`readonly [1, 2]`"
+  - "`[number, number]`"
 answer: 1
-explain: The assertion preserves literal values and `readonly` tuple structure.
+explain: as const keeps the literal values, makes it readonly, and fixes the length.
 ```

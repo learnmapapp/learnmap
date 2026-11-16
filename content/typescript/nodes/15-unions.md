@@ -5,36 +5,68 @@ branch: "narrowing"
 requires: ["primitives"]
 summary: "Represent alternatives and narrow before using specialized operations."
 ---
-
-A [[union]] accepts values belonging to any of its alternatives:
-
-```typescript
-function label(id: string | number): string {
-  return `Learner ${id}`;
-}
-console.log(label(42));
-console.log(label("ada"));
-```
-
-Before narrowing, you can use only operations valid for every possible member. Calling `id.toUpperCase()` directly would fail checking because numbers do not provide it.
-
-## Preserve the alternatives
-
-`string | number` differs from `any`: the union keeps track of which possibilities must be handled. It also differs from an intersection, which requires a value to satisfy multiple contracts together.
+Real data is often "this **or** that". An order ID might be a number in the new system and a string like `"A-1042"` in the old one. A [[union]] type says exactly that, with `|`:
 
 ```typescript
-function display(id: string | number): string {
-  return typeof id === "string" ? id.toUpperCase() : id.toFixed(0);
+type OrderId = number | string;
+
+function label(id: OrderId): string {
+  return `Order ${id}`;
 }
-console.log(display(42));
+
+label(1042);       // fine
+label("A-1042");   // fine
+label(true);
+//    ~~~~ Argument of type 'boolean' is not assignable
+//         to parameter of type 'string | number'.
 ```
 
-The conditional gives each branch a more specific type. Do not convert every value to `any` to bypass the error; choose the appropriate branch or use an operation supported by both alternatives.
+## The catch: what can you do with it?
 
-Parentheses matter for collections: `(string | number)[]` is an array whose elements may use either type.
+Here's where unions get interesting. Try calling a string method:
+
+```typescript
+function shout(id: number | string) {
+  return id.toUpperCase();
+  //        ~~~~~~~~~~~ Property 'toUpperCase' does not exist
+  //                    on type 'number'.
+}
+```
+
+Fair enough: if `id` is a number, that would crash. With a union, you can only use what's valid for **every** member. Template strings and `===` work for both; `toUpperCase` doesn't.
+
+To use the string side, you first check which one you have. The checker follows your `if`:
+
+```typescript
+function shout(id: number | string): string {
+  if (typeof id === "string") {
+    return id.toUpperCase();     // here, id is a string
+  }
+  return String(id);             // here, id is a number
+}
+```
+
+That's [[narrowing]], and it's [the next big topic](node:narrowing).
+
+## Unions everywhere
+
+You've seen unions already, maybe without noticing:
+
+- `string | undefined`, for an [optional property](node:optional-properties).
+- `(string | number)[]`, for a mixed array.
+- `"queued" | "done"`, a union of exact values, coming up in [literal types](node:literal-types).
+
+```compare python
+OrderId = int | str
+```
+
+```compare kotlin
+// Kotlin has no ad-hoc unions; you'd write a sealed interface
+// with one class per case.
+```
 
 ```exercise
-goal: "Allow a numeric or textual identifier."
+goal: "`label(42)` is rejected because `id` only accepts strings. Allow numbers too."
 lang: typescript
 code: |
   function label(id: string): string {
@@ -42,17 +74,22 @@ code: |
   }
   console.log(label(42));
 checks:
-  - match: "id:\\s+string\\s+\\|\\s+number"
+  - match: 'id:\s*string\s*\|\s*number'
     message: "Use string | number for the id parameter."
-hint: "Use string | number for the id parameter."
+hint: Join the two types with a vertical bar.
+solution: |
+  function label(id: string | number): string {
+    return `Learner ${id}`;
+  }
+  console.log(label(42));
 ```
 
 ```quiz
-question: "What can you call on a union before narrowing?"
+question: "`value` has type `string | number`. Which of these compiles without any checks?"
 options:
-  - "Every method from either member."
-  - "Only operations safe for all possible members."
-  - "No operations at all."
-answer: 1
-explain: "The checker must know that an operation works for every remaining possibility."
+  - "`value.toUpperCase()`"
+  - "`value.toFixed(2)`"
+  - "`String(value)`"
+answer: 2
+explain: String() accepts both members. The methods only exist on one of them, so you'd need to narrow first.
 ```

@@ -5,48 +5,83 @@ branch: "modeling"
 requires: ["unions", "object-types"]
 summary: "Give useful shapes and combinations a reusable name."
 ---
-
-A [[type alias]] names a type expression:
+A [[type alias]] gives a name to any type. That's all it does, and it's used constantly.
 
 ```typescript
-type LearnerId = string | number;
-type Learner = { id: LearnerId; name: string };
-
-function display(learner: Learner): string {
-  return `${learner.id}: ${learner.name}`;
-}
-console.log(display({ id: 1, name: "Ada" }));
+type UserId = string;
+type Point = { x: number; y: number };
+type Status = "active" | "banned";
+type Callback = (error: Error | null) => void;
 ```
 
-Aliases can name objects, unions, tuples, primitives, and more complex transformations. They make repeated contracts easier to read and update.
+Each line is `type Name = <any type expression>`. After that, the name and the type are interchangeable.
 
-## Names do not create runtime objects
+## Three reasons to name a type
 
-`Learner` is not a constructor or a validator. It disappears during compilation. Calling `Learner(...)` would be an error unless you also separately defined a runtime value with that name.
+**1. Repetition.** If `{ x: number; y: number }` appears in ten signatures, a change means ten edits. With `Point`, it's one.
 
-An alias usually does not create a nominal distinction. If `LearnerId` and `CourseId` are both aliases of `string`, plain strings are compatible with both. A distinct brand requires an additional modeling technique and a trustworthy construction boundary.
+**2. Meaning.** Compare:
 
-Use a name when it expresses a real domain idea. Avoid aliases that merely rename a primitive everywhere without clarifying what values mean.
+```typescript
+function move(a: [number, number], b: number): [number, number];
+function move(position: Point, distance: Meters): Point;
+```
+
+The second one documents itself.
+
+**3. Complex types need names.** Unions, function types and the computed types later in this course get unreadable inline. Naming them breaks them into pieces.
+
+## A limit worth knowing
+
+An alias is **just a name**, not a new type. These two are interchangeable:
+
+```typescript
+type UserId = string;
+type OrderId = string;
+
+function cancelOrder(id: OrderId) { /* ... */ }
+
+const user: UserId = "u-17";
+cancelOrder(user);    // no error: both are just string
+```
+
+The checker sees two strings and is happy. If you need it to keep them apart, there's a pattern for that called "branded types": search for it once you're comfortable with [intersections](node:intersections).
+
+## Aliases or interfaces?
+
+For object types, there's also `interface`, which is the [next lesson](node:interfaces). They overlap a lot. A simple rule: use `type` for unions, functions and tuples (only aliases can do those), and pick one style for objects and stay consistent.
+
+```compare kotlin
+typealias UserId = String   // also just a name, not a new type
+```
+
+```compare go
+type UserID string   // in Go this IS a new, distinct type
+```
 
 ```exercise
-goal: "Make LearnerId accept text as well as numeric identifiers."
+goal: "The alias only allows numbers, but `\"ada\"` is a valid ID too. Make it accept strings as well."
 lang: typescript
 code: |
   type LearnerId = number;
   const id: LearnerId = "ada";
   console.log(id);
 checks:
-  - match: "type\\s+LearnerId\\s+=\\s+string\\s+\\|\\s+number;"
+  - match: 'type\s+LearnerId\s*=\s*string\s*\|\s*number;'
     message: "Define the alias as string | number."
-hint: "Define the alias as string | number."
+hint: Use a union, string first.
+solution: |
+  type LearnerId = string | number;
+  const id: LearnerId = "ada";
+  console.log(id);
 ```
 
 ```quiz
-question: Does `type Learner = ...` create a runtime validator?
+question: "`type Email = string`. Can you pass an `Email` where a plain `string` is expected?"
 options:
-  - Yes.
-  - No, it only names a static type.
-  - Only if exported.
-answer: 1
-explain: Type aliases are erased and do not create runtime behavior.
+  - Yes; an alias is just another name for the same type.
+  - No; it's a new type.
+  - Only after a cast.
+answer: 0
+explain: Aliases don't create new types. Email and string are completely interchangeable.
 ```

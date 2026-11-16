@@ -5,46 +5,85 @@ branch: "basics"
 requires: ["arrays"]
 summary: "Give each position its own type for a small fixed record."
 ---
-
-A [[tuple]] describes positions rather than one shared element type:
+An array type like `number[]` says "any number of numbers". Sometimes you mean something stricter: **exactly two things, in this order**. That's a [[tuple]]:
 
 ```typescript
-const point: [number, number] = [3, 4];
-const [x, y] = point;
-console.log(x + y); // 7
-
-const result: [name: string, score: number] = ["Ada", 42];
-console.log(result[1].toFixed(0));
+const point: [number, number] = [52.37, 4.89];
+const entry: [string, number] = ["Ada", 42];
 ```
 
-Labels document the positions but do not become runtime property names. A tuple is still a JavaScript array, so labels such as `name` do not create `result.name`.
+Each position has its own type, and the length is fixed:
 
-## Choose positions deliberately
+```typescript
+entry[0].toUpperCase();    // fine: position 0 is a string
+entry[1].toFixed(1);       // fine: position 1 is a number
+entry[2];
+//    ~ Tuple type '[string, number]' of length '2'
+//      has no element at index '2'.
+```
 
-Use tuples for compact, established pairs such as coordinates or a value and setter. If many positions have unclear meanings, a named object is often easier to use correctly.
+## You've already used tuples
 
-`readonly [number, number]` prevents assignment through that tuple reference. `Optional` and rest elements can describe more flexible argument lists, but an ordinary array is clearer when position does not carry distinct meaning.
+Ever written this in React?
 
-A plain `[3, 4]` without context usually infers `number[]`, not a two-element tuple. Supply an annotation or use a const assertion when fixed positions matter.
+```typescript
+const [count, setCount] = useState(0);
+```
+
+`useState` returns a tuple: the value first, the setter second. Tuples are perfect for functions that return a couple of values that callers immediately destructure and name themselves. `Object.entries` returns tuples too:
+
+```typescript
+const prices = { tea: 2, cake: 4 };
+for (const [item, price] of Object.entries(prices)) {
+  console.log(item.toUpperCase(), price.toFixed(2));
+}
+```
+
+## Labels make them readable
+
+Plain tuples don't say what each position means. Labels fix that, and they show up in your editor's hints:
+
+```typescript
+type Range = [start: number, end: number];
+
+function split(text: string): [head: string, rest: string] {
+  return [text.slice(0, 1), text.slice(1)];
+}
+```
+
+```tip
+Past two or three positions, a tuple gets hard to read: what was index 3 again? Switch to an [object type](node:object-types) with named properties.
+```
+
+```compare python
+entry: tuple[str, int] = ("Ada", 42)
+```
+
+```compare kotlin
+val entry: Pair<String, Int> = "Ada" to 42
+```
 
 ```exercise
-goal: "Use a tuple whose second position is a number."
+goal: "The second item is a number, but the tuple type says `string`. Fix the type."
 lang: typescript
 code: |
   const learner: [string, string] = ["Ada", 42];
   console.log(learner[1].toFixed(0));
 checks:
-  - match: "\\[string,\\s+number\\]"
+  - match: '\[string,\s*number\]'
     message: "Change the tuple type to [string, number]."
-hint: "Change the tuple type to [string, number]."
+hint: Each position gets its own type, in order.
+solution: |
+  const learner: [string, number] = ["Ada", 42];
+  console.log(learner[1].toFixed(0));
 ```
 
 ```quiz
-question: "Do labels in `[name: string, score: number]` create object properties?"
+question: "What's the difference between `[string, number]` and `(string | number)[]`?"
 options:
-  - Yes, result.name reads the first value.
-  - No, access is still positional.
-  - Only after compilation.
+  - They're the same type.
+  - The tuple has exactly two items with fixed positions; the array can hold any mix, any length.
+  - The array is faster.
 answer: 1
-explain: Tuple labels help readers and tooling; the runtime value remains an array.
+explain: A tuple fixes length and position types. The union array only says what kinds of items are allowed.
 ```

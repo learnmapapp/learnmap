@@ -5,43 +5,74 @@ branch: "narrowing"
 requires: ["narrowing", "optional-properties"]
 summary: "Handle missing values instead of silencing their types."
 ---
+Tony Hoare, who invented the null reference, later called it his "billion-dollar mistake". In JavaScript you get two of them: `null` and `undefined`. With [strict mode](node:tsconfig) on, TypeScript treats them as separate types, which **don't** sneak into other types. A `string` is always a real string. If it might be missing, the type says so:
 
-Under strict `null` checking, a possibly missing value must be handled before use:
+```typescript
+let nickname: string | null = null;     // explicitly "maybe nothing"
+```
+
+## Where they come from
+
+You often get a "maybe nothing" without writing it yourself:
+
+```typescript
+const user = users.find(u => u.id === 7);        // User | undefined
+const el = document.querySelector(".title");     // Element | null
+const port = process.env.PORT;                   // string | undefined
+```
+
+All three can fail to find something, and their types are honest about it. Trying to use the result directly is an error:
+
+```typescript
+console.log(user.name);
+//          ~~~~ 'user' is possibly 'undefined'.
+```
+
+## Your toolkit
+
+**Early return**, the cleanest option for functions:
 
 ```typescript
 function lengthOf(text: string | null): number {
   if (text === null) return 0;
-  return text.length;
+  return text.length;            // text: string from here on
 }
-console.log(lengthOf(null)); // 0
 ```
 
-`null` and `undefined` are separate types. A deliberate `value == null` check excludes both because of JavaScript's equality rules; explicit comparisons can be clearer when only one is relevant.
-
-## Convenience with a cost
-
-`Optional` chaining skips work on a nullish receiver:
+**Optional chaining `?.`** to read through a maybe-missing value. The result stays maybe-missing:
 
 ```typescript
-const settings: { label?: string } = {};
-const length = settings.label?.length ?? 0;
-console.log(length);
+const name = user?.name;                     // string | undefined
 ```
 
-The non-`null` assertion `value!` removes nullish possibilities from the static view without checking anything at runtime. Use a real guard when the value might actually be missing.
+**`??` for a default**, giving you a definite value:
 
-Do not treat absence as an error automatically. Sometimes a fallback is the right contract; sometimes the function should reject the missing input. Make that choice visible in code and in the return type.
+```typescript
+const port = Number(process.env.PORT ?? "3000");
+```
+
+**The `!` operator**, which tells the checker "trust me, it's there":
+
+```typescript
+const title = document.querySelector(".title")!;
+```
+
+Use `!` sparingly. It doesn't check anything at runtime. If you're wrong, you're back to `Cannot read properties of null`.
+
+```tip
+`== null` (two equals signs) matches both `null` and `undefined`. It's the one place where many style guides allow `==`.
+```
 
 ```compare kotlin
-fun lengthOf(text: String?): Int = text?.length ?: 0
+val length = text?.length ?: 0   // Kotlin's nullable types
 ```
 
-```compare javascript
-function lengthOf(text) { return text?.length ?? 0; }
+```compare rust
+// No null at all: Option<String> is Some(text) or None.
 ```
 
 ```exercise
-goal: Return zero when text is `null` before reading its length.
+goal: "`lengthOf(null)` crashes, because the check looks for an empty string instead of `null`. Return 0 for `null`."
 lang: typescript
 code: |
   function lengthOf(text: string | null): number {
@@ -50,17 +81,23 @@ code: |
   }
   console.log(lengthOf(null));
 checks:
-  - match: if\s+\(text\s+===\s+null\)\s+return\s+0;
-    message: Check text === null before the property access.
-hint: Check text === `null` before the property access.
+  - match: 'if\s*\(text\s*===\s*null\)\s*return\s+0;'
+    message: Check text === null before reading length.
+hint: Compare text with null instead of "".
+solution: |
+  function lengthOf(text: string | null): number {
+    if (text === null) return 0;
+    return text.length;
+  }
+  console.log(lengthOf(null));
 ```
 
 ```quiz
-question: What runtime check does `value!` perform?
+question: "What's the type of `user?.name` when `user` is `User | undefined` and `name` is a `string`?"
 options:
-  - It throws if the value is `null`.
-  - "`None`; it only changes the static view."
-  - It inserts a default object.
+  - "`string`"
+  - "`string | undefined`"
+  - "`User`"
 answer: 1
-explain: The non-`null` assertion is erased and offers no runtime protection.
+explain: "?. stops at a missing user and gives undefined, so the result can be either."
 ```

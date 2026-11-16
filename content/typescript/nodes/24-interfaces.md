@@ -5,40 +5,78 @@ branch: "modeling"
 requires: ["type-aliases"]
 summary: "Name object contracts and extend them with additional fields."
 ---
+An [[interface]] is another way to name an object type:
 
-An [[interface]] names an object contract. Interfaces can extend other interfaces:
+```typescript
+interface User {
+  id: string;
+  name: string;
+}
+```
+
+That's equivalent to `type User = { id: string; name: string }`. So why have both? Interfaces have two abilities aliases don't share. Let's build up a small model to see them.
+
+## Ability 1: `extends`
+
+Interfaces can build on each other:
 
 ```typescript
 interface Named {
   name: string;
 }
-interface Learner extends Named {
-  score: number;
+
+interface User extends Named {
+  id: string;
 }
-const learner: Learner = { name: "Ada", score: 42 };
-console.log(learner.name);
+
+interface Admin extends User {
+  permissions: string[];
+}
 ```
 
-A type alias can express a similar object shape. Interfaces emphasize object contracts; aliases can also express unions and other type expressions that interfaces do not directly name.
+An `Admin` must have `name`, `id` and `permissions`. If a child tries to change an inherited property to something incompatible, you get an error at the declaration, which is a helpful early warning. (Aliases get the same combination with `&`, see [intersections](node:intersections).)
 
-## Declaration merging
+## Ability 2: declaration merging
 
-Interfaces with the same name in the same relevant scope can merge. This supports extending some library contracts, but accidental duplicate declarations can also enlarge a contract unexpectedly. A type alias cannot be reopened in the same way.
+Declare the same interface twice and the two are merged:
 
-Choose the form that best fits the contract and the project's conventions. Do not assume using an interface makes an object nominal or changes its JavaScript representation. The checker still compares ordinary object shapes structurally.
-
-A class can declare that it implements an interface, but the interface itself does not contain executable method implementations.
-
-```compare go
-type Speaker interface { Speak(name string) string }
+```typescript
+interface User { id: string }
+interface User { email: string }
+// User now has id AND email
 ```
+
+In your own code, that's usually a surprise rather than a feature. It exists so libraries can be extended. For example, adding a property to the browser's `Window`:
+
+```typescript
+declare global {
+  interface Window {
+    analytics: { track(event: string): void };
+  }
+}
+```
+
+## So which one?
+
+| | `interface` | `type` |
+| --- | --- | --- |
+| Object shapes | ✅ | ✅ |
+| Unions, tuples, function types | ❌ | ✅ |
+| `extends` | ✅ | use `&` |
+| Merges duplicate declarations | ✅ | ❌, it's an error |
+
+The TypeScript team's own advice: use `interface` for object shapes until you need something only `type` can do. Plenty of teams use `type` everywhere, and that's fine too. Consistency matters more than the choice.
 
 ```compare java
-interface Speaker { String speak(String name); }
+interface Admin extends User { List<String> permissions(); }
+```
+
+```compare go
+type Admin struct { User; Permissions []string }  // embedding
 ```
 
 ```exercise
-goal: "Extend Named so Learner also requires a name."
+goal: "The learner object has a `name`, but `Learner` doesn't require one. Make `Learner` extend `Named`."
 lang: typescript
 code: |
   interface Named { name: string; }
@@ -46,17 +84,22 @@ code: |
   const learner: Learner = { name: "Ada", score: 42 };
   console.log(learner.name);
 checks:
-  - match: "interface\\s+Learner\\s+extends\\s+Named\\s+\\{"
+  - match: 'interface\s+Learner\s+extends\s+Named\s*\{'
     message: "Use interface Learner extends Named."
-hint: "Use interface Learner extends Named."
+hint: extends goes between the interface name and the opening brace.
+solution: |
+  interface Named { name: string; }
+  interface Learner extends Named { score: number; }
+  const learner: Learner = { name: "Ada", score: 42 };
+  console.log(learner.name);
 ```
 
 ```quiz
-question: "Which type declaration can be reopened through declaration merging?"
+question: "Which of these can only be written with `type`, not `interface`?"
 options:
-  - "An interface."
-  - "Every type alias."
-  - "Only a primitive literal."
-answer: 0
-explain: "Compatible interface declarations can merge; a type alias cannot be reopened that way."
+  - "An object with a name property"
+  - "`\"on\" | \"off\"`"
+  - An object that extends another object type
+answer: 1
+explain: Interfaces only describe object shapes. Unions need a type alias.
 ```

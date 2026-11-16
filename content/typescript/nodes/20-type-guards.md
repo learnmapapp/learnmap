@@ -5,30 +5,84 @@ branch: "narrowing"
 requires: ["unknown", "function-types"]
 summary: "Package a runtime test as a precise narrowing predicate."
 ---
+Narrowing works inline. But what happens when you move a check into a helper function?
 
-A user-defined [[type guard]] returns a boolean with a type predicate describing what a successful result proves:
+```typescript
+function isText(value: unknown): boolean {
+  return typeof value === "string";
+}
+
+function shout(value: unknown) {
+  if (isText(value)) {
+    return value.toUpperCase();
+    //     ~~~~~ 'value' is of type 'unknown'.
+  }
+}
+```
+
+The checker only sees that `isText` returns a `boolean`. It doesn't look inside, so it doesn't know what `true` means.
+
+## The fix: say what `true` means
+
+A [[type predicate]] replaces `boolean` in the return type:
 
 ```typescript
 function isText(value: unknown): value is string {
   return typeof value === "string";
 }
-const values: unknown[] = ["Ada", 42, "Grace"];
-const names = values.filter(isText);
-console.log(names.map(name => name.toUpperCase()));
 ```
 
-The result is a `string[]` because the predicate narrows each retained item. Modern TypeScript can infer some simple predicates, but an explicit predicate makes a public guard's intent visible.
+`value is string` reads as: "if this returns true, `value` is a string". Now the helper narrows just like an inline check:
 
-## A predicate is a promise
+```typescript
+if (isText(value)) {
+  value.toUpperCase();          // value: string
+}
+```
 
-The checker trusts the declared relationship; it does not prove that your implementation checked every property. An incorrect guard can make unsafe operations appear valid.
+Functions like this are called [[type guard]]s.
 
-For an object guard, check that the value is non-`null`, has the required keys, and contains compatible values. Test both accepted and rejected inputs. A guard for a class-like shape does not establish prototype identity unless that is what the code actually tests.
+## It works with `filter` too
 
-Use guards for a clear reusable check; use a decoder when you also need detailed validation errors or normalization.
+This is where predicates really pay off:
+
+```typescript
+const mixed: unknown[] = ["Ada", 42, "Grace"];
+
+// Before TypeScript 5.5 this gave unknown[]:
+mixed.filter(v => typeof v === "string");
+mixed.filter(isText);                        // string[]
+```
+
+Recent TypeScript versions (5.5+) can infer simple predicates like that arrow function by themselves. Writing one explicitly is still the way for anything the checker can't work out.
+
+## Guards for your own types
+
+```typescript
+type Cat = { meow(): void };
+type Dog = { bark(): void };
+
+function isCat(pet: Cat | Dog): pet is Cat {
+  return "meow" in pet;
+}
+```
+
+```warn
+The checker trusts your predicate completely. If `isCat` returned `true` for dogs, nothing would catch it. Keep guard functions small and obviously correct.
+```
+
+```compare kotlin
+// Kotlin contracts do the same:
+// contract { returns(true) implies (value is String) }
+```
+
+```compare python
+from typing import TypeGuard
+def is_text(value: object) -> TypeGuard[str]: ...
+```
 
 ```exercise
-goal: "Declare the narrowing relationship in the guard return type."
+goal: "`isText` returns a plain `boolean`, so it doesn't narrow. Change its return type to a type predicate."
 lang: typescript
 code: |
   function isText(value: unknown): boolean {
@@ -37,17 +91,23 @@ code: |
   const values: unknown[] = ["Ada", 42];
   console.log(values.filter(isText));
 checks:
-  - match: ":\\s+value\\s+is\\s+string\\s+\\{"
-    message: "Return value is string as the predicate type."
-hint: "Return value is string as the predicate type."
+  - match: ':\s*value\s+is\s+string\s*\{'
+    message: "Use value is string as the return type."
+hint: "The predicate is written value is string."
+solution: |
+  function isText(value: unknown): value is string {
+    return typeof value === "string";
+  }
+  const values: unknown[] = ["Ada", 42];
+  console.log(values.filter(isText));
 ```
 
 ```quiz
-question: "Does TypeScript prove that a custom type predicate validates every promised field?"
+question: "What does the return type `x is Date` promise?"
 options:
-  - "Yes."
-  - "No, the implementation must uphold that contract."
-  - "Only for exported functions."
+  - That x is converted to a Date.
+  - That if the function returns true, x is a Date.
+  - That the function always returns a Date.
 answer: 1
-explain: "A declared type predicate is trusted, so incomplete guard logic can be unsound."
+explain: A predicate links the boolean result to the type of the parameter. The checker trusts it.
 ```

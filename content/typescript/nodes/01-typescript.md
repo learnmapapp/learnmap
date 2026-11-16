@@ -6,28 +6,92 @@ requires: []
 summary: "JavaScript plus a static checker, not a different runtime."
 kind: "hub"
 ---
+Here's a bug that has shipped to production a thousand times:
 
-TypeScript checks JavaScript-shaped programs before they run. It can catch a missing property, a wrong argument, or an unhandled state while you are still editing.
+```javascript
+function greet(user) {
+  return "Hello, " + user.name.toUpperCase();
+}
 
-```typescript
-const learner: string = "Ada";
-console.log(learner.toUpperCase()); // ADA
+greet({ nmae: "Ada" });
+// TypeError: Cannot read properties of undefined
 ```
 
-The annotation after `learner` describes a [[static type]]. The emitted JavaScript has no `: string`: browsers and JavaScript runtimes execute the resulting program, not the type annotation.
+JavaScript only finds out when that line runs, maybe in front of a customer. Here's the same code in TypeScript:
 
-## Know the boundary
+```typescript title=greet.ts
+type User = { name: string };
 
-Types describe assumptions; they do not inspect a server response or make a failing operation succeed. Data from outside your program still needs runtime validation. We will build that boundary in [JSON validation](node:json-validation).
+function greet(user: User): string {
+  return "Hello, " + user.name.toUpperCase();
+}
 
-Basic JavaScript knowledge helps: variables, functions, objects, and arrays still behave like JavaScript. Start with [the toolchain](node:toolchain), or pick a goal for a smaller route. Exercises here check your text rather than running a compiler. Use the local checker to experiment, with the [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/intro.html) as a reference.
+greet({ nmae: "Ada" });
+//      ~~~~ Object literal may only specify known properties,
+//           and 'nmae' does not exist in type 'User'.
+```
+
+Your editor underlines the typo **as you type it**. That's TypeScript in one sentence: **JavaScript, plus a checker that reads your code and points out mistakes before it runs.**
+
+## Three things to know up front
+
+- **It's still JavaScript.** Every JavaScript feature works. The `: string` and `type User` bits are additions, and the compiler strips them out, leaving plain JavaScript that runs anywhere JavaScript does.
+- **Types are a design tool.** Writing `type User = { name: string }` documents what your function expects, and the checker keeps that documentation honest.
+- **Types vanish at runtime.** The checker only knows what you told it. Data from a server or a form can still be anything; the [Runtime boundaries](node:json-validation) branch shows how to handle that.
+
+## How this map works
+
+Start with [the toolchain](node:toolchain) to get the checker running on your machine. If you'd rather not install anything yet, paste the examples into the [TypeScript playground](https://www.typescriptlang.org/play), which shows the errors right in the browser. Then the branches cover:
+
+- **Values and shapes**: annotating variables, arrays and objects.
+- **Functions**: typing parameters, callbacks and return values.
+- **Narrowing safely** and **Modeling data**: the parts that make TypeScript really pay off.
+- **Reusable types**: generics, and types computed from other types.
+- **Classes**, **Project tooling** and **Runtime boundaries**: using it in a real codebase.
+
+You'll want to know basic JavaScript: variables, functions, objects, arrays and arrow functions. The exercises are checked here in the browser by pattern, without running a compiler.
+
+```compare python
+# Python type hints are similar in spirit: optional annotations
+# that a separate checker (mypy, pyright) verifies.
+```
+
+```compare java
+// Java checks types too, but at compile time it also decides how
+// the program runs. TypeScript's types are erased completely.
+```
+
+```exercise
+goal: "The checker flags the typo in this call. Fix the property name."
+lang: typescript
+code: |
+  type User = { name: string };
+
+  function greet(user: User): string {
+    return "Hello, " + user.name.toUpperCase();
+  }
+
+  greet({ nmae: "Ada" });
+checks:
+  - match: 'greet\(\{\s*name:\s*"Ada"\s*\}\)'
+    message: Spell the property as name.
+hint: Compare the property in the call with the one in type User.
+solution: |
+  type User = { name: string };
+
+  function greet(user: User): string {
+    return "Hello, " + user.name.toUpperCase();
+  }
+
+  greet({ name: "Ada" });
+```
 
 ```quiz
-question: "What happens to most type annotations in emitted JavaScript?"
+question: "What happens to `: string` annotations when TypeScript compiles to JavaScript?"
 options:
-  - "They become automatic runtime validators."
-  - "They are removed."
-  - "They make all values immutable."
+  - They become runtime checks that throw on bad values.
+  - They're removed; the output is plain JavaScript.
+  - They're kept as comments.
 answer: 1
-explain: "Most type syntax is erased. Checking external data remains runtime work."
+explain: Types exist for the checker and your editor. The JavaScript that runs has none of them.
 ```

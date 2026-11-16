@@ -5,34 +5,76 @@ branch: "objects"
 requires: ["classes", "structural-typing"]
 summary: "Use implements as a verification step, not an implementation generator."
 ---
+You know from [structural typing](node:structural-typing) that a class fits an interface just by having the right shape. So what's `implements` for? It moves the error to a better place.
 
-A class can declare that its instances satisfy an interface:
+Watch where the error lands **without** it:
 
 ```typescript
-interface Speaker {
-  speak(name: string): string;
+interface Notifier {
+  send(to: string, message: string): Promise<void>;
 }
-class Greeter implements Speaker {
-  speak(name: string): string {
-    return `Hello, ${name}`;
-  }
+
+class EmailNotifier {
+  async sned(to: string, message: string) { /* ... */ }  // typo
 }
-const speaker: Speaker = new Greeter();
-console.log(speaker.speak("Ada"));
+
+// 200 lines later, in another file:
+const notifier: Notifier = new EmailNotifier();
+//    ~~~~~~~~ Property 'send' is missing in type 'EmailNotifier'.
 ```
 
-`implements` checks the resulting instance shape. It does not provide method bodies or automatically copy parameter annotations into the class implementation.
+The error appears where the class is **used**, maybe in someone else's code. Now **with** it:
 
-## Instance and constructor sides
+```typescript
+class EmailNotifier implements Notifier {
+//    ~~~~~~~~~~~~~ Class 'EmailNotifier' incorrectly implements
+//                  interface 'Notifier'.
+  async sned(to: string, message: string) { /* ... */ }
+}
+```
 
-The interface above describes instances, not the class's constructor or its static members. A factory needing `new` support should use a constructor signature, separately from the instance contract.
+The error is right on the class, where the typo is. `implements` is a promise you make up front: "this class is a `Notifier`", and the checker holds you to it.
 
-In ordinary structural cases, a compatible class can satisfy the same interface even without an explicit `implements` clause. Writing it still makes intent visible and catches a missing member at the class declaration.
+## A swappable design
 
-Keep interface contracts focused on behavior the caller needs. A class with extra methods can still be used through a smaller interface, reducing coupling to its implementation details.
+Interfaces shine when several classes can play the same role:
+
+```typescript
+class SmsNotifier implements Notifier {
+  async send(to: string, message: string) { /* ... */ }
+}
+
+class FakeNotifier implements Notifier {
+  sent: string[] = [];
+  async send(to: string, message: string) {
+    this.sent.push(`${to}: ${message}`);
+  }
+}
+
+function welcome(user: { email: string }, notifier: Notifier) {
+  return notifier.send(user.email, "Welcome aboard!");
+}
+```
+
+`welcome` doesn't care which one it gets. In tests, pass the `FakeNotifier` and check `sent`.
+
+## Two things `implements` doesn't do
+
+- **It doesn't add any code.** It only checks. You still write every method yourself.
+- **It doesn't type the parameters for you.** Each method in the class needs its own annotations.
+
+A class can implement several interfaces: `class X implements A, B`.
+
+```compare java
+class EmailNotifier implements Notifier { ... }  // required in Java
+```
+
+```compare go
+// Go has no implements keyword at all; fitting the shape is enough.
+```
 
 ```exercise
-goal: "State that Greeter implements the Speaker interface."
+goal: "`Greeter` fits `Speaker` by accident. Declare it, so the checker will catch future mistakes on the class itself."
 lang: typescript
 code: |
   interface Speaker { speak(name: string): string; }
@@ -41,17 +83,23 @@ code: |
   }
   console.log(new Greeter().speak("Ada"));
 checks:
-  - match: "class\\s+Greeter\\s+implements\\s+Speaker\\s+\\{"
+  - match: 'class\s+Greeter\s+implements\s+Speaker\s*\{'
     message: "Add implements Speaker after the class name."
-hint: "Add implements Speaker after the class name."
+hint: implements goes between the class name and the brace.
+solution: |
+  interface Speaker { speak(name: string): string; }
+  class Greeter implements Speaker {
+    speak(name: string): string { return `Hello, ${name}`; }
+  }
+  console.log(new Greeter().speak("Ada"));
 ```
 
 ```quiz
-question: "Does implements fill in method bodies or infer all implementation parameters?"
+question: "What's the main benefit of `implements` in TypeScript?"
 options:
-  - "Yes, both."
-  - "No, the class must supply its implementation and annotations."
-  - "It generates an abstract runtime class."
+  - Without it, a class can't be used where the interface is expected.
+  - Mismatches are reported on the class itself, instead of where it's used.
+  - It generates the methods from the interface.
 answer: 1
-explain: "implements checks the instance contract; it does not generate the implementation."
+explain: Structural typing already lets the class fit. implements moves the check to the class declaration.
 ```

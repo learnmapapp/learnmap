@@ -5,46 +5,87 @@ branch: "tooling"
 requires: ["satisfies", "utility-types", "functions"]
 summary: "Keep positive examples and deliberate negative checks next to an API."
 ---
+Normal tests check what code **does**. Sometimes you also want to test what the checker **refuses**: "calling `double` with a string must stay an error". That sounds odd, but it matters for library code and shared helper types, where a loosened type would silently let bugs through.
 
-A type contract can have regression checks just like runtime behavior:
+## Red, then green
+
+**Red:** write the call that should be rejected, and mark it:
 
 ```typescript
-function double(value: number): number { return value * 2; }
-const valid: number = double(21);
-// @ts-expect-error text must remain invalid
-const invalid = double("21");
-console.log(valid, invalid);
+function double(value: number): number {
+  return value * 2;
+}
+
+// @ts-expect-error: strings must be rejected
+double("21");
 ```
 
-`@ts-expect-error` requires the next line to produce a checking error. If a future change accidentally allows the call, the directive itself becomes an error. Keep its scope narrow and explain the intended rejection.
+`@ts-expect-error` says "the next line **must** have a type error". Right now it does, so the check passes. ✅
 
-## Two kinds of evidence
+**Now someone loosens the type:**
 
-Run these checks with `tsc --noEmit`. Unlike type checking, runtime tests execute behavior: parsing, computation, and error handling still need real tests.
+```typescript
+function double(value: number | string): number {
+  return Number(value) * 2;
+}
 
-Do not use `@ts-expect-error` as a permanent substitute for understanding an application error. In a dedicated negative test it records an intentional contract boundary; in production logic it may hide a broken assumption.
+// @ts-expect-error: strings must be rejected
+double("21");
+// error: Unused '@ts-expect-error' directive.
+```
 
-`satisfies` is useful for positive fixture checks. A value satisfying one broad shape does not prove two arbitrary types are identical, so use a deliberate testing strategy for complicated generic relationships.
+There's no error on that line any more, so the **directive itself** becomes an error. The test fails. That's the point.
+
+## Its dangerous cousin: `@ts-ignore`
+
+`@ts-ignore` silences the next line whether or not it has an error. If the error goes away, nothing tells you, and if a different error appears, that's hidden too. Prefer `@ts-expect-error` everywhere, including when you're temporarily silencing a real problem: you'll be told when it's fixed.
+
+## Checking exact types
+
+To check that a type is **exactly** right, test frameworks have helpers. Vitest ships `expectTypeOf`:
+
+```typescript
+import { expectTypeOf, test } from "vitest";
+
+test("first keeps the element type", () => {
+  expectTypeOf(first(["a", "b"])).toEqualTypeOf<string | undefined>();
+});
+```
+
+These run as part of the normal type check, so `tsc --noEmit` in CI catches regressions.
+
+```compare python
+# mypy has a similar idea: # type: ignore[code] plus
+# --warn-unused-ignores to report ignores that aren't needed.
+```
+
+```compare rust
+// compile_fail doctests check that a snippet doesn't compile.
+```
 
 ```exercise
-goal: "Require the following bad call to keep producing a type error."
+goal: "`@ts-ignore` wouldn't notice if strings started being accepted. Use the directive that requires an error."
 lang: typescript
 code: |
   function double(value: number): number { return value * 2; }
   // @ts-ignore strings are intentionally rejected
   double("21");
 checks:
-  - match: "//\\s+@ts\\-expect\\-error"
+  - match: '//\s*@ts-expect-error'
     message: "Use @ts-expect-error instead of @ts-ignore."
-hint: "Use @ts-expect-error instead of @ts-ignore."
+hint: Its name says it expects an error.
+solution: |
+  function double(value: number): number { return value * 2; }
+  // @ts-expect-error strings are intentionally rejected
+  double("21");
 ```
 
 ```quiz
-question: "What happens if the next line no longer errors after @ts-expect-error?"
+question: "What happens when a line under `// @ts-expect-error` has no type error?"
 options:
-  - "The directive reports an unused expectation."
-  - "The compiler silently ignores it forever."
-  - "The line is deleted from runtime code."
-answer: 0
-explain: "An unused expect-error directive fails checking, making negative tests sensitive to contract changes."
+  - Nothing.
+  - The directive is reported as unused, which is an error.
+  - The line is skipped at runtime.
+answer: 1
+explain: That's what makes it useful as a test.
 ```

@@ -5,35 +5,78 @@ branch: "modeling"
 requires: ["literal-types", "narrowing", "object-types"]
 summary: "Keep each state and its valid data together."
 ---
-
-A [[discriminated union]] uses a shared property whose literal value identifies each variant:
+**The problem.** You're loading data, and the state looks like this:
 
 ```typescript
-type LoadState =
-  | { status: "loading" }
-  | { status: "ready"; names: string[] }
-  | { status: "failed"; message: string };
-
-function describe(state: LoadState): string {
-  switch (state.status) {
-    case "loading": return "Loading";
-    case "ready": return state.names.join(", ");
-    case "failed": return state.message;
-  }
-}
-console.log(describe({ status: "ready", names: ["Ada"] }));
+type Request = {
+  loading: boolean;
+  data?: string[];
+  error?: string;
+};
 ```
 
-Checking `status` narrows the entire object, including which other properties are available. A loading state does not need a fake empty result or error string.
+Count the combinations: `loading: true` with an `error`? `data` **and** `error` both set? Nothing set at all? That type allows eight combinations, and only three of them make sense. Every component reading it has to guess.
 
-## Model valid combinations
+**The fix.** List the states that are actually possible, each with a tag that says which one it is:
 
-An object with unrelated `loading`, `error`, and `data` properties can represent contradictory combinations. A union makes the supported states explicit and gives each state only its relevant data.
+```typescript
+type Request =
+  | { status: "loading" }
+  | { status: "success"; data: string[] }
+  | { status: "error"; message: string };
+```
 
-Keep the discriminator available when narrowing. Storing loosely related fields in separate variables can obscure their relationship. This pattern works well for async results, editor modes, and commands with different payloads.
+That's a [[discriminated union]]. `status` is the **discriminant**: a property with a different [literal type](node:literal-types) in each member. Impossible states are now impossible to write:
+
+```typescript
+const r: Request = { status: "success", message: "?" };
+//                                      ~~~~~~~ Object literal
+//                 may only specify known properties.
+```
+
+## Checking the tag narrows the whole object
+
+```typescript
+function render(r: Request): string {
+  if (r.status === "loading") {
+    return "Loading...";
+  }
+  if (r.status === "error") {
+    return `Failed: ${r.message}`;       // message exists here
+  }
+  return r.data.join(", ");              // only success is left
+}
+```
+
+Try reading `r.data` inside the error branch and the checker stops you, because errors don't have data.
+
+A `switch` on the tag reads well when there are many cases:
+
+```typescript
+switch (r.status) {
+  case "loading": return "Loading...";
+  case "error":   return `Failed: ${r.message}`;
+  case "success": return r.data.join(", ");
+}
+```
+
+```tip
+Any property name works as the tag: `kind`, `type` and `status` are common. It just needs a literal type in every member.
+```
+
+```compare kotlin
+sealed interface Request
+object Loading : Request
+data class Success(val data: List<String>) : Request
+data class Failure(val message: String) : Request
+```
+
+```compare rust
+enum Request { Loading, Success(Vec<String>), Error(String) }
+```
 
 ```exercise
-goal: "Read the successful payload only in the ready variant."
+goal: "This code reads `value` in the failed case, and `message` in the ready one. Check for `\"ready\"` instead."
 lang: typescript
 code: |
   type Result = { status: "ready"; value: number } | { status: "failed"; message: string };
@@ -42,17 +85,23 @@ code: |
     return result.message;
   }
 checks:
-  - match: "result\\.status\\s+===\\s+\"ready\""
-    message: "Narrow the ready variant before reading value."
-hint: "Narrow the ready variant before reading value."
+  - match: 'result\.status\s*===\s*"ready"'
+    message: "Narrow to the ready variant before reading value."
+hint: Change the string the status is compared with.
+solution: |
+  type Result = { status: "ready"; value: number } | { status: "failed"; message: string };
+  function describe(result: Result): string {
+    if (result.status === "ready") return String(result.value);
+    return result.message;
+  }
 ```
 
 ```quiz
-question: "What makes status a discriminator here?"
+question: "What makes a union *discriminated*?"
 options:
-  - "Every variant has a distinct literal value for it."
-  - "Its name must literally be status."
-  - "It is always a boolean."
-answer: 0
-explain: "A shared property with distinct literal types lets the checker identify a variant."
+  - Every member is a class.
+  - Every member has a shared property with a different literal type.
+  - The union has exactly two members.
+answer: 1
+explain: The shared literal property, such as status, tells the checker which member it's looking at.
 ```

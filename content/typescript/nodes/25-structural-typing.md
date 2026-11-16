@@ -5,47 +5,96 @@ branch: "modeling"
 requires: ["interfaces"]
 summary: "Compatibility depends on the required shape, not a matching declaration name."
 ---
-
-TypeScript generally uses [[structural typing]]. An object is compatible when it supplies the required members:
+If you're coming from Java, C# or Kotlin, this lesson might change how you think about types. Here's a little experiment:
 
 ```typescript
-interface Named { name: string; }
-function greet(value: Named): string {
-  return `Hello, ${value.name}`;
+interface Duck {
+  quack(): string;
 }
-const learner = { name: "Ada", score: 42 };
-console.log(greet(learner));
+
+class Robot {
+  quack() { return "BEEP. QUACK."; }
+}
+
+function listen(duck: Duck) {
+  console.log(duck.quack());
+}
+
+listen(new Robot());                         // fine!
+listen({ quack: () => "quack?" });           // also fine!
 ```
 
-The extra `score` does not invalidate this stored value. The caller has the required `name` property of the correct type.
+`Robot` never mentions `Duck`. There's no `implements`. And yet it's accepted. **Why?**
 
-## Fresh literals get extra scrutiny
+## Types are shapes, not names
 
-A fresh literal passed directly to a narrower parameter may receive an excess-property check. That helps find typos; it is not a guarantee that all accepted objects have only those keys.
+TypeScript's check is: "does this value have everything `Duck` needs?" `Robot` has a `quack()` method returning a string, so it fits. This is [[structural typing]]: compatibility is decided by structure. Java and Kotlin use *nominal* typing, where a class only fits an interface it declares.
 
-Private and protected class members introduce additional compatibility rules. Structural typing describes much of the everyday model, not every special case in the language.
+It fits JavaScript well, because most JavaScript objects are plain literals that were never declared as any class.
 
-Design small contracts around what a function actually needs. A formatting function needing only a name should not require a full database record merely because one caller happens to have one. This improves reuse and makes small test values easy to construct.
+## A consequence: ask for less
+
+Since anything with the right shape fits, a function should ask only for the properties it actually uses:
+
+```typescript
+// Demands a whole User, but reads one field.
+function greet(user: User) {
+  return `Hi ${user.name}`;
+}
+
+// Works with users, admins, authors, pets...
+function greet(thing: { name: string }) {
+  return `Hi ${thing.name}`;
+}
+```
+
+The second version is easier to call and easier to test: no need to construct a full `User` in a test.
+
+## And one risk
+
+Two unrelated types with the same shape are interchangeable, even when you'd prefer they weren't:
+
+```typescript
+type Celsius = { value: number };
+type Fahrenheit = { value: number };
+
+const temp: Celsius = { value: 21 };
+const oops: Fahrenheit = temp;   // fine, as far as the checker knows
+```
+
+Usually that's harmless. When it matters, add a distinguishing property, such as `unit: "C"`, to make the shapes differ.
+
+```compare java
+// Nominal: Robot must declare "implements Duck" to be accepted.
+```
+
+```compare go
+// Go interfaces are structural too: no "implements" keyword.
+```
 
 ```exercise
-goal: "Require only the property that greet actually reads."
+goal: "`greet` only reads `name`, but `Named` also demands a `score`, so the call fails. Ask only for what's used."
 lang: typescript
 code: |
   interface Named { name: string; score: number; }
   function greet(value: Named): string { return `Hello, ${value.name}`; }
   console.log(greet({ name: "Ada" }));
 checks:
-  - match: "interface\\s+Named\\s*\\{\\s*name:\\s*string;\\s*\\}"
-    message: "Remove the unnecessary score requirement from Named."
-hint: "Remove the unnecessary score requirement from Named."
+  - match: 'interface\s+Named\s*\{\s*name:\s*string;\s*\}'
+    message: "Remove the score requirement from Named."
+hint: Delete the property greet never reads.
+solution: |
+  interface Named { name: string; }
+  function greet(value: Named): string { return `Hello, ${value.name}`; }
+  console.log(greet({ name: "Ada" }));
 ```
 
 ```quiz
-question: "Why can a stored `{ name, score }` object be passed to a parameter requiring `{ name: string }`?"
+question: "A class `Printer` has a method `print(): void`, and doesn't mention any interface. Can it be passed where `interface Printable { print(): void }` is expected?"
 options:
-  - It supplies the required compatible shape.
-  - The extra field is deleted.
-  - All objects are implicitly any.
-answer: 0
-explain: Additional properties can remain present; compatibility checks the required members.
+  - No; it must say implements Printable.
+  - Yes; it has the right shape.
+  - Only if it extends Printable.
+answer: 1
+explain: TypeScript compares structure. Matching members are enough.
 ```

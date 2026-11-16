@@ -5,31 +5,58 @@ branch: "basics"
 requires: ["optional-properties", "arrays"]
 summary: "Restrict mutation through a reference without claiming a deep freeze."
 ---
+Ever passed an array to a helper function, only to find it was sorted in place afterwards? `readonly` lets a function **promise** not to do that.
 
-`readonly` prevents writes through a typed property or array reference:
+```typescript
+function topThree(scores: readonly number[]): number[] {
+  return [...scores].sort((a, b) => b - a).slice(0, 3);
+}
+```
+
+Inside the function, any attempt to change the array is an error:
+
+```typescript
+function cheat(scores: readonly number[]) {
+  scores.push(100);
+  //     ~~~~ Property 'push' does not exist on type
+  //          'readonly number[]'.
+  scores.sort();
+  //     ~~~~ Property 'sort' does not exist ...
+}
+```
+
+`map`, `filter`, `slice` and other non-changing methods are all still there. Callers can pass a normal array; it's the **function** that gave up the right to change it.
+
+## Readonly properties
+
+Properties can be `readonly` too:
 
 ```typescript
 type Point = { readonly x: number; readonly y: number };
-const point: Point = { x: 3, y: 4 };
 
-function total(values: readonly number[]): number {
-  return values.reduce((sum, value) => sum + value, 0);
-}
-console.log(point.x, total([1, 2, 3]));
+const p: Point = { x: 3, y: 4 };
+p.x = 10;
+//^ Cannot assign to 'x' because it is a read-only property.
 ```
 
-A function accepting a `readonly` array promises not to mutate it through that parameter. Both mutable arrays and `readonly` arrays can be passed to it.
+To "change" one, make a new object: `const moved = { ...p, x: 10 }`. This style of update is everywhere in React and Redux.
 
-## Compile-time restrictions
+## Three things `readonly` doesn't do
 
-`const` prevents rebinding the variable, while `readonly` restricts writes through a type. Neither automatically freezes runtime objects. Another mutable alias may still be able to change the same object.
+1. **It doesn't freeze anything at runtime.** It's a type-level rule; the JavaScript output is ordinary. Use `Object.freeze` if you need a runtime guarantee.
+2. **It's shallow.** A `readonly` property that holds an array stops you **replacing** the array, not pushing into it. You'd need `readonly string[]` for that too.
+3. **It isn't `const`.** `const` stops a variable from being reassigned. `readonly` stops writes to properties or elements. A `const` array can still be pushed to.
 
-Readonly is also shallow by default. A `readonly` property containing a mutable array prevents replacing that array reference, but not necessarily pushing into the array. Describe nested levels separately when that distinction matters.
+```compare kotlin
+fun topThree(scores: List<Int>)   // Kotlin's List is read-only
+```
 
-Return a new object or array for an update rather than forcing a `readonly` value back into a mutable type with an assertion.
+```compare rust
+fn top_three(scores: &[u32])       // a shared borrow can't mutate
+```
 
 ```exercise
-goal: Accept a `readonly` array without requiring mutable access.
+goal: "`total` doesn't change the array, but its parameter type is mutable, so the `readonly` array can't be passed. Make the parameter `readonly`."
 lang: typescript
 code: |
   function total(values: number[]): number {
@@ -38,17 +65,23 @@ code: |
   const values: readonly number[] = [1, 2];
   console.log(total(values));
 checks:
-  - match: function\s+total\(\s*values:\s*readonly\s+number\[\]
+  - match: 'function\s+total\(\s*values:\s*readonly\s+number\[\]'
     message: Add readonly to the parameter array type.
-hint: Add `readonly` to the parameter array type.
+hint: Put readonly in front of number[] in the signature.
+solution: |
+  function total(values: readonly number[]): number {
+    return values.reduce((sum, value) => sum + value, 0);
+  }
+  const values: readonly number[] = [1, 2];
+  console.log(total(values));
 ```
 
 ```quiz
-question: Does `readonly` automatically call `Object.freeze` at runtime?
+question: "`const list: string[] = []`. Is `list.push(\"a\")` allowed?"
 options:
-  - Yes.
-  - No, it is a static restriction.
-  - Only for arrays.
+  - No, list is const.
+  - Yes; const prevents reassigning list, not changing the array.
+  - Only inside a function.
 answer: 1
-explain: Readonly type syntax restricts checked access; it does not implement runtime freezing.
+explain: const is about the variable binding. To stop changes to the array itself, use readonly string[].
 ```

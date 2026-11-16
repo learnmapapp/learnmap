@@ -5,52 +5,80 @@ branch: "functions"
 requires: ["functions"]
 summary: "Treat callbacks as values with their own call signatures."
 ---
+JavaScript passes functions around all the time: callbacks, event handlers, `map`, `filter`. So TypeScript needs a way to describe a function **as a type**. It looks like an arrow function without a body:
 
-Functions are values, so their types can describe arguments and results independently of an implementation:
+```typescript
+type Transform = (value: number) => number;
+```
+
+Read it as: "a function that takes a number and returns a number". The parameter **name** is just documentation; only the types matter.
+
+## Puzzle: which of these fit?
 
 ```typescript
 type Transform = (value: number) => number;
 
-function apply(value: number, transform: Transform): number {
-  return transform(value);
-}
-console.log(apply(21, value => value * 2));
+const double: Transform = n => n * 2;              // ✅
+const round: Transform = Math.round;               // ✅
+const ignore: Transform = () => 0;                 // ✅ (!)
+const label: Transform = n => `${n}`;              // ❌
+//                            ~~~~~~ Type 'string' is not
+//                                   assignable to type 'number'.
+const add: Transform = (a: number, b: number) => a + b;   // ❌
 ```
 
-The callback's `value` parameter is contextually typed as `number`. You do not need to repeat an annotation that the surrounding contract already supplies.
+Two of those deserve a closer look:
 
-## Return-value intent
+- **`ignore` is fine**, even though it takes no parameters. A function that ignores its arguments can always be called with more. It's the same reason `array.map(x => x * 2)` works even though `map` passes the index and the array too.
+- **`add` isn't**, because it **needs** a second argument that callers of `Transform` will never pass.
 
-A callback typed as returning `void` means its caller ignores the result. A function returning a value can often fill that role; this is useful for callbacks that perform work such as array insertion.
+Notice too that `n` in `double` needs no annotation. The checker infers it from `Transform`. This is called *contextual typing*, and it's why callbacks in `map` and `addEventListener` need no annotations.
+
+## Functions that take functions
 
 ```typescript
-const record: (value: string) => void = value => console.log(value);
-record("finished");
+function applyTwice(fn: Transform, value: number): number {
+  return fn(fn(value));
+}
+
+applyTwice(n => n + 10, 1);   // 21
 ```
 
-Avoid the broad `Function` type. It does not express the argument and return relationship that makes a callback safe to call.
+```tip
+For callbacks whose result you ignore, use `void` as the return type: `type Listener = (event: string) => void`. Then callbacks that happen to return something are still accepted.
+```
 
-A function type uses `=>` between its parameter list and return type. That syntax describes a callable value; it does not execute or create a function by itself.
+```compare kotlin
+val double: (Int) -> Int = { it * 2 }
+```
+
+```compare java
+Function<Integer, Integer> doubler = n -> n * 2;
+```
 
 ```exercise
-goal: "Make the callback return type match a numeric transformation."
+goal: "`double` returns a number, but the `Transform` type says the result is a string. Fix the type."
 lang: typescript
 code: |
   type Transform = (value: number) => string;
   const double: Transform = value => value * 2;
   console.log(double(21));
 checks:
-  - match: "=>\\s+number"
+  - match: 'Transform\s*=\s*\(value:\s*number\)\s*=>\s*number'
     message: "The callback returns a number, so use => number."
-hint: "The callback returns a number, so use => number."
+hint: The return type comes after the =>.
+solution: |
+  type Transform = (value: number) => number;
+  const double: Transform = value => value * 2;
+  console.log(double(21));
 ```
 
 ```quiz
-question: "What does `(value: number) => string` describe?"
+question: "`type Handler = (event: string, time: number) => void`. Is `const h: Handler = (event) => console.log(event)` accepted?"
 options:
-  - An immediately executed conversion.
-  - A function accepting a number and returning a string.
-  - An object with a property called value.
-answer: 1
-explain: A function type describes a call signature.
+  - Yes; a function may ignore parameters it doesn't need.
+  - No; it must declare both parameters.
+  - Only if time is optional.
+answer: 0
+explain: Fewer parameters is always safe. Callers pass both, and the function just doesn't use the second.
 ```

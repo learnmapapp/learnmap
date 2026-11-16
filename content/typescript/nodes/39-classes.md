@@ -5,35 +5,94 @@ branch: "objects"
 requires: ["interfaces", "functions"]
 summary: "Type instance state and distinguish static restrictions from runtime privacy."
 ---
+JavaScript classes work as you know them. TypeScript adds types for fields, and a few keywords. Here's a bank account, written twice.
 
-Classes keep their JavaScript construction and method behavior, with types added to instance members:
+**Plain JavaScript:**
 
-```typescript
-class Counter {
-  private value: number;
-  constructor(start = 0) {
-    this.value = start;
+```javascript
+class Account {
+  constructor(owner, balance = 0) {
+    this.owner = owner;
+    this.balance = balance;
   }
-  increment(): number {
-    this.value += 1;
-    return this.value;
+  deposit(amount) {
+    this.balance += amount;
   }
 }
-console.log(new Counter(10).increment()); // 11
 ```
 
-Strict property initialization checks that declared fields are initialized, assigned in construction, or explicitly handled in another supported way.
+**TypeScript:**
 
-## Two forms of privacy
+```typescript
+class Account {
+  readonly owner: string;
+  private balance: number;
 
-TypeScript's `private` restricts checked access but does not provide the same runtime privacy as JavaScript `#private` fields. Use `#value` when actual JavaScript private-field semantics are part of the design.
+  constructor(owner: string, balance = 0) {
+    this.owner = owner;
+    this.balance = balance;
+  }
 
-A parameter property such as `constructor(private value = 0) {}` is shorthand for declaring and initializing a field. It is one example of TypeScript syntax that generates runtime code rather than merely disappearing.
+  deposit(amount: number): void {
+    if (amount <= 0) throw new Error("Deposit must be positive");
+    this.balance += amount;
+  }
 
-Use classes when instances and behavior fit the model. Functions with plain typed objects are often sufficient for data transformations.
+  get current(): number {
+    return this.balance;
+  }
+}
+```
+
+What changed:
+
+- **Fields are declared up front**, with types. In strict mode, each must be set in the constructor or have a default, or you'll hear about it.
+- **`readonly`** fields can only be set in the constructor.
+- **`private`** fields can only be used inside the class. `account.balance = 1_000_000` from outside is a compile error.
+
+## The shortcut: parameter properties
+
+Declaring, accepting and assigning each field is repetitive. Put a modifier in front of a constructor parameter, and TypeScript does all three:
+
+```typescript
+class Account {
+  constructor(
+    readonly owner: string,
+    private balance = 0,
+  ) {}
+}
+```
+
+Same class, much shorter. You'll see this a lot in Angular and NestJS code.
+
+## `private` versus `#private`
+
+There are two kinds of private:
+
+| | `private balance` | `#balance` |
+| --- | --- | --- |
+| Comes from | TypeScript | JavaScript itself |
+| Enforced | at compile time only | at runtime too |
+
+`private` is erased with the other types, so plain JavaScript can still reach the field. `#balance` is truly hidden. Either is fine; just pick one per codebase.
+
+```tip
+Many TypeScript codebases use few classes, and prefer plain objects plus functions. Classes are good for things with identity and state, like this account. Data alone is often a simple object type.
+```
+
+```compare java
+public class Account {
+    private final String owner;
+    private long balance;
+}
+```
+
+```compare kotlin
+class Account(val owner: String, private var balance: Long = 0)
+```
 
 ```exercise
-goal: "Declare the field as a number to match construction and updates."
+goal: "The counter starts at 0 and gets incremented, but the field is declared as `string`. Fix the field's type."
 lang: typescript
 code: |
   class Counter {
@@ -43,17 +102,24 @@ code: |
   }
   console.log(new Counter().increment());
 checks:
-  - match: "private\\s+value:\\s+number;"
+  - match: 'private\s+value:\s*number;'
     message: "Use number for the counter field."
-hint: "Use number for the counter field."
+hint: The start value tells you the type.
+solution: |
+  class Counter {
+    private value: number;
+    constructor(start = 0) { this.value = start; }
+    increment(): number { return ++this.value; }
+  }
+  console.log(new Counter().increment());
 ```
 
 ```quiz
-question: "Which form supplies JavaScript runtime private-field semantics?"
+question: "What does `constructor(private name: string) {}` do?"
 options:
-  - "The TypeScript private modifier alone."
-  - "#private fields."
-  - "An underscore in the name."
+  - Only declares a parameter.
+  - Declares a private field called name and assigns the argument to it.
+  - Makes the constructor private.
 answer: 1
-explain: "# fields use JavaScript runtime privacy; TypeScript private is primarily a checking restriction."
+explain: A modifier on a constructor parameter turns it into a parameter property.
 ```

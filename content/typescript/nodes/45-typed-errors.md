@@ -5,30 +5,94 @@ branch: "applications"
 requires: ["async-await", "unknown"]
 summary: "Narrow a caught value before reading its message."
 ---
-
-JavaScript can throw any value, including a string or `null`. Under strict checking, a catch variable is `unknown`:
+**The case of the missing message.** A support ticket reads: "The error popup just says *undefined*." The code looks innocent:
 
 ```typescript
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
 try {
-  throw new Error("Connection unavailable");
+  await saveDraft(draft);
 } catch (error) {
-  console.log(errorMessage(error));
+  showPopup(error.message);
 }
 ```
 
-`instanceof Error` proves the familiar error shape for ordinary errors in the same runtime realm. Integrations spanning different realms or custom error payloads may need a different validated contract.
+**Clue 1:** in JavaScript, you can `throw` anything. Not just `Error` objects:
 
-## Expected versus unexpected failure
+```typescript
+throw new Error("Disk full");    // has .message
+throw "Disk full";               // a plain string: no .message
+throw { code: 507 };             // an object: no .message
+```
 
-A `Result` union can make expected failures explicit, such as validation rejecting a missing field. Exceptions still suit failures that interrupt the current operation and should be handled farther out.
+Some library deep inside `saveDraft` throws a string. `"Disk full".message` is `undefined`. Case closed.
 
-When wrapping an error, add useful context and preserve the cause when supported, rather than replacing the original message with a generic failure. Do not assert every caught value as `Error`: that hides the very uncertainty the catch boundary is meant to handle.
+**Clue 2:** TypeScript knew. In [strict mode](node:tsconfig), the `catch` variable is [unknown](node:unknown), precisely because anything can arrive:
+
+```typescript
+} catch (error) {
+  showPopup(error.message);
+  //        ~~~~~ 'error' is of type 'unknown'.
+}
+```
+
+Someone silenced it with `catch (error: any)`. That's the real culprit.
+
+## The fix: narrow, then read
+
+```typescript
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  return "Something went wrong";
+}
+
+try {
+  await saveDraft(draft);
+} catch (error) {
+  showPopup(errorMessage(error));
+}
+```
+
+`instanceof Error` also matches subclasses like `TypeError`, and your own.
+
+## Your own error classes
+
+Subclass `Error` to add details that callers can check for:
+
+```typescript
+class HttpError extends Error {
+  constructor(readonly status: number, message: string) {
+    super(message);
+    this.name = "HttpError";
+  }
+}
+
+try {
+  await saveDraft(draft);
+} catch (error) {
+  if (error instanceof HttpError && error.status === 401) {
+    redirectToLogin();
+  }
+}
+```
+
+## Or: don't throw
+
+For failures that are **expected** (validation, "not found"), many teams return them as values instead, using a [discriminated union](node:discriminated-unions). Then the possible errors are in the type, where the checker can see them:
+
+```typescript
+type Result<T> = { ok: true; value: T } | { ok: false; error: string };
+```
+
+```compare java
+catch (IOException e) { e.getMessage(); }   // typed by the catch
+```
+
+```compare rust
+// No exceptions: Result<T, E> puts the error in the type.
+```
 
 ```exercise
-goal: "Recognize Error objects before reading message."
+goal: "The check looks for a string, then reads `.message`, which strings don't have. Check for an `Error` instead."
 lang: typescript
 code: |
   function message(error: unknown): string {
@@ -37,17 +101,23 @@ code: |
   }
   console.log(message(new Error("offline")));
 checks:
-  - match: "error\\s+instanceof\\s+Error"
-    message: "Use instanceof Error to justify reading error.message."
-hint: "Use instanceof Error to justify reading error.message."
+  - match: 'error\s+instanceof\s+Error'
+    message: "Use instanceof Error before reading error.message."
+hint: Replace the typeof check with an instanceof check.
+solution: |
+  function message(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    return "Unknown failure";
+  }
+  console.log(message(new Error("offline")));
 ```
 
 ```quiz
-question: Why is a catch variable `unknown` under strict checking?
+question: "Why is the `catch` variable `unknown` in strict mode?"
 options:
-  - Because only strings can be thrown.
-  - Because JavaScript can throw values that are not Error objects.
-  - Because the function must be async.
+  - Because errors are always strings.
+  - Because JavaScript code can throw any value, not only Error objects.
+  - Because TypeScript can't type exceptions at all.
 answer: 1
-explain: The runtime permits arbitrary thrown values, so property access needs narrowing.
+explain: "throw \"oops\" and throw 42 are both legal, so the type has to allow anything."
 ```

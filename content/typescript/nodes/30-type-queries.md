@@ -5,31 +5,68 @@ branch: "generics"
 requires: ["inference", "type-aliases"]
 summary: "Derive a type from a value with typeof in a type position."
 ---
-
-In a type position, `typeof` asks the checker for the type of a value:
+Usually you write a type, then create values that match it. Sometimes it's nicer the other way round: you already have a value, and you want its type. In a **type** position, `typeof` does that.
 
 ```typescript
-const defaults = { retries: 3, label: "Learner" };
-type Settings = typeof defaults;
+const defaults = {
+  retries: 3,
+  timeoutMs: 5000,
+  label: "api",
+};
 
-function describe(settings: Settings): string {
-  return `${settings.label}: ${settings.retries}`;
-}
-console.log(describe(defaults));
+type Settings = typeof defaults;
+// { retries: number; timeoutMs: number; label: string }
 ```
 
-This avoids maintaining a duplicate handwritten shape when a runtime value is the natural source of truth.
+Add a property to `defaults`, and `Settings` updates by itself. No second definition to keep in sync.
 
-## Two uses of typeof
+## Two `typeof`s
 
-JavaScript's runtime `typeof value` returns a string such as `"number"`. TypeScript's type query `type T = typeof value` exists only while checking. The syntax shares a word but does different jobs depending on its position.
+JavaScript already has a `typeof` operator. TypeScript reuses the word in type positions, and it does something different there:
 
-Combine `keyof typeof defaults` to obtain the value's known property keys as a type. If you need exact literal values rather than widened mutable properties, a const assertion can retain that precision.
+```typescript
+// In an expression: the JavaScript operator, run at runtime.
+if (typeof value === "string") { /* ... */ }
 
-Keep the direction of ownership clear: sometimes a public type should define the contract and values should satisfy it. Deriving everything from one implementation can unintentionally expose implementation details.
+// After "type X =" or ":": the TypeScript one, compile time only.
+type Settings = typeof defaults;                  // a whole type
+```
+
+Where it's written tells you which one it is.
+
+## Where it shines
+
+**Functions you didn't write.** `ReturnType` (from [utility types](node:utility-types)) with `typeof` gives you a function's result type:
+
+```typescript
+function createStore() {
+  return { items: [] as string[], add(item: string) { /* ... */ } };
+}
+
+type Store = ReturnType<typeof createStore>;
+```
+
+**Config objects.** Combined with [keyof](node:keyof):
+
+```typescript
+type SettingName = keyof typeof defaults;
+// "retries" | "timeoutMs" | "label"
+```
+
+```warn
+`typeof` only works on values (variables, functions, imports), not on types. `typeof User`, where User is a type alias, is an error. You already have that type: just write `User`.
+```
+
+```compare python
+# No direct equivalent; you'd write a TypedDict by hand.
+```
+
+```compare go
+// No equivalent: Go types are always declared explicitly.
+```
 
 ```exercise
-goal: "Derive Settings from the existing defaults value."
+goal: "`defaults` is a value, so it can't be used as a type directly. Derive `Settings` from it with `typeof`."
 lang: typescript
 code: |
   const defaults = { retries: 3, label: "Learner" };
@@ -37,17 +74,22 @@ code: |
   const settings: Settings = { retries: 2, label: "Course" };
   console.log(settings);
 checks:
-  - match: "type\\s+Settings\\s+=\\s+typeof\\s+defaults;"
+  - match: 'type\s+Settings\s*=\s*typeof\s+defaults;'
     message: "Use typeof defaults in the type alias."
-hint: "Use typeof defaults in the type alias."
+hint: Put typeof in front of the value.
+solution: |
+  const defaults = { retries: 3, label: "Learner" };
+  type Settings = typeof defaults;
+  const settings: Settings = { retries: 2, label: "Course" };
+  console.log(settings);
 ```
 
 ```quiz
-question: What is produced by `type Settings = typeof defaults`?
+question: "`const port = 8080; type P = typeof port;` What is P?"
 options:
-  - A duplicate runtime object.
-  - A static type derived from defaults.
-  - The string "object".
+  - "`number`"
+  - "`8080`"
+  - "`\"number\"`"
 answer: 1
-explain: In a type position, typeof refers to the inferred type of the value.
+explain: A const gets its literal type, and typeof in a type position gives you that type. The string "number" is what the runtime typeof operator would return.
 ```

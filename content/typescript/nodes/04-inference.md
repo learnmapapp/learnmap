@@ -5,35 +5,61 @@ branch: "basics"
 requires: ["tsconfig"]
 summary: "Let the checker infer obvious types; annotate useful boundaries."
 ---
-
-TypeScript often infers a type from an initializer, so you do not need an annotation on every name:
+A common first reaction to TypeScript: "So I have to write types on everything?" Mostly, no. The checker works out a lot by itself. That's [[inference]], and it's easiest to see by hovering in your editor. Here's what the tooltips would show:
 
 ```typescript
-let score = 10;          // number
-score += 5;
-const title = "Types";  // the literal type "Types"
-const scores = [10, 20]; // number[]
+let count = 0;                    // let count: number
+const name = "Ada";               // const name: "Ada"
+const scores = [90, 85, 77];      // const scores: number[]
+const user = { name, active: true };
+// const user: { name: string; active: boolean }
+
+function double(n: number) {      // function double(n: number): number
+  return n * 2;
+}
 ```
 
-[[Inference]] follows how a value is introduced and used. A mutable variable usually gets a wider type than an immutable primitive binding: `let title = "Types"` normally becomes `string`.
+You wrote one annotation, `n: number`, and everything else was figured out. (`const name` gets the exact type `"Ada"` rather than `string`, because a `const` can never change. [Literal types](node:literal-types) explains why that's useful.)
 
-## Annotate the contract
+## Where inference can't help: parameters
 
-Function parameters are useful annotation points because callers supply their values:
+The checker can work out a variable's type from its value. A parameter has no value until someone calls the function, so there's nothing to infer from:
+
+```typescript
+function double(value) {
+  //            ~~~~~ Parameter 'value' implicitly has an 'any' type.
+  return value * 2;
+}
+```
+
+In [strict mode](node:tsconfig), that's an error. Annotate it, and callers get checked:
 
 ```typescript
 function double(value: number) {
-  return value * 2; // return type inferred as number
+  return value * 2;
 }
-console.log(double(21));
+double("21");
+//     ~~~~ Argument of type 'string' is not assignable
+//          to parameter of type 'number'.
 ```
 
-An explicit return annotation can document an exported contract, even when inference already knows the implementation's result. Avoid adding `any` merely to silence an error; that gives up checking instead of explaining the value.
+## A rule of thumb
 
-Use `const` when the binding will not be reassigned. It does not freeze the contents of an object or array, which [readonly](node:readonly) explores separately.
+- **Annotate** function parameters, and exported functions' return types (they're your public contract).
+- **Let inference work** for local variables.
+- **Annotate** a variable when it starts empty and gets filled later. `const ids = []` doesn't tell the checker what will go in it, so write `const ids: string[] = []`.
+
+```compare kotlin
+val count = 0            // Kotlin infers locals the same way
+fun double(n: Int) = n * 2
+```
+
+```compare java
+var count = 0;           // Java's var: inferred locals, since Java 10
+```
 
 ```exercise
-goal: "Annotate the parameter so strict mode can check callers."
+goal: "`value` is implicitly `any`, so callers aren't checked. Annotate the parameter as a number."
 lang: typescript
 code: |
   function double(value) {
@@ -41,17 +67,22 @@ code: |
   }
   console.log(double(21));
 checks:
-  - match: "value:\\s+number"
+  - match: 'value:\s*number'
     message: "Add : number after value."
-hint: "Add : number after value."
+hint: The annotation goes right after the parameter name.
+solution: |
+  function double(value: number) {
+    return value * 2;
+  }
+  console.log(double(21));
 ```
 
 ```quiz
-question: Why does let `score = 10` usually infer number rather than only 10?
+question: "What type does TypeScript infer for `let total = 0`?"
 options:
-  - The binding is mutable and can hold other numbers.
-  - All variables have type any.
-  - Integers cannot be inferred.
-answer: 0
-explain: Widening lets mutable bindings accept other values of the same broad type.
+  - "`0`"
+  - "`number`"
+  - "`any`"
+answer: 1
+explain: A let can be reassigned later, so it gets the general type number. A const would get the exact type 0.
 ```

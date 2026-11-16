@@ -5,36 +5,71 @@ branch: "applications"
 requires: ["unknown", "discriminated-unions"]
 summary: "Decode untrusted data into a trustworthy application contract."
 ---
+This is the most important idea in the whole map, so here it is up front: **types don't exist at runtime.** TypeScript checks your code. It can't check the data that arrives while the program runs.
 
-Parsing JSON checks syntax, not your application's shape. Treat the parsed result as `unknown`, then inspect it:
+That's a problem at the edges, where data comes in:
 
 ```typescript
-type Learner = { name: string; score: number };
-function decodeLearner(value: unknown): Learner {
-  if (
-    typeof value !== "object" || value === null ||
-    !("name" in value) || typeof value.name !== "string" ||
-    !("score" in value) || typeof value.score !== "number" ||
-    !Number.isFinite(value.score)
-  ) {
-    throw new Error("Invalid learner");
-  }
-  return { name: value.name, score: value.score };
-}
-const raw: unknown = JSON.parse('{"name":"Ada","score":42}');
-console.log(decodeLearner(raw));
+type User = { id: string; name: string };
+
+const user: User = await res.json();   // compiles fine
+user.name.toUpperCase();               // crashes if name is missing
 ```
 
-The function returns a fresh object containing validated fields. Extra incoming fields do not become part of its result.
+`res.json()` returns `any`, and `any` can be assigned to `User` without a check. The annotation **looks** like a safety check, but it's just a hope.
 
-## Validate meaningful constraints
+## The pattern: `unknown` in, validated type out
 
-A numeric field can still be negative or outside your domain's range. Add those rules when the contract needs them. Arrays need element validation as well as an outer array check.
+Treat everything from outside as [unknown](node:unknown), and convert it to a real type in one place:
 
-For larger schemas, a runtime validation library can reduce repetition. Regardless of the tool, connect the returned static type to checks that really run rather than asserting the input into the desired type.
+```typescript
+function parseUser(data: unknown): User {
+  if (typeof data !== "object" || data === null) {
+    throw new Error("Expected an object");
+  }
+  if (!("id" in data) || typeof data.id !== "string") {
+    throw new Error("Expected id to be a string");
+  }
+  if (!("name" in data) || typeof data.name !== "string") {
+    throw new Error("Expected name to be a string");
+  }
+  return { id: data.id, name: data.name };
+}
+
+const user = parseUser(await res.json());   // checked for real
+```
+
+Bad data now fails at the door with a clear message, instead of deep in your UI.
+
+## Use a library for real projects
+
+Hand-written checks get long. Validation libraries let you describe the shape once, and give you **both** the runtime check and the type:
+
+```typescript
+import { z } from "zod";
+
+const User = z.object({ id: z.string(), name: z.string() });
+type User = z.infer<typeof User>;    // the type, for free
+
+const user = User.parse(await res.json());
+```
+
+Zod is the most popular; Valibot and ArkType work the same way.
+
+## Where the edges are
+
+`fetch` responses, `JSON.parse`, `localStorage`, URL parameters, form data, `process.env`, messages from other windows and workers, and files. Validate there; inside your program, trust the types.
+
+```compare python
+user = User.model_validate(data)   # Pydantic: the same idea
+```
+
+```compare go
+// json.Unmarshal checks field types, but missing fields become "".
+```
 
 ```exercise
-goal: "Reject non-string names rather than trusting an assertion."
+goal: "The check is inverted: it rejects strings and lets everything else through. Reject values that are **not** strings."
 lang: typescript
 code: |
   function decodeName(value: unknown): string {
@@ -43,17 +78,23 @@ code: |
   }
   console.log(decodeName("Ada"));
 checks:
-  - match: "typeof\\s+value\\s+!==\\s+\"string\""
-    message: "Reject the value when typeof value is not string."
-hint: "Reject the value when typeof value is not string."
+  - match: 'typeof\s+value\s*!==\s*"string"'
+    message: "Throw when typeof value is not \"string\"."
+hint: Swap === for !==.
+solution: |
+  function decodeName(value: unknown): string {
+    if (typeof value !== "string") throw new Error("Expected name");
+    return value;
+  }
+  console.log(decodeName("Ada"));
 ```
 
 ```quiz
-question: Does `JSON.parse` prove that a response contains a numeric score?
+question: "`const u: User = JSON.parse(text)` compiles. What has been checked?"
 options:
-  - Yes, JSON is already typed.
-  - No, it only parses valid JSON syntax.
-  - Only for objects.
+  - That text contains a valid User.
+  - Nothing about the data; JSON.parse returns any, which is accepted unchecked.
+  - Only the property names.
 answer: 1
-explain: The application must check the fields it depends on after parsing.
+explain: The annotation isn't a runtime check. You need to validate the parsed value.
 ```

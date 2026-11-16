@@ -5,46 +5,84 @@ branch: "generics"
 requires: ["functions", "arrays"]
 summary: "Preserve relationships between input and output types."
 ---
+Let's write a tiny function: return the first item of an array. Watch the attempts get better.
 
-A [[generic]] introduces a type parameter chosen for each use:
+**Attempt 1: pick a type.**
 
 ```typescript
-function first<T>(values: readonly T[]): T | undefined {
-  return values[0];
+function first(items: number[]): number | undefined {
+  return items[0];
 }
-const name = first(["Ada", "Grace"]); // string | undefined
-const score = first([10, 20]);        // number | undefined
-console.log(name, score);
+
+first([1, 2, 3]);         // fine
+first(["a", "b"]);        // error: strings aren't numbers
 ```
 
-`T` keeps the input element and output type related. Using `any` would lose that connection; using `unknown` for every element would make callers narrow a result whose type was already known.
+Works, but only for numbers. We'd need `firstString`, `firstUser`...
 
-## Let calls infer the type
+**Attempt 2: accept anything.**
 
-The checker can usually infer type arguments from inputs. Supply an explicit argument, such as `first<string>([])`, when the empty input gives too little information.
+```typescript
+function first(items: unknown[]): unknown {
+  return items[0];
+}
 
-A type parameter does not prove arbitrary operations are valid. Inside the function, `T` could be many different types, so calling `toUpperCase` on it is not justified. Use a [constraint](node:generic-constraints) to express required capabilities.
+const name = first(["Ada", "Grace"]);
+name.toUpperCase();
+//^^ 'name' is of type 'unknown'.
+```
 
-Do not add a generic parameter merely to make a function look reusable. It should express a relationship or a meaningful caller-selected type.
+Now it accepts every array, but the result forgets what was inside. We put strings in and got `unknown` out.
 
-```compare rust
-fn identity<T>(value: T) -> T { value }
+**Attempt 3: a type parameter.**
+
+```typescript
+function first<T>(items: T[]): T | undefined {
+  return items[0];
+}
+
+const name = first(["Ada", "Grace"]);   // string | undefined
+const n = first([1, 2, 3]);             // number | undefined
+```
+
+`<T>` declares a **type parameter**: a placeholder for a type, filled in fresh at each call. TypeScript sees `["Ada", "Grace"]`, works out that `T` is `string`, and the return type follows. That's a [[generic]] function, and the point is the **connection** between input and output.
+
+## You've been using generics all along
+
+```typescript
+const ids: Array<number> = [1, 2];              // Array<T>
+const cache = new Map<string, User>();          // Map<K, V>
+const loaded: Promise<User> = fetchUser(7);     // Promise<T>
+```
+
+`Array`, `Map`, `Set` and `Promise` are all generic. The `<...>` fills in their type parameters.
+
+## Generic types
+
+Type aliases can take parameters too:
+
+```typescript
+type ApiResponse<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: string };
+
+type UserResponse = ApiResponse<User>;
+```
+
+```tip
+`T` is just a convention for "type". Longer names like `Item` or `TUser` are fine, and help when there are several parameters.
 ```
 
 ```compare java
-static <T> T identity(T value) { return value; }
+static <T> T first(List<T> items) { return items.get(0); }
 ```
 
-```compare kotlin
-fun <T> identity(value: T): T = value
-```
-
-```compare go
-func identity[T any](value T) T { return value }
+```compare rust
+fn first<T: Clone>(items: &[T]) -> Option<T> { items.first().cloned() }
 ```
 
 ```exercise
-goal: "Keep the returned type connected to the input."
+goal: "`identity` returns `unknown`, so `score.toFixed` is rejected. Make it generic, so the result keeps the input's type."
 lang: typescript
 code: |
   function identity(value: unknown): unknown {
@@ -53,17 +91,23 @@ code: |
   const score = identity(42);
   console.log(score.toFixed(0));
 checks:
-  - match: "function\\s+identity<T>\\(value:\\s+T\\):\\s+T"
-    message: "Declare T and use it for both the parameter and return type."
-hint: "Declare T and use it for both the parameter and return type."
+  - match: 'function\s+identity<T>\(value:\s*T\):\s*T'
+    message: "Declare <T> and use T for both the parameter and the return type."
+hint: "Add <T> after the function name, then replace both unknowns with T."
+solution: |
+  function identity<T>(value: T): T {
+    return value;
+  }
+  const score = identity(42);
+  console.log(score.toFixed(0));
 ```
 
 ```quiz
-question: What advantage does T provide over any in `first<T>`?
+question: "With `function first<T>(items: T[]): T | undefined`, what's the type of `first([true, false])`?"
 options:
-  - It preserves the relationship to the input element type.
-  - It validates every element at runtime.
-  - It ensures the array is nonempty.
-answer: 0
-explain: The type parameter preserves information without promising that an element exists.
+  - "`unknown`"
+  - "`boolean | undefined`"
+  - "`T | undefined`"
+answer: 1
+explain: T is inferred as boolean from the argument, and the return type follows.
 ```
