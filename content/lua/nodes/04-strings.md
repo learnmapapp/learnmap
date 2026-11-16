@@ -1,46 +1,85 @@
 ---
 title: Quoted strings
-icon: 💬
+icon: "🧵"
 branch: basics
-requires:
-  - locals
-summary: Concatenate strings with two dots.
+requires: [locals]
+summary: Three ways to write strings, joining them with .., and calling methods on them.
 ---
+Lua gives you three ways to write a string. Pick whichever needs the least escaping:
 
-Concatenate strings with two dots. Strings are immutable byte sequences, so concatenation produces a new value.
-
-A useful term here is [[concatenation]]: Combining strings into a new string with the .. operator.
-
-```lua
-local name = "Ada"
-print("Hello, " .. name)
+```lua title=quotes.lua
+local single = 'She said "hi"'
+local double = "It's fine"
+local long = [[
+Long strings use double square brackets.
+They can span lines, and "quotes" or 'apostrophes'
+need no escaping. Even \n stays as-is.
+]]
 ```
 
-## Put it to work
+In `'...'` and `"..."` the usual escapes work: `\n` for a newline, `\t` for a tab, `\\` for a backslash. Inside a long string, between double square brackets, nothing is escaped. If your text itself contains two closing brackets, add equals signs: `[==[ ... ]==]`.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Joining strings** uses the [[concatenation]] operator, two dots:
+
+```lua
+local first, last = "Ada", "Lovelace"
+local full = first .. " " .. last
+print(full)          -- Ada Lovelace
+print(#full)         -- 12: # gives the length in bytes
+print("Level " .. 3) -- numbers convert automatically
+```
+
+`..` will not convert `nil` or a boolean, though: `"Score: " .. nil` is an error. Use `tostring(value)` for those.
+
+**Methods with a colon.** The `string` library has the usual tools, and you can call them straight on a string with `:`:
+
+```lua
+local shout = ("hello"):upper()     -- HELLO
+local name = "  Grace  "
+print(name:len())                   -- 9
+print(("ha"):rep(3))                -- hahaha
+print(("Lua"):lower())              -- lua
+```
+
+`name:upper()` is shorthand for `string.upper(name)`. The colon passes the string as the first argument. (Literals need parentheses around them, as in `("hello"):upper()`, which is why you usually see this on variables.) The colon gets [its own lesson](node:methods) later.
+
+Strings are **immutable**: `upper()` returns a new string and leaves the original alone.
+
+```compare python
+full = first + " " + last
+shout = "hello".upper()
+```
+
+```compare javascript
+const full = first + " " + last;
+const shout = "hello".toUpperCase();
+```
+
+```compare rust
+let full = format!("{first} {last}");
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about quoted strings.
-lang: lua
+goal: "This fails, because Lua's `+` only does arithmetic. Join the strings with `..` instead."
 code: |-
-  local name = "Ada"
-  print("Hello, " + name)
+  local city = "Lisbon"
+  local message = "Welcome to " + city
 checks:
-  - match: '"Hello,\s+"\s+\.\.\s+name'
-    message: Use "Hello, " .. name for this step.
-  - notMatch: '"Hello,\s+"\s+\+\s+name'
-    message: Replace "Hello, " + name in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'local\s+message\s*=\s*"Welcome to "\s*\.\.\s*city'
+    message: 'Write "Welcome to " .. city'
+  - notMatch: '\+'
+    message: Remove the +.
+solution: |-
+  local city = "Lisbon"
+  local message = "Welcome to " .. city
 ```
 
 ```quiz
-question: Which expression joins the strings `first` and `last`?
+question: "What does `#\"moon\"` return?"
 options:
-  - "`first & last`"
-  - "`first .. last`"
-  - "`first + last`"
-answer: 1
-explain: Lua uses `..` for string concatenation.
+  - "`4`"
+  - "`\"moon\"`"
+  - "`nil`"
+answer: 0
+explain: "# is the length operator. For strings it counts bytes."
 ```

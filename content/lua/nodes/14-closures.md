@@ -1,61 +1,104 @@
 ---
 title: Captured state
-icon: 🏷️
+icon: "🎒"
 branch: functions
-requires:
-  - scope
-summary: A closure retains access to locals from its enclosing function.
+requires: [scope]
+summary: Inner functions remember the locals around them, which gives you private state for free.
 ---
+Let's build a ticket dispenser, the kind at a deli counter. Each pull gives the next number:
 
-A closure retains access to locals from its enclosing function. Each call to counter creates a separate captured value.
-
-A useful term here is [[closure]]: A function together with the surrounding local bindings it captures.
-
-```lua
-local function counter()
-  local value = 0
+```lua title=deli.lua
+local function makeDispenser(start)
+  local next = start
   return function()
-    value = value + 1
-    return value
+    local ticket = next
+    next = next + 1
+    return ticket
   end
 end
-local nextCount = counter()
-print(nextCount(), nextCount())
+
+local cheese = makeDispenser(1)
+local fish = makeDispenser(100)
+
+print(cheese(), cheese(), cheese())   -- 1  2  3
+print(fish(), cheese())               -- 100  4
 ```
 
-## Put it to work
+Look at what happened: `makeDispenser` returned long ago, yet the inner function still reads and changes `next`. A function that remembers the locals around it is called a **[[closure]]**, and each closure gets **its own** copy. That's why the cheese and fish counters are independent.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+There's something else neat here. Nobody can touch `next` from outside. There's no `cheese.next = 0` to reset the counter. The variable is completely private, which in Lua is the simplest way to hide state.
+
+Closures show up everywhere in Lua:
+
+- **Callbacks** that need some context: `button.onClick = function() count = count + 1 end`.
+- **Factories** like `makeDispenser`, which produce functions configured for one job.
+- **Iterators**, which remember their position between calls. You'll [write your own](node:generators) later.
+
+One subtle thing that's handled *well*: every round of a `for` loop gets a fresh loop variable, so closures created in a loop capture different values.
+
+```lua
+local actions = {}
+for i = 1, 3 do
+  actions[i] = function() return i end
+end
+print(actions[1](), actions[3]())   -- 1  3
+```
+
+(Older JavaScript with `var` famously got this one wrong.)
+
+```compare javascript
+function makeDispenser(start) {
+  let next = start;
+  return () => next++;
+}
+```
+
+```compare python
+def make_dispenser(start):
+    n = start
+    def pull():
+        nonlocal n   # Python needs this to change n
+        n += 1
+        return n - 1
+    return pull
+```
+
+```compare rust
+fn make_dispenser(start: u32) -> impl FnMut() -> u32 {
+    let mut next = start;
+    move || { next += 1; next - 1 }
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about captured state.
-lang: lua
+goal: "Finish `makeCounter`: return a function that adds 1 to `count` and returns the new value."
 code: |-
-  local function counter()
-    local value = 0
+  local function makeCounter()
+    local count = 0
+  end
+checks:
+  - match: 'return\s+function\s*\(\s*\)'
+    message: Return an anonymous function, return function() ... end
+  - match: 'count\s*=\s*count\s*\+\s*1'
+    message: Inside it, add one with count = count + 1
+  - match: 'return\s+count\b'
+    message: Then return count.
+solution: |-
+  local function makeCounter()
+    local count = 0
     return function()
-      value = value + 2
-      return value
+      count = count + 1
+      return count
     end
   end
-  local nextCount = counter()
-  print(nextCount(), nextCount())
-checks:
-  - match: value\s+=\s+value\s+\+\s+1
-    message: Use value = value + 1 for this step.
-  - notMatch: value\s+=\s+value\s+\+\s+2
-    message: Replace value = value + 2 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
 ```
 
 ```quiz
-question: Two functions returned by separate calls to `counter()` capture a local `value`. What
-  state do they use?
+question: "You create `a = makeCounter()` and `b = makeCounter()`, then call `a()` twice and `b()` once. What does the next `b()` return?"
 options:
-  - One shared global `value`.
-  - A new zero value on every increment call.
-  - A separate captured `value` for each counter.
-answer: 2
-explain: Each call to the factory creates a new local retained by its closure.
+  - "2"
+  - "4"
+  - "3"
+answer: 0
+explain: Each call to makeCounter creates a fresh count, so b has its own counter, which is at 1 before this call.
 ```

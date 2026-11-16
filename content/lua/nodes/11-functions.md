@@ -1,65 +1,92 @@
 ---
 title: Define functions
-icon: 🛠️
+icon: "🛠️"
 branch: functions
-requires:
-  - numbers
-summary: Functions receive arguments and return results.
+requires: [numbers]
+summary: local function, parameters, return, and functions as ordinary values.
 ---
+Here's a function that converts Celsius to Fahrenheit:
 
-Functions receive arguments and return results. Use a local function declaration to keep the function name scoped.
-
-```lua
-local function square(n)
-  return n * n
+```lua title=convert.lua
+local function toFahrenheit(celsius)
+  return celsius * 9 / 5 + 32
 end
-print(square(6))
+
+print(toFahrenheit(100))   -- 212.0
+print(toFahrenheit(-40))   -- -40.0
 ```
 
-## Put it to work
+The shape: `function name(parameters) ... end`. No types, no braces, and `return` hands back a value. A function without a `return` gives back nothing, which shows up as `nil` if you use the result.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Notice `local function`. Just like variables, functions are **global unless you say `local`**. Make it a habit.
+
+**Functions are values.** That line is really a shorter way to write this:
+
+```lua
+local toFahrenheit = function(celsius)
+  return celsius * 9 / 5 + 32
+end
+```
+
+A function is just a value stored in a variable, like a number or a string. You can put functions in tables, pass them to other functions, and return them. That's how [sorting](node:sorting), [closures](node:closures) and [modules](node:modules) work.
+
+**Arguments are forgiving.** Lua doesn't check how many arguments you pass:
+
+```lua
+local function greet(name, greeting)
+  print(greeting, name)
+end
+
+greet("Ada")                     -- nil  Ada: the missing one is nil
+greet("Ada", "Hi", "ignored")    -- Hi  Ada: extras are dropped
+```
+
+That flexibility is what makes [default arguments](node:defaults) and [variable arguments](node:varargs) possible. It also means a typo'd call won't complain, so keep function signatures short and clear.
+
+**A small gotcha:** a `local function` can only be called by code written *after* it. Lua reads the file from top to bottom, and the name doesn't exist yet above its definition.
+
+**Calling with one string or table argument** lets you drop the parentheses: `print "hi"` or `setup { debug = true }`. You'll see this in Neovim configs a lot.
 
 ```compare python
-def square(value: int) -> int:
-    return value * value
-
-print(square(6))
+def to_fahrenheit(celsius):
+    return celsius * 9 / 5 + 32
 ```
 
 ```compare javascript
-function square(value) { return value * value; }
-console.log(square(6));
+function toFahrenheit(celsius) {
+  return celsius * 9 / 5 + 32;
+}
 ```
 
 ```compare rust
-fn square(value: i32) -> i32 { value * value }
-fn main() { println!("{}", square(6)); }
+fn to_fahrenheit(celsius: f64) -> f64 {
+    celsius * 9.0 / 5.0 + 32.0
+}
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about define functions.
-lang: lua
+goal: "Write a local function `area(width, height)` that returns the area of a rectangle."
 code: |-
-  local function square(n)
-    return n + n
-  end
-  print(square(6))
+  -- write area here
 checks:
-  - match: return\s+n\s+\*\s+n
-    message: Use return n * n for this step.
-  - notMatch: return\s+n\s+\+\s+n
-    message: Replace return n + n in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'local\s+function\s+area\(\s*width\s*,\s*height\s*\)'
+    message: "Start with local function area(width, height)"
+  - match: 'return\s+width\s*\*\s*height'
+    message: Return width * height.
+  - match: '\bend\b'
+    message: Close the function with end.
+solution: |-
+  local function area(width, height)
+    return width * height
+  end
 ```
 
 ```quiz
-question: For `local function square(n) return n * n end`, what is `square(6)`?
+question: "`local function f(a, b) return b end` — what does `f(1)` return?"
 options:
-  - "`12`"
-  - "`6`"
-  - "`36`"
-answer: 2
-explain: The function multiplies its input by itself and returns the result.
+  - "An error: missing argument"
+  - "`nil`"
+  - "`1`"
+answer: 1
+explain: Missing arguments are simply nil.
 ```

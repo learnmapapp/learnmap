@@ -1,48 +1,74 @@
 ---
 title: Sequence boundaries
-icon: 📋
+icon: "📏"
 branch: tables
-requires:
-  - lists
-summary: "Use # for contiguous sequences."
+requires: [lists]
+summary: "What # really measures, why holes break it, and how to keep your lists safe."
 ---
+**Predict the output:**
 
-Use # for contiguous sequences. Holes make the boundary ambiguous, so remove the final element here instead of introducing an interior gap.
-
-```lua
-local values = {4, 8, 12}
-print(#values)
-values[3] = nil
-print(#values)
+```lua title=holes.lua
+local guests = { "Ana", "Ben", "Cy", "Dee" }
+guests[2] = nil   -- Ben cancelled
+print(#guests)
 ```
 
-## Put it to work
+Did you say 3? The real answer is **"4 or 1, depending"**. Lua's manual allows either. Let's see why.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+`#` doesn't count elements. It finds a **border**: an index `n` where `t[n]` isn't `nil` but `t[n + 1]` is. For a proper **[[sequence]]**, a table with values at 1, 2, ..., n and no gaps, there's exactly one border, so `#` is reliable. Put a hole in the middle, and there are several borders (1 and 4 here), and `#` may return any of them.
+
+So the rule is simple: **don't make holes in lists.** To delete from the middle, shift the rest down with `table.remove`:
+
+```lua
+local guests = { "Ana", "Ben", "Cy", "Dee" }
+table.remove(guests, 2)   -- Cy and Dee move up
+print(#guests)            -- 3, reliably
+```
+
+Other ways holes sneak in, and what to do instead:
+
+| Accident | Better |
+| --- | --- |
+| `list[i] = nil` in the middle | `table.remove(list, i)` |
+| `{ a, b, c }` where `b` might be `nil` | `table.pack(a, b, c)` and use `.n` |
+| Skipping an index: `list[#list + 2] = x` | `list[#list + 1] = x` |
+| Using `nil` to mean "empty slot" | a placeholder like `false` |
+
+That last one deserves a word: `false` is a real value, so `{ "Ana", false, "Cy" }` is a valid sequence of length 3.
+
+`#` is fast, by the way. On a list built in the normal way it doesn't walk through the table, so using it in a loop condition is fine.
+
+```compare python
+guests = ["Ana", "Ben", "Cy"]
+del guests[1]     # shifts automatically, like table.remove
+```
+
+```compare javascript
+const guests = ["Ana", "Ben", "Cy"];
+delete guests[1];  // JS leaves a hole too, and length stays 3
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about sequence boundaries.
-lang: lua
+goal: "Removing an item this way leaves a hole. Use `table.remove` instead, so the list stays a proper sequence."
 code: |-
-  local values = {4, 8, 12}
-  print(#values)
-  values[2] = nil
-  print(#values)
+  local queue = { "a", "b", "c" }
+  queue[1] = nil
 checks:
-  - match: values\[3\]\s+=\s+nil
-    message: Use values[3] = nil for this step.
-  - notMatch: values\[2\]\s+=\s+nil
-    message: Replace values[2] = nil in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'table\.remove\(\s*queue\s*,\s*1\s*\)'
+    message: "Write table.remove(queue, 1)"
+  - notMatch: 'queue\[1\]\s*=\s*nil'
+    message: Don't assign nil to a list slot.
+solution: |-
+  local queue = { "a", "b", "c" }
+  table.remove(queue, 1)
 ```
 
 ```quiz
-question: When is `#values` reliable as a sequence length?
+question: "Which of these is a proper sequence, where `#` is reliable?"
 options:
-  - When arbitrary missing indices should count as elements.
-  - When the integer keys run contiguously from 1.
-  - When the table contains only string keys.
+  - "`{ 1, nil, 3 }`"
+  - "`{ \"x\", false, \"z\" }`"
+  - "`{ [1] = \"a\", [3] = \"c\" }`"
 answer: 1
-explain: Holes can make the sequence boundary ambiguous.
+explain: false is a real value, so there's no gap. The other two have a hole at index 2.
 ```

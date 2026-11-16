@@ -12,11 +12,11 @@ guide:
   name: Luna
   avatar: 🌙
   intro:
-    - Welcome! I'm Luna. Let's build something with Lua.
-    - These fifty lessons use Lua 5.4. Start with the foundations or pick a goal to follow a shorter
-      route.
-    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
-      here; use the local tools to run the examples.
+    - Hi, I'm Luna! Lua is a tiny language with a big reach. It runs inside Neovim, Roblox (as Luau),
+      Redis, game engines and nginx, and the whole thing fits in about 300 KB.
+    - It has only a handful of ideas, and one of them, the table, does almost everything. Each lesson
+      has a short example, a small exercise you solve in the browser, and a quick check. The examples
+      use Lua 5.4.
   askGoal: What would you like to build first?
 branches:
   - id: core
@@ -47,20 +47,20 @@ goals:
   - id: closures
     node: closures
     title: Write reusable functions
-    description: Understand scope, returns, and captured state.
-    icon: 🏷️
+    description: Write functions with several results, defaults and remembered state.
+    icon: 🧰
   - id: records
     node: records
     title: Model application data
-    description: Build lists and records with tables.
-    icon: 🔢
+    description: Store lists and records in tables, and loop over them.
+    icon: 🗃️
   - id: objects
     node: objects
     title: Design reusable objects
-    description: Combine modules, methods, and metatables.
-    icon: 💬
+    description: Build objects from tables, methods and metatables.
+    icon: 🧩
   - id: capstone
     node: capstone
     title: Build a task tracker
-    description: Integrate validation, persistence, and tests.
-    icon: 🚦
+    description: Combine objects, error handling, files and tests in one small program.
+    icon: 🏁

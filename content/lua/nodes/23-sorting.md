@@ -1,47 +1,96 @@
 ---
 title: Custom sorting
-icon: 🛠️
+icon: "🏆"
 branch: tables
-requires:
-  - functions
-  - lists
-summary: table.sort changes the sequence in place.
+requires: [functions, lists]
+summary: table.sort sorts in place, and takes a "comes before" function for anything fancy.
 ---
+**A leaderboard.** Players are records, and you want the highest score first. With equal scores, sort by name.
 
-`table.sort` changes the sequence in place. Its comparator must describe a strict ordering; using <= breaks that contract.
+Step 1, the default. `table.sort` sorts a list **in place**, smallest first, using `<`:
 
 ```lua
-local items = {7, 2, 5}
-table.sort(items, function(a, b) return a < b end)
-print(table.concat(items, ","))
+local scores = { 42, 7, 99, 15 }
+table.sort(scores)
+print(table.concat(scores, ", "))   -- 7, 15, 42, 99
 ```
 
-## Put it to work
+It works for numbers and for strings (alphabetical, by byte). It returns nothing: the original table is reordered.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Step 2, reverse it. Pass a **comparison function** that answers one question: *should `a` come before `b`?*
+
+```lua
+table.sort(scores, function(a, b) return a > b end)   -- 99, 42, 15, 7
+```
+
+Step 3, sort records. `<` doesn't work on tables, so the comparison picks the field:
+
+```lua title=leaderboard.lua
+local players = {
+  { name = "Zed", score = 80 },
+  { name = "Amy", score = 95 },
+  { name = "Bo",  score = 80 },
+}
+
+table.sort(players, function(a, b)
+  if a.score ~= b.score then
+    return a.score > b.score    -- higher score first
+  end
+  return a.name < b.name        -- tie: alphabetical
+end)
+
+for rank, p in ipairs(players) do
+  print(rank, p.name, p.score)
+end
+```
+
+```repl shell
+> lua leaderboard.lua
+1	Amy	95
+2	Bo	80
+3	Zed	80
+```
+
+**Two rules for the comparison function:**
+
+1. Return `true` only when `a` must come *strictly* before `b`. Using `>=` or `<=` can make Lua fail with *invalid order function for sorting*.
+2. Don't mix types. Sorting `{ 3, "10" }` fails with *attempt to compare number with string*.
+
+`table.sort` isn't stable: items that compare as equal may change order. That's why the tie-breaker on `name` matters if you want a predictable result.
+
+```compare python
+players.sort(key=lambda p: (-p["score"], p["name"]))
+```
+
+```compare javascript
+players.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+```
+
+```compare rust
+players.sort_by(|a, b| b.score.cmp(&a.score).then(a.name.cmp(&b.name)));
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about custom sorting.
-lang: lua
+goal: "Sort `words` from shortest to longest, using a comparison function on `#a` and `#b`."
 code: |-
-  local items = {7, 2, 5}
-  table.sort(items, function(a, b) return a > b end)
-  print(table.concat(items, ","))
+  table.sort(words)
 checks:
-  - match: return\s+a\s+<\s+b
-    message: Use return a < b for this step.
-  - notMatch: return\s+a\s+>\s+b
-    message: Replace return a > b in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'table\.sort\(\s*words\s*,\s*function\s*\(\s*a\s*,\s*b\s*\)'
+    message: "Pass a function(a, b) as the second argument."
+  - match: 'return\s+#a\s*<\s*#b'
+    message: Return #a < #b
+solution: |-
+  table.sort(words, function(a, b)
+    return #a < #b
+  end)
 ```
 
 ```quiz
-question: Which comparator gives `table.sort` an ascending numeric order?
+question: What should a table.sort comparison function return?
 options:
-  - "`function(a, b) return a > b end`"
-  - "`function(a, b) return a <= b end`"
-  - "`function(a, b) return a < b end`"
-answer: 2
-explain: The comparator must express a strict ordering; equal values must not compare less.
+  - "-1, 0 or 1, like in other languages."
+  - true when a should come before b.
+  - The smaller of the two values.
+answer: 1
+explain: Lua's comparison returns a Boolean "a comes before b", not a number.
 ```

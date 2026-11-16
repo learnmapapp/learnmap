@@ -1,30 +1,42 @@
 chunk:
-  definition: A sequence of Lua statements compiled and executed as a unit.
+  definition: A piece of Lua code that runs as one unit, such as a file or a line typed into the interactive prompt.
   node: lua
+local:
+  definition: A variable that exists only in the block where it's declared. Without local, a variable is global.
+  node: locals
 concatenation:
-  definition: Combining strings into a new string with the .. operator.
+  definition: Joining strings with the .. operator, as in "Hello, " .. name.
   node: strings
 nil:
-  definition: The value representing absence; assigning it to a table key removes that entry.
+  definition: "Lua's \"no value\". Unset variables and missing table keys are nil, and setting a key to nil removes it."
+  node: truth
+truthy:
+  definition: Counts as true in a condition. In Lua everything is truthy except nil and false, including 0 and "".
   node: truth
 closure:
-  definition: A function together with the surrounding local bindings it captures.
+  definition: A function that remembers the local variables around it, even after the outer function has returned.
   node: closures
 table:
-  definition: Lua’s associative data structure, used for sequences, records, maps, and objects.
+  definition: "Lua's one data structure. The same table type is used for arrays, dictionaries, records, modules and objects."
   node: lists
+sequence:
+  definition: A table whose keys are 1, 2, 3 ... n with no gaps. Only sequences have a reliable length with #.
+  node: length
 pattern:
-  definition: Lua’s built-in string matching language, using classes and repetition operators.
+  definition: "Lua's built-in text matching language, similar to (but smaller than) regular expressions. % is the escape character."
   node: patterns
 protected call:
-  definition: A function invocation that catches Lua errors and reports success as a return value.
+  definition: Calling a function with pcall, so an error comes back as a return value instead of stopping the program.
   node: errors
 module:
-  definition: A reusable chunk loaded by require, commonly returning a table of public operations.
+  definition: A Lua file that returns a table of functions, loaded with require.
   node: modules
 metatable:
-  definition: A table that supplies metamethods to customize operations on another value.
+  definition: A table attached to another table that changes how it behaves, for example what + or a missing key does.
+  node: metatables
+metamethod:
+  definition: A function stored in a metatable under a special name like __index or __add.
   node: metatables
 coroutine:
-  definition: A cooperatively scheduled execution context that can suspend and resume.
+  definition: A function that can pause itself with yield and be resumed later from where it stopped.
   node: coroutines

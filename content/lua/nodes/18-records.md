@@ -1,45 +1,89 @@
 ---
 title: Record tables
-icon: 🔁
+icon: "🗂️"
 branch: tables
-requires:
-  - lists
-  - strings
-summary: Record fields are string keys.
+requires: [lists, strings]
+summary: The same table, now with named fields, dot access, and nil meaning "gone".
 ---
+Tables with string keys work as records and dictionaries. Here's a character in a role-playing game:
 
-Record fields are string keys. user.name and user["name"] access the same entry; bracket syntax also accepts computed keys.
+```lua title=hero.lua
+local hero = {
+  name = "Lyra",
+  class = "ranger",
+  hp = 42,
+  inventory = { "bow", "rope", "apple" },
+}
 
-```lua
-local user = {name = "Ada", active = true}
-print(user.name, user["active"])
+print(hero.name)                -- Lyra
+hero.hp = hero.hp - 10          -- change a field
+hero.level = 3                  -- add a new one, any time
+print(hero.inventory[2])        -- rope
 ```
 
-## Put it to work
+`hero.name` is shorthand for `hero["name"]`. Use the dot when the key is a fixed name, and brackets when the key is in a variable, or isn't a valid identifier:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```lua
+local stat = "hp"
+print(hero[stat])          -- 32
+local scores = { ["high score"] = 900, [10] = "ten" }
+```
+
+In the constructor, `name = "Lyra"` is shorthand for `["name"] = "Lyra"`. Any value except `nil` can be a key: strings, numbers, booleans, even other tables.
+
+**Removing a field: assign `nil`.**
+
+```lua
+hero.level = nil   -- the key is gone
+```
+
+In Lua, "a field that's `nil`" and "a field that doesn't exist" are the same thing. That's why [[nil]] can't be stored in a table, and why you check for a field simply with `if hero.shield then`.
+
+A table can be a list *and* a record at the same time, like this:
+
+```lua
+local playlist = { "Intro", "Theme", name = "Road trip", shuffle = true }
+print(#playlist, playlist.name)   -- 2  Road trip
+```
+
+`#` only counts the list part. It's legal and occasionally handy (function arguments packed with `table.pack` look like this, with their `n` field), but for your own data, keeping lists and records separate makes code easier to follow.
+
+```compare python
+hero = {"name": "Lyra", "hp": 42}
+hero["hp"] -= 10
+del hero["hp"]   # Lua: hero.hp = nil
+```
+
+```compare javascript
+const hero = { name: "Lyra", hp: 42 };
+hero.hp -= 10;
+delete hero.hp;  // Lua: hero.hp = nil
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about record tables.
-lang: lua
+goal: "Build a `book` record with a `title` of \"Dune\" and `pages` set to 412, then remove the `draft` field."
 code: |-
-  local user = {name = "Ada", active = true}
-  print(user.name, user["enabled"])
+  local book = {}
+  book.draft = true
 checks:
-  - match: user\["active"\]
-    message: Use user["active"] for this step.
-  - notMatch: user\["enabled"\]
-    message: Replace user["enabled"] in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'title\s*=\s*"Dune"'
+    message: 'Add title = "Dune"'
+  - match: 'pages\s*=\s*412'
+    message: Add pages = 412
+  - match: 'book\.draft\s*=\s*nil'
+    message: Remove draft with book.draft = nil
+solution: |-
+  local book = { title = "Dune", pages = 412 }
+  book.draft = true
+  book.draft = nil
 ```
 
 ```quiz
-question: Which access is equivalent to `user.name`?
+question: "How do you remove the key `color` from table `t`?"
 options:
-  - '`user["name"]`'
-  - "`user[name]` regardless of `name`'s value."
-  - "`user[1]`"
+  - "`t.color = nil`"
+  - "`delete t.color`"
+  - "`t:remove(\"color\")`"
 answer: 0
-explain: Dot syntax uses a literal string key; bracket syntax can also use computed keys.
+explain: Assigning nil removes the key. A nil field and a missing field are the same thing in Lua.
 ```

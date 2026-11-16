@@ -1,52 +1,96 @@
 ---
 title: Suspend and resume
-icon: 📋
+icon: "🏓"
 branch: runtime
-requires:
-  - coroutines
-summary: yield returns control to the resumer.
+requires: [coroutines]
+summary: Values travel both ways through resume and yield, like a game of ping-pong.
 ---
+`resume` and `yield` don't just pause and continue. They also **pass values** to each other. Think of a ping-pong rally: each side sends the ball, and whatever one side hits arrives as the other side's return value.
 
-yield returns control to the resumer. The next successful resume continues after the yield rather than restarting the function.
+Let's build a running-average calculator, which receives numbers and sends back the average so far:
 
-```lua
-local worker = coroutine.create(function()
-  coroutine.yield("first")
-  return "last"
+```lua title=average.lua
+local averager = coroutine.create(function(first)
+  local sum, count = first, 1
+  while true do
+    local nextNumber = coroutine.yield(sum / count)
+    sum = sum + nextNumber
+    count = count + 1
+  end
 end)
-print(coroutine.resume(worker))
-print(coroutine.resume(worker))
+
+print(coroutine.resume(averager, 10))   -- true  10.0
+print(coroutine.resume(averager, 20))   -- true  15.0
+print(coroutine.resume(averager, 60))   -- true  30.0
 ```
 
-## Put it to work
+Follow the ball:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+1. The **first** `resume(averager, 10)` starts the function, so `10` arrives as the parameter `first`.
+2. The coroutine runs to `yield(sum / count)` and sends `10.0` back. The first `resume` returns `true, 10.0`.
+3. The **next** `resume(averager, 20)` continues the paused `yield`, which now *returns* `20`. That's how `nextNumber` gets its value.
+4. Around the loop again, it yields `15.0`, and so on.
+
+So:
+
+| Call | Sends | Receives |
+| --- | --- | --- |
+| first `resume(co, ...)` | arguments to the function | values from the first `yield`, or the function's `return` |
+| later `resume(co, ...)` | the return values of the paused `yield` | values from the next `yield` |
+| `yield(...)` | values back to `resume` | the arguments of the next `resume` |
+
+`resume` always puts a Boolean first: `true` if all went well, or `false` plus an error message if the coroutine raised an error. Like [`pcall`](node:errors), errors inside a coroutine don't escape on their own.
+
+**`coroutine.wrap`** is a friendlier version. It returns a plain function: calling it resumes the coroutine, there's no Boolean in the results, and errors are raised normally:
+
+```lua
+local average = coroutine.wrap(function(first) --[[ same body ]] end)
+print(average(10))   -- 10.0
+print(average(20))   -- 15.0
+```
+
+Use `create`/`resume` when you need the status or want to catch errors, and `wrap` for everything else.
+
+```compare python
+def averager():
+    total, count = 0, 0
+    avg = None
+    while True:
+        n = yield avg       # gen.send(n) is Lua's resume(co, n)
+        total, count = total + n, count + 1
+        avg = total / count
+```
+
+```compare javascript
+// gen.next(value) is Lua's resume(co, value)
+const value = yield average;
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about suspend and resume.
-lang: lua
+goal: "Make the echo coroutine send back each message in upper case: yield `msg:upper()`, and store what the next resume sends in `msg`."
 code: |-
-  local worker = coroutine.create(function()
-    coroutine.yield("skip")
-    return "last"
+  local echo = coroutine.wrap(function(msg)
+    while true do
+      coroutine.yield()
+    end
   end)
-  print(coroutine.resume(worker))
-  print(coroutine.resume(worker))
 checks:
-  - match: coroutine\.yield\("first"\)
-    message: Use coroutine.yield("first") for this step.
-  - notMatch: coroutine\.yield\("skip"\)
-    message: Replace coroutine.yield("skip") in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'msg\s*=\s*coroutine\.yield\(\s*msg:upper\(\)\s*\)'
+    message: Write msg = coroutine.yield(msg:upper())
+solution: |-
+  local echo = coroutine.wrap(function(msg)
+    while true do
+      msg = coroutine.yield(msg:upper())
+    end
+  end)
 ```
 
 ```quiz
-question: Where does execution continue after a yielded coroutine is resumed?
+question: "Inside a coroutine, `local x = coroutine.yield(1)`. The caller then runs `coroutine.resume(co, \"hi\")`. What's `x`?"
 options:
-  - After the coroutine's final return.
-  - After its suspended `yield` call.
-  - At the first line of the coroutine again.
+  - "1"
+  - "\"hi\""
+  - "true"
 answer: 1
-explain: Yield preserves the coroutine's execution position.
+explain: The arguments to the next resume become the return values of the paused yield.
 ```

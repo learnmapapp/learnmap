@@ -1,57 +1,98 @@
 ---
 title: Choose a branch
-icon: 🔁
+icon: "🔀"
 branch: flow
-requires:
-  - truth
-  - numbers
-summary: An if chain runs the first branch whose condition is truthy.
+requires: [truth, numbers]
+summary: if, elseif, else, and end. Watch out for the space in "else if".
 ---
+Lua's `if` reads almost like English. The condition is followed by `then`, and the whole statement is closed by `end`:
 
-An if chain runs the first branch whose condition is truthy. elseif belongs to the same chain.
+```lua title=thermostat.lua
+local temp = 17
 
-```lua
-local score = 75
-if score >= 70 then
-  print("pass")
-elseif score >= 50 then
-  print("retry")
+if temp < 16 then
+  print("Heating on 🔥")
+elseif temp > 24 then
+  print("Cooling on ❄️")
 else
-  print("practice")
+  print("Just right 👌")
 end
 ```
 
-## Put it to work
+```repl shell
+> lua thermostat.lua
+Just right 👌
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Branches are checked from top to bottom, and only the first one whose condition is truthy runs.
+
+**The classic slip: `else if` vs `elseif`.** Written as two words, `else if` opens a *new*, nested `if`, which needs its own `end`. Forget it and Lua complains at the very bottom of the file:
+
+```repl shell
+> lua thermostat.lua
+error: lua: thermostat.lua:10: 'end' expected (to close 'if' at line 3) near <eof>
+```
+
+If you see *'end' expected* pointing at the end of the file, look for an `else if` or a missing `end` somewhere above. Lua's one-word `elseif` keeps everything flat with a single `end`.
+
+Two other things to keep in mind:
+
+- **No parentheses needed** around the condition. `if (temp < 16) then` also works, but it's unusual style.
+- **Lua has no `switch`.** A chain of `elseif`s does the job, and for mapping values to results, a [table](node:records) lookup is often even neater:
+
+```lua
+local sounds = { cat = "meow", dog = "woof", cow = "moo" }
+print(sounds[animal] or "...")
+```
+
+```compare python
+if temp < 16:
+    print("Heating on")
+elif temp > 24:
+    print("Cooling on")
+else:
+    print("Just right")
+```
+
+```compare javascript
+if (temp < 16) {
+  console.log("Heating on");
+} else if (temp > 24) {   // two words in JS, one in Lua!
+  console.log("Cooling on");
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about choose a branch.
-lang: lua
+goal: "This code has the `else if` slip and won't compile. Turn it into a single `elseif`."
 code: |-
-  local score = 75
-  if score >= 80 then
-    print("pass")
-  elseif score >= 50 then
-    print("retry")
+  if score >= 90 then
+    grade = "A"
+  else if score >= 80 then
+    grade = "B"
   else
-    print("practice")
+    grade = "C"
   end
 checks:
-  - match: score\s+>=\s+70
-    message: Use score >= 70 for this step.
-  - notMatch: score\s+>=\s+80
-    message: Replace score >= 80 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '^\s*elseif\s+score\s*>=\s*80\s+then'
+    message: Write elseif as one word.
+  - notMatch: 'else\s+if'
+    message: There should be no "else if" left.
+solution: |-
+  if score >= 90 then
+    grade = "A"
+  elseif score >= 80 then
+    grade = "B"
+  else
+    grade = "C"
+  end
 ```
 
 ```quiz
-question: Two conditions in one `if`/`elseif` chain are `true`. Which bodies run?
+question: "How many `end`s does an `if ... elseif ... elseif ... else` chain need?"
 options:
-  - Only the first matching body.
-  - Both matching bodies.
-  - Only the final matching body.
+  - One
+  - One per branch
+  - None
 answer: 0
-explain: Lua stops selecting branches after the first truthy condition.
+explain: elseif continues the same if statement, so a single end closes the whole chain.
 ```

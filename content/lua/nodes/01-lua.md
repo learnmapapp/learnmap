@@ -1,45 +1,69 @@
 ---
 title: Meet Lua
-icon: 🌙
+icon: "🌙"
 branch: core
 requires: []
-summary: Lua executes a script from top to bottom.
+summary: What Lua is for, how to run a script, and the interactive prompt.
 kind: hub
 ---
+Lua (Portuguese for "moon") was created in Brazil in 1993, as a small language to **embed** in other programs. That's still its superpower. You might write Lua without ever running a "Lua program": you write it to configure Neovim, script a game in Roblox or LÖVE, extend Redis or nginx, or add mods to a game written in C++.
 
-Lua executes a script from top to bottom. Save this example as `hello.lua` and run `lua hello.lua`.
+It's also a perfectly nice language on its own, and the quickest way to learn it is with the standalone interpreter. Install Lua 5.4 (`brew install lua`, `apt install lua5.4`, or from [lua.org](https://www.lua.org/download.html)), then create a file called `hello.lua`:
 
-A useful term here is [[chunk]]: A sequence of Lua statements compiled and executed as a unit.
-
-```lua
-print("Hello, Lua!")
+```lua title=hello.lua
+-- Two dashes start a comment.
+local name = "Lua"
+print("Hello, " .. name .. "!")
 ```
 
-## Put it to work
+Run it from a terminal in the same folder:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```repl shell
+> lua hello.lua
+Hello, Lua!
+```
 
-This course targets **Lua 5.4**. Check your local tool version before following examples. See the [official reference](https://www.lua.org/manual/5.4/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
+(Some Linux distributions call the command `lua5.4`. If `lua` isn't found, try that.)
+
+A few things already stand out:
+
+- **No semicolons and no braces.** Lines end where they end, and blocks are closed with the word `end`, as you'll see soon.
+- `..` (two dots) **joins strings**. `+` is only for numbers.
+- `local` declares a variable. It matters more than you'd think, and it's [the next lesson](node:locals).
+
+For quick experiments, run `lua` on its own to get an interactive prompt. Type a line, press Enter, and it runs right away. Each line you type is a **[[chunk]]**, a unit of code that Lua compiles and runs in one go. A file is a chunk too.
+
+```repl shell
+> lua
+Lua 5.4.7  Copyright (C) 1994-2024 Lua.org, PUC-Rio
+> 2 ^ 10
+1024.0
+> os.exit()
+```
+
+The map ahead covers the whole language, which is small enough that 50 lessons get you through nearly all of it. Pick a goal, or just follow the paths.
 
 ```exercise
-goal: Make the script print `Hello, Lua!`.
-lang: lua
-code: print("Goodbye")
+goal: "Change the greeting so the script prints `Hello, Moon!` instead."
+code: |-
+  local name = "Lua"
+  print("Hello, " .. name .. "!")
 checks:
-  - match: '"Hello,\s+Lua!"'
-    message: Use "Hello, Lua!" for this step.
-  - notMatch: '"Goodbye"'
-    message: Replace "Goodbye" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'local\s+name\s*=\s*"Moon"'
+    message: Change the value of name to "Moon".
+  - match: 'print\("Hello, "\s*\.\.\s*name\s*\.\.\s*"!"\)'
+    message: Keep the print line as it was.
+solution: |-
+  local name = "Moon"
+  print("Hello, " .. name .. "!")
 ```
 
 ```quiz
-question: How do you run the saved Lua script `hello.lua` from a terminal?
+question: Which operator joins two strings in Lua?
 options:
-  - "`lua build hello.lua`"
-  - "`lua hello.lua`"
-  - "`lua require hello.lua`"
+  - "`+`"
+  - "`..`"
+  - "`&`"
 answer: 1
-explain: The standalone Lua interpreter executes the file passed as its argument.
+explain: Two dots concatenate strings. Lua keeps + strictly for arithmetic.
 ```

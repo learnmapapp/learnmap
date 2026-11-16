@@ -1,50 +1,87 @@
 ---
 title: While loops
-icon: 📋
+icon: "🔄"
 branch: flow
-requires:
-  - conditionals
-summary: A while loop checks its condition before each iteration.
+requires: [conditionals]
+summary: Keep looping while a condition holds, with while ... do ... end.
 ---
+A savings goal: put away €50 a month, earning 1% a month on what's there. How many months until there's €1,000?
 
-A while loop checks its condition before each iteration. Update the value that controls termination.
+You don't know the number of rounds in advance, which makes it a job for **`while`**:
 
-```lua
-local count = 0
-while count < 3 do
-  count = count + 1
+```lua title=savings.lua
+local balance, months = 0, 0
+
+while balance < 1000 do
+  balance = balance * 1.01 + 50
+  months = months + 1
 end
-print(count)
+
+print(("After %d months: €%.2f"):format(months, balance))
 ```
 
-## Put it to work
+```repl shell
+> lua savings.lua
+After 19 months: €1040.54
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+The shape is `while condition do ... end`. The condition is checked before every round, so if it's false from the start, the body never runs.
+
+(`string.format` with `%d` and `%.2f` makes the number look nice. There's a [whole lesson](node:format) on it.)
+
+**No `+=` in Lua.** You may have noticed `months = months + 1`. Lua has no `+=`, `-=` or `++`. It's a little more typing, and you get used to it surprisingly fast.
+
+**Watch the loop variable.** A `while` loop only ends if something in the body moves it towards the exit. Forget to update it, and it spins forever. Press Ctrl+C in the terminal to stop a runaway script.
+
+When you know the number of rounds up front, a [numeric for](node:numeric-for) is shorter and can't loop forever by accident.
+
+```compare python
+while balance < 1000:
+    balance = balance * 1.01 + 50
+    months += 1
+```
+
+```compare javascript
+while (balance < 1000) {
+  balance = balance * 1.01 + 50;
+  months++;
+}
+```
+
+```compare rust
+while balance < 1000.0 {
+    balance = balance * 1.01 + 50.0;
+    months += 1;
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about while loops.
-lang: lua
+goal: "This countdown never stops, and `-=` doesn't exist in Lua. Decrease `n` by one on each round."
 code: |-
-  local count = 0
-  while count < 1 do
-    count = count + 1
+  local n = 3
+  while n > 0 do
+    print(n)
+    n -= 1
   end
-  print(count)
 checks:
-  - match: count\s+<\s+3
-    message: Use count < 3 for this step.
-  - notMatch: count\s+<\s+1
-    message: Replace count < 1 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'n\s*=\s*n\s*-\s*1'
+    message: Write n = n - 1
+  - notMatch: '-='
+    message: Lua has no -= operator.
+solution: |-
+  local n = 3
+  while n > 0 do
+    print(n)
+    n = n - 1
+  end
 ```
 
 ```quiz
-question: When does a `while` loop first check its condition?
+question: Which keyword comes after the condition in a while loop?
 options:
-  - After executing its body twice.
-  - Before executing its body.
-  - After executing its body once.
+  - "`then`"
+  - "`do`"
+  - "`:`"
 answer: 1
-explain: An initially `false` condition means the body never executes.
+explain: "It's while condition do ... end. then belongs to if."
 ```

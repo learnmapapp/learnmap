@@ -1,57 +1,119 @@
 ---
 title: Assertion tests
-icon: 🧪
+icon: "🧪"
 branch: runtime
-requires:
-  - assertions
-  - modules
-summary: A small test script can use assert and exit with an error on failure.
+requires: [assertions, modules]
+summary: A tiny test runner in fifteen lines, and when to move to busted.
 ---
+Lua's standard library has no test framework, and for small projects you don't need one. `assert`, `pcall` and a table of functions add up to a perfectly usable test runner. Let's build one.
 
-A small test script can use assert and exit with an error on failure. Include empty inputs and representative normal inputs.
+The code under test, a module:
 
-```lua
-local function total(values)
-  local result = 0
-  for _, value in ipairs(values) do result = result + value end
-  return result
+```lua title=slug.lua
+local M = {}
+
+function M.slugify(title)
+  return (title:lower():gsub("%s+", "-"):gsub("[^%w-]", ""))
 end
-assert(total({}) == 0)
-assert(total({2, 3}) == 5)
-print("tests passed")
+
+return M
 ```
 
-## Put it to work
+The tests. Each one is a function in a table, and the runner calls each with `pcall`, so one failure doesn't stop the rest:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```lua title=slug_test.lua
+local slug = require("slug")
+local tests = {}
+
+tests["lowercases and joins words"] = function()
+  assert(slug.slugify("Hello World") == "hello-world")
+end
+
+tests["removes punctuation"] = function()
+  local got = slug.slugify("Lua: fast & small!")
+  assert(got == "lua-fast--small", "got " .. got)
+end
+
+local failed = 0
+for name, test in pairs(tests) do
+  local ok, err = pcall(test)
+  print((ok and "✅ " or "❌ ") .. name)
+  if not ok then
+    print("   " .. tostring(err))
+    failed = failed + 1
+  end
+end
+os.exit(failed == 0 and 0 or 1)
+```
+
+```repl shell
+> lua slug_test.lua
+✅ lowercases and joins words
+✅ removes punctuation
+```
+
+A few deliberate choices in there:
+
+- **The message in the second `assert`** shows what came out. A bare `assert(a == b)` only says *assertion failed!*, which leaves you guessing.
+- **`os.exit` with 1 on failure** makes the script usable in CI: a non-zero exit code fails the build.
+- **`pairs` runs the tests in random-ish order**, which is actually useful: tests that secretly depend on each other show up quickly.
+
+Did you notice "fast & small" became `fast--small`, with two dashes? The test documents that behavior. If you decide it's a bug, change the test first, see it fail, then fix `slugify`.
+
+**When to switch to a framework.** Once you want nicer assertions (`assert.are.same` for deep table comparison), setup and teardown, or mocking, install **busted**, the most popular Lua test framework:
+
+```lua title=spec/slug_spec.lua
+describe("slugify", function()
+  it("lowercases and joins words", function()
+    assert.are.equal("hello-world", require("slug").slugify("Hello World"))
+  end)
+end)
+```
+
+Run `busted` in the project folder, and it finds every `*_spec.lua` file in `spec/`.
+
+```compare python
+def test_slugify():
+    assert slugify("Hello World") == "hello-world"
+```
+
+```compare javascript
+test("slugify", () => {
+  expect(slugify("Hello World")).toBe("hello-world");
+});
+```
+
+```compare rust
+#[test]
+fn slugify_works() {
+    assert_eq!(slugify("Hello World"), "hello-world");
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about assertion tests.
-lang: lua
+goal: "Add a test named \"keeps edge dashes\" that checks `slug.slugify(\" hi \")` returns \"-hi-\", with a helpful message."
 code: |-
-  local function total(values)
-    local result = 0
-    for _, value in ipairs(values) do result = result + value end
-    return result
-  end
-  assert(total({}) == 0)
-  assert(total({2, 3}) == 6)
-  print("tests passed")
+  local tests = {}
 checks:
-  - match: total\(\{2,\s+3\}\)\s+==\s+5
-    message: Use total({2, 3}) == 5 for this step.
-  - notMatch: total\(\{2,\s+3\}\)\s+==\s+6
-    message: Replace total({2, 3}) == 6 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'tests\["keeps edge dashes"\]\s*=\s*function\(\s*\)'
+    message: 'Add tests["keeps edge dashes"] = function() ... end'
+  - match: 'assert\(\s*(\w+)\s*==\s*"-hi-"\s*,'
+    message: Assert that the result equals "-hi-", and pass a message as the second argument.
+solution: |-
+  local tests = {}
+
+  tests["keeps edge dashes"] = function()
+    local got = slug.slugify(" hi ")
+    assert(got == "-hi-", "got " .. got)
+  end
 ```
 
 ```quiz
-question: What happens when an assertion in a plain Lua test script fails?
+question: "Why does the runner call each test through pcall?"
 options:
-  - It changes the expected value to match the actual result.
-  - It raises an error, causing an uncaught failure to stop the script.
-  - It prints a warning and automatically skips the failure.
+  - To make the tests run faster.
+  - So a failing test doesn't stop the other tests from running.
+  - Because assert only works inside pcall.
 answer: 1
-explain: An uncaught assertion error makes the test run fail.
+explain: Without pcall, the first failing assert would end the whole script.
 ```

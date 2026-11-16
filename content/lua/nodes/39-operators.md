@@ -1,57 +1,108 @@
 ---
 title: Custom addition
-icon: 🔢
+icon: "➗"
 branch: design
-requires:
-  - metatables
-  - functions
-summary: The __add metamethod defines addition for these vector tables.
+requires: [metatables, functions]
+summary: Teach your tables +, == and < with arithmetic and comparison metamethods.
 ---
+Let's make 2D vectors that you can add with `+`, like the built-in numbers. The plan: one shared metatable, and a small function that creates vectors with it.
 
-The __add metamethod defines addition for these vector tables. Return another vector to preserve behavior for later operations.
-
-```lua
+```lua title=vector.lua
 local Vector = {}
-Vector.__index = Vector
-function Vector.__add(a, b)
-  return setmetatable({x = a.x + b.x}, Vector)
+
+local function vec(x, y)
+  return setmetatable({ x = x, y = y }, Vector)
 end
-local a = setmetatable({x = 2}, Vector)
-local b = setmetatable({x = 3}, Vector)
-print((a + b).x)
+
+Vector.__add = function(a, b)
+  return vec(a.x + b.x, a.y + b.y)
+end
+
+Vector.__eq = function(a, b)
+  return a.x == b.x and a.y == b.y
+end
+
+Vector.__tostring = function(v)
+  return ("(%g, %g)"):format(v.x, v.y)
+end
+
+local pos = vec(1, 2)
+local step = vec(3, 0)
+print(pos + step)                -- (4, 2)
+print(pos + step == vec(4, 2))   -- true
 ```
 
-## Put it to work
+**How it works.** For `a + b`, Lua first checks whether both are numbers. They aren't, so it looks for `__add` in `a`'s metatable, then in `b`'s, and calls `__add(a, b)`.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+That "then in `b`'s" matters for mixed operations. In `2 * v`, the left side is a number, so Lua finds `__mul` on `v`, but the arguments still arrive in order: `__mul(2, v)`. Your function needs to check which side is the number:
+
+```lua
+Vector.__mul = function(a, b)
+  if type(a) == "number" then a, b = b, a end   -- now a is the vector
+  return vec(a.x * b, a.y * b)
+end
+
+print(2 * pos, pos * 2)   -- (2, 4)  (2, 4)
+```
+
+The full menu:
+
+| Operators | Metamethods |
+| --- | --- |
+| `+ - * / % ^` | `__add __sub __mul __div __mod __pow` |
+| `//` and unary `-` | `__idiv __unm` |
+| `..` | `__concat` |
+| `== < <=` | `__eq __lt __le` |
+| `& \| ~ << >>` | `__band __bor __bxor __shl __shr` |
+
+There's no `__ne`, `__gt` or `__ge`: Lua derives `~=` from `__eq`, and `a > b` from `b < a`.
+
+Without `__eq`, `==` compares tables by **identity**: two separate tables with the same contents are not equal. That's why `__eq` is on the list above.
+
+```compare python
+class Vector:
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+```
+
+```compare rust
+impl Add for Vector {
+    type Output = Vector;
+    fn add(self, o: Vector) -> Vector { Vector { x: self.x + o.x, y: self.y + o.y } }
+}
+```
+
+```compare javascript
+// JavaScript has no operator overloading: you'd write a.add(b)
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about custom addition.
-lang: lua
+goal: "Add subtraction: give `Vector` an `__sub` metamethod that returns `vec(a.x - b.x, a.y - b.y)`."
 code: |-
-  local Vector = {}
-  Vector.__index = Vector
-  function Vector.__add(a, b)
-    return setmetatable({x = a.x - b.x}, Vector)
+  Vector.__add = function(a, b)
+    return vec(a.x + b.x, a.y + b.y)
   end
-  local a = setmetatable({x = 2}, Vector)
-  local b = setmetatable({x = 3}, Vector)
-  print((a + b).x)
 checks:
-  - match: a\.x\s+\+\s+b\.x
-    message: Use a.x + b.x for this step.
-  - notMatch: a\.x\s+\-\s+b\.x
-    message: Replace a.x - b.x in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'Vector\.__sub\s*=\s*function\(\s*a\s*,\s*b\s*\)'
+    message: Define Vector.__sub = function(a, b)
+  - match: 'return\s+vec\(\s*a\.x\s*-\s*b\.x\s*,\s*a\.y\s*-\s*b\.y\s*\)'
+    message: Return vec(a.x - b.x, a.y - b.y)
+solution: |-
+  Vector.__add = function(a, b)
+    return vec(a.x + b.x, a.y + b.y)
+  end
+
+  Vector.__sub = function(a, b)
+    return vec(a.x - b.x, a.y - b.y)
+  end
 ```
 
 ```quiz
-question: Which metamethod defines `a + b` for the vector tables in this lesson?
+question: "Two tables have the same fields and no metatable. What is `a == b`?"
 options:
-  - "`__add`"
-  - "`__index`"
-  - "`__call`"
-answer: 0
-explain: "`__add` implements addition; lookup and function-call behavior have different hooks."
+  - true, because their contents are equal.
+  - false, because without __eq, tables are compared by identity.
+  - An error.
+answer: 1
+explain: Without __eq, == only returns true for the very same table.
 ```

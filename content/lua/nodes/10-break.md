@@ -1,48 +1,98 @@
 ---
 title: Exit a loop
-icon: 📦
+icon: "🚪"
 branch: flow
-requires:
-  - numeric-for
-summary: break exits the innermost loop.
+requires: [numeric-for]
+summary: break to leave a loop early, and goto continue, since Lua has no continue.
 ---
+**A treasure hunt.** You're searching a list of boxes for the first one that holds a key:
 
-break exits the innermost loop. This example prints 1 through 3 because the exit happens before print.
+```lua title=hunt.lua
+local boxes = { "socks", "sand", "key", "shell", "key" }
+local found
+
+for i = 1, #boxes do
+  if boxes[i] == "key" then
+    found = i
+    break
+  end
+end
+
+print(found and ("Key in box " .. found) or "No key")   -- Key in box 3
+```
+
+**`break`** leaves the innermost loop immediately. Box 5 is never even opened. It works in `while`, `repeat` and both kinds of `for`.
+
+(`#boxes` is the number of items, and `boxes[i]` reads one item. [Tables](node:lists) come up soon; for now they're just lists.)
+
+**And `continue`?** Lua doesn't have one. When you want to skip to the next round, you have two options.
+
+Option 1: flip the condition, so the rest of the body only runs when it should:
 
 ```lua
-for n = 1, 10 do
-  if n == 4 then break end
-  print(n)
+for i = 1, #boxes do
+  if boxes[i] ~= "sand" then
+    print("Opening " .. boxes[i])
+  end
 end
 ```
 
-## Put it to work
+Option 2: for longer bodies, where nesting gets deep, Lua 5.4 has **`goto`** with a label. The community convention is a label called `continue` at the end of the loop body:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```lua
+for i = 1, #boxes do
+  if boxes[i] == "sand" then goto continue end
+  print("Opening " .. boxes[i])
+  -- more work here...
+  ::continue::
+end
+```
+
+Labels are written `::name::`. `goto` can only jump within the same function, and not into a block, so it can't create true spaghetti. Use it for this pattern and you'll be in good company.
+
+```compare python
+for box in boxes:
+    if box == "sand":
+        continue
+    print("Opening", box)
+```
+
+```compare javascript
+for (const box of boxes) {
+  if (box === "key") break;
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about exit a loop.
-lang: lua
+goal: "Stop the loop as soon as a negative number shows up, using `break`."
 code: |-
-  for n = 1, 10 do
-    if n == 8 then break end
-    print(n)
+  local total = 0
+  for i = 1, #readings do
+    if readings[i] < 0 then
+      print("Bad reading")
+    end
+    total = total + readings[i]
   end
 checks:
-  - match: n\s+==\s+4
-    message: Use n == 4 for this step.
-  - notMatch: n\s+==\s+8
-    message: Replace n == 8 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'print\("Bad reading"\)\s*\n\s*break\s*\n\s*end'
+    message: Add break right after the print, inside the if.
+solution: |-
+  local total = 0
+  for i = 1, #readings do
+    if readings[i] < 0 then
+      print("Bad reading")
+      break
+    end
+    total = total + readings[i]
+  end
 ```
 
 ```quiz
-question: What does `break` exit when loops are nested?
+question: "How do you skip to the next round of a Lua loop?"
 options:
-  - The entire enclosing function.
-  - The innermost enclosing loop.
-  - Every enclosing loop.
-answer: 1
-explain: Execution continues after the nearest loop containing the `break`.
+  - "`continue`"
+  - "`next`"
+  - "Use an if around the rest of the body, or `goto continue` with a `::continue::` label"
+answer: 2
+explain: Lua has no continue keyword. Restructuring with if, or goto to a label at the end of the body, does the job.
 ```
