@@ -56,7 +56,8 @@ split(text, ",", { trim: true }); // an options object
 ```
 
 ```compare kotlin
-fun split(text: String, sep: String, trim: Boolean = false) // named args
+// named args
+fun split(text: String, sep: String, trim: Boolean = false)
 ```
 
 ```compare java

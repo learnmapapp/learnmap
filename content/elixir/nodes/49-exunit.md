@@ -51,11 +51,15 @@ end
 Run one file or one line with `mix test test/greeter_test.exs:12`.
 
 ```compare java
-@Test void greetsByName() { assertEquals("Hello, Drop!", Greeter.hello("Drop")); }
+@Test void greetsByName() {
+    assertEquals("Hello, Drop!", Greeter.hello("Drop"));
+}
 ```
 
 ```compare kotlin
-@Test fun `greets by name`() { assertEquals("Hello, Drop!", hello("Drop")) }
+@Test fun `greets by name`() {
+    assertEquals("Hello, Drop!", hello("Drop"))
+}
 ```
 
 ```compare python
@@ -64,15 +68,24 @@ def test_greets_by_name():
 ```
 
 ```compare javascript
-test("greets by name", () => expect(hello("Drop")).toBe("Hello, Drop!"));
+test("greets by name", () => {
+  expect(hello("Drop")).toBe("Hello, Drop!");
+});
 ```
 
 ```compare rust
-#[test] fn greets_by_name() { assert_eq!(hello("Drop"), "Hello, Drop!"); }
+#[test]
+fn greets_by_name() {
+    assert_eq!(hello("Drop"), "Hello, Drop!");
+}
 ```
 
 ```compare go
-func TestHello(t *testing.T) { if Hello("Drop") != "Hello, Drop!" { t.Fail() } }
+func TestHello(t *testing.T) {
+    if Hello("Drop") != "Hello, Drop!" {
+        t.Fail()
+    }
+}
 ```
 
 ```exercise

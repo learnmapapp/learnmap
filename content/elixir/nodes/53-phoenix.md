@@ -35,9 +35,13 @@ Notice the pattern match on the params map, straight in the function head.
 defmodule HelloWeb.CounterLive do
   use HelloWeb, :live_view
 
-  def mount(_params, _session, socket), do: {:ok, assign(socket, count: 0)}
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, count: 0)}
+  end
 
-  def handle_event("inc", _, socket), do: {:noreply, update(socket, :count, &(&1 + 1))}
+  def handle_event("inc", _, socket) do
+    {:noreply, update(socket, :count, &(&1 + 1))}
+  end
 
   def render(assigns) do
     ~H"""
@@ -50,7 +54,8 @@ end
 Look familiar? It's shaped like a GenServer: state in, new state out. Phoenix sends only the changed bits to the browser over a WebSocket.
 
 ```compare javascript
-// Like Next.js server components plus a WebSocket, minus the client state.
+// Like Next.js server components plus a WebSocket, minus the client
+// state.
 ```
 
 ```compare python
@@ -58,7 +63,8 @@ Look familiar? It's shaped like a GenServer: state in, new state out. Phoenix se
 ```
 
 ```compare java
-// Like Spring Boot, with each request and client in its own lightweight process.
+// Like Spring Boot, with each request and client in its own
+// lightweight process.
 ```
 
 ```compare kotlin

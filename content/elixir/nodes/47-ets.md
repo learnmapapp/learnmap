@@ -10,7 +10,8 @@ A GenServer handles one message at a time. That's safe, but if hundreds of proce
 ETS (Erlang Term Storage) is a built-in, in-memory key-value table that many processes can read at the same time:
 
 ```elixir
-table = :ets.new(:cache, [:set, :public, :named_table, read_concurrency: true])
+table =
+  :ets.new(:cache, [:set, :public, :named_table, read_concurrency: true])
 
 :ets.insert(:cache, {"user:1", %{name: "Drop"}})
 :ets.lookup(:cache, "user:1")
@@ -47,7 +48,8 @@ cache.Store("user:1", user)
 ```
 
 ```compare python
-# Closest: a dict guarded by a lock, or Redis for cross-process sharing.
+# Closest: a dict guarded by a lock, or Redis for cross-process
+# sharing.
 ```
 
 ```compare javascript

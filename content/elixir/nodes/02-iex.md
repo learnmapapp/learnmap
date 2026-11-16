@@ -5,7 +5,7 @@ branch: basics
 requires: [elixir]
 summary: The interactive shell, your playground.
 ---
-Type `iex` in a terminal and you get [[iex|Interactive Elixir]]. Every lesson here uses it:
+Type `iex` in a terminal and you get [[iex|Interactive Elixir]], a prompt where you type an expression and see its value right away. Lines starting with `>` in this course are things you type there:
 
 ```repl
 > 1 + 2
@@ -80,6 +80,8 @@ Press **Tab** to autocomplete module and function names: type `String.` and hit 
 
 Stuck in a half-written expression? Type `#iex:break` on its own line to start over.
 
+Don't have Elixir yet? The [install page](https://elixir-lang.org/install.html) lists a package for every major OS; Erlang comes along with it. You won't need it for the exercises on this map, which run in your browser.
+
 ```quiz
 question: Which IEx helper shows the documentation of a function?
 options:
@@ -87,5 +89,5 @@ options:
   - h
   - doc
 answer: 1
-explain: "h, for help: h `String.upcase` shows its docs and examples."
+explain: "`h` is for help: `h String.upcase` shows its docs and examples."
 ```

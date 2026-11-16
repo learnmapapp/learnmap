@@ -44,7 +44,9 @@ results = await asyncio.gather(*(fetch(u) for u in urls))
 ```
 
 ```compare java
-var futures = urls.stream().map(u -> CompletableFuture.supplyAsync(() -> get(u))).toList();
+var futures = urls.stream()
+    .map(u -> CompletableFuture.supplyAsync(() -> get(u)))
+    .toList();
 ```
 
 ```compare kotlin
@@ -53,12 +55,16 @@ val results = urls.map { async { get(it) } }.awaitAll()
 
 ```compare go
 var wg sync.WaitGroup
-for _, u := range urls { wg.Add(1); go func() { defer wg.Done(); get(u) }() }
+for _, u := range urls {
+    wg.Add(1)
+    go func() { defer wg.Done(); get(u) }()
+}
 wg.Wait()
 ```
 
 ```compare rust
-let handles: Vec<_> = urls.iter().map(|u| tokio::spawn(get(u))).collect();
+let handles: Vec<_> =
+    urls.iter().map(|u| tokio::spawn(get(u))).collect();
 ```
 
 ```exercise

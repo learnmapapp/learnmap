@@ -20,7 +20,8 @@ Guards work on function heads too:
 ```elixir
 def describe(x) when is_integer(x), do: "an integer"
 def describe(x) when is_binary(x), do: "a string"
-def describe(x) when is_list(x) and length(x) > 0, do: "a non-empty list"
+def describe(x) when is_list(x) and length(x) > 0,
+  do: "a non-empty list"
 ```
 
 Only a limited set of things is allowed in a guard: comparisons, `and`/`or`/`not`, arithmetic, type checks like `is_atom/1`, `is_map/1`, `is_nil/1`, and a few others like `length/1`, `map_size/1` and `x in [1, 2, 3]`. No calls to your own functions; that keeps guards fast and side-effect free.

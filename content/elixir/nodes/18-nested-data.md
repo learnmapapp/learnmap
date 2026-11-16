@@ -54,7 +54,11 @@ game["player"]["stats"]["hp"] = 9  # mutates in place
 ```
 
 ```compare kotlin
-val next = game.copy(player = game.player.copy(stats = game.player.stats.copy(hp = 9)))
+val next = game.copy(
+    player = game.player.copy(
+        stats = game.player.stats.copy(hp = 9)
+    )
+)
 ```
 
 ```compare java

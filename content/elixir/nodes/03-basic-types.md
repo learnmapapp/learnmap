@@ -28,7 +28,8 @@ A [[tuple]] groups a fixed number of values in curly braces. Together with atoms
 ```
 
 ```compare python
-# Like returning a (status, value) tuple; atoms are similar to an Enum member.
+# Like returning a (status, value) tuple; atoms are similar to an Enum
+# member.
 ("ok", "Hello!\n")
 ```
 
@@ -37,7 +38,8 @@ A [[tuple]] groups a fixed number of values in curly braces. Together with atoms
 ```
 
 ```compare java
-// Atoms are like enum constants; {:ok, value} plays the role of Optional or a Result type.
+// Atoms are like enum constants; {:ok, value} plays the role of
+// Optional or a Result type.
 ```
 
 ```compare kotlin
@@ -79,11 +81,11 @@ Almost every function that can fail returns one of these. Because they're plain 
 Tuples are for small, fixed groups of values. Reading an element by position is fast (`elem(tuple, 0)`), but adding elements means copying, so don't use them as growable lists.
 
 ```quiz
-question: Which return value convention represents a recoverable failure?
+question: "`File.read(\"notes.txt\")` fails because the file doesn't exist. What does it most likely return?"
 options:
-  - The integer `0` for every failure.
-  - An `{:error, reason}` tuple.
-  - An `{:ok, reason}` tuple.
+  - "`nil`"
+  - "`{:error, :enoent}`"
+  - "`{:ok, :enoent}`"
 answer: 1
-explain: Tagged result tuples let callers distinguish success and failure with pattern matching.
+explain: "Functions that can fail return a tagged tuple: `{:ok, value}` on success, `{:error, reason}` otherwise. `:enoent` is the classic \"no such file\" reason."
 ```

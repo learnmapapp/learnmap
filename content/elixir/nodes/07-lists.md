@@ -39,15 +39,20 @@ def total(xs): return 0 if not xs else xs[0] + total(xs[1:])
 ```
 
 ```compare javascript
-const sum = ([head, ...tail]) => head === undefined ? 0 : head + sum(tail);
+const sum = ([head, ...tail]) =>
+  head === undefined ? 0 : head + sum(tail);
 ```
 
 ```compare java
-int sum(List<Integer> xs) { return xs.isEmpty() ? 0 : xs.getFirst() + sum(xs.subList(1, xs.size())); }
+int sum(List<Integer> xs) {
+    if (xs.isEmpty()) return 0;
+    return xs.getFirst() + sum(xs.subList(1, xs.size()));
+}
 ```
 
 ```compare kotlin
-fun sum(xs: List<Int>): Int = if (xs.isEmpty()) 0 else xs.first() + sum(xs.drop(1))
+fun sum(xs: List<Int>): Int =
+    if (xs.isEmpty()) 0 else xs.first() + sum(xs.drop(1))
 ```
 
 ```compare go

@@ -35,7 +35,9 @@ The exact versions are written to `mix.lock`. Commit it, so everyone gets the sa
 ```repl
 > Jason.encode!(%{name: "Drop"})
 "{\"name\":\"Drop\"}"
-> Req.get!("https://api.github.com/repos/elixir-lang/elixir").body["stargazers_count"]
+> resp = Req.get!("https://api.github.com/repos/elixir-lang/elixir")
+%Req.Response{status: 200, ...}
+> resp.body["stargazers_count"]
 25000
 ```
 

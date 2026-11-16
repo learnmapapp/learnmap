@@ -57,7 +57,12 @@ tailrec fun sum(xs: List<Int>, acc: Int = 0): Int =
 ```
 
 ```compare go
-func sum(xs []int) int { if len(xs) == 0 { return 0 }; return xs[0] + sum(xs[1:]) }
+func sum(xs []int) int {
+    if len(xs) == 0 {
+        return 0
+    }
+    return xs[0] + sum(xs[1:])
+}
 ```
 
 ```exercise

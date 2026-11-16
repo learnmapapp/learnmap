@@ -46,7 +46,8 @@ match result:
 ```
 
 ```compare javascript
-const [first, ...rest] = [1, 2, 3];  // destructuring, but no failing match
+// destructuring, but no failing match
+const [first, ...rest] = [1, 2, 3];
 ```
 
 ```compare kotlin

@@ -15,7 +15,10 @@ defmodule Counter do
   use GenServer
 
   # Client API: called by other processes
-  def start_link(start), do: GenServer.start_link(__MODULE__, start, name: __MODULE__)
+  def start_link(start) do
+    GenServer.start_link(__MODULE__, start, name: __MODULE__)
+  end
+
   def inc, do: GenServer.cast(__MODULE__, :inc)
   def value, do: GenServer.call(__MODULE__, :value)
 
@@ -50,7 +53,8 @@ The shape is always the same:
 The client functions at the top hide the messaging, so callers just call `Counter.inc()`.
 
 ```compare java
-// Closest: an actor (Akka) or a single-threaded executor guarding some state.
+// Closest: an actor (Akka) or a single-threaded executor guarding
+// some state.
 ```
 
 ```compare kotlin
@@ -70,7 +74,8 @@ The client functions at the top hide the messaging, so callers just call `Counte
 ```
 
 ```compare rust
-// An actor: a tokio task owning its state, reading from an mpsc channel.
+// An actor: a tokio task owning its state, reading from an mpsc
+// channel.
 ```
 
 ```quiz

@@ -11,7 +11,8 @@ Define one with `@callback`:
 
 ```elixir
 defmodule Notifier do
-  @callback send(to :: String.t(), message :: String.t()) :: :ok | {:error, term}
+  @callback send(to :: String.t(), message :: String.t()) ::
+              :ok | {:error, term}
 end
 ```
 
@@ -38,7 +39,9 @@ Forget a callback and the compiler warns you. `@impl` marks which functions are 
 Now code can take the module as a value and call it:
 
 ```elixir
-def alert(notifier, user), do: notifier.send(user.contact, "Server down!")
+def alert(notifier, user) do
+  notifier.send(user.contact, "Server down!")
+end
 
 alert(SlackNotifier, user)
 ```
@@ -47,7 +50,9 @@ This is how OTP works: [GenServer](node:genserver) is a behaviour. You write the
 
 ```compare java
 interface Notifier { void send(String to, String message); }
-class EmailNotifier implements Notifier { @Override public void send(...) {} }
+class EmailNotifier implements Notifier {
+    @Override public void send(String to, String message) { ... }
+}
 ```
 
 ```compare kotlin

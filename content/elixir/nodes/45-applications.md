@@ -21,7 +21,8 @@ defmodule MyApp.Application do
       MyApp.Counter
     ]
 
-    Supervisor.start_link(children, strategy: :one_for_one, name: MyApp.Supervisor)
+    opts = [strategy: :one_for_one, name: MyApp.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end
 ```
@@ -51,7 +52,8 @@ config :my_app, greeting: "Hello"
 ```
 
 ```compare java
-// Like a Spring Boot application context: beans started in dependency order.
+// Like a Spring Boot application context: beans started in dependency
+// order.
 ```
 
 ```compare kotlin

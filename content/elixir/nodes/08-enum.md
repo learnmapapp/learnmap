@@ -37,11 +37,18 @@ sum(x * x for x in range(1, 11) if x % 2 == 0)
 ```
 
 ```compare javascript
-[...Array(10).keys()].map(i => i + 1).filter(x => x % 2 === 0).map(x => x * x).reduce((a, b) => a + b, 0)
+[...Array(10).keys()]
+  .map(i => i + 1)
+  .filter(x => x % 2 === 0)
+  .map(x => x * x)
+  .reduce((a, b) => a + b, 0)
 ```
 
 ```compare java
-IntStream.rangeClosed(1, 10).filter(x -> x % 2 == 0).map(x -> x * x).sum()
+IntStream.rangeClosed(1, 10)
+    .filter(x -> x % 2 == 0)
+    .map(x -> x * x)
+    .sum()
 ```
 
 ```compare kotlin

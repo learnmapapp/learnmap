@@ -32,11 +32,13 @@ If a child keeps crashing (by default more than 3 times in 5 seconds), the super
 Supervisors can supervise supervisors. That gives you a **supervision tree**: small failures get fixed close to where they happen, and only real disasters climb up the tree.
 
 ```compare java
-// Closest: Kubernetes restarting a pod, but per object and in microseconds.
+// Closest: Kubernetes restarting a pod, but per object and in
+// microseconds.
 ```
 
 ```compare kotlin
-// SupervisorJob stops one child's failure from cancelling its siblings, but doesn't restart.
+// SupervisorJob stops one child's failure from cancelling its
+// siblings, but doesn't restart.
 ```
 
 ```compare go

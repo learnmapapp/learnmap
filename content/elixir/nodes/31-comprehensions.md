@@ -22,8 +22,10 @@ Add filters after the generator:
 Several generators give every combination:
 
 ```repl
-> for suit <- [:hearts, :spades], rank <- [:ace, :king], do: {rank, suit}
-[{:ace, :hearts}, {:king, :hearts}, {:ace, :spades}, {:king, :spades}]
+> for suit <- [:hearts, :spades], rank <- [:ace, :king],
+...>   do: {rank, suit}
+[{:ace, :hearts}, {:king, :hearts}, {:ace, :spades},
+ {:king, :spades}]
 ```
 
 Generators pattern match, and **skip** elements that don't match. Great for picking out results:

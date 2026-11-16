@@ -10,7 +10,8 @@ A GenServer gets messages three ways.
 **`call`** is synchronous: the caller waits for the reply (5 s by default).
 
 ```elixir
-def handle_call({:withdraw, amount}, _from, balance) when amount <= balance do
+def handle_call({:withdraw, amount}, _from, balance)
+    when amount <= balance do
   {:reply, :ok, balance - amount}
 end
 

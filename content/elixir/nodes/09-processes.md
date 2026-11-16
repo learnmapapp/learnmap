@@ -29,7 +29,8 @@ end
 Because nothing is shared, a crashing process can't corrupt anyone else. Elixir embraces this with *supervisors*: processes that watch others and restart them when they fail. The motto is "let it crash".
 
 ```compare java
-// Like a thread with its own BlockingQueue, but much lighter (closest: virtual threads).
+// Like a thread with its own BlockingQueue, but much lighter
+// (closest: virtual threads).
 Thread.startVirtualThread(() -> { var msg = queue.take(); });
 ```
 
@@ -39,12 +40,14 @@ launch { val msg = channel.receive() }
 ```
 
 ```compare go
-// Like a goroutine with a channel, except each process has its own mailbox and nothing is shared.
+// Like a goroutine with a channel, except each process has its own
+// mailbox and nothing is shared.
 go func() { msg := <-ch; reply <- "hi" }()
 ```
 
 ```compare python
-# Closest: multiprocessing with a Queue, but BEAM processes are thousands of times cheaper.
+# Closest: multiprocessing with a Queue, but BEAM processes are
+# thousands of times cheaper.
 ```
 
 ```compare javascript
@@ -53,13 +56,13 @@ worker.postMessage({ hello: true });
 ```
 
 ```quiz
-question: How do Elixir processes normally communicate directly?
+question: Process A wants to tell process B about a new order. How?
 options:
-  - By mutating one shared process-local map.
-  - By sending messages to each other's mailboxes.
-  - By assigning each other's local variables.
+  - Write the order into a variable that B can also see.
+  - Send B a message; it lands in B's mailbox until B receives it.
+  - Call a method on B's object.
 answer: 1
-explain: Message passing is the normal direct process interface; ETS is a separate shared-storage facility.
+explain: Processes share no memory at all. Messages are the only way in.
 ```
 
 ## Processes are cheap

@@ -61,7 +61,8 @@ private int line(Item i) { ... }
 ```
 
 ```compare kotlin
-fun hello(name: String, greeting: String = "Hello") = "$greeting, $name!"
+fun hello(name: String, greeting: String = "Hello") =
+    "$greeting, $name!"
 private fun line(i: Item) = i.price * i.qty
 ```
 

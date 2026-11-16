@@ -45,7 +45,11 @@ end
 A struct is still a map underneath, with a hidden `__struct__` key holding the module name. What it **doesn't** have is access with `user[:name]`, or `Enum` support; those are opt-in via [protocols](node:protocols).
 
 ```compare kotlin
-data class User(val name: String, val age: Int = 0, val admin: Boolean = false)
+data class User(
+    val name: String,
+    val age: Int = 0,
+    val admin: Boolean = false,
+)
 ```
 
 ```compare java

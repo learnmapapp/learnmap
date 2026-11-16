@@ -21,7 +21,8 @@ The [[pipe operator]] `|>` passes the value on its left as the **first argument*
 ```
 
 ```repl
-> "  hello drop  " |> String.trim() |> String.upcase() |> String.split()
+> "  hello drop  " |> String.trim() |> String.upcase()
+...>   |> String.split()
 ["HELLO", "DROP"]
 ```
 

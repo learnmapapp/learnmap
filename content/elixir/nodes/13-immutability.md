@@ -51,7 +51,8 @@ new = list + [4]  # a new list; list.append(4) would mutate
 ```
 
 ```compare java
-List<Integer> next = Stream.concat(list.stream(), Stream.of(4)).toList();
+List<Integer> next =
+    Stream.concat(list.stream(), Stream.of(4)).toList();
 ```
 
 ```compare kotlin
