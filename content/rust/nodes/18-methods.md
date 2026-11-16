@@ -75,7 +75,8 @@ class Counter { fun bump() { count++ } }
 ```
 
 ```compare go
-func (c *Counter) bump() { c.count++ } // pointer receiver, like &mut self
+// pointer receiver, like &mut self
+func (c *Counter) bump() { c.count++ }
 ```
 
 ```exercise

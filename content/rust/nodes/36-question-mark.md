@@ -57,7 +57,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ```
 
 ```compare java
-// Checked exceptions: declare `throws IOException` and let it bubble up.
+// Checked exceptions: declare `throws IOException` and let it bubble
+// up.
 String read() throws IOException { return Files.readString(path); }
 ```
 

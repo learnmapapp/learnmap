@@ -54,15 +54,18 @@ Most of the time you don't write lifetimes. If a function takes one reference an
 `'static` is the longest lifetime: the whole program. String literals are `&'static str`, they're baked into the binary.
 
 ```compare java
-// Java's garbage collector keeps referenced objects alive, so this question never comes up.
+// Java's garbage collector keeps referenced objects alive, so this
+// question never comes up.
 ```
 
 ```compare kotlin
-// The garbage collector keeps objects alive for as long as anything refers to them.
+// The garbage collector keeps objects alive for as long as anything
+// refers to them.
 ```
 
 ```compare go
-// Go's escape analysis moves such values to the heap; the GC handles the rest.
+// Go's escape analysis moves such values to the heap; the GC handles
+// the rest.
 ```
 
 ```compare python

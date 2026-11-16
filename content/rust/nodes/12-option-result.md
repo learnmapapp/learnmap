@@ -50,12 +50,15 @@ int total(String a, String b) throws NumberFormatException {
 ```
 
 ```compare kotlin
-// Kotlin has nullable types (Int?) for Option, and exceptions for errors.
-fun total(a: String, b: String): Int? = a.toIntOrNull()?.let { x -> b.toIntOrNull()?.plus(x) }
+// Kotlin has nullable types (Int?) for Option, and exceptions for
+// errors.
+fun total(a: String, b: String): Int? =
+    a.toIntOrNull()?.let { x -> b.toIntOrNull()?.plus(x) }
 ```
 
 ```compare go
-// Go returns (value, error) too, but `?` saves all the `if err != nil`.
+// Go returns (value, error) too, but `?` saves all the `if err !=
+// nil`.
 x, err := strconv.Atoi(a)
 if err != nil { return 0, err }
 ```

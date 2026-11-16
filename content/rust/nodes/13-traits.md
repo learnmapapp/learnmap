@@ -43,7 +43,9 @@ struct Crab { name: String, legs: u8 }
 ```compare java
 interface Describe { String describe(); }
 record Crab(String name, int legs) implements Describe {
-    public String describe() { return name + ", a crab with " + legs + " legs"; }
+    public String describe() {
+        return name + ", a crab with " + legs + " legs";
+    }
 }
 ```
 
@@ -55,7 +57,8 @@ data class Crab(val name: String, val legs: Int) : Describe {
 ```
 
 ```compare go
-// Go interfaces are implemented implicitly; Rust needs an explicit impl.
+// Go interfaces are implemented implicitly; Rust needs an explicit
+// impl.
 type Describer interface { Describe() string }
 ```
 
@@ -65,7 +68,8 @@ class Describe(Protocol):
 ```
 
 ```compare javascript
-// No built-in interfaces; TypeScript's `interface` is the closest relative.
+// No built-in interfaces; TypeScript's `interface` is the closest
+// relative.
 ```
 
 ```exercise

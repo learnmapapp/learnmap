@@ -55,7 +55,8 @@ const s = { kind: "circle", radius: 2 };
 ```
 
 ```compare go
-// Go has no sum types; an interface with a marker method is the usual stand-in.
+// Go has no sum types; an interface with a marker method is the usual
+// stand-in.
 type Shape interface{ isShape() }
 ```
 

@@ -72,11 +72,17 @@ function* countdown(n) { while (n > 0) yield n--; }
 ```
 
 ```compare java
-class Countdown implements Iterator<Integer> { public boolean hasNext() {...} public Integer next() {...} }
+class Countdown implements Iterator<Integer> {
+    public boolean hasNext() { ... }
+    public Integer next() { ... }
+}
 ```
 
 ```compare kotlin
-fun countdown(n: Int) = sequence { var i = n; while (i > 0) yield(i--) }
+fun countdown(n: Int) = sequence {
+    var i = n
+    while (i > 0) yield(i--)
+}
 ```
 
 ```compare go

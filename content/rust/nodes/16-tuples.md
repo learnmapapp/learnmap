@@ -56,7 +56,8 @@ const [name, legs] = crab;
 ```
 
 ```compare java
-record Crab(String name, int legs) {}  // Java has no tuples; a record is closest
+// Java has no tuples; a record is closest
+record Crab(String name, int legs) {}
 ```
 
 ```compare kotlin

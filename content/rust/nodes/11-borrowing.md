@@ -39,12 +39,14 @@ In function parameters, `&str` is nicer than `&String`: it accepts both string l
 ```
 
 ```compare java
-// Java passes object references freely; nothing stops two threads changing one list.
+// Java passes object references freely; nothing stops two threads
+// changing one list.
 void addClaw(StringBuilder text) { text.append(" 🦀"); }
 ```
 
 ```compare kotlin
-// Kotlin passes references freely; read-only vs mutable is only a type-level hint.
+// Kotlin passes references freely; read-only vs mutable is only a
+// type-level hint.
 fun addClaw(text: StringBuilder) { text.append(" 🦀") }
 ```
 
@@ -54,7 +56,8 @@ func addClaw(text *string) { *text += " 🦀" }
 ```
 
 ```compare python
-# Python passes references to everything; nothing stops shared mutation.
+# Python passes references to everything; nothing stops shared
+# mutation.
 def add_claw(items: list): items.append("🦀")
 ```
 
@@ -108,11 +111,11 @@ v.push(3);            // fine now
 ```
 
 ```quiz
-question: Which rule applies to overlapping active borrows of the same value?
+question: "You hold a `&v` to a vector and, while it's still in use, ask for a `&mut v`. What does the compiler say?"
 options:
-  - Mutable borrows are allowed only for global variables.
-  - One exclusive mutable borrow, or shared read-only borrows.
-  - Any number of independent mutable and shared borrows together.
+  - Nothing, both are fine.
+  - It refuses. You can have many readers or one writer, never both at once.
+  - It allows it, but only in release builds.
 answer: 1
-explain: A mutable borrow requires exclusive access while it is in use.
+explain: A `&mut` borrow needs exclusive access for as long as it's in use.
 ```

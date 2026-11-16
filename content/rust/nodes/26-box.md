@@ -37,7 +37,8 @@ enum List {
     Empty,
 }
 
-let list = List::Node(1, Box::new(List::Node(2, Box::new(List::Empty))));
+let tail = List::Node(2, Box::new(List::Empty));
+let list = List::Node(1, Box::new(tail));
 ```
 
 Other reasons to box:
@@ -51,7 +52,8 @@ class Node { int value; Node next; }
 ```
 
 ```compare kotlin
-class Node(val value: Int, val next: Node?) // references, like Box (or Option<Box>)
+// references, like Box (or Option<Box>)
+class Node(val value: Int, val next: Node?)
 ```
 
 ```compare go

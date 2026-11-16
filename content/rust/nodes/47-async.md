@@ -26,7 +26,8 @@ tokio = { version = "1", features = ["full"] }
 ```rust
 #[tokio::main]
 async fn main() {
-    let (a, b) = tokio::join!(fetch_name(1), fetch_name(2)); // both at once
+    // run both at once
+    let (a, b) = tokio::join!(fetch_name(1), fetch_name(2));
     println!("{a} and {b}");
 }
 ```
@@ -51,7 +52,10 @@ Don't call slow blocking code (like std::thread::sleep or heavy computation) ins
 ```
 
 ```compare javascript
-async function fetchName(id) { const user = await dbLookup(id); return user.name; }
+async function fetchName(id) {
+  const user = await dbLookup(id);
+  return user.name;
+}
 ```
 
 ```compare python

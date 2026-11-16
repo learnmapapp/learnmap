@@ -34,7 +34,9 @@ struct Crab { name: String, legs: u8, age: u8 }
 
 match crab {
     Crab { legs: 10, .. } => "a healthy crab",
-    Crab { name, legs, .. } => format!("{name} lost {} legs", 10 - legs),
+    Crab { name, legs, .. } => {
+        format!("{name} lost {} legs", 10 - legs)
+    }
 }
 ```
 

@@ -18,13 +18,13 @@ error[E0384]: cannot assign twice to immutable variable `x`
 Learning Rust mostly means learning to read those messages. Think of the compiler as a very picky, very patient pair programmer.
 
 ```quiz
-question: How does safe Rust reject ordinary dangling-reference code?
+question: You write code that uses a value after it has been freed. When do you find out?
 options:
-  - Only through tests written by the developer.
-  - Through borrow and lifetime checks during compilation.
-  - By waiting for a production crash.
+  - When a test happens to hit it.
+  - When you compile. The compiler refuses to build it and explains why.
+  - When it crashes in production.
 answer: 1
-explain: Safe Rust's reference rules are checked before execution; unsafe code has additional obligations.
+explain: Rust checks these rules before the program runs, so that whole class of bug never makes it into a build.
 ```
 
 ## What you'll find on this map
@@ -41,11 +41,11 @@ Rust is a small set of ideas stacked on top of each other:
 Start at the top and follow the lines, or pick a goal and let the guide build a route.
 
 ```quiz
-question: Which memory-management mechanism does Rust not require by default?
+question: Coming from Java or Go, which familiar piece is missing in Rust?
 options:
-  - A tracing garbage collector.
-  - Ownership and automatic destruction.
-  - Compile-time borrowing checks.
+  - A garbage collector.
+  - Functions.
+  - A package manager.
 answer: 0
-explain: Owned values are normally destroyed through ownership and scope rules.
+explain: Rust frees memory through ownership instead. The Ownership branch shows how, and Cargo is a very good package manager.
 ```

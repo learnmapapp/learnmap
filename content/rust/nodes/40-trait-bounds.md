@@ -65,7 +65,8 @@ func Max[T cmp.Ordered](a, b T) T
 ```
 
 ```compare python
-def shout(thing: SupportsStr) -> str: ...  # Protocols, checked by type checkers
+# Protocols, checked by type checkers:
+def shout(thing: SupportsStr) -> str: ...
 ```
 
 ```compare javascript

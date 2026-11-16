@@ -42,7 +42,8 @@ And consumers:
 true
 > [3, 8, 2].iter().position(|&n| n == 8)
 Some(1)
-> ["1", "x", "3"].iter().filter_map(|s| s.parse::<i32>().ok()).collect::<Vec<_>>()
+> ["1", "x", "3"].iter().filter_map(|s| s.parse::<i32>().ok())
+  .collect::<Vec<_>>()
 [1, 3]
 ```
 
@@ -57,7 +58,10 @@ const passed = scores.filter((s) => s >= 20).map((s) => s * 2);
 ```
 
 ```compare java
-var passed = scores.stream().filter(s -> s >= 20).map(s -> s * 2).toList();
+var passed = scores.stream()
+    .filter(s -> s >= 20)
+    .map(s -> s * 2)
+    .toList();
 ```
 
 ```compare kotlin

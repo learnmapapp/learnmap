@@ -39,7 +39,8 @@ The cost: each call goes through a small lookup table (a "vtable") to find the r
 | speed | fastest | one extra pointer hop |
 
 ```compare java
-List<Shape> shapes = List.of(new Circle(1), new Square(2)); // always dynamic
+// always dynamic
+List<Shape> shapes = List.of(new Circle(1), new Square(2));
 ```
 
 ```compare kotlin
@@ -47,7 +48,8 @@ val shapes: List<Shape> = listOf(Circle(1.0), Square(2.0))
 ```
 
 ```compare go
-shapes := []Shape{Circle{1}, Square{2}} // interfaces are always dynamic
+// interfaces are always dynamic
+shapes := []Shape{Circle{1}, Square{2}}
 ```
 
 ```compare python

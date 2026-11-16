@@ -16,8 +16,9 @@ Rust has two main string types, and now that you know about ownership and slices
 Converting between them:
 
 ```rust
-let owned: String = "crab".to_string(); // or String::from("crab"), or "crab".into()
-let borrowed: &str = &owned;            // or owned.as_str()
+// or String::from("crab"), or "crab".into()
+let owned: String = "crab".to_string();
+let borrowed: &str = &owned; // or owned.as_str()
 ```
 
 Building strings:

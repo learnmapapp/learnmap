@@ -47,7 +47,8 @@ int pears = 5;         // Rust's `let mut`
 ```
 
 ```compare python
-# Python has no immutable variables; Rust's default is like a constant you can't reassign.
+# Python has no immutable variables; Rust's default is like a constant
+# you can't reassign.
 apples = 5
 ```
 

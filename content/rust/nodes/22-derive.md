@@ -5,7 +5,7 @@ branch: traits
 requires: [traits]
 summary: Debug, Clone, PartialEq, Default and friends for free.
 ---
-`Some` traits are so mechanical that the compiler can write them for you. Put `#[derive(...)]` above a struct or enum:
+Some traits are so mechanical that the compiler can write them for you. Put `#[derive(...)]` above a struct or enum:
 
 ```rust
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -55,11 +55,13 @@ impl std::fmt::Display for Crab {
 ```
 
 ```compare java
-record Crab(String name, int legs) {} // equals, hashCode, toString for free
+// equals, hashCode, toString for free
+record Crab(String name, int legs) {}
 ```
 
 ```compare kotlin
-data class Crab(val name: String, val legs: Int) // equals, hashCode, toString, copy
+// equals, hashCode, toString, copy
+data class Crab(val name: String, val legs: Int)
 ```
 
 ```compare python
@@ -74,7 +76,8 @@ class Crab:
 ```
 
 ```compare go
-// Structs compare with == when all fields are comparable; %+v prints them.
+// Structs compare with == when all fields are comparable; %+v prints
+// them.
 ```
 
 ```exercise

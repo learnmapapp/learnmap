@@ -56,7 +56,8 @@ Ok(42)
 And `as` is only for simple number casts, where truncation is OK.
 
 ```compare java
-Fahrenheit f = Fahrenheit.from(celsius); // a static factory, by convention
+// a static factory, by convention
+Fahrenheit f = Fahrenheit.from(celsius);
 ```
 
 ```compare kotlin
@@ -64,7 +65,9 @@ fun Celsius.toFahrenheit() = Fahrenheit(value * 9 / 5 + 32)
 ```
 
 ```compare go
-func FromCelsius(c Celsius) Fahrenheit { return Fahrenheit(c*9/5 + 32) }
+func FromCelsius(c Celsius) Fahrenheit {
+    return Fahrenheit(c*9/5 + 32)
+}
 ```
 
 ```compare python

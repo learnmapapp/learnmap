@@ -42,11 +42,13 @@ Reach for a function first. Use a macro when a function can't do it: a variable 
 ```
 
 ```compare kotlin
-// No macros; inline functions and compiler plugins fill some of the gap.
+// No macros; inline functions and compiler plugins fill some of the
+// gap.
 ```
 
 ```compare java
-// No macros; annotation processors (like Lombok) generate code instead.
+// No macros; annotation processors (like Lombok) generate code
+// instead.
 ```
 
 ```compare python

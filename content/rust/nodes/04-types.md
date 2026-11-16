@@ -47,7 +47,8 @@ double total = 3 * 2.5;
 ```
 
 ```compare kotlin
-// Kotlin also refuses implicit conversions: like Rust, you call .toDouble().
+// Kotlin also refuses implicit conversions: like Rust, you call
+// .toDouble().
 val total = 3.toDouble() * 2.5
 ```
 

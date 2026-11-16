@@ -70,7 +70,8 @@ public class Circle { public double radius; }
 
 ```compare kotlin
 package shapes
-class Circle(val radius: Double) // public by default; mark private/internal
+// public by default; mark private/internal
+class Circle(val radius: Double)
 ```
 
 ```compare go

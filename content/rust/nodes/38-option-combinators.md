@@ -11,8 +11,10 @@ summary: map, and_then, unwrap_or and ok_or instead of match.
 
 ```rust
 let name = maybe_name.unwrap_or("stranger");
-let port = env_port.unwrap_or_default();           // 0 for numbers, "" for strings
-let list = cached.unwrap_or_else(|| load_list()); // only computed when needed
+// 0 for numbers, "" for strings
+let port = env_port.unwrap_or_default();
+// load_list() only runs when cached is None
+let list = cached.unwrap_or_else(|| load_list());
 ```
 
 **Transforming** the value inside, if there is one:

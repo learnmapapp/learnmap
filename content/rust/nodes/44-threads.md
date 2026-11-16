@@ -66,7 +66,8 @@ t.join()
 ```
 
 ```compare go
-go func() { fmt.Println("hi") }() // goroutines; use a WaitGroup to wait
+// goroutines; use a WaitGroup to wait
+go func() { fmt.Println("hi") }()
 ```
 
 ```compare python

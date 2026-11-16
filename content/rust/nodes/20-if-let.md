@@ -54,11 +54,14 @@ if (port := config.port) is not None:
 ```
 
 ```compare javascript
-if (config.port != null) { console.log(`listening on ${config.port}`); }
+if (config.port != null) {
+  console.log(`listening on ${config.port}`);
+}
 ```
 
 ```compare java
-config.port().ifPresent(port -> System.out.println("listening on " + port));
+config.port().ifPresent(port ->
+    System.out.println("listening on " + port));
 ```
 
 ```compare kotlin

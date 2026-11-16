@@ -31,7 +31,8 @@ After the [[move]], `a` is empty, so Rust won't let you use it. That's how Rust 
 Small, simple values like numbers and `bool` are copied instead, so they don't have this problem. If you really want a full copy of a `String`, ask for it with `.clone()`.
 
 ```compare java
-// In Java, both names point to the same object, and the GC frees it later.
+// In Java, both names point to the same object, and the GC frees it
+// later.
 String a = "crab";
 String b = a;
 ```
@@ -55,7 +56,8 @@ val b = a
 ```
 
 ```compare go
-// Go copies the string header, both stay usable; the GC frees memory later.
+// Go copies the string header, both stay usable; the GC frees memory
+// later.
 a := "crab"
 b := a
 ```

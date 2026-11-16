@@ -25,8 +25,12 @@ impl fmt::Display for ConfigError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             ConfigError::Missing(k) => write!(f, "missing key {k}"),
-            ConfigError::Invalid { key, value } => write!(f, "{key} can't be {value}"),
-            ConfigError::Io(e) => write!(f, "could not read config: {e}"),
+            ConfigError::Invalid { key, value } => {
+                write!(f, "{key} can't be {value}")
+            }
+            ConfigError::Io(e) => {
+                write!(f, "could not read config: {e}")
+            }
         }
     }
 }
@@ -44,7 +48,8 @@ impl From<std::io::Error> for ConfigError {
 }
 
 fn load() -> Result<String, ConfigError> {
-    let text = std::fs::read_to_string("app.toml")?; // io::Error -> ConfigError
+    // ? turns the io::Error into a ConfigError
+    let text = std::fs::read_to_string("app.toml")?;
     Ok(text)
 }
 ```

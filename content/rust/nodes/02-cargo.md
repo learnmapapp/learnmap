@@ -7,6 +7,8 @@ summary: Create, build and run a project with one tool.
 ---
 [[cargo|Cargo]] does everything around your code: create a project, fetch libraries, compile, test and run.
 
+You get it together with the compiler from [rustup.rs](https://rustup.rs), the official installer. One command installs both, and `rustup update` keeps them current. The exercises on this map run in your browser, so installing is only needed when you want to build things on your own machine.
+
 ```shell
 $ cargo new hello
 $ cd hello
@@ -42,13 +44,16 @@ console.log("Hello, world!");
 ```
 
 ```compare python
-# Cargo.toml is like pyproject.toml; cargo is pip + venv + a build tool in one.
+# Cargo.toml is like pyproject.toml; cargo is pip + venv + a build
+# tool in one.
 print("Hello, world!")
 ```
 
 ```compare java
 // Cargo is Maven or Gradle, but with zero config to start.
-public static void main(String[] args) { System.out.println("Hello, world!"); }
+public static void main(String[] args) {
+    System.out.println("Hello, world!");
+}
 ```
 
 ```compare kotlin
