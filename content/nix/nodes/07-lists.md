@@ -25,7 +25,8 @@ Lists go between square brackets, and the elements are separated by **spaces**, 
 ```
 
 ```compare java
-Stream.concat(List.of("git", "curl").stream(), Stream.of("vim")).toList()
+Stream.concat(List.of("git", "curl").stream(), Stream.of("vim"))
+    .toList()
 ```
 
 ```compare kotlin

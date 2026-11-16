@@ -46,7 +46,8 @@ in
 ```
 
 ```compare java
-// Like constructor injection in Spring: list dependencies, the container supplies them.
+// Like constructor injection in Spring: list dependencies, the
+// container supplies them.
 ```
 
 ```compare kotlin

@@ -16,14 +16,18 @@ outputs = { self, nixpkgs }:
     packages.x86_64-linux.default = pkgs.callPackage ./package.nix { };
     packages.x86_64-linux.docs = pkgs.callPackage ./docs.nix { };
 
-    devShells.x86_64-linux.default = pkgs.mkShell { packages = [ pkgs.go ]; };
+    devShells.x86_64-linux.default = pkgs.mkShell {
+      packages = [ pkgs.go ];
+    };
 
     apps.x86_64-linux.default = {
       type = "app";
       program = "${self.packages.x86_64-linux.default}/bin/tool";
     };
 
-    nixosConfigurations.server = nixpkgs.lib.nixosSystem { modules = [ ./server.nix ]; };
+    nixosConfigurations.server = nixpkgs.lib.nixosSystem {
+      modules = [ ./server.nix ];
+    };
   };
 ```
 

@@ -19,7 +19,8 @@ Since it returns a value, you can drop it anywhere a value fits:
 ```nix
 {
   port = if production then 443 else 8080;
-  packages = [ pkgs.git ] ++ (if withDocs then [ pkgs.pandoc ] else [ ]);
+  packages = [ pkgs.git ]
+    ++ (if withDocs then [ pkgs.pandoc ] else [ ]);
 }
 ```
 

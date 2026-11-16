@@ -33,8 +33,10 @@ For a standard `./configure && make && make install` project, that's the whole p
 Dependencies go in two lists:
 
 ```nix
-nativeBuildInputs = [ pkgs.pkg-config pkgs.cmake ];  # tools that run during the build
-buildInputs = [ pkgs.openssl pkgs.zlib ];             # libraries you link against
+# tools that run during the build
+nativeBuildInputs = [ pkgs.pkg-config pkgs.cmake ];
+# libraries you link against
+buildInputs = [ pkgs.openssl pkgs.zlib ];
 ```
 
 Add a `meta` block so others know what it is:

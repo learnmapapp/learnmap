@@ -36,7 +36,8 @@ If a change breaks so badly that you can't log in, reboot and pick an older gene
 Rebuild a remote machine from your laptop:
 
 ```shell
-$ nixos-rebuild switch --flake .#server --target-host root@server.example.org
+$ nixos-rebuild switch --flake .#server \
+    --target-host root@server.example.org
 ```
 
 ```quiz

@@ -14,7 +14,8 @@ summary: Search nixpkgs by name, and find what a package contains.
 ```shell
 $ nix search nixpkgs ripgrep
 * legacyPackages.x86_64-linux.ripgrep (14.1.1)
-  Utility that combines the usability of The Silver Searcher with the raw speed of grep
+  Utility that combines the usability of The Silver Searcher with
+  the raw speed of grep
 ```
 
 Package names don't always match command names. To find which package provides a command, use `nix-locate` (from `nix-index`), or the `comma` tool:

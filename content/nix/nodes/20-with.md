@@ -39,7 +39,8 @@ from pkgs import git, curl, jq  # but for one expression only
 ```
 
 ```compare javascript
-// JavaScript had a with statement too. It was deprecated for the same reasons.
+// JavaScript had a with statement too. It was deprecated for the same
+// reasons.
 const { git, curl, jq } = pkgs;
 ```
 

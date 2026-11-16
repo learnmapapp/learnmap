@@ -11,7 +11,8 @@ Sometimes a value just doesn't make sense, and the best thing is to stop with a 
 
 ```nix
 { port }:
-if port < 1024 then throw "port ${toString port} needs root, pick one above 1024"
+if port < 1024
+then throw "port ${toString port} needs root, pick one above 1024"
 else { inherit port; }
 ```
 

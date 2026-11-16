@@ -45,7 +45,10 @@ in
 stdenv.mkDerivation {
   pname = "hello";
   inherit version;
-  src = fetchurl { url = "mirror://gnu/hello/hello-${version}.tar.gz"; hash = "sha256-…"; };
+  src = fetchurl {
+    url = "mirror://gnu/hello/hello-${version}.tar.gz";
+    hash = "sha256-…";
+  };
 }
 ```
 
@@ -59,11 +62,13 @@ const o = { a: 1, b: o.a + 1 }; // ReferenceError
 ```
 
 ```compare kotlin
-// Use a val first, or an object with properties that refer to each other.
+// Use a val first, or an object with properties that refer to each
+// other.
 ```
 
 ```compare java
-// Fields can refer to earlier fields in a class, but not in a Map literal.
+// Fields can refer to earlier fields in a class, but not in a Map
+// literal.
 ```
 
 ```exercise

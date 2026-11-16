@@ -28,15 +28,16 @@ Commit it. From then on, everyone builds against those exact commits.
 Updating is always explicit:
 
 ```shell
-$ nix flake update                 # update every input
-$ nix flake update nixpkgs         # update just one
-$ nix flake metadata               # show inputs and when they were locked
+$ nix flake update          # update every input
+$ nix flake update nixpkgs  # update just one
+$ nix flake metadata        # show inputs and when they were locked
 ```
 
 Want an older nixpkgs for one input? Pin a commit in the URL:
 
 ```nix
-inputs.nixpkgs-old.url = "github:NixOS/nixpkgs/8b27c1239e5c421a2bbc2c65d52e4a6fbf2ff296";
+inputs.nixpkgs-old.url =
+  "github:NixOS/nixpkgs/8b27c1239e5c421a2bbc2c65d52e4a6fbf2ff296";
 ```
 
 ```warn

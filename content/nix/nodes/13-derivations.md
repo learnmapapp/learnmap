@@ -17,7 +17,8 @@ stdenv.mkDerivation {
   version = "2.12.1";
   src = fetchurl {
     url = "https://ftp.gnu.org/gnu/hello/hello-2.12.1.tar.gz";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Nix tells you the real one
+    # a placeholder: Nix tells you the real hash on the first build
+    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   };
 }
 ```
@@ -69,7 +70,12 @@ To see what a derivation would do, without building it:
 
 ```shell
 $ nix derivation show nixpkgs#hello
-{ "/nix/store/…-hello-2.12.1.drv": { "outputs": { "out": … }, "inputDrvs": … } }
+{
+  "/nix/store/…-hello-2.12.1.drv": {
+    "outputs": { "out": … },
+    "inputDrvs": …
+  }
+}
 ```
 
 Ready to package something properly? Continue with [mkDerivation](node:mkderivation).

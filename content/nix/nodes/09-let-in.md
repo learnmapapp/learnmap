@@ -28,28 +28,39 @@ in
 
 ```compare python
 version = "2.12.1"
-pkg = {"name": f"hello-{version}", "url": f".../hello-{version}.tar.gz"}
+pkg = {
+    "name": f"hello-{version}",
+    "url": f".../hello-{version}.tar.gz",
+}
 ```
 
 ```compare javascript
 const version = "2.12.1";
-const pkg = { name: `hello-${version}`, url: `.../hello-${version}.tar.gz` };
+const pkg = {
+  name: `hello-${version}`,
+  url: `.../hello-${version}.tar.gz`,
+};
 ```
 
 ```compare java
 final var version = "2.12.1";
-var pkg = Map.of("name", "hello-" + version, "url", ".../hello-" + version + ".tar.gz");
+var pkg = Map.of(
+    "name", "hello-" + version,
+    "url", ".../hello-" + version + ".tar.gz");
 ```
 
 ```compare kotlin
 val version = "2.12.1"
-val pkg = mapOf("name" to "hello-$version", "url" to ".../hello-$version.tar.gz")
+val pkg = mapOf(
+    "name" to "hello-$version",
+    "url" to ".../hello-$version.tar.gz",
+)
 ```
 
 Bindings are like constants: they never change. The order doesn't matter, and they can refer to each other:
 
 ```repl
-> let full = "${name}-${version}"; name = "hello"; version = "2.12"; in full
+> let full = "${name}-${v}"; name = "hello"; v = "2.12"; in full
 "hello-2.12"
 ```
 

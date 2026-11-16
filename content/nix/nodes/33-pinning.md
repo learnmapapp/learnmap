@@ -12,7 +12,8 @@ The fix is to **pin** nixpkgs to an exact commit:
 ```nix title=shell.nix
 let
   nixpkgs = fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/8b27c1239e5c.tar.gz";
+    url =
+      "https://github.com/NixOS/nixpkgs/archive/8b27c1239e5c.tar.gz";
     sha256 = "1ki8nj8bnbpq8d6p8rmzkhdm1yj2g6gxbdfv43yq8jpb5pq9bsva";
   };
   pkgs = import nixpkgs { };

@@ -14,7 +14,8 @@ Most real-world Nix functions take an [[attribute set]] as their single argument
 Call it with a set:
 
 ```repl
-> let greet = { name, greeting }: "${greeting}, ${name}!"; in greet { name = "Ada"; greeting = "Hi"; }
+> greet = { name, greeting }: "${greeting}, ${name}!"
+> greet { name = "Ada"; greeting = "Hi"; }
 "Hi, Ada!"
 ```
 
@@ -30,15 +31,18 @@ def greet(name, greeting="Hello"):
 ```
 
 ```compare javascript
-const greet = ({ name, greeting = "Hello" }) => `${greeting}, ${name}!`;
+const greet = ({ name, greeting = "Hello" }) =>
+  `${greeting}, ${name}!`;
 ```
 
 ```compare kotlin
-fun greet(name: String, greeting: String = "Hello") = "$greeting, $name!"
+fun greet(name: String, greeting: String = "Hello") =
+    "$greeting, $name!"
 ```
 
 ```compare java
-// Java has no named or default parameters; a record + builder is the usual workaround.
+// Java has no named or default parameters; a record + builder is the
+// usual workaround.
 record Greet(String name, String greeting) {}
 ```
 
@@ -72,7 +76,8 @@ Sometimes you want the named arguments **and** the whole set. Use `@`:
 
 ```nix
 args@{ name, greeting ? "Hello", ... }:
-"${greeting}, ${name}! You passed ${toString (builtins.length (builtins.attrNames args))} arguments."
+let count = builtins.length (builtins.attrNames args);
+in "${greeting}, ${name}! You passed ${toString count} arguments."
 ```
 
 `args` is the whole set that was passed in. Note: defaults are **not** added to `args`; it holds exactly what the caller passed.

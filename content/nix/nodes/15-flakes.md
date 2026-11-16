@@ -66,12 +66,12 @@ explain: "`flake.lock` pins the exact revision of every input."
 You use flakes through the `nix` command:
 
 ```shell
-$ nix flake init                   # start a flake.nix in this folder
-$ nix flake show                   # what does this flake provide?
-$ nix develop                      # enter its dev shell
-$ nix build                        # build its default package
-$ nix run github:owner/repo        # run someone else's flake, no clone needed
-$ nix flake update                 # update flake.lock
+$ nix flake init            # start a flake.nix in this folder
+$ nix flake show            # what does this flake provide?
+$ nix develop               # enter its dev shell
+$ nix build                 # build its default package
+$ nix run github:owner/repo # run someone else's flake, no clone
+$ nix flake update          # update flake.lock
 ```
 
 The `#` picks an output: `nix build .#docs` builds the `docs` package of the flake in `.`, and `nixpkgs#hello` means the `hello` package of nixpkgs.
