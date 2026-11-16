@@ -49,11 +49,11 @@ hint: "Change the increment to score += 5."
 ```
 
 ```quiz
-question: "What does score = 20 do after score = 10?"
+question: What does `score = 20` do after `score = 10`?
 options:
-  - "Changes the integer object 10."
-  - "Binds score to the value 20."
-  - "Declares a second variable with the same name."
+  - Changes the integer object 10.
+  - Binds score to the value 20.
+  - Declares a second variable with the same name.
 answer: 1
-explain: "Assignment rebinds the name. Integers themselves are immutable."
+explain: Assignment rebinds the name. Integers themselves are immutable.
 ```

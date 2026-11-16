@@ -30,7 +30,7 @@ document.addEventListener("click", event => {
 
 An event target can be absent or be a different event target type. Narrow it instead of asserting that every click came from the desired element.
 
-Use null checks when absence is expected, or report a clear initialization error when the page contract requires an element. Keep direct DOM work at an appropriate integration boundary if another library owns the same UI subtree.
+Use `null` checks when absence is expected, or report a clear initialization error when the page contract requires an element. Keep direct DOM work at an appropriate integration boundary if another library owns the same UI subtree.
 
 ```exercise
 goal: "Verify that the query found a button before disabling it."
@@ -47,11 +47,11 @@ hint: "Narrow with instanceof HTMLButtonElement."
 ```
 
 ```quiz
-question: "Does querySelector<HTMLButtonElement>(selector) verify the matched tag?"
+question: Does `querySelector<HTMLButtonElement>(selector)` verify the matched tag?
 options:
-  - "Yes."
-  - "No; use a runtime check when the actual element type is uncertain."
-  - "Only for id selectors."
+  - Yes.
+  - No; use a runtime check when the actual element type is uncertain.
+  - Only for id selectors.
 answer: 1
-explain: "The generic argument describes the result to the checker without validating the DOM match."
+explain: The generic argument describes the result to the checker without validating the DOM match.
 ```

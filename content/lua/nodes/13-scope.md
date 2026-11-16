@@ -43,11 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about block scope is correct?
+question: An inner block declares `local count = 7`. What happens to an outer `count = 1`?
 options:
-  - do blocks cannot contain locals.
-  - A local declared in an inner block shadows an outer name without modifying the outer binding.
-  - The inner declaration overwrites the outer local.
+  - The outer binding becomes `nil`.
+  - The outer binding stays `1`.
+  - The outer binding becomes `7`.
 answer: 1
-explain: A local declared in an inner block shadows an outer name without modifying the outer binding.
+explain: The inner local shadows the outer binding within that block.
 ```

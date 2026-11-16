@@ -48,14 +48,14 @@ val port = if (production) 443 else 8080
 ```
 
 ```exercise
-goal: Use port 443 when `secure` is true, and 80 otherwise.
+goal: Use port 443 when `secure` is `true`, and 80 otherwise.
 code: |
   { secure }:
   {
     port = 80;
   }
 checks:
-  - match: 'port\s*=\s*if\s+secure\s+then\s+443\s+else\s+80\s*;'
-    message: 'Write  port = if secure then 443 else 80;'
+  - match: port\s*=\s*if\s+secure\s+then\s+443\s+else\s+80\s*;
+    message: Write  port = if secure then 443 else 80;
 output: "{ port = 443; }"
 ```

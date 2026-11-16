@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about browser event handlers is correct?
+question: Where should an ordinary DOM click listener be registered?
 options:
-  - A processed script runs in the browser and can register event handlers. Frontmatter itself
-    cannot attach a live browser click listener.
-  - Frontmatter and browser scripts execute in the same environment.
-  - Astro requires React for a button click listener.
+  - In a browser `<script>` block.
+  - In component frontmatter as if `document` were available.
+  - In the collection schema.
 answer: 0
-explain: A processed script runs in the browser and can register event handlers. Frontmatter itself
-  cannot attach a live browser click listener.
+explain: Browser scripts can access the DOM; frontmatter runs in the rendering environment.
 ```

@@ -8,7 +8,7 @@ requires:
 summary: string.format uses conversion directives such as %s, %d, and %.2f.
 ---
 
-string.format uses conversion directives such as %s, %d, and %.2f. Precision controls the displayed decimal digits.
+`string.format` uses conversion directives such as %s, %d, and %.2f. Precision controls the displayed decimal digits.
 
 ```lua
 local price = 12.5
@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about formatted output is correct?
+question: What does `string.format("%.2f", 12.5)` produce?
 options:
-  - "%.2f requests two integer digits only."
-  - string.format uses conversion directives such as %s, %d, and %.2f. Precision controls the
-    displayed decimal digits.
-  - Formatting changes the original number.
+  - '`"12"`'
+  - '`"12.50"`'
+  - '`"12.5"`'
 answer: 1
-explain: string.format uses conversion directives such as %s, %d, and %.2f. Precision controls the
-  displayed decimal digits.
+explain: The precision requests two digits after the decimal point.
 ```

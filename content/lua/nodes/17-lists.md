@@ -7,7 +7,7 @@ requires:
 summary: List-style table constructors use consecutive integer keys starting at 1.
 ---
 
-List-style table constructors use consecutive integer keys starting at 1. Reading an absent key yields nil.
+List-style table constructors use consecutive integer keys starting at 1. Reading an absent key yields `nil`.
 
 A useful term here is [[table]]: Lua’s associative data structure, used for sequences, records, maps, and objects.
 
@@ -53,13 +53,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about sequence tables is correct?
+question: For `local colors = {"red", "blue"}`, which access returns `"red"`?
 options:
-  - List constructors start at key zero.
-  - An absent key throws an indexing error.
-  - List-style table constructors use consecutive integer keys starting at 1. Reading an absent key
-    yields nil.
+  - "`colors[0]`"
+  - "`colors[2]`"
+  - "`colors[1]`"
 answer: 2
-explain: List-style table constructors use consecutive integer keys starting at 1. Reading an absent
-  key yields nil.
+explain: A list-style table constructor starts its integer keys at 1.
 ```

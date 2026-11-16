@@ -53,13 +53,13 @@ worker.postMessage({ hello: true });
 ```
 
 ```quiz
-question: How do two Elixir processes share data?
+question: How do Elixir processes normally communicate directly?
 options:
-  - Through a shared global variable.
-  - By sending each other messages.
-  - By locking a shared map.
+  - By mutating one shared process-local map.
+  - By sending messages to each other's mailboxes.
+  - By assigning each other's local variables.
 answer: 1
-explain: Processes share nothing. Messages are the only way in or out, which makes crashes safe.
+explain: Message passing is the normal direct process interface; ETS is a separate shared-storage facility.
 ```
 
 ## Processes are cheap

@@ -18,13 +18,13 @@ error[E0384]: cannot assign twice to immutable variable `x`
 Learning Rust mostly means learning to read those messages. Think of the compiler as a very picky, very patient pair programmer.
 
 ```quiz
-question: When does Rust catch memory bugs like dangling pointers?
+question: How does safe Rust reject ordinary dangling-reference code?
 options:
-  - At runtime, by crashing safely.
-  - At compile time, before the program runs.
-  - Only when you run the tests.
+  - Only through tests written by the developer.
+  - Through borrow and lifetime checks during compilation.
+  - By waiting for a production crash.
 answer: 1
-explain: The rules are checked by the compiler, so a whole class of bugs never makes it into your program.
+explain: Safe Rust's reference rules are checked before execution; unsafe code has additional obligations.
 ```
 
 ## What you'll find on this map
@@ -34,18 +34,18 @@ Rust is a small set of ideas stacked on top of each other:
 - **Basics**: variables, types, functions and loops. Familiar territory, with a few twists.
 - **Data**: structs and enums, plus `match`, Rust's superpower for working with them.
 - **Ownership**: the one genuinely new idea. Every value has one owner, and the compiler tracks who.
-- **Errors**: no exceptions and no null. Failure is a value you can't forget to check.
+- **Errors**: no exceptions and no `null`. Failure is a value you can't forget to check.
 - **Traits and generics**: shared behaviour without inheritance.
 - **Collections, concurrency and tooling**: the everyday toolbox.
 
 Start at the top and follow the lines, or pick a goal and let the guide build a route.
 
 ```quiz
-question: Which of these does Rust NOT have?
+question: Which memory-management mechanism does Rust not require by default?
 options:
-  - A garbage collector
-  - Generics
-  - Pattern matching
+  - A tracing garbage collector.
+  - Ownership and automatic destruction.
+  - Compile-time borrowing checks.
 answer: 0
-explain: Memory is freed when its owner goes out of scope, decided at compile time. No GC pauses.
+explain: Owned values are normally destroyed through ownership and scope rules.
 ```

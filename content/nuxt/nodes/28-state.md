@@ -7,7 +7,7 @@ requires:
 summary: useState provides keyed shared state scoped correctly for server requests and hydration.
 ---
 
-In your Nuxt 4 project, save this as `app/composables/useLessonCount.ts`. useState provides keyed shared state scoped correctly for server requests and hydration. Store serializable values; avoid module-level mutable refs for per-user SSR data.
+In your Nuxt 4 project, save this as `app/composables/useLessonCount.ts`. `useState` provides keyed shared state scoped correctly for server requests and hydration. Store serializable values; avoid module-level mutable refs for per-user SSR data.
 
 A useful term here is [[useState]]: Nuxt’s keyed, serializable, SSR-aware shared state composable.
 
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about ssr-safe shared state is correct?
+question: Why prefer `useState` over a module-level mutable ref for per-user shared SSR data?
 options:
-  - useState can safely serialize any function or class instance.
-  - useState provides keyed shared state scoped correctly for server requests and hydration. Store
-    serializable values; avoid module-level mutable refs for per-user SSR data.
-  - A module-level ref is automatically isolated between users.
+  - It automatically serializes arbitrary functions and classes.
+  - It provides request-aware state with hydration serialization.
+  - It intentionally shares one mutable value among all visitors.
 answer: 1
-explain: useState provides keyed shared state scoped correctly for server requests and hydration.
-  Store serializable values; avoid module-level mutable refs for per-user SSR data.
+explain: Avoid leaking user-specific state through process-wide mutable globals.
 ```

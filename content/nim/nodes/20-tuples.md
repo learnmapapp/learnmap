@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about named tuples is correct?
+question: What does `let (x, y) = (3, 4)` bind?
 options:
-  - Tuples must contain values of one type.
-  - Destructuring reverses field order.
-  - Tuples group a fixed number of typed values and support destructuring. Named fields also allow
-    point.x access.
+  - "`x = 4` and `y = 3`."
+  - Both names refer to the entire tuple.
+  - "`x = 3` and `y = 4`."
 answer: 2
-explain: Tuples group a fixed number of typed values and support destructuring. Named fields also
-  allow point.x access.
+explain: Tuple destructuring assigns elements by position.
 ```

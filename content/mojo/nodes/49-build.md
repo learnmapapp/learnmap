@@ -8,7 +8,7 @@ summary: mojo run compiles and executes a source file; mojo build creates a nati
   later execution.
 ---
 
-mojo run compiles and executes a source file; mojo build creates a native executable for later execution. Check mojo --version against the course target.
+`mojo run` compiles and executes a source file; `mojo build` creates a native executable for later execution. Check `mojo --version` against the course target.
 
 ```shell
 mojo run hello.mojo
@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about build a native program is correct?
+question: Which command creates a native executable without also running it?
 options:
-  - Running the output always requires the original source file.
-  - mojo run compiles and executes a source file; mojo build creates a native executable for later
-    execution. Check mojo --version against the course target.
-  - mojo build creates only Python bytecode.
+  - "`./hello`"
+  - "`mojo build hello.mojo -o hello`"
+  - "`mojo run hello.mojo`"
 answer: 1
-explain: mojo run compiles and executes a source file; mojo build creates a native executable for
-  later execution. Check mojo --version against the course target.
+explain: Build produces the executable; run or invoking the binary executes it.
 ```

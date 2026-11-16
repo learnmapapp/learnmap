@@ -48,11 +48,11 @@ hint: "Add a comma after 42."
 ```
 
 ```quiz
-question: "Which expression creates a one-element tuple?"
+question: Which expression creates a one-element tuple?
 options:
-  - "(42)"
-  - "(42,)"
-  - "[42]"
+  - "`(42)`"
+  - "`(42,)`"
+  - "`[42]`"
 answer: 1
-explain: "The trailing comma makes it a tuple; parentheses alone do not."
+explain: The trailing comma makes it a tuple; parentheses alone do not.
 ```

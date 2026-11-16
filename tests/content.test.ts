@@ -78,6 +78,18 @@ describe('markdown', () => {
     expect(runChecks(spec, 'false')).toEqual({ ok: false, message: 'flip' });
     expect(runChecks(spec, 'true').ok).toBe(true);
   });
+
+  it('keeps the Zig terminal command distinct from instructions and quiz answers', () => {
+    const course = loadFromDisk('zig');
+    const lesson = course.nodeById.get('zig')!;
+    const segments = parseLesson(lesson.body, course.syntax);
+    const prose = segments.filter((segment) => segment.kind === 'prose').map((segment) => segment.html).join('');
+    const quiz = segments.find((segment) => segment.kind === 'quiz');
+    expect(prose).toContain('run <code>zig run hello.zig</code>');
+    if (!quiz || quiz.kind !== 'quiz') throw new Error('Missing Zig introduction quiz');
+    expect(quiz.spec.questionHtml).toContain('<code>zig run hello.zig</code>');
+    expect(quiz.spec.options[quiz.spec.answer]).toBe('Compiles and runs the source program.');
+  });
 });
 
 describe('highlighter', () => {
@@ -226,7 +238,15 @@ describe.each(courseIds)('course %s', (id) => {
           expect(s.spec.checks.length, `${n.id} exercise has checks`).toBeGreaterThan(0);
           expect(runChecks(s.spec, s.spec.code).ok, `${n.id} exercise already solved`).toBe(false);
         }
-        if (s.kind === 'quiz') expect(s.spec.answer).toBeLessThan(s.spec.options.length);
+        if (s.kind === 'quiz') {
+          expect(Number.isInteger(s.spec.answer), `${n.id}: answer index`).toBe(true);
+          expect(s.spec.answer, `${n.id}: answer index`).toBeGreaterThanOrEqual(0);
+          expect(s.spec.answer).toBeLessThan(s.spec.options.length);
+          for (const option of s.spec.options) {
+            expect(option.replace(/<[^>]*>/g, '').trim(), `${n.id}: blank quiz option`).not.toBe('');
+          }
+          expect(new Set(s.spec.options).size, `${n.id}: repeated quiz options`).toBe(s.spec.options.length);
+        }
         if (s.kind === 'compare') expect(known.has(s.lang), `${n.id} compare ${s.lang}`).toBe(true);
       }
       const prose = n.body.replace(/^```[^\n]*\n[\s\S]*?^```[ \t]*$/gm, '');

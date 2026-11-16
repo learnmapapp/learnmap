@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time constants is correct?
+question: When must a Nim `const` initializer be evaluated?
 options:
-  - const expressions are evaluated at compile time. The $ operator converts a value to a string for
-    concatenation with &.
-  - const expressions are always evaluated at every use at runtime.
-  - The & operator performs integer addition.
+  - During compilation.
+  - At the first loop iteration.
+  - After the program exits.
 answer: 0
-explain: const expressions are evaluated at compile time. The $ operator converts a value to a
-  string for concatenation with &.
+explain: A `const` value must be available at compile time.
 ```

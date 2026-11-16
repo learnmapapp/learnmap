@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about intercept new fields is correct?
+question: When does `__newindex` normally intercept a table assignment?
 options:
-  - __newindex intercepts every assignment even to existing keys.
-  - Calling rawset triggers __newindex again.
-  - __newindex handles assignments to absent keys. rawset bypasses this mechanism; existing keys are
-    assigned directly.
+  - Only when the target key already exists.
+  - Only when the assigned value is a function.
+  - When the target key is absent.
 answer: 2
-explain: __newindex handles assignments to absent keys. rawset bypasses this mechanism; existing
-  keys are assigned directly.
+explain: Assignments to existing keys bypass `__newindex`; `rawset` also bypasses it.
 ```

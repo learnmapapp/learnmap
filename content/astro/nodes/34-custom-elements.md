@@ -52,13 +52,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reusable browser behavior is correct?
+question: Where should each custom counter instance keep its own count?
 options:
-  - Custom elements require a React integration.
-  - A custom element scopes browser behavior to each instance. Registration is global, while
-    instance state belongs to each connected element.
-  - Every custom element instance must share a single global count.
+  - In the public route filename.
+  - In state associated with that element instance.
+  - In one global count shared by every element.
 answer: 1
-explain: A custom element scopes browser behavior to each instance. Registration is global, while
-  instance state belongs to each connected element.
+explain: Reusable behavior should not unintentionally share mutable state between instances.
 ```

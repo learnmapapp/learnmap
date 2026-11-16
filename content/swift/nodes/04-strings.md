@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about string interpolation is correct?
+question: With `name = "Ada"`, what does `"Hello, \(name)"` produce?
 options:
-  - String.count always reports UTF-8 bytes.
-  - Interpolation embeds expressions using a backslash followed by parentheses. Swift String counts
-    extended grapheme clusters through count.
-  - String interpolation uses ${...}.
+  - '`"Hello, (Ada)"`'
+  - '`"Hello, Ada"`'
+  - '`"Hello, name"`'
 answer: 1
-explain: Interpolation embeds expressions using a backslash followed by parentheses. Swift String
-  counts extended grapheme clusters through count.
+explain: A backslash followed by parentheses interpolates an expression.
 ```

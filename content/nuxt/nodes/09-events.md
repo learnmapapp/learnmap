@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about handle user events is correct?
+question: What does `@click="save"` register?
 options:
-  - The @ shorthand registers an event handler. Keep complex event logic in a named setup function
-    instead of a long template expression.
-  - "@click executes only at static build time."
-  - A DOM click requires a server route.
+  - An event handler called when a click occurs.
+  - A server route named `click`.
+  - An immediate call during every template render.
 answer: 0
-explain: The @ shorthand registers an event handler. Keep complex event logic in a named setup
-  function instead of a long template expression.
+explain: The handler runs in response to the event rather than during rendering.
 ```

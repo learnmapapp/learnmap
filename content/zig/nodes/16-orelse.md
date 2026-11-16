@@ -7,7 +7,7 @@ requires:
 summary: orelse provides a value or control-flow action for null.
 ---
 
-orelse provides a value or control-flow action for null. Use .? only when absence would be a violated invariant.
+`orelse` provides a value or control-flow action for `null`. Use .? only when absence would be a violated invariant.
 
 ```zig
 const std = @import("std");
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about optional fallbacks is correct?
+question: If `requested` is `null`, what is `requested orelse 10`?
 options:
-  - .? converts null into zero automatically.
-  - orelse provides a value or control-flow action for null. Use .? only when absence would be a
-    violated invariant.
-  - orelse replaces every zero value.
+  - A panic in every build mode.
+  - "`10`"
+  - "`null`"
 answer: 1
-explain: orelse provides a value or control-flow action for null. Use .? only when absence would be
-  a violated invariant.
+explain: "`orelse` supplies the `null` case's fallback or control-flow action."
 ```

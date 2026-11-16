@@ -41,11 +41,11 @@ hint: "Remove the unnecessary score requirement from Named."
 ```
 
 ```quiz
-question: "Why can a stored { name, score } object be passed to a parameter requiring { name: string }?"
+question: "Why can a stored `{ name, score }` object be passed to a parameter requiring `{ name: string }`?"
 options:
-  - "It supplies the required compatible shape."
-  - "The extra field is deleted."
-  - "All objects are implicitly any."
+  - It supplies the required compatible shape.
+  - The extra field is deleted.
+  - All objects are implicitly any.
 answer: 0
-explain: "Additional properties can remain present; compatibility checks the required members."
+explain: Additional properties can remain present; compatibility checks the required members.
 ```

@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about create a coroutine is correct?
+question: What does `coroutine.create(worker)` do immediately?
 options:
-  - A coroutine starts suspended. resume runs it and reports success plus yielded or returned
-    values; it is cooperative execution, not an OS thread.
-  - Creating a coroutine executes it immediately.
-  - Every coroutine uses a separate operating-system thread.
+  - Creates a suspended coroutine.
+  - Runs `worker` to completion.
+  - Starts `worker` on a new OS thread.
 answer: 0
-explain: A coroutine starts suspended. resume runs it and reports success plus yielded or returned
-  values; it is cooperative execution, not an OS thread.
+explain: "`coroutine.resume` starts or continues its cooperative execution."
 ```

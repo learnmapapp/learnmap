@@ -90,11 +90,11 @@ true
 `Enum` works on anything enumerable: lists, maps, ranges, MapSets and streams. On a map, each element is a `{key, value}` tuple.
 
 ```quiz
-question: "What does  Enum.find([3, 8, 12], &(&1 > 5))  return?"
+question: What does  `Enum.find([3, 8, 12], &(&1 > 5))`  return?
 options:
   - "[8, 12]"
   - "8"
-  - "true"
+  - "`true`"
 answer: 1
 explain: find returns the first element that matches. filter would return all of them.
 ```

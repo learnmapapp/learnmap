@@ -33,7 +33,7 @@ Inside an exception handler, `logger.exception("Could not read configuration")` 
 Log enough context to diagnose a problem, while omitting passwords, tokens, and personal data. Libraries should avoid configuring global logging for their callers.
 
 ```exercise
-goal: "Enable INFO messages in this application configuration."
+goal: Enable INFO messages in this application configuration.
 lang: python
 code: |
   import logging
@@ -42,17 +42,17 @@ code: |
   logger = logging.getLogger(__name__)
   logger.info("Processing %s records", 3)
 checks:
-  - match: "basicConfig\\(\\s*level\\s*=\\s*logging\\.INFO\\s*\\)"
-    message: "Set the configured level to logging.INFO."
-hint: "Set the configured level to logging.INFO."
+  - match: basicConfig\(\s*level\s*=\s*logging\.INFO\s*\)
+    message: Set the configured level to logging.INFO.
+hint: Set the configured level to `logging.INFO`.
 ```
 
 ```quiz
-question: "Which call includes the current exception traceback inside an except handler?"
+question: Which call includes the current exception traceback inside an except handler?
 options:
-  - "logger.info"
-  - "logger.exception"
-  - "logger.getLogger"
+  - "`logger.info`"
+  - "`logger.exception`"
+  - "`logger.getLogger`"
 answer: 1
-explain: "logger.exception emits an error-level message with the active exception information."
+explain: "`logger.exception` emits an error-level message with the active exception information."
 ```

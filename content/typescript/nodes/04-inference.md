@@ -47,11 +47,11 @@ hint: "Add : number after value."
 ```
 
 ```quiz
-question: "Why does let score = 10 usually infer number rather than only 10?"
+question: Why does let `score = 10` usually infer number rather than only 10?
 options:
-  - "The binding is mutable and can hold other numbers."
-  - "All variables have type any."
-  - "Integers cannot be inferred."
+  - The binding is mutable and can hold other numbers.
+  - All variables have type any.
+  - Integers cannot be inferred.
 answer: 0
-explain: "Widening lets mutable bindings accept other values of the same broad type."
+explain: Widening lets mutable bindings accept other values of the same broad type.
 ```

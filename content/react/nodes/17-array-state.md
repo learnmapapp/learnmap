@@ -54,11 +54,11 @@ hint: "Return [...previous, \"Grace\"] from the updater."
 ```
 
 ```quiz
-question: "Is [...tasks] enough if you then mutate one of its existing objects?"
+question: Is `[...tasks]` enough if you then mutate one of its existing objects?
 options:
-  - "Yes, spread deep-copies every object."
-  - "No, the nested objects are still shared."
-  - "Only when tasks is const."
+  - Yes, spread deep-copies every object.
+  - No, the nested objects are still shared.
+  - Only when tasks is const.
 answer: 1
-explain: "Array spread is shallow; copy a changed record too."
+explain: Array spread is shallow; copy a changed record too.
 ```

@@ -38,11 +38,11 @@ hint: "Use string to describe the supplied label."
 ```
 
 ```quiz
-question: "What does declare const BUILD_LABEL: string create at runtime?"
+question: "What does `declare const BUILD_LABEL: string` create at runtime?"
 options:
-  - "A new global variable initialized to an empty string."
-  - "Nothing; a host must supply the value."
-  - "A runtime type validator."
+  - A new global variable initialized to an empty string.
+  - Nothing; a host must supply the value.
+  - A runtime type validator.
 answer: 1
-explain: "declare describes an externally supplied value and does not implement it."
+explain: declare describes an externally supplied value and does not implement it.
 ```

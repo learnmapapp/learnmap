@@ -8,7 +8,7 @@ requires:
 summary: Cancellation is cooperative.
 ---
 
-Cancellation is cooperative. Task.checkCancellation throws when the current task has been cancelled, allowing expensive work to stop at useful boundaries.
+Cancellation is cooperative. `Task.checkCancellation` throws when the current task has been cancelled, allowing expensive work to stop at useful boundaries.
 
 ```swift
 func work() async throws -> Int {
@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about cooperative cancellation is correct?
+question: What does `Task.checkCancellation()` do for a cancelled task?
 options:
-  - Cancellation is impossible in throwing functions.
-  - Cancellation is cooperative. Task.checkCancellation throws when the current task has been
-    cancelled, allowing expensive work to stop at useful boundaries.
-  - Cancelling a task forcibly kills its thread immediately.
+  - Silently restarts the task.
+  - Throws a cancellation error.
+  - Forcibly kills its current thread.
 answer: 1
-explain: Cancellation is cooperative. Task.checkCancellation throws when the current task has been
-  cancelled, allowing expensive work to stop at useful boundaries.
+explain: Cancellation is cooperative, so code checks and responds at appropriate boundaries.
 ```

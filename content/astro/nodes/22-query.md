@@ -8,7 +8,7 @@ requires:
 summary: getCollection retrieves loaded entries and can filter drafts.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. getCollection retrieves loaded entries and can filter drafts. A link is useful only after a matching page route has been created.
+In your Astro project, save this as `src/pages/index.astro`. `getCollection` retrieves loaded entries and can filter drafts. A link is useful only after a matching page route has been created.
 
 ```astro
 ---
@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about query a collection is correct?
+question: Which filter selects published entries when `draft` is Boolean?
 options:
-  - Entry metadata lives only in an HTML string.
-  - getCollection retrieves loaded entries and can filter drafts. A link is useful only after a
-    matching page route has been created.
-  - getCollection automatically creates linked routes.
+  - '`entry => entry.id === "draft"`'
+  - "`entry => !entry.data.draft`"
+  - "`entry => entry.data.draft`"
 answer: 1
-explain: getCollection retrieves loaded entries and can filter drafts. A link is useful only after a
-  matching page route has been created.
+explain: Publication state belongs to metadata rather than being inferred from an arbitrary ID.
 ```

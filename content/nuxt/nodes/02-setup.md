@@ -7,7 +7,7 @@ requires:
 summary: Create a fresh practice project using Nuxt 4.
 ---
 
-In your Nuxt 4 project, save this as `terminal commands`. Create a fresh practice project using Nuxt 4. Keep its dependencies separate from Learnmap and check package.json for the installed major version.
+In your Nuxt 4 project, save this as `terminal commands`. Create a fresh practice project using Nuxt 4. Keep its dependencies separate from Learnmap and check `package.json` for the installed major version.
 
 ```shell
 npm create nuxt@latest study-app
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about create a nuxt project is correct?
+question: Which command normally starts the development server in the generated project?
 options:
-  - These commands should replace Learnmap’s package.json.
-  - The development server is the final production artifact.
-  - Create a fresh practice project using Nuxt 4. Keep its dependencies separate from Learnmap and
-    check package.json for the installed major version.
+  - "`npm run build`"
+  - "`npm run preview`"
+  - "`npm run dev`"
 answer: 2
-explain: Create a fresh practice project using Nuxt 4. Keep its dependencies separate from Learnmap
-  and check package.json for the installed major version.
+explain: Development serving supports editing; building and previewing serve different stages.
 ```

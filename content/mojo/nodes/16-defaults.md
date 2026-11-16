@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about default arguments is correct?
+question: "For `power(base: Int, exponent: Int = 2)`, which exponent does `power(3)` use?"
 options:
-  - A mutable argument must always have a default.
-  - Default arguments let callers omit common choices. Keep the default visible in the signature
-    rather than hiding it inside the function.
-  - Defaults can never be overridden by a caller.
+  - The preceding call's exponent.
+  - "`2`"
+  - "`3`"
 answer: 1
-explain: Default arguments let callers omit common choices. Keep the default visible in the
-  signature rather than hiding it inside the function.
+explain: An omitted argument uses the signature's default value.
 ```

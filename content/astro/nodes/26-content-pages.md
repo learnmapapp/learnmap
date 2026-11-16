@@ -53,13 +53,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about collection routes is correct?
+question: Why use `[...id].astro` for collection IDs that may contain slashes?
 options:
-  - Route props must all be URL strings.
-  - A rest parameter can never contain slashes.
-  - Pass an entry through route props to avoid looking it up again. A rest parameter supports
-    collection IDs containing nested path segments.
+  - It removes the need to load content.
+  - It guarantees every ID contains exactly one segment.
+  - A rest parameter can match multiple path segments.
 answer: 2
-explain: Pass an entry through route props to avoid looking it up again. A rest parameter supports
-  collection IDs containing nested path segments.
+explain: A single bracketed parameter matches one segment; a rest parameter can span several.
 ```

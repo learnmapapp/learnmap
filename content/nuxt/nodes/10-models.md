@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about form bindings is correct?
+question: What does the `.trim` modifier in `v-model.trim` do?
 options:
-  - v-model always converts inputs into integers.
-  - v-model connects an input with reactive state. The trim modifier normalizes surrounding
-    whitespace, while server validation remains necessary for submitted data.
-  - v-model validation makes all server input trustworthy.
+  - Performs all server-side validation automatically.
+  - Removes surrounding whitespace from the bound input text.
+  - Converts every input to an integer.
 answer: 1
-explain: v-model connects an input with reactive state. The trim modifier normalizes surrounding
-  whitespace, while server validation remains necessary for submitted data.
+explain: The modifier normalizes input but does not replace validation at the server boundary.
 ```

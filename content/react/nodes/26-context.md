@@ -32,7 +32,7 @@ Context distributes data but does not choose its owner. A parent can put state i
 Use props for direct, local relationships. Context is useful for genuinely cross-cutting data such as theme or a coordinated feature's shared state, not a requirement for every value.
 
 ```exercise
-goal: "Read the supplied theme using useContext."
+goal: Read the supplied theme using `useContext`.
 lang: jsx
 code: |
   import { createContext, useContext } from "react";
@@ -40,9 +40,9 @@ code: |
   function Label() { const theme = ThemeContext; return <p>{theme}</p>; }
   export default function App() { return <ThemeContext value="dark"><Label /></ThemeContext>; }
 checks:
-  - match: "const\\s+theme\\s+=\\s+useContext\\(ThemeContext\\);"
-    message: "Call useContext with ThemeContext."
-hint: "Call useContext with ThemeContext."
+  - match: const\s+theme\s+=\s+useContext\(ThemeContext\);
+    message: Call useContext with ThemeContext.
+hint: Call `useContext` with ThemeContext.
 ```
 
 ```quiz

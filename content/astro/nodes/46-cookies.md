@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about request cookies is correct?
+question: Why must a page reading each visitor's cookie be rendered on demand?
 options:
-  - Static prerendered pages can read each future visitor’s cookies.
-  - Request-specific cookies require on-demand rendering. Treat a preference cookie as untrusted
-    input and never confuse it with proof of identity.
-  - A theme cookie proves a user is authenticated.
+  - Cookies are available only to React components.
+  - The cookie belongs to that visitor's request.
+  - A static build knows every future visitor's cookies.
 answer: 1
-explain: Request-specific cookies require on-demand rendering. Treat a preference cookie as
-  untrusted input and never confuse it with proof of identity.
+explain: Build-time HTML cannot personalize itself using future request data.
 ```

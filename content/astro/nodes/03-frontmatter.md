@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about component frontmatter is correct?
+question: Where does an Astro component's frontmatter code execute?
 options:
-  - Code between the opening fences executes during rendering, not as a browser event handler. Keep
-    browser interaction in a script or an island.
-  - Frontmatter runs whenever a visitor clicks any element.
-  - Every frontmatter binding becomes a global browser variable.
+  - During rendering on the server or at build time.
+  - As a browser click handler.
+  - As a global script in every visitor's window.
 answer: 0
-explain: Code between the opening fences executes during rendering, not as a browser event handler.
-  Keep browser interaction in a script or an island.
+explain: Frontmatter supplies rendering data rather than live browser event listeners.
 ```

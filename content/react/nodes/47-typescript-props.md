@@ -47,11 +47,11 @@ hint: "Use string for a textual title."
 ```
 
 ```quiz
-question: "Which extension supports TypeScript annotations together with JSX?"
+question: Which extension supports TypeScript annotations together with JSX?
 options:
-  - ".ts for every case"
-  - ".tsx"
-  - ".css"
+  - "`.ts` for every case"
+  - "`.tsx`"
+  - .css
 answer: 1
-explain: "TSX allows both TypeScript and JSX syntax in the same source file."
+explain: TSX allows both TypeScript and JSX syntax in the same source file.
 ```

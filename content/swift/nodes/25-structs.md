@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about value structs is correct?
+question: What kind of semantics does an ordinary Swift struct provide?
 options:
-  - Structs can contain only methods.
-  - A struct models data as a value type. Swift can synthesize a memberwise initializer for its
-    stored properties.
-  - All structs are shared reference types.
+  - Global singleton identity.
+  - Value semantics.
+  - Shared reference identity by default.
 answer: 1
-explain: A struct models data as a value type. Swift can synthesize a memberwise initializer for its
-  stored properties.
+explain: A struct represents a value rather than an implicitly shared mutable object.
 ```

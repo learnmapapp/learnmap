@@ -8,7 +8,7 @@ requires:
 summary: Lua 5.4 <const> prevents reassignment of a local binding.
 ---
 
-Lua 5.4 <const> prevents reassignment of a local binding. It does not freeze the contents of a table stored in that binding.
+Lua 5.4 `<const>` prevents reassignment of a local binding. It does not freeze the contents of a table stored in that binding.
 
 ```lua
 local limit <const> = 5
@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about read-only bindings is correct?
+question: For `local t <const> = {}`, which operation is allowed?
 options:
-  - <const> recursively freezes tables.
-  - <const> requires the value to be a number.
-  - Lua 5.4 <const> prevents reassignment of a local binding. It does not freeze the contents of a
-    table stored in that binding.
+  - Rebinding `t = {name = "Ada"}`.
+  - Rebinding `t = nil`.
+  - Assigning `t.name = "Ada"`.
 answer: 2
-explain: Lua 5.4 <const> prevents reassignment of a local binding. It does not freeze the contents
-  of a table stored in that binding.
+explain: "`<const>` protects the binding, not the contents of the referenced table."
 ```

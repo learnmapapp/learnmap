@@ -7,7 +7,7 @@ requires:
 summary: Treat request bodies as unknown and validate before using them.
 ---
 
-In your Nuxt 4 project, save this as `server/api/tasks.post.ts`. Treat request bodies as unknown and validate before using them. This example returns a validated task but does not persist it.
+In your Nuxt 4 project, save this as `server/api/tasks.post.ts`. Treat request bodies as `unknown` and validate before using them. This example returns a validated task but does not persist it.
 
 ```typescript
 export default defineEventHandler(async (event) => {
@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about validate request input is correct?
+question: "Does `readBody<{ title: string }>(event)` validate an incoming title at runtime?"
 options:
-  - Returning a valid object automatically stores it in a database.
-  - A request can be trusted because a browser form supplied it.
-  - Treat request bodies as unknown and validate before using them. This example returns a validated
-    task but does not persist it.
+  - Yes; every malformed field is automatically rejected.
+  - Only when the body is JSON.
+  - No; the type argument alone performs no runtime checks.
 answer: 2
-explain: Treat request bodies as unknown and validate before using them. This example returns a
-  validated task but does not persist it.
+explain: Read untrusted input as `unknown` and check its required runtime shape.
 ```

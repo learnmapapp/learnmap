@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about optional binding is correct?
+question: Where is `value` available after `if let value = number { ... }`?
 options:
-  - The unwrapped binding stays available outside the if scope.
-  - if let unwraps a present optional into a nonoptional binding within the success branch. Handle
-    absence in the other branch.
-  - Optional binding force-unwraps nil and crashes.
+  - Only inside the `else` branch.
+  - Inside the successful binding branch.
+  - In every later scope, even if `number` was `nil`.
 answer: 1
-explain: if let unwraps a present optional into a nonoptional binding within the success branch.
-  Handle absence in the other branch.
+explain: "`Optional` binding provides a nonoptional local where the value is known to exist."
 ```

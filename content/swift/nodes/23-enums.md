@@ -46,11 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about enumerated cases is correct?
+question: When can a `switch` over an enum omit `default`?
 options:
-  - Enums automatically contain all strings.
-  - Enum switches always need default.
-  - An enum restricts a value to its declared cases. A switch covering every case needs no default.
+  - Whenever at least one case is covered.
+  - Only when the enum has associated values.
+  - When it explicitly covers every possible case.
 answer: 2
-explain: An enum restricts a value to its declared cases. A switch covering every case needs no default.
+explain: An exhaustive switch already handles every alternative.
 ```

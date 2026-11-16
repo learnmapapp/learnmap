@@ -47,11 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about choose a branch is correct?
+question: Two conditions in one `if`/`elseif` chain are `true`. Which bodies run?
 options:
-  - An if chain runs the first branch whose condition is truthy. elseif belongs to the same chain.
-  - Every matching branch executes.
-  - Conditions must be Boolean values.
+  - Only the first matching body.
+  - Both matching bodies.
+  - Only the final matching body.
 answer: 0
-explain: An if chain runs the first branch whose condition is truthy. elseif belongs to the same chain.
+explain: Lua stops selecting branches after the first truthy condition.
 ```

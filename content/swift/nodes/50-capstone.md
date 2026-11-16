@@ -63,13 +63,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about a tested task model is correct?
+question: Why test both task completion and a JSON round trip?
 options:
-  - A synthesized JSON decoder automatically calls every custom validating initializer.
-  - A UI is required before domain logic can be tested.
-  - Keep domain validation in an initializer and state changes in named methods. Add tests for empty
-    titles, completion, and JSON round trips before adding a UI.
+  - Encoding automatically proves the completion method works.
+  - A successful print guarantees both behaviors for every input.
+  - They exercise state transitions and serialization as separate behaviors.
 answer: 2
-explain: Keep domain validation in an initializer and state changes in named methods. Add tests for
-  empty titles, completion, and JSON round trips before adding a UI.
+explain: Test each contract the task model exposes instead of inferring one from another.
 ```

@@ -76,13 +76,13 @@ midweek := days[1:4] // a view, very similar to Rust
 ```
 
 ```exercise
-goal: Make `total` accept any slice of i32 instead of only a Vec.
+goal: Make `total` accept any slice of `i32` instead of only a Vec.
 code: |
   fn total(nums: &Vec<i32>) -> i32 {
       nums.iter().sum()
   }
 checks:
-  - match: 'fn\s+total\s*\(\s*nums\s*:\s*&\[\s*i32\s*\]\s*\)'
-    message: "Change the parameter type to &[i32]."
+  - match: fn\s+total\s*\(\s*nums\s*:\s*&\[\s*i32\s*\]\s*\)
+    message: Change the parameter type to &[i32].
 output: total(&[1, 2, 3]) == 6
 ```

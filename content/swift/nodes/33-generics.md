@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about generic functions is correct?
+question: What is the result type of `duplicate("Swift")` when `duplicate<T>` returns `[T]`?
 options:
-  - A generic type parameter preserves the input type in the result. The same function can duplicate
-    strings, integers, or custom values.
-  - T loses all static type information.
-  - A generic function must return Any.
+  - "`[String]`"
+  - "`[Any]` in every case."
+  - "`String`"
 answer: 0
-explain: A generic type parameter preserves the input type in the result. The same function can
-  duplicate strings, integers, or custom values.
+explain: The generic relationship retains the argument's concrete type.
 ```

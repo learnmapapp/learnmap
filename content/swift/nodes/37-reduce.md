@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about fold a collection is correct?
+question: What does an empty integer array return from `reduce(0, +)`?
 options:
-  - The initial value is ignored.
-  - reduce combines elements into an accumulator starting from an explicit initial value. Empty
-    input returns that initial value.
-  - reduce on an empty array always crashes.
+  - A bounds-check failure.
+  - "`0`"
+  - "`nil`"
 answer: 1
-explain: reduce combines elements into an accumulator starting from an explicit initial value. Empty
-  input returns that initial value.
+explain: With no elements, reduce returns its initial accumulator.
 ```

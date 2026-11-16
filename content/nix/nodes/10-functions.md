@@ -97,7 +97,7 @@ twice inc 5
 ```
 
 ```quiz
-question: "What does  (a: b: a * b) 3  return?"
+question: "What does  `(a: b: a * b) 3`  return?"
 options:
   - "3"
   - A function waiting for b.

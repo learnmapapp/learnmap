@@ -7,7 +7,7 @@ requires:
 summary: useSeoMeta offers typed fields for common metadata.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. useSeoMeta offers typed fields for common metadata. Keep descriptions accurate and include publicly reachable images when adding social previews.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. `useSeoMeta` offers typed fields for common metadata. Keep descriptions accurate and include publicly reachable images when adding social previews.
 
 ```vue
 <script setup lang="ts">
@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed seo metadata is correct?
+question: What should `useSeoMeta` descriptions reflect?
 options:
-  - useSeoMeta offers typed fields for common metadata. Keep descriptions accurate and include
-    publicly reachable images when adding social previews.
-  - SEO metadata guarantees a search ranking.
-  - All Open Graph images can point to localhost.
+  - The actual content of the current page.
+  - Unrelated popular keywords shared by every page.
+  - A guaranteed first-place search ranking.
 answer: 0
-explain: useSeoMeta offers typed fields for common metadata. Keep descriptions accurate and include
-  publicly reachable images when adding social previews.
+explain: Metadata describes the page; it does not guarantee search placement.
 ```

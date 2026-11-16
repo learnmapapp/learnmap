@@ -55,13 +55,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed lists is correct?
+question: What does `len(values)` report for a `List`?
 options:
-  - len always reports spare capacity.
-  - List[T] is a growable collection with one element type. len reports the number of elements, not
-    allocated capacity.
-  - A List can silently change its element type on every append.
+  - The size in bytes of its element type.
+  - Its current number of elements.
+  - Its unused allocation capacity.
 answer: 1
-explain: List[T] is a growable collection with one element type. len reports the number of elements,
-  not allocated capacity.
+explain: Length and allocated capacity are separate properties.
 ```

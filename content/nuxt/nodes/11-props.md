@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed props is correct?
+question: How should a child ask its parent to change a prop-owned value?
 options:
-  - A child should directly overwrite every parent prop.
-  - Props can only contain strings.
-  - Props describe parent-supplied inputs. Treat them as read-only and use events when a child
-    requests a state change.
+  - Directly assign a new value to the prop.
+  - Write to an unrelated global variable.
+  - Emit an event for the parent to handle.
 answer: 2
-explain: Props describe parent-supplied inputs. Treat them as read-only and use events when a child
-  requests a state change.
+explain: Props are read-only inputs; the owning parent handles changes.
 ```

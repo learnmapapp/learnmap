@@ -99,7 +99,7 @@ error: ** (MatchError) no match of right hand side value: 2
 Patterns show up everywhere, not just with `=`: in function heads, [case](node:case), `with`, `for` and `receive`. Getting comfortable with them is the single best investment in Elixir.
 
 ```quiz
-question: "After  x = 5,  what does  {^x, y} = {5, 6}  do?"
+question: After  `x = 5`,  what does  `{^x, y} = {5, 6}`  do?
 options:
   - Rebinds x to 5 and y to 6.
   - Checks the first element equals 5, and binds y to 6.

@@ -60,14 +60,14 @@ import settings from "./settings.js";
 ```
 
 ```exercise
-goal: Import ./hosts.nix and call it with `{ inherit pkgs; }`.
+goal: Import `./hosts.nix` and call it with `{ inherit pkgs; }`.
 code: |
   let
     hosts = ./hosts.nix;
   in
   hosts
 checks:
-  - match: 'hosts\s*=\s*import\s+\./hosts\.nix\s*\{\s*inherit\s+pkgs\s*;\s*\}\s*;'
-    message: 'Write  hosts = import ./hosts.nix { inherit pkgs; };'
-output: '{ web = { … }; db = { … }; }'
+  - match: hosts\s*=\s*import\s+\./hosts\.nix\s*\{\s*inherit\s+pkgs\s*;\s*\}\s*;
+    message: Write  hosts = import ./hosts.nix { inherit pkgs; };
+output: "{ web = { … }; db = { … }; }"
 ```

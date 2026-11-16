@@ -7,7 +7,7 @@ requires:
 summary: Optional chaining stops when a receiver is nil and returns an optional result.
 ---
 
-Optional chaining stops when a receiver is nil and returns an optional result. Combine it with ?? for an explicit display fallback.
+`Optional` chaining stops when a receiver is `nil` and returns an optional result. Combine it with ?? for an explicit display fallback.
 
 ```swift
 struct Profile { let city: String }
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about optional chaining is correct?
+question: If `profile` is `nil`, what does `profile?.city` produce?
 options:
-  - Optional chaining always returns a nonoptional result.
-  - Optional chaining stops when a receiver is nil and returns an optional result. Combine it with
-    ?? for an explicit display fallback.
-  - Optional chaining crashes whenever a receiver is nil.
+  - A forced-unwrapping trap.
+  - "`nil`."
+  - An empty `String`.
 answer: 1
-explain: Optional chaining stops when a receiver is nil and returns an optional result. Combine it
-  with ?? for an explicit display fallback.
+explain: "`Optional` chaining stops at a missing receiver and produces an optional result."
 ```

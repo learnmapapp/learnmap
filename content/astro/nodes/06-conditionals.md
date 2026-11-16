@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about conditional markup is correct?
+question: Does a frontmatter variable automatically become reactive in the browser?
 options:
-  - Ternaries and logical expressions select markup during rendering. A server-rendered variable
-    does not become reactive in the browser by itself.
-  - Changing a frontmatter variable later automatically updates every open browser.
-  - Conditional markup always ships a client framework.
+  - No; browser updates need explicit client-side behavior.
+  - Yes; every assignment rerenders all open pages.
+  - Only when the variable is a number.
 answer: 0
-explain: Ternaries and logical expressions select markup during rendering. A server-rendered
-  variable does not become reactive in the browser by itself.
+explain: Server rendering chooses initial markup; it does not create browser reactivity by itself.
 ```

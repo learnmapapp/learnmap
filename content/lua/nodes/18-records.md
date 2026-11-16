@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about record tables is correct?
+question: Which access is equivalent to `user.name`?
 options:
-  - Record fields are string keys. user.name and user["name"] access the same entry; bracket syntax
-    also accepts computed keys.
-  - Dot syntax evaluates the field name as a variable.
-  - A table can contain only numeric keys.
+  - '`user["name"]`'
+  - "`user[name]` regardless of `name`'s value."
+  - "`user[1]`"
 answer: 0
-explain: Record fields are string keys. user.name and user["name"] access the same entry; bracket
-  syntax also accepts computed keys.
+explain: Dot syntax uses a literal string key; bracket syntax can also use computed keys.
 ```

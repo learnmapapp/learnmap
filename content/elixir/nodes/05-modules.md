@@ -98,11 +98,11 @@ end
 Short functions go on one line with `, do:`; longer ones use `do ... end`. They mean the same thing.
 
 ```quiz
-question: "What does  alias Shop.Cart  let you write?"
+question: What does  alias Shop.Cart  let you write?
 options:
-  - "Cart.total(items)"
-  - "total(items)"
-  - "Shop.total(items)"
+  - "`Cart.total(items)`"
+  - "`total(items)`"
+  - "`Shop.total(items)`"
 answer: 0
 explain: alias shortens the name to its last part. import would let you drop the prefix entirely.
 ```

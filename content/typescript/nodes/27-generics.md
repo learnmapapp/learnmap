@@ -59,11 +59,11 @@ hint: "Declare T and use it for both the parameter and return type."
 ```
 
 ```quiz
-question: "What advantage does T provide over any in first<T>?"
+question: What advantage does T provide over any in `first<T>`?
 options:
-  - "It preserves the relationship to the input element type."
-  - "It validates every element at runtime."
-  - "It ensures the array is nonempty."
+  - It preserves the relationship to the input element type.
+  - It validates every element at runtime.
+  - It ensures the array is nonempty.
 answer: 0
-explain: "The type parameter preserves information without promising that an element exists."
+explain: The type parameter preserves information without promising that an element exists.
 ```

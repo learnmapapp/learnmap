@@ -51,11 +51,11 @@ hint: "Log next, the value calculated before calling the setter."
 ```
 
 ```quiz
-question: "Does setCount(1) immediately change count in the already running handler?"
+question: Does `setCount(1)` immediately change count in the already running handler?
 options:
-  - "Yes."
-  - "No, that handler retains its render snapshot."
-  - "Only in production."
+  - Yes.
+  - No, that handler retains its render snapshot.
+  - Only in production.
 answer: 1
-explain: "The setter requests a future render; local snapshot variables stay unchanged."
+explain: The setter requests a future render; local snapshot variables stay unchanged.
 ```

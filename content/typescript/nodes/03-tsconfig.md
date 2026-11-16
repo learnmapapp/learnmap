@@ -21,7 +21,7 @@ summary: "Choose strict checking and settings that match the host."
 }
 ```
 
-[[Strict mode]] enables a family of checks, including null handling and rejecting implicit `any`. `target` controls syntax output choices; it does not supply missing runtime APIs or polyfills.
+[[Strict mode]] enables a family of checks, including `null` handling and rejecting implicit `any`. `target` controls syntax output choices; it does not supply missing runtime APIs or polyfills.
 
 ## Match your runtime
 
@@ -30,7 +30,7 @@ summary: "Choose strict checking and settings that match the host."
 `include` selects source files, and imports can bring additional files into the project. Keep generated output outside your source tree. Options such as `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` add useful checks beyond `strict`; introduce them deliberately so their extra requirements are understood.
 
 ```exercise
-goal: "Enable the strict family of compiler checks."
+goal: Enable the strict family of compiler checks.
 lang: json
 code: |
   {
@@ -38,17 +38,17 @@ code: |
     "include": ["src"]
   }
 checks:
-  - match: "\"strict\":\\s+true"
-    message: "Set strict to true."
-hint: "Set strict to true."
+  - match: '"strict":\s+true'
+    message: Set strict to true.
+hint: Set strict to `true`.
 ```
 
 ```quiz
-question: "Does target: ES2022 install missing runtime APIs?"
+question: "Does `target: ES2022` install missing runtime APIs?"
 options:
-  - "Yes, all APIs are polyfilled."
-  - "Only for browsers."
-  - "No; target does not provide polyfills."
+  - Yes, all APIs are polyfilled.
+  - Only for browsers.
+  - No; target does not provide polyfills.
 answer: 2
-explain: "Compiler targets affect emitted syntax and related defaults, not the runtime implementation."
+explain: Compiler targets affect emitted syntax and related defaults, not the runtime implementation.
 ```

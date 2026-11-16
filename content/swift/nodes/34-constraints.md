@@ -7,7 +7,7 @@ requires:
 summary: A constraint supplies operations that unconstrained T does not promise.
 ---
 
-A constraint supplies operations that unconstrained T does not promise. Equatable enables equality checks between values of the same type.
+A constraint supplies operations that unconstrained T does not promise. `Equatable` enables equality checks between values of the same type.
 
 ```swift
 func allEqual<T: Equatable>(_ values: [T]) -> Bool {
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about generic constraints is correct?
+question: Why constrain the element type of `allEqual` to `Equatable`?
 options:
-  - Constraints are checked only after deployment.
-  - A constraint supplies operations that unconstrained T does not promise. Equatable enables
-    equality checks between values of the same type.
-  - Every type supports == without any constraint.
+  - So every value becomes a string.
+  - So equality comparison is guaranteed to be available.
+  - So every collection is guaranteed nonempty.
 answer: 1
-explain: A constraint supplies operations that unconstrained T does not promise. Equatable enables
-  equality checks between values of the same type.
+explain: The constraint supplies the operation used by the algorithm.
 ```

@@ -40,13 +40,12 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about independent value copies is correct?
+question: After `var second = first` for a struct with an `Int` field, what does changing
+  `second.value` affect?
 options:
-  - Assigning a struct creates a value copy. Mutating second does not change first, even when the
-    implementation uses storage optimizations.
-  - All struct copies share observable mutable state.
-  - Copy-on-write means values must expose shared mutations.
+  - Only the second value's field.
+  - Both values' fields.
+  - Only the first value's field.
 answer: 0
-explain: Assigning a struct creates a value copy. Mutating second does not change first, even when
-  the implementation uses storage optimizations.
+explain: Copying a struct preserves independent value behavior.
 ```

@@ -28,26 +28,27 @@ An uncontrolled input uses `defaultValue` for its initial value and lets the DOM
 Labels are part of the control's interface, not decorative text. Nest the input in its label or connect them with `htmlFor` and `id`.
 
 ```exercise
-goal: "Use checked when updating the checkbox state."
+goal: Use checked when updating the checkbox state.
 lang: jsx
-code: |
+code: >
   import { useState } from "react";
+
   export default function Toggle() {
     const [enabled, setEnabled] = useState(false);
     return <label><input type="checkbox" checked={enabled} onChange={event => setEnabled(event.target.value)} />Enabled</label>;
   }
 checks:
-  - match: "setEnabled\\(event\\.target\\.checked\\)"
-    message: "Read event.target.checked for a checkbox."
-hint: "Read event.target.checked for a checkbox."
+  - match: setEnabled\(event\.target\.checked\)
+    message: Read event.target.checked for a checkbox.
+hint: Read `event.target.checked` for a checkbox.
 ```
 
 ```quiz
-question: "Which property represents a checkbox's boolean state?"
+question: Which property represents a checkbox's boolean state?
 options:
-  - "value"
-  - "checked"
-  - "innerHTML"
+  - value
+  - checked
+  - innerHTML
 answer: 1
-explain: "Use checked for the state and event.target.checked when handling an edit."
+explain: Use checked for the state and `event.target.checked` when handling an edit.
 ```

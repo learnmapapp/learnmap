@@ -7,7 +7,7 @@ requires:
 summary: client:only skips server rendering for that framework component.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. client:only skips server rendering for that framework component. Use a renderer hint and provide meaningful fallback content when initial HTML is unavailable.
+In your Astro project, save this as `src/pages/index.astro`. `client:only` skips server rendering for that framework component. Use a renderer hint and provide meaningful fallback content when initial HTML is unavailable.
 
 ```astro
 ---
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about browser-only components is correct?
+question: What distinguishes `client:only="react"` from `client:load`?
 options:
-  - client:only skips server rendering for that framework component. Use a renderer hint and provide
-    meaningful fallback content when initial HTML is unavailable.
-  - client:only always provides the component’s server-rendered HTML.
-  - A renderer hint is never needed.
+  - It skips server rendering of that component.
+  - It guarantees the component needs no JavaScript.
+  - It hydrates Astro frontmatter directly.
 answer: 0
-explain: client:only skips server rendering for that framework component. Use a renderer hint and
-  provide meaningful fallback content when initial HTML is unavailable.
+explain: The renderer hint identifies the client framework; fallback content covers initial absence.
 ```

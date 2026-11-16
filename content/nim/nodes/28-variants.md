@@ -51,13 +51,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about variant objects is correct?
+question: When is a variant object's `message` field valid?
 options:
-  - The discriminator has no relationship to field availability.
-  - A variant object stores fields selected by a discriminator. Access fields only in the matching
-    branch to avoid invalid-field errors.
-  - Every variant field is valid in every state.
+  - Only after converting the object into a tuple.
+  - When its discriminator selects the text variant.
+  - In every variant regardless of its discriminator.
 answer: 1
-explain: A variant object stores fields selected by a discriminator. Access fields only in the
-  matching branch to avoid invalid-field errors.
+explain: The active discriminator determines which variant fields are available.
 ```

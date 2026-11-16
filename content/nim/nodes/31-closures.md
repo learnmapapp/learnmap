@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about captured functions is correct?
+question: What happens to the local counter captured by the returned closure?
 options:
-  - All closures must capture global variables.
-  - A closure can retain local state after the creating procedure returns. Each makeCounter
-    invocation creates separate state.
-  - Closures cannot outlive their enclosing procedure call.
+  - It becomes a shared global for every factory invocation.
+  - It persists for that closure's later calls.
+  - It is reset every time the closure is called.
 answer: 1
-explain: A closure can retain local state after the creating procedure returns. Each makeCounter
-  invocation creates separate state.
+explain: Each factory invocation creates its own captured state.
 ```

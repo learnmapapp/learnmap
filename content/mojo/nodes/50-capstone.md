@@ -10,7 +10,7 @@ requires:
 summary: Separate input validation from the numeric loop.
 ---
 
-Separate input validation from the numeric loop. Add tests for an empty list, a single value, and a known average before trying SIMD optimization.
+Separate input validation from the numeric loop. Add tests for an empty list, a single value, and a known average before trying `SIMD` optimization.
 
 ```mojo
 def average(values: List[Float64]) raises -> Float64:
@@ -53,13 +53,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about validated numeric pipeline is correct?
+question: Why should the average function reject an empty list first?
 options:
-  - Optimization removes the need to test empty input.
-  - An empty average should always divide by zero silently.
-  - Separate input validation from the numeric loop. Add tests for an empty list, a single value,
-    and a known average before trying SIMD optimization.
+  - An empty list cannot be passed as a typed value.
+  - Every empty list contains a hidden zero element.
+  - There is no element count by which to divide a meaningful total.
 answer: 2
-explain: Separate input validation from the numeric loop. Add tests for an empty list, a single
-  value, and a known average before trying SIMD optimization.
+explain: Validate the numeric operation's domain before performing the calculation.
 ```

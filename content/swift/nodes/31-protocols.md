@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about protocol contracts is correct?
+question: "What must a type adopting `Named` provide for `var name: String { get }`?"
 options:
-  - Only classes can conform to protocols.
-  - A protocol declares requirements that conforming types implement. A generic constraint lets code
-    use that contract without depending on one concrete type.
-  - Protocols must store instance fields directly.
+  - A method called `getName` instead.
+  - A readable `String` property called `name`.
+  - A mutable global called `name`.
 answer: 1
-explain: A protocol declares requirements that conforming types implement. A generic constraint lets
-  code use that contract without depending on one concrete type.
+explain: A get-only protocol requirement can be satisfied by a suitable stored or computed property.
 ```

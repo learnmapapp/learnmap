@@ -34,11 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about integer arithmetic is correct?
+question: What are `17 div 5` and `17 mod 5`?
 options:
-  - div always returns a float.
-  - mod returns the quotient.
-  - div computes an integer quotient and mod the remainder. Integer division truncates toward zero.
+  - "`3.4` and `0`."
+  - "`2` and `3`."
+  - "`3` and `2`."
 answer: 2
-explain: div computes an integer quotient and mod the remainder. Integer division truncates toward zero.
+explain: "`div` returns the integer quotient; `mod` returns the remainder."
 ```

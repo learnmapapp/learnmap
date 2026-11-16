@@ -5,7 +5,7 @@ branch: traits
 requires: [traits]
 summary: Debug, Clone, PartialEq, Default and friends for free.
 ---
-Some traits are so mechanical that the compiler can write them for you. Put `#[derive(...)]` above a struct or enum:
+`Some` traits are so mechanical that the compiler can write them for you. Put `#[derive(...)]` above a struct or enum:
 
 ```rust
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -25,7 +25,7 @@ Now you get:
 | `PartialEq`, `Eq` | `==` and `!=` |
 | `PartialOrd`, `Ord` | `<`, `>`, and sorting |
 | `Hash` | use as a `HashMap` key |
-| `Default` | `Crab::default()`, with zero, empty, false fields |
+| `Default` | `Crab::default()`, with zero, empty, `false` fields |
 
 ```rust
 let a = Crab { name: "Ferris".into(), legs: 10 };

@@ -7,7 +7,7 @@ requires:
 summary: Put logo.svg under the root public directory for this URL.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. Put logo.svg under the root public directory for this URL. Files under app/assets enter the bundler through imports or stylesheet references.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. Put `logo.svg` under the root public directory for this URL. Files under `app/assets` enter the bundler through imports or stylesheet references.
 
 ```vue
 <template><img src="/logo.svg" alt="Study club" width="80" height="80" /></template>
@@ -31,13 +31,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about public and bundled assets is correct?
+question: Where should `/logo.svg` be stored for the direct public URL?
 options:
-  - All app/assets files are automatically served at /assets unchanged.
-  - A public image never needs alternative text.
-  - Put logo.svg under the root public directory for this URL. Files under app/assets enter the
-    bundler through imports or stylesheet references.
+  - "`app/assets/logo.svg` without any import."
+  - "`server/api/logo.svg.ts`."
+  - "`public/logo.svg`."
 answer: 2
-explain: Put logo.svg under the root public directory for this URL. Files under app/assets enter the
-  bundler through imports or stylesheet references.
+explain: Public files are served from root-relative URLs; bundled assets use imports or references.
 ```

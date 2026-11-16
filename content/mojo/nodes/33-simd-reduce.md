@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reduce vector lanes is correct?
+question: What does `reduce_add()` produce for lanes `1, 2, 3, 4`?
 options:
-  - A horizontal reduction combines lanes into an aggregate. reduce_add sums them, while
-    element-wise addition retains the vector shape.
-  - reduce_add always returns every lane unchanged.
-  - Element-wise addition automatically sums across lanes.
+  - Their sum, `10`.
+  - A vector containing the same four lanes.
+  - Only the final lane, `4`.
 answer: 0
-explain: A horizontal reduction combines lanes into an aggregate. reduce_add sums them, while
-  element-wise addition retains the vector shape.
+explain: A horizontal reduction combines all lanes into an aggregate.
 ```

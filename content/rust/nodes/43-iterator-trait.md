@@ -84,7 +84,7 @@ for n := range countdown(3) { } // range-over-func iterators, Go 1.23+
 ```
 
 ```exercise
-goal: Fill in the associated type, so Evens yields u32 values.
+goal: Fill in the associated type, so Evens yields `u32` values.
 code: |
   impl Iterator for Evens {
       fn next(&mut self) -> Option<u32> {
@@ -93,7 +93,7 @@ code: |
       }
   }
 checks:
-  - match: 'type\s+Item\s*=\s*u32\s*;'
-    message: "Add  type Item = u32;  inside the impl."
+  - match: type\s+Item\s*=\s*u32\s*;
+    message: Add  type Item = u32;  inside the impl.
 output: "[2, 4, 6]"
 ```

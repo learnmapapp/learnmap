@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about client-only ui boundaries is correct?
+question: What does `ClientOnly` show in server output?
 options:
-  - ClientOnly makes private data secure in browser memory.
-  - ClientOnly defers its default content to the browser and supplies fallback markup for server
-    output. Put an actual browser-dependent component inside when needed.
-  - ClientOnly renders its entire default slot on the server.
+  - An automatically generated screenshot of the widget.
+  - Its fallback content instead of its browser-only default content.
+  - The fully rendered default slot in every case.
 answer: 1
-explain: ClientOnly defers its default content to the browser and supplies fallback markup for
-  server output. Put an actual browser-dependent component inside when needed.
+explain: The default slot waits for the browser; fallback markup can cover its initial absence.
 ```

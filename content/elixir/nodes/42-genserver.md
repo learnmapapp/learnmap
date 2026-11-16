@@ -74,7 +74,7 @@ The client functions at the top hide the messaging, so callers just call `Counte
 ```
 
 ```quiz
-question: Which callback answers a GenServer.call?
+question: Which callback answers a `GenServer.call`?
 options:
   - handle_cast/2
   - handle_call/3

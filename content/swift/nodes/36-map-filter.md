@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about transform collections is correct?
+question: "What is `[1, 2, 3, 4].filter { $0.isMultiple(of: 2) }.map { $0 * 2 }`?"
 options:
-  - filter selects elements and map transforms each selected element. These operations return new
-    arrays and leave scores unchanged.
-  - filter always changes element types.
-  - map drops all falsey results.
+  - "`[4, 8]`"
+  - "`[2, 4, 6, 8]`"
+  - "`[2, 4]`"
 answer: 0
-explain: filter selects elements and map transforms each selected element. These operations return
-  new arrays and leave scores unchanged.
+explain: Filter retains the even values; map then doubles those retained values.
 ```

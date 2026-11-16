@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about prerender known routes is correct?
+question: Why explicitly list known routes for prerendering?
 options:
-  - Explicit prerender routes help cover pages a crawler may not discover. Ensure the listed pages
-    exist and inspect generated output before deploying static assets.
-  - Prerendering can execute a live POST API after static deployment.
-  - Every possible dynamic URL is always discoverable automatically.
+  - Some pages may not be discoverable by link crawling.
+  - The list creates missing page components automatically.
+  - It preserves live POST APIs on a static-only host.
 answer: 0
-explain: Explicit prerender routes help cover pages a crawler may not discover. Ensure the listed
-  pages exist and inspect generated output before deploying static assets.
+explain: Prerender configuration selects existing pages to generate; it does not add a server runtime.
 ```

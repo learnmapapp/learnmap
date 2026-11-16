@@ -8,7 +8,7 @@ requires:
 summary: Name module-level tests with test_ and run a TestSuite from main.
 ---
 
-Name module-level tests with test_ and run a TestSuite from main. Save this as test_square.mojo and run mojo run test_square.mojo.
+Name module-level tests with `test_` and run a `TestSuite` from main. Save this as `test_square.mojo` and run `mojo run test_square.mojo`.
 
 ```mojo
 from std.testing import assert_equal, TestSuite
@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about unit tests is correct?
+question: Which function name is eligible for automatic test discovery?
 options:
-  - Name module-level tests with test_ and run a TestSuite from main. Save this as test_square.mojo
-    and run mojo run test_square.mojo.
-  - Tests are automatically run by every import.
-  - Test discovery requires tests to accept arbitrary arguments.
+  - "`test_square`"
+  - "`check_square`"
+  - "`square_example`"
 answer: 0
-explain: Name module-level tests with test_ and run a TestSuite from main. Save this as
-  test_square.mojo and run mojo run test_square.mojo.
+explain: The test suite discovers suitable module-level functions with the `test_` prefix.
 ```

@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about dynamic child tasks is correct?
+question: In what order does `for await` receive task-group results?
 options:
-  - A task group manages a dynamic set of child tasks. Results arrive in completion order, so do not
-    assume submission order.
-  - Task groups guarantee results arrive in submission order.
-  - Leaving a group discards running children without waiting.
+  - Completion order.
+  - Always submission order.
+  - Always ascending result-value order.
 answer: 0
-explain: A task group manages a dynamic set of child tasks. Results arrive in completion order, so
-  do not assume submission order.
+explain: Do not assume concurrent children finish in the order they were added.
 ```

@@ -59,11 +59,11 @@ names.map { it * 10 }
 ```
 
 ```exercise
-goal: Replace the fn with a capture of String.trim/1.
+goal: Replace the fn with a capture of `String.trim`/1.
 code: |
   Enum.map(lines, fn line -> String.trim(line) end)
 checks:
-  - match: 'Enum\.map\(\s*lines\s*,\s*&String\.trim/1\s*\)'
-    message: 'Use  &String.trim/1'
+  - match: Enum\.map\(\s*lines\s*,\s*&String\.trim/1\s*\)
+    message: Use  &String.trim/1
 output: '["a", "b"]'
 ```

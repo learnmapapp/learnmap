@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about flexible array arguments is correct?
+question: What can a parameter of type `openArray[int]` accept?
 options:
-  - openArray parameters accept array and sequence inputs without forcing callers to use one
-    concrete container type.
-  - openArray is a growable return type.
-  - Only sequences can be passed to openArray.
+  - Compatible integer arrays and sequences.
+  - Only fixed arrays of exactly three integers.
+  - Only a mutable `Table`.
 answer: 0
-explain: openArray parameters accept array and sequence inputs without forcing callers to use one
-  concrete container type.
+explain: "`openArray` lets a procedure consume several compatible container forms."
 ```

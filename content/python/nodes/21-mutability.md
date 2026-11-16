@@ -50,7 +50,7 @@ let copy = original.clone(); // cloning behavior depends on the element type
 ```
 
 ```exercise
-goal: "Copy the list before appending so original stays unchanged."
+goal: Copy the list before appending so original stays unchanged.
 lang: python
 code: |
   original = ["Ada"]
@@ -58,9 +58,9 @@ code: |
   copy.append("Grace")
   print(original)
 checks:
-  - match: "copy\\s*=\\s*original\\.copy\\(\\s*\\)"
-    message: "Assign original.copy() to copy."
-hint: "Assign original.copy() to copy."
+  - match: copy\s*=\s*original\.copy\(\s*\)
+    message: Assign original.copy() to copy.
+hint: Assign `original.copy()` to copy.
 ```
 
 ```quiz

@@ -108,11 +108,11 @@ v.push(3);            // fine now
 ```
 
 ```quiz
-question: "How many &mut references to the same value can exist at the same time?"
+question: Which rule applies to overlapping active borrows of the same value?
 options:
-  - As many as you like
-  - One
-  - Zero, &mut is only for functions
+  - Mutable borrows are allowed only for global variables.
+  - One exclusive mutable borrow, or shared read-only borrows.
+  - Any number of independent mutable and shared borrows together.
 answer: 1
-explain: Exactly one mutable reference, and no shared ones while it lives.
+explain: A mutable borrow requires exclusive access while it is in use.
 ```

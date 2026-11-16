@@ -7,7 +7,7 @@ requires:
 summary: anytype asks the compiler to specialize a function for its argument’s type.
 ---
 
-anytype asks the compiler to specialize a function for its argument’s type. Operations inside the function must still be valid for that concrete type.
+`anytype` asks the compiler to specialize a function for its argument’s type. Operations inside the function must still be valid for that concrete type.
 
 ```zig
 const std = @import("std");
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about inferred parameter types is correct?
+question: Does an `anytype` parameter turn off checking inside a function?
 options:
-  - Every anytype argument becomes a boxed runtime object.
-  - anytype asks the compiler to specialize a function for its argument’s type. Operations inside
-    the function must still be valid for that concrete type.
-  - anytype disables all compile-time checking.
+  - Only return values remain checked.
+  - No; operations are checked for the concrete argument type.
+  - Yes; all invalid operations become runtime casts.
 answer: 1
-explain: anytype asks the compiler to specialize a function for its argument’s type. Operations
-  inside the function must still be valid for that concrete type.
+explain: The compiler specializes and checks the function for its actual types.
 ```

@@ -8,9 +8,9 @@ requires:
 summary: A composable packages reusable reactive logic.
 ---
 
-In your Nuxt 4 project, save this as `app/composables/useCounter.ts`. A composable packages reusable reactive logic. Each useCounter invocation here creates independent state; shared request-safe state is a separate design choice.
+In your Nuxt 4 project, save this as `app/composables/useCounter.ts`. A composable packages reusable reactive logic. Each `useCounter` invocation here creates independent state; shared request-safe state is a separate design choice.
 
-A useful term here is [[composable]]: A function encapsulating reusable reactive behavior, conventionally named useSomething.
+A useful term here is [[composable]]: A function encapsulating reusable reactive behavior, conventionally named `useSomething`.
 
 ```typescript
 export function useCounter() {
@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reusable composables is correct?
+question: Two calls to the example `useCounter()` each create `ref(0)`. What do they share?
 options:
-  - A composable packages reusable reactive logic. Each useCounter invocation here creates
-    independent state; shared request-safe state is a separate design choice.
-  - Every composable invocation automatically shares one global count.
-  - Composables can only return template strings.
+  - Logic, while keeping independent counter state.
+  - One global counter by default.
+  - Every future state assignment automatically.
 answer: 0
-explain: A composable packages reusable reactive logic. Each useCounter invocation here creates
-  independent state; shared request-safe state is a separate design choice.
+explain: A composable reuses behavior; sharing state needs an explicit design.
 ```

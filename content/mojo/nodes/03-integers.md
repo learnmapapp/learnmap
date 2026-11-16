@@ -7,7 +7,7 @@ requires:
 summary: Int is the native-word signed integer type.
 ---
 
-Int is the native-word signed integer type. Fixed-width types such as UInt8 make representation and range choices explicit.
+`Int` is the native-word signed integer type. Fixed-width types such as `UInt8` make representation and range choices explicit.
 
 ```mojo
 def main() raises:
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about integer widths is correct?
+question: Which value fits in `UInt8`?
 options:
-  - Int is the native-word signed integer type. Fixed-width types such as UInt8 make representation
-    and range choices explicit.
-  - UInt8 stores negative values.
-  - Int always has exactly eight bits.
+  - "`200`"
+  - "`-1`"
+  - "`256`"
 answer: 0
-explain: Int is the native-word signed integer type. Fixed-width types such as UInt8 make
-  representation and range choices explicit.
+explain: An unsigned 8-bit value represents integers from 0 through 255.
 ```

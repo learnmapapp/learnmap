@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about conditional repetition is correct?
+question: What happens if a `while` condition is `false` before its first iteration?
 options:
-  - while checks before each iteration. repeat-while checks afterward when at least one iteration is
-    required.
-  - while always executes once.
-  - repeat-while never executes its body when the initial condition is false.
+  - The body is skipped.
+  - The body runs exactly once.
+  - The body runs until an explicit `break`.
 answer: 0
-explain: while checks before each iteration. repeat-while checks afterward when at least one
-  iteration is required.
+explain: "`while` checks its condition before executing the body."
 ```

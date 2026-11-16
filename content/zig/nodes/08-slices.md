@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about borrowed slices is correct?
+question: A mutable slice refers to `values[1..]`. What does writing its first element change?
 options:
-  - A slice always owns a copied allocation.
-  - A slice keeps stack storage alive after its function returns.
-  - A slice combines a pointer and length; it borrows backing storage. Changing an element through a
-    mutable slice changes that storage.
+  - Only a detached copy of that element.
+  - The backing array's element at index 0.
+  - The backing array's element at index 1.
 answer: 2
-explain: A slice combines a pointer and length; it borrows backing storage. Changing an element
-  through a mutable slice changes that storage.
+explain: A slice borrows contiguous storage rather than automatically copying it.
 ```

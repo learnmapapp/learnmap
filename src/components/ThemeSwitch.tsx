@@ -14,7 +14,7 @@ export function ThemeButton({ compact = false }: { compact?: boolean }) {
       onClick={() => setThemePreference(next)}
     >
       <Icon name={next === 'light' ? 'sun' : 'moon'} size={compact ? 20 : 22} />
-      {!compact && <span>{next === 'light' ? 'Light mode' : 'Dark mode'}</span>}
+      {!compact && <span>{next === 'light' ? 'Light' : 'Dark'}</span>}
     </button>
   );
 }

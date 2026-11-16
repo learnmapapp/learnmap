@@ -20,7 +20,7 @@ A union accepts alternatives; an intersection combines requirements. This can co
 
 ## Conflicts are not overrides
 
-If one member requires `id: string` and another requires `id: number`, the intersection does not choose the later one. The property must satisfy both incompatible requirements, often reducing it to `never`.
+If one member requires `id: string` and another requires `id: number`, the intersection does not choose the later one. The property must satisfy both incompatible requirements, often reducing it to never.
 
 Use `Omit<Base, "id"> & { id: NewType }` when you intentionally replace a property type, rather than intersecting contradictory contracts. [Utility types](node:utility-types) develops that pattern.
 
@@ -42,11 +42,11 @@ hint: "Use & to combine required shapes."
 ```
 
 ```quiz
-question: "What does Named & Scored require?"
+question: What does `Named & Scored` require?
 options:
-  - "Either a name or a score."
-  - "Both compatible name and score properties."
-  - "A runtime object merge automatically."
+  - Either a name or a score.
+  - Both compatible name and score properties.
+  - A runtime object merge automatically.
 answer: 1
-explain: "An intersection requires every member contract to hold simultaneously."
+explain: An intersection requires every member contract to hold simultaneously.
 ```

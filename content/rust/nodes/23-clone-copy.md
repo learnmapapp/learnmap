@@ -62,9 +62,9 @@ b := a // structs copy, but slices and maps inside still share data
 ```quiz
 question: Which of these types is NOT Copy?
 options:
-  - "(i32, bool)"
-  - "[u8; 4]"
-  - Vec<u8>
+  - (`i32`, bool)
+  - "[`u8`; 4]"
+  - "`Vec<u8>`"
   - char
 answer: 2
 explain: A Vec owns heap memory, so it moves. Tuples and arrays of Copy types are Copy themselves.

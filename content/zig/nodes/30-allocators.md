@@ -52,13 +52,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about explicit allocators is correct?
+question: Who releases a buffer returned by `allocator.alloc`?
 options:
-  - Allocation is explicit and fallible. Pair owned allocations with free and pass an allocator into
-    reusable code instead of hiding a global policy.
-  - Allocator memory is always reclaimed automatically at scope exit.
-  - alloc cannot fail.
+  - The code responsible for that allocation's ownership.
+  - The slice value automatically on scope exit.
+  - The compiler's implicit garbage collector.
 answer: 0
-explain: Allocation is explicit and fallible. Pair owned allocations with free and pass an allocator
-  into reusable code instead of hiding a global policy.
+explain: Pair owned allocations with the allocator's matching release policy.
 ```

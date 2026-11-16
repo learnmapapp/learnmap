@@ -8,7 +8,7 @@ requires:
 summary: SIMD groups fixed-width numeric lanes for element-wise operations.
 ---
 
-SIMD groups fixed-width numeric lanes for element-wise operations. A vector’s dtype and width are compile-time parameters.
+`SIMD` groups fixed-width numeric lanes for element-wise operations. A vector’s dtype and width are compile-time parameters.
 
 A useful term here is [[SIMD]]: Single instruction, multiple data: operating on several numeric lanes together.
 
@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about simd lanes is correct?
+question: What does multiplying a four-lane `SIMD` vector by `2` do?
 options:
-  - Vector width can change freely at runtime.
-  - SIMD groups fixed-width numeric lanes for element-wise operations. A vector’s dtype and width
-    are compile-time parameters.
-  - SIMD multiplication always computes a scalar dot product.
+  - Doubles the number of lanes.
+  - Multiplies each lane by `2`.
+  - Adds the lanes into one scalar.
 answer: 1
-explain: SIMD groups fixed-width numeric lanes for element-wise operations. A vector’s dtype and
-  width are compile-time parameters.
+explain: "`SIMD` arithmetic applies the operation element by element."
 ```

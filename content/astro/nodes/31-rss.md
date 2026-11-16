@@ -7,7 +7,7 @@ requires:
 summary: Install @astrojs/rss and set site in astro.config.mjs to your real public origin.
 ---
 
-In your Astro project, save this as `src/pages/rss.xml.ts`. Install @astrojs/rss and set site in astro.config.mjs to your real public origin. Feed links should point to published pages.
+In your Astro project, save this as `src/pages/rss.xml.ts`. Install `@astrojs/rss` and set site in `astro.config.mjs` to your real public origin. Feed links should point to published pages.
 
 ```typescript
 import type { APIContext } from "astro";
@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about an rss feed is correct?
+question: What does the RSS endpoint need for absolute feed URLs?
 options:
-  - context.site is always known without configuration.
-  - Install @astrojs/rss and set site in astro.config.mjs to your real public origin. Feed links
-    should point to published pages.
-  - RSS requires a hydrated React tree.
+  - A hydrated React root.
+  - The real public site origin in configuration.
+  - A browser-only local-storage value.
 answer: 1
-explain: Install @astrojs/rss and set site in astro.config.mjs to your real public origin. Feed
-  links should point to published pages.
+explain: Configure `site` so the feed can resolve links against the deployed origin.
 ```

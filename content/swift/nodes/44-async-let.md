@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about concurrent child work is correct?
+question: What does `async let` introduce?
 options:
-  - Child tasks can outlive their structured scope indefinitely.
-  - async let waits synchronously before starting the next declaration.
-  - async let starts structured child work whose lifetime belongs to its scope. Await the values
-    before using their completed results.
+  - A global background operation with unlimited lifetime.
+  - A synchronous constant that cannot suspend.
+  - Structured child work whose lifetime belongs to its scope.
 answer: 2
-explain: async let starts structured child work whose lifetime belongs to its scope. Await the
-  values before using their completed results.
+explain: The enclosing scope manages and awaits its child work.
 ```

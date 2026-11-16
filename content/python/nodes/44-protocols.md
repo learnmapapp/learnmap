@@ -41,7 +41,7 @@ type Speaker interface {
 ```
 
 ```exercise
-goal: "Call the speak method rather than returning the method object."
+goal: Call the speak method rather than returning the method object.
 lang: python
 code: |
   from typing import Protocol
@@ -58,9 +58,9 @@ code: |
 
   print(announce(Duck()))
 checks:
-  - match: "^\\s+return\\s+speaker\\.speak\\(\\s*\\)\\s*$"
-    message: "Use return speaker.speak()."
-hint: "Use return speaker.speak()."
+  - match: ^\s+return\s+speaker\.speak\(\s*\)\s*$
+    message: Use return speaker.speak().
+hint: Use return `speaker.speak()`.
 ```
 
 ```quiz

@@ -32,22 +32,22 @@ Terminal commands and Python code go in different places. Do not paste `python3 
 ```
 
 ```exercise
-goal: "Print Hello, Python! from this script."
+goal: Print Hello, Python! from this script.
 lang: python
 code: |
   "Hello, Python!"
 checks:
-  - match: "^print\\(\\s*[\"']Hello, Python![\"']\\s*\\)\\s*$"
-    message: "Wrap the string in print(...)."
-hint: "Wrap the string in print(...)."
+  - match: ^print\(\s*["']Hello, Python!["']\s*\)\s*$
+    message: Wrap the string in print(...).
+hint: Wrap the string in `print(...)`.
 ```
 
 ```quiz
-question: "Why does a script containing only 2 + 3 display nothing?"
+question: Why does a script containing only `2 + 3` display nothing?
 options:
-  - "Scripts cannot do arithmetic."
-  - "Scripts need print() to display that value."
-  - "Every file needs a class."
+  - Scripts cannot do arithmetic.
+  - Scripts need `print()` to display that value.
+  - Every file needs a class.
 answer: 1
-explain: "The REPL echoes expressions. A script does not; print() writes output."
+explain: The REPL echoes expressions. A script does not; `print()` writes output.
 ```

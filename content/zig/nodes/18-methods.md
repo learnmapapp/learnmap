@@ -8,7 +8,7 @@ requires:
 summary: A method is a function in a type’s namespace.
 ---
 
-A method is a function in a type’s namespace. A *Self receiver allows mutation; @This() names the containing type.
+A method is a function in a type’s namespace. A *Self receiver allows mutation; @`This()` names the containing type.
 
 ```zig
 const std = @import("std");
@@ -51,13 +51,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about struct methods is correct?
+question: "Why declare the counter receiver as `self: *@This()`?"
 options:
-  - A method is a function in a type’s namespace. A *Self receiver allows mutation; @This() names
-    the containing type.
-  - All method receivers are implicitly mutable copies.
-  - "@This() always returns the std module."
+  - To permit mutation of the original counter.
+  - To copy the counter into a read-only parameter.
+  - To allocate a counter automatically.
 answer: 0
-explain: A method is a function in a type’s namespace. A *Self receiver allows mutation; @This()
-  names the containing type.
+explain: A mutable pointer receiver can update the caller's instance.
 ```

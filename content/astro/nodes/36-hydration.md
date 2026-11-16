@@ -7,7 +7,7 @@ requires:
 summary: Create Counter.jsx with React useState and a button.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. Create Counter.jsx with React useState and a button. client:load renders initial HTML and hydrates the component promptly in the browser.
+In your Astro project, save this as `src/pages/index.astro`. Create `Counter.jsx` with React `useState` and a button. `client:load` renders initial HTML and hydrates the component promptly in the browser.
 
 A useful term here is [[hydration]]: Attaching browser behavior to framework component HTML rendered on the server.
 
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about hydrate an island is correct?
+question: What does `client:load` request for a React component?
 options:
-  - Create Counter.jsx with React useState and a button. client:load renders initial HTML and
-    hydrates the component promptly in the browser.
-  - client:load skips server rendering entirely.
-  - A React component without a client directive is automatically interactive.
+  - Initial rendered HTML followed by prompt browser hydration.
+  - Browser rendering with all server HTML skipped.
+  - Only a build-time type check with no browser behavior.
 answer: 0
-explain: Create Counter.jsx with React useState and a button. client:load renders initial HTML and
-  hydrates the component promptly in the browser.
+explain: Load hydration attaches framework interactivity to the initial markup.
 ```

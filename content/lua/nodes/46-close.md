@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about scoped cleanup is correct?
+question: When is a Lua 5.4 local marked `<close>` closed?
 options:
-  - To-be-closed locals wait for garbage collection.
-  - Lua 5.4 to-be-closed locals run their closing method when the scope exits, including error
-    exits. A temporary file avoids overwriting project data.
-  - <close> is available in all Lua versions.
+  - Only if the scope reaches its final statement normally.
+  - When control leaves its scope, including on an error.
+  - Only during a later garbage-collection cycle.
 answer: 1
-explain: Lua 5.4 to-be-closed locals run their closing method when the scope exits, including error
-  exits. A temporary file avoids overwriting project data.
+explain: To-be-closed locals provide deterministic scope-exit cleanup.
 ```

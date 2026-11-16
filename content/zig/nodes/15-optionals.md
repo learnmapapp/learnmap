@@ -7,9 +7,9 @@ requires:
 summary: ?T represents either a T or null.
 ---
 
-?T represents either a T or null. An optional capture exposes the present value safely inside the branch.
+?T represents either a T or `null`. An optional capture exposes the present value safely inside the branch.
 
-A useful term here is [[optional]]: A type that explicitly holds a value or null, written ?T.
+A useful term here is [[optional]]: A type that explicitly holds a value or `null`, written ?T.
 
 ```zig
 const std = @import("std");
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about optional values is correct?
+question: Which type can hold either a `u8` or `null`?
 options:
-  - ?T represents either a T or null. An optional capture exposes the present value safely inside
-    the branch.
-  - null is a valid ordinary u8.
-  - Optional captures always force a panic.
+  - "`?u8`"
+  - "`u8`"
+  - "`!u8`"
 answer: 0
-explain: ?T represents either a T or null. An optional capture exposes the present value safely
-  inside the branch.
+explain: The question-mark type constructor models optional presence.
 ```

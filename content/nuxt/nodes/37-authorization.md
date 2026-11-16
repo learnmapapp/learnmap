@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about enforce access on the server is correct?
+question: Where must the private endpoint reject an invalid token?
 options:
-  - Private API secrets should be bundled into browser code.
-  - This minimal server-to-server token example checks access at the endpoint. Keep apiSecret
-    private; a browser user session needs a proper session system and resource-level authorization.
-  - A hidden navigation link is sufficient authorization.
+  - Only in a browser route guard.
+  - Inside the server's request handling.
+  - Only in a navigation link's visibility condition.
 answer: 1
-explain: This minimal server-to-server token example checks access at the endpoint. Keep apiSecret
-  private; a browser user session needs a proper session system and resource-level authorization.
+explain: Clients can bypass UI checks and send requests directly to the endpoint.
 ```

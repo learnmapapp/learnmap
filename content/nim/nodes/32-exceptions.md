@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about catch exceptions is correct?
+question: Which exception should handle invalid text passed to `parseInt`?
 options:
-  - parseInt returns zero for every invalid string.
-  - Catching IOError handles every ValueError.
-  - Catch the specific exception a boundary operation can raise. parseInt reports invalid numeric
-    text with ValueError.
+  - "`IOError`"
+  - "`KeyError`"
+  - "`ValueError`"
 answer: 2
-explain: Catch the specific exception a boundary operation can raise. parseInt reports invalid
-  numeric text with ValueError.
+explain: Invalid numeric text is a conversion-value failure.
 ```

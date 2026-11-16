@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about import modules is correct?
+question: What does `from std/math import sqrt` make available?
 options:
-  - Only standard-library modules can be imported.
-  - import makes another module’s public API available; from ... import narrows which names you
-    bring into scope.
-  - Imports copy source text into a string.
+  - A local copy of the module's source text.
+  - The selected `sqrt` name.
+  - Every name from every standard module.
 answer: 1
-explain: import makes another module’s public API available; from ... import narrows which names you
-  bring into scope.
+explain: A selective import brings the requested public name into scope.
 ```

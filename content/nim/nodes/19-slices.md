@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about slices and indices is correct?
+question: For a nonempty sequence, what does `values[^1]` access?
 options:
-  - Slices always exclude their last index.
-  - Slices use range syntax, and ^1 addresses the last element. Check that the collection is
-    nonempty before indexing from the end.
-  - ^1 refers to the first element.
+  - An element before index zero.
+  - Its last element.
+  - Its first element.
 answer: 1
-explain: Slices use range syntax, and ^1 addresses the last element. Check that the collection is
-  nonempty before indexing from the end.
+explain: Backwards indexing counts from the end; `^1` means the last position.
 ```

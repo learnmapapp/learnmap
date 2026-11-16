@@ -7,7 +7,7 @@ requires:
 summary: Create Greeting.astro with server-rendered content and configure a compatible adapter.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. Create Greeting.astro with server-rendered content and configure a compatible adapter. server:defer loads that server-rendered fragment independently from the surrounding page.
+In your Astro project, save this as `src/pages/index.astro`. Create `Greeting.astro` with server-rendered content and configure a compatible adapter. `server:defer` loads that server-rendered fragment independently from the surrounding page.
 
 A useful term here is [[server island]]: A server-rendered fragment deferred independently from the surrounding page.
 
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about deferred server islands is correct?
+question: What does `server:defer` defer?
 options:
-  - Server islands require no server-capable deployment.
-  - Create Greeting.astro with server-rendered content and configure a compatible adapter.
-    server:defer loads that server-rendered fragment independently from the surrounding page.
-  - server:defer means hydrate an Astro component with React.
+  - Loading the entire page's CSS only after a click.
+  - Rendering a server fragment independently from its surrounding page.
+  - Hydrating an Astro component with React.
 answer: 1
-explain: Create Greeting.astro with server-rendered content and configure a compatible adapter.
-  server:defer loads that server-rendered fragment independently from the surrounding page.
+explain: A server island requires a compatible server-capable deployment.
 ```

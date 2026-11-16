@@ -71,9 +71,9 @@ n, err := strconv.Atoi("abc")
 ```quiz
 question: Your app can't start without its config file. Which call fits best?
 options:
-  - "File.read(path) and ignore errors"
-  - "File.read!(path)"
-  - "try ... rescue around File.read(path)"
+  - "`File.read(path)` and ignore errors"
+  - "`File.read`!(path)"
+  - try ... rescue around `File.read(path)`
 answer: 1
 explain: There's no way to continue without the file, so crash loudly with the ! version.
 ```

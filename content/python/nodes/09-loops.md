@@ -46,23 +46,23 @@ for _, name := range []string{"Ada", "Grace"} {
 ```
 
 ```exercise
-goal: "Print 1, 2, and 3 by fixing the stop value."
+goal: Print 1, 2, and 3 by fixing the stop value.
 lang: python
 code: |
   for number in range(1, 3):
       print(number)
 checks:
-  - match: "range\\(\\s*1\\s*,\\s*4\\s*\\)"
-    message: "The stop is excluded, so use range(1, 4)."
-hint: "The stop is excluded, so use range(1, 4)."
+  - match: range\(\s*1\s*,\s*4\s*\)
+    message: The stop is excluded, so use range(1, 4).
+hint: The stop is excluded, so use `range(1, 4)`.
 ```
 
 ```quiz
-question: "Which values come from range(1, 4)?"
+question: Which values come from `range(1, 4)`?
 options:
-  - "1, 2, 3, 4"
-  - "0, 1, 2, 3"
-  - "1, 2, 3"
+  - 1, 2, 3, 4
+  - 0, 1, 2, 3
+  - 1, 2, 3
 answer: 2
-explain: "range includes the start and excludes the stop."
+explain: range includes the start and excludes the stop.
 ```

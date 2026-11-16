@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about enumerated states is correct?
+question: Why use an enum for `todo`, `doing`, and `done`?
 options:
-  - An enum case must always include else.
-  - An enum names a finite set of states. Exhaustive case branches let the compiler help when states
-    are added.
-  - Enum values are arbitrary strings.
+  - To allocate a separate class for every status.
+  - To restrict status to a finite set of named values.
+  - To accept arbitrary status strings without validation.
 answer: 1
-explain: An enum names a finite set of states. Exhaustive case branches let the compiler help when
-  states are added.
+explain: An enum makes supported states explicit and enables exhaustive branching.
 ```

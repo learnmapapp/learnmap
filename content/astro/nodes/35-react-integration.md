@@ -7,7 +7,7 @@ requires:
 summary: Run this inside your practice Astro project to install and configure React support.
 ---
 
-In your Astro project, save this as `terminal command`. Run this inside your practice Astro project to install and configure React support. Create a Counter.jsx component before using the next island examples.
+In your Astro project, save this as `terminal command`. Run this inside your practice Astro project to install and configure React support. Create a `Counter.jsx` component before using the next island examples.
 
 ```shell
 npx astro add react
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about add react support is correct?
+question: What does adding React integration enable?
 options:
-  - Adding the integration automatically hydrates every Astro component.
-  - React integration replaces the Astro file router.
-  - Run this inside your practice Astro project to install and configure React support. Create a
-    Counter.jsx component before using the next island examples.
+  - Automatic hydration of every Astro component.
+  - Replacement of Astro's file-based router.
+  - Rendering React components and hydrating selected ones.
 answer: 2
-explain: Run this inside your practice Astro project to install and configure React support. Create
-  a Counter.jsx component before using the next island examples.
+explain: The integration supplies a renderer; client directives still choose hydration behavior.
 ```

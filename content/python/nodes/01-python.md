@@ -25,11 +25,12 @@ Exercises on this map check the text you write; they do not run Python. Use a lo
 ```
 
 ```quiz
-question: "What runs a Python program?"
+question: What is the Python interpreter's role when you run a script?
 options:
-  - "The Python interpreter."
-  - "A browser is always required."
-  - "The Markdown renderer."
+  - Execute the program's Python code.
+  - Install every dependency automatically.
+  - Enforce all type annotations as runtime validators.
 answer: 0
-explain: "Python programs run through an interpreter; this map displays examples and checks exercise text."
+explain: The interpreter runs the code; package installation and optional static checking are
+  separate tasks.
 ```

@@ -8,7 +8,7 @@ requires:
 summary: table.concat joins a sequence of strings or numbers with an optional separator.
 ---
 
-table.concat joins a sequence of strings or numbers with an optional separator. It avoids repeated concatenation inside a loop.
+`table.concat` joins a sequence of strings or numbers with an optional separator. It avoids repeated concatenation inside a loop.
 
 ```lua
 local parts = {"learn", "Lua", "today"}
@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about join a sequence is correct?
+question: What is `table.concat({"learn", "Lua"}, " ")`?
 options:
-  - table.concat joins a sequence of strings or numbers with an optional separator. It avoids
-    repeated concatenation inside a loop.
-  - table.concat joins every map key.
-  - The separator is appended after the final item.
+  - '`"learn Lua"`'
+  - '`"learnLua"`'
+  - '`"learn Lua "`'
 answer: 0
-explain: table.concat joins a sequence of strings or numbers with an optional separator. It avoids
-  repeated concatenation inside a loop.
+explain: The separator appears between items, not after the final item.
 ```

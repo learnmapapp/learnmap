@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about inspect types is correct?
+question: What does `@typeInfo(Point)` expose?
 options:
-  - "@typeInfo exposes compile-time type metadata. Use reflection deliberately for serialization or
-    validation rather than duplicating field lists by hand."
-  - "@typeInfo can only inspect a runtime object’s address."
-  - Reflection fields are available only for strings.
+  - Compile-time metadata about the type.
+  - Only the address of a runtime point.
+  - A serialized copy of every point instance.
 answer: 0
-explain: "@typeInfo exposes compile-time type metadata. Use reflection deliberately for
-  serialization or validation rather than duplicating field lists by hand."
+explain: Reflection can inspect fields and other type properties during compilation.
 ```

@@ -8,7 +8,7 @@ requires:
 summary: An async procedure returns a Future, and await suspends until another future completes.
 ---
 
-An async procedure returns a Future, and await suspends until another future completes. waitFor drives the event loop at the program boundary.
+An async procedure returns a `Future`, and await suspends until another future completes. waitFor drives the event loop at the program boundary.
 
 ```nim
 import std/asyncdispatch
@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about async procedures is correct?
+question: What does `await` do when an asynchronous operation is unfinished?
 options:
-  - await creates a separate OS thread for every call.
-  - waitFor is required inside every async procedure.
-  - An async procedure returns a Future, and await suspends until another future completes. waitFor
-    drives the event loop at the program boundary.
+  - Creates an OS thread for that expression.
+  - Blocks all event-loop work permanently.
+  - Suspends the async procedure until the future completes.
 answer: 2
-explain: An async procedure returns a Future, and await suspends until another future completes.
-  waitFor drives the event loop at the program boundary.
+explain: Async suspension lets the event loop make progress on other work.
 ```

@@ -46,11 +46,11 @@ hint: "Use & for intersection, rather than | for union."
 ```
 
 ```quiz
-question: "How do you create an empty set?"
+question: How do you create an empty set?
 options:
   - "{}"
   - "[]"
-  - "set()"
+  - "`set()`"
 answer: 2
-explain: "{} creates a dictionary; set() creates an empty set."
+explain: "{} creates a dictionary; `set()` creates an empty set."
 ```

@@ -8,7 +8,7 @@ summary: Save hello.swift and run swift hello.swift for a script, or swiftc hell
 kind: hub
 ---
 
-Save hello.swift and run swift hello.swift for a script, or swiftc hello.swift -o hello to compile an executable.
+Save `hello.swift` and run `swift hello.swift` for a script, or `swiftc hello.swift -o hello` to compile an executable.
 
 ```swift
 print("Hello, Swift!")
@@ -21,7 +21,7 @@ Compare the worked example with the starting code below. Identify the changed op
 This course targets **Swift 6**. Check your local tool version before following examples. See the [official reference](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
 
 ```exercise
-goal: Repair the starting example using what you learned about meet swift.
+goal: Make the script print `Hello, Swift!`.
 lang: swift
 code: print("Goodbye")
 checks:
@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about meet swift is correct?
+question: Which terminal command runs `hello.swift` as a Swift script?
 options:
-  - A script must declare a class before printing.
-  - Save hello.swift and run swift hello.swift for a script, or swiftc hello.swift -o hello to
-    compile an executable.
-  - Swift runs only inside iPhone applications.
+  - "`swift test hello.swift`"
+  - "`swift hello.swift`"
+  - "`swift package hello.swift`"
 answer: 1
-explain: Save hello.swift and run swift hello.swift for a script, or swiftc hello.swift -o hello to
-  compile an executable.
+explain: The Swift interpreter can compile and execute a source script directly.
 ```

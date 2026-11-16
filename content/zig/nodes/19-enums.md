@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about enum states is correct?
+question: What does `.doing` mean when a `Status` type is expected?
 options:
-  - All enums can hold arbitrary undeclared tags.
-  - An enum names a finite set of tags. The .tag shorthand works when the surrounding context
-    determines the enum type.
-  - Enum tags must always be strings.
+  - A pointer to a global `doing` variable.
+  - The `doing` tag of that enum.
+  - A runtime string lookup for `"doing"`.
 answer: 1
-explain: An enum names a finite set of tags. The .tag shorthand works when the surrounding context
-  determines the enum type.
+explain: Context can determine the enum type for a tag literal.
 ```

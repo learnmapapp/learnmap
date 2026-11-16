@@ -45,7 +45,7 @@ An HTTP error status does not automatically reject fetch, so check `response.ok`
 For larger applications, framework loaders or a data cache can handle request deduplication, caching, and server rendering more effectively than independent component effects. This local example teaches lifecycle management, not a complete data layer.
 
 ```exercise
-goal: "Treat an unsuccessful HTTP status as a failure."
+goal: Treat an unsuccessful HTTP status as a failure.
 lang: javascript
 code: |
   export async function loadName(url) {
@@ -55,9 +55,9 @@ code: |
     return data;
   }
 checks:
-  - match: "if\\s+\\(!response\\.ok\\)"
-    message: "Reject when response.ok is false."
-hint: "Reject when response.ok is false."
+  - match: if\s+\(!response\.ok\)
+    message: Reject when response.ok is false.
+hint: Reject when response.ok is `false`.
 ```
 
 ```quiz

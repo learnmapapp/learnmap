@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about attach behavior is correct?
+question: What does `setmetatable(value, meta)` attach?
 options:
-  - A metatable can customize selected operations through specially named fields. Ordinary fields
-    such as label do not change behavior by themselves.
-  - Every metatable field is a metamethod.
-  - Attaching a metatable copies all fields into the value.
+  - A table providing behavior through metamethod fields.
+  - A deep copy of all `meta` fields inside `value`.
+  - A new global class named after `value`.
 answer: 0
-explain: A metatable can customize selected operations through specially named fields. Ordinary
-  fields such as label do not change behavior by themselves.
+explain: The metatable supplies operation hooks without copying its entries into the value.
 ```

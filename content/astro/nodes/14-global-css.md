@@ -7,7 +7,7 @@ requires:
 summary: Import this stylesheet from Base.astro frontmatter with import "../styles/global.css".
 ---
 
-In your Astro project, save this as `src/styles/global.css`. Import this stylesheet from Base.astro frontmatter with import "../styles/global.css". Use global styles for document defaults and shared design tokens.
+In your Astro project, save this as `src/styles/global.css`. Import this stylesheet from `Base.astro` frontmatter with `import "../styles/global.css"`. Use global styles for document defaults and shared design tokens.
 
 ```css
 html { font-family: system-ui, sans-serif; }
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about global styles is correct?
+question: How does the example layout load `src/styles/global.css`?
 options:
-  - A CSS file in src/styles is automatically loaded without an import.
-  - Global styles can only be defined in JavaScript.
-  - Import this stylesheet from Base.astro frontmatter with import "../styles/global.css". Use
-    global styles for document defaults and shared design tokens.
+  - Assume the folder name automatically loads every stylesheet.
+  - Use a React hydration directive on the CSS file.
+  - Import the stylesheet in the layout's frontmatter.
 answer: 2
-explain: Import this stylesheet from Base.astro frontmatter with import "../styles/global.css". Use
-  global styles for document defaults and shared design tokens.
+explain: Global source styles must enter the build through an import or another explicit reference.
 ```

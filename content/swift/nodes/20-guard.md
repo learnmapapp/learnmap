@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about early exits with guard is correct?
+question: What must the `else` branch of a `guard` do?
 options:
-  - A guard failure may simply continue after the guard.
-  - Bindings from guard exist only inside else.
-  - A guard failure must exit its enclosing scope. Successfully bound values remain available after
-    the guard.
+  - Continue with the following statement.
+  - Assign a fallback to every unwrapped constant.
+  - Exit the enclosing scope.
 answer: 2
-explain: A guard failure must exit its enclosing scope. Successfully bound values remain available
-  after the guard.
+explain: A successful guard lets execution proceed with its bindings available afterward.
 ```

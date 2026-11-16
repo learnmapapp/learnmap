@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about import standard modules is correct?
+question: Which import brings `sqrt` from the standard math module into scope?
 options:
-  - Every module is implicitly imported with all names.
-  - Imports require shell path separators.
-  - Use from module import name to make dependencies explicit. Standard-library modules in this
-    course use the std namespace.
+  - "`from math.std import sqrt`"
+  - "`import sqrt from std.math`"
+  - "`from std.math import sqrt`"
 answer: 2
-explain: Use from module import name to make dependencies explicit. Standard-library modules in this
-  course use the std namespace.
+explain: The module path follows the current standard-library namespace.
 ```

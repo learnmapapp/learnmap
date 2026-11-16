@@ -20,7 +20,7 @@ Combine conditions with `and`, `or`, and `not`, rather than `&&` or `!`. Compari
 
 ## Truthiness
 
-Empty strings and collections, numeric zero, and `None` are false in a condition. Most other values are true. `bool(value)` converts that truthiness into an explicit boolean.
+Empty strings and collections, numeric zero, and `None` are `false` in a condition. Most other values are `true`. `bool(value)` converts that truthiness into an explicit boolean.
 
 `and` and `or` short-circuit and return an operand, not necessarily a boolean. For example, `"" or "guest"` returns `"guest"`. That makes fallback expressions convenient, but `count or 10` also replaces a legitimate zero.
 
@@ -44,11 +44,11 @@ hint: "Combine the two comparisons with and."
 ```
 
 ```quiz
-question: "What does an empty string or \"guest\" evaluate to?"
+question: What does `"" or "guest"` evaluate to?
 options:
-  - "True"
-  - "The string guest."
-  - "An empty string."
+  - The empty string.
+  - The string `"guest"`.
+  - The Boolean `True`.
 answer: 1
-explain: "or returns its first truthy operand, or the final operand if none is truthy."
+explain: The empty string is falsey, so or returns the fallback operand.
 ```

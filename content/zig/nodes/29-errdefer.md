@@ -8,7 +8,7 @@ requires:
 summary: errdefer runs only when the enclosing scope exits with an error.
 ---
 
-errdefer runs only when the enclosing scope exits with an error. Use it to release partially constructed resources before ownership transfers on success.
+`errdefer` runs only when the enclosing scope exits with an error. Use it to release partially constructed resources before ownership transfers on success.
 
 ```zig
 const std = @import("std");
@@ -51,13 +51,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about error-only cleanup is correct?
+question: When does `errdefer` execute?
 options:
-  - errdefer always runs after every successful return.
-  - errdefer replaces try with a fallback.
-  - errdefer runs only when the enclosing scope exits with an error. Use it to release partially
-    constructed resources before ownership transfers on success.
+  - After every successful return.
+  - Only when a later garbage collector runs.
+  - When its scope exits with an error.
 answer: 2
-explain: errdefer runs only when the enclosing scope exits with an error. Use it to release
-  partially constructed resources before ownership transfers on success.
+explain: Use error-only cleanup for resources that transfer ownership on success.
 ```

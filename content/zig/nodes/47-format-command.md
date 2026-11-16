@@ -8,7 +8,7 @@ summary: zig fmt applies the standard formatting style; --check verifies formatt
   rewriting the file.
 ---
 
-zig fmt applies the standard formatting style; --check verifies formatting without rewriting the file. Use the check form in CI.
+`zig fmt` applies the standard formatting style; --check verifies formatting without rewriting the file. Use the check form in CI.
 
 ```shell
 zig fmt hello.zig
@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about format source is correct?
+question: What does `zig fmt --check hello.zig` do?
 options:
-  - --check rewrites every source file.
-  - zig fmt compiles and runs every test.
-  - zig fmt applies the standard formatting style; --check verifies formatting without rewriting the
-    file. Use the check form in CI.
+  - Rewrites the file and runs it.
+  - Builds an optimized executable.
+  - Checks formatting without rewriting the file.
 answer: 2
-explain: zig fmt applies the standard formatting style; --check verifies formatting without
-  rewriting the file. Use the check form in CI.
+explain: The check form is useful for verifying formatting in CI.
 ```

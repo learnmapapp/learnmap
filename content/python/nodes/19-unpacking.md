@@ -53,11 +53,11 @@ hint: "Put a star before rest: first, *rest = ..."
 ```
 
 ```quiz
-question: "What type does a starred assignment target receive?"
+question: What type does a starred assignment target receive?
 options:
-  - "A tuple."
-  - "A list."
-  - "A dictionary."
+  - A tuple.
+  - A list.
+  - A dictionary.
 answer: 1
-explain: "In head, *rest = values, rest is a list of the remaining items."
+explain: In `head, *rest = values`, rest is a list of the remaining items.
 ```

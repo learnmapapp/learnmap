@@ -8,7 +8,7 @@ requires:
 summary: Install @astrojs/node for this Node example.
 ---
 
-In your Astro project, save this as `astro.config.mjs`. Install @astrojs/node for this Node example. Choose an adapter matching the host and run the built server according to that adapter’s instructions.
+In your Astro project, save this as `astro.config.mjs`. Install `@astrojs/node` for this Node example. Choose an adapter matching the host and run the built server according to that adapter’s instructions.
 
 ```javascript
 import { defineConfig } from "astro/config";
@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about configure a server adapter is correct?
+question: Which deployment matches the example Node standalone adapter?
 options:
-  - All adapters target the same runtime.
-  - Install @astrojs/node for this Node example. Choose an adapter matching the host and run the
-    built server according to that adapter’s instructions.
-  - Node standalone output is deployed by copying only a static HTML file.
+  - A browser tab opened directly on the source configuration.
+  - A host that can run the built Node server.
+  - A host that accepts only static files and has no server runtime.
 answer: 1
-explain: Install @astrojs/node for this Node example. Choose an adapter matching the host and run
-  the built server according to that adapter’s instructions.
+explain: Choose an adapter compatible with the actual deployment runtime.
 ```

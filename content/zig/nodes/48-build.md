@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile an executable is correct?
+question: What is the defining tradeoff of `ReleaseSafe`?
 options:
-  - build-exe creates an executable. ReleaseSafe enables optimization while retaining runtime safety
-    checks; ReleaseFast makes a different safety tradeoff.
-  - ReleaseFast retains every runtime safety check.
-  - build-exe produces only a text syntax report.
+  - Optimization with runtime safety checks retained.
+  - Optimization with all runtime safety checks removed.
+  - No optimization and no safety checks.
 answer: 0
-explain: build-exe creates an executable. ReleaseSafe enables optimization while retaining runtime
-  safety checks; ReleaseFast makes a different safety tradeoff.
+explain: The release modes differ in their optimization and safety choices.
 ```

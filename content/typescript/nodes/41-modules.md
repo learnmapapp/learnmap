@@ -45,11 +45,11 @@ hint: "Use import type for the erased contract."
 ```
 
 ```quiz
-question: "Can import type { Learner } create a Learner object at runtime?"
+question: Can `import type { Learner }` create a Learner object at runtime?
 options:
-  - "Yes."
-  - "No; it brings in a static contract only."
-  - "Only in production."
+  - Yes.
+  - No; it brings in a static contract only.
+  - Only in production.
 answer: 1
-explain: "Type-only imports are erased and cannot be used as runtime values."
+explain: Type-only imports are erased and cannot be used as runtime values.
 ```

@@ -47,11 +47,11 @@ hint: "Use count > 0 as the boolean condition."
 ```
 
 ```quiz
-question: "What can 0 && <Badge /> render as a child?"
+question: What can `0 && <Badge />` render as a child?
 options:
-  - "Nothing in every case."
-  - "The number 0."
-  - "The word false."
+  - Nothing in every case.
+  - The number 0.
+  - The word `false`.
 answer: 1
-explain: "The expression evaluates to 0, which React can render as a number."
+explain: The expression evaluates to 0, which React can render as a number.
 ```

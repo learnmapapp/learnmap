@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about implicit result is correct?
+question: What does assigning to `result` inside a value-returning procedure do?
 options:
-  - A value-returning procedure has a result variable. Assigning it sets the return value; explicit
-    return is also available.
-  - result is a global shared by all procedures.
-  - Assigning result immediately exits the procedure.
+  - Sets the procedure's eventual return value.
+  - Immediately exits the procedure.
+  - Changes a global shared by all procedures.
 answer: 0
-explain: A value-returning procedure has a result variable. Assigning it sets the return value;
-  explicit return is also available.
+explain: "`result` is an implicit local result variable, not an early-return statement."
 ```

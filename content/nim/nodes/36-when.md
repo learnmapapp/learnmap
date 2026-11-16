@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time branches is correct?
+question: When is a `when defined(windows)` branch selected?
 options:
-  - when chooses a branch during compilation. Use platform symbols for compile-time differences
-    rather than runtime OS guesses.
-  - when evaluates both branches at runtime.
-  - defined reads operating-system environment variables.
+  - During compilation.
+  - Every time the function is called.
+  - When an environment variable named `windows` changes.
 answer: 0
-explain: when chooses a branch during compilation. Use platform symbols for compile-time differences
-  rather than runtime OS guesses.
+explain: "`when` selects compile-time branches using compiler information."
 ```

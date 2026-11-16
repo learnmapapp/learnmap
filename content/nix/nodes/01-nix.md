@@ -48,11 +48,11 @@ The map has five branches around this starting point:
 You don't need all of it. Want a dev shell for one project? That's a short route. Want to run NixOS on a server? Pick that goal, and the map lights up the way there.
 
 ```quiz
-question: Two machines use the same Nix config and the same pinned inputs. What do they get?
+question: What does pinning the same Nix inputs give two machines?
 options:
-  - Roughly the same setup, depending on what was installed before.
-  - Exactly the same packages and configuration.
-  - Whatever the latest versions are today.
+  - A guarantee that every build is bit-for-bit deterministic.
+  - The same selected input revisions rather than independently chosen latest versions.
+  - A guarantee that they download today's latest packages.
 answer: 1
-explain: Same inputs, same outputs. That's what reproducible means.
+explain: Pinning fixes input selection; reproducibility also depends on the build and platform.
 ```

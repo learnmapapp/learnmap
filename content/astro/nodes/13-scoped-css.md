@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about scoped component styles is correct?
+question: What is the default scope of a component's `<style>` block?
 options:
-  - Astro styles require a client framework.
-  - Astro scopes component style selectors by default. This reduces accidental styling of unrelated
-    components while keeping CSS beside its markup.
-  - A component style block always affects every page element globally.
+  - Only inline style attributes.
+  - The component's markup through generated scope markers.
+  - Every matching element on every page unconditionally.
 answer: 1
-explain: Astro scopes component style selectors by default. This reduces accidental styling of
-  unrelated components while keeping CSS beside its markup.
+explain: Scoped selectors help prevent styles from unintentionally affecting unrelated components.
 ```

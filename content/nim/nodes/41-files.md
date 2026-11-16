@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about scoped file reading is correct?
+question: "Why place `defer: file.close()` after a successful `open`?"
 options:
-  - fmWrite is a safe read-only mode.
-  - File opening cannot fail.
-  - Opening a file can raise IOError; close it with defer after successful acquisition. Read mode
-    preserves existing contents.
+  - To close the file before reading it.
+  - To make a failed `open` succeed.
+  - To close the acquired file when its scope exits.
 answer: 2
-explain: Opening a file can raise IOError; close it with defer after successful acquisition. Read
-  mode preserves existing contents.
+explain: Register cleanup only after the resource has been acquired.
 ```

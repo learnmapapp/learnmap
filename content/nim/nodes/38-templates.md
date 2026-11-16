@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about code templates is correct?
+question: A template expands its argument twice. What happens to an `inc count` argument?
 options:
-  - Templates always evaluate their input exactly once.
-  - untyped requires a string argument.
-  - A template expands code at the call site. Repeating an expression also repeats its effects, so
-    expansion semantics matter.
+  - It executes once and its result is reused.
+  - It is ignored because templates cannot have effects.
+  - The increment executes twice.
 answer: 2
-explain: A template expands code at the call site. Repeating an expression also repeats its effects,
-  so expansion semantics matter.
+explain: Template expansion can duplicate effects in the supplied code.
 ```

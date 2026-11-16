@@ -8,7 +8,7 @@ requires:
 summary: "Swift Testing uses @Test functions and #expect checks."
 ---
 
-Swift Testing uses @Test functions and #expect checks. Put tests in a Swift package test target and run swift test.
+Swift Testing uses @Test functions and #expect checks. Put tests in a Swift package test target and run `swift test`.
 
 ```swift
 import Testing
@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about swift testing is correct?
+question: Which Swift Testing construct records a checked expectation?
 options:
-  - "Swift Testing uses @Test functions and #expect checks. Put tests in a Swift package test target
-    and run swift test."
-  - "@Test functions are automatically invoked by every production build."
-  - "#expect proves correctness for inputs it never evaluates."
+  - "`#expect(square(3) == 9)`"
+  - "`print(square(3) == 9)`"
+  - "`let expected = 9`"
 answer: 0
-explain: "Swift Testing uses @Test functions and #expect checks. Put tests in a Swift package test
-  target and run swift test."
+explain: An expectation reports a test failure when its expression is `false`.
 ```

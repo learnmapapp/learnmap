@@ -62,11 +62,11 @@ in
 ```
 
 ```exercise
-goal: Build ./tool.nix with callPackage.
+goal: Build `./tool.nix` with callPackage.
 code: |
   tool = import ./tool.nix;
 checks:
-  - match: 'tool\s*=\s*pkgs\.callPackage\s+\./tool\.nix\s*\{\s*\}\s*;'
-    message: 'Write  tool = pkgs.callPackage ./tool.nix { };'
-output: "/nix/store/…-tool-1.0"
+  - match: tool\s*=\s*pkgs\.callPackage\s+\./tool\.nix\s*\{\s*\}\s*;
+    message: Write  tool = pkgs.callPackage ./tool.nix { };
+output: /nix/store/…-tool-1.0
 ```

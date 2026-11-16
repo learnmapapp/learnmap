@@ -8,7 +8,7 @@ requires:
 summary: The default layout wraps pages through its slot.
 ---
 
-In your Nuxt 4 project, save this as `app/layouts/default.vue`. The default layout wraps pages through its slot. Add named layout files and select one using definePageMeta when a section needs a different shell.
+In your Nuxt 4 project, save this as `app/layouts/default.vue`. The default layout wraps pages through its slot. Add named layout files and select one using `definePageMeta` when a section needs a different shell.
 
 ```vue
 <template>
@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about shared page layouts is correct?
+question: Where should a Nuxt layout render its page content?
 options:
-  - A layout should render NuxtPage again inside every slot.
-  - Layouts are only CSS files.
-  - The default layout wraps pages through its slot. Add named layout files and select one using
-    definePageMeta when a section needs a different shell.
+  - Through a second root `createApp` call.
+  - By importing every page manually.
+  - Through a `<slot />`.
 answer: 2
-explain: The default layout wraps pages through its slot. Add named layout files and select one
-  using definePageMeta when a section needs a different shell.
+explain: NuxtLayout supplies the selected page as layout content.
 ```

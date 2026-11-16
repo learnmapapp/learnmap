@@ -76,15 +76,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about a task dashboard is correct?
+question: The demo POST handler returns a validated task. Is that task durable across server restarts?
 options:
-  - Returning an accepted task automatically makes it durable.
-  - The client form eliminates the need for server validation.
-  - Connect the course endpoint, validated POST handler, and default layout. This accepts tasks
-    without storing them; add a persistence layer and tests for invalid input and request failure as
-    the next milestone.
+  - Yes; returning JSON automatically writes a database record.
+  - Yes; displaying the task title saves it permanently.
+  - No; persistence must be implemented separately.
 answer: 2
-explain: Connect the course endpoint, validated POST handler, and default layout. This accepts tasks
-  without storing them; add a persistence layer and tests for invalid input and request failure as
-  the next milestone.
+explain: Validation, response serialization, and persistent storage are separate steps.
 ```

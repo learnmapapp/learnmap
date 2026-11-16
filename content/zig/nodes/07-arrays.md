@@ -61,13 +61,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about fixed arrays is correct?
+question: For `[_]u8{ 2, 4, 6 }`, what does `_` ask the compiler to infer?
 options:
-  - Arrays use one-based indices.
-  - An array’s length is part of its type. The underscore in [_] asks the compiler to infer that
-    length from the initializer.
-  - Arrays grow automatically on append.
+  - A new unsigned element type.
+  - The array length.
+  - A heap allocator.
 answer: 1
-explain: An array’s length is part of its type. The underscore in [_] asks the compiler to infer
-  that length from the initializer.
+explain: The initializer determines the fixed array's length.
 ```

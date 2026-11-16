@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about explicit overflow is correct?
+question: For a `u8` value of 255, what does `value +% 1` produce?
 options:
-  - +% saturates at the largest representable value.
-  - Wrapping operators such as +% make overflow behavior explicit. Ordinary overflowing arithmetic
-    is illegal behavior and is checked in safety-enabled builds.
-  - Ordinary + always wraps in every build mode.
+  - "`256`"
+  - "`0`"
+  - "`255`"
 answer: 1
-explain: Wrapping operators such as +% make overflow behavior explicit. Ordinary overflowing
-  arithmetic is illegal behavior and is checked in safety-enabled builds.
+explain: The explicit wrapping operator wraps around the integer's range.
 ```

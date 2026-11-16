@@ -57,13 +57,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed functions is correct?
+question: What must a function returning `u32` do on every normal return path?
 options:
-  - A function body implicitly returns any final expression.
-  - Functions declare parameter and return types. A return statement makes the result explicit;
-    unused results must be intentionally handled.
-  - Function arguments need no declared types in ordinary typed functions.
+  - Return `null` when no result is written.
+  - Return a compatible `u32` value.
+  - End with an implicit final expression.
 answer: 1
-explain: Functions declare parameter and return types. A return statement makes the result explicit;
-  unused results must be intentionally handled.
+explain: Zig uses explicit return statements for normal value results.
 ```

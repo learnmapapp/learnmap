@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about ordered iteration is correct?
+question: For `{10, nil, 30}`, what does ordinary `ipairs` visit?
 options:
-  - ipairs visits every string key.
-  - ipairs continues past holes automatically.
-  - ipairs visits integer keys from 1 upward and stops at the first absent index. Use it for
-    contiguous sequences.
+  - Indices 1 and 3.
+  - All three indices, including the absent value.
+  - Only index 1.
 answer: 2
-explain: ipairs visits integer keys from 1 upward and stops at the first absent index. Use it for
-  contiguous sequences.
+explain: "`ipairs` stops at the first absent integer index."
 ```

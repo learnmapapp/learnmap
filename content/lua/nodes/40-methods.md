@@ -8,7 +8,7 @@ requires:
 summary: A colon call passes the receiver as the first argument.
 ---
 
-A colon call passes the receiver as the first argument. counter:add(3) is equivalent to counter.add(counter, 3).
+A colon call passes the receiver as the first argument. counter:`add(3)` is equivalent to `counter.add(counter, 3)`.
 
 ```lua
 local counter = {value = 0}
@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about colon methods is correct?
+question: Which dot call is equivalent to `counter:add(3)`?
 options:
-  - self is a global keyword created for all functions.
-  - A colon call passes the receiver as the first argument. counter:add(3) is equivalent to
-    counter.add(counter, 3).
-  - Colon syntax discards the receiver.
+  - "`counter.add(3, counter)`"
+  - "`counter.add(counter, 3)`"
+  - "`counter.add(3)`"
 answer: 1
-explain: A colon call passes the receiver as the first argument. counter:add(3) is equivalent to
-  counter.add(counter, 3).
+explain: Colon syntax supplies the receiver as the first argument.
 ```

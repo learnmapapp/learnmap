@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about ranges and iteration is correct?
+question: Which range produces `0, 1, 2`?
 options:
-  - ..< includes both endpoints.
-  - ... excludes the first endpoint.
-  - The ... operator includes the upper bound; ..< excludes it. Half-open ranges fit zero-based
-    collection indexing.
+  - "`0...3`"
+  - "`1...3`"
+  - "`0..<3`"
 answer: 2
-explain: The ... operator includes the upper bound; ..< excludes it. Half-open ranges fit zero-based
-  collection indexing.
+explain: The half-open range excludes its upper bound.
 ```

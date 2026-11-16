@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about call python is correct?
+question: What does `Python.import_module("math")` obtain?
 options:
-  - Python interoperability loads an installed Python module. A compatible Python runtime must be
-    available; Python objects remain dynamic at this boundary.
-  - Importing Python makes all calls statically typed Mojo functions.
-  - Python interoperability needs no Python runtime.
+  - A Python module accessed through interoperability.
+  - A statically typed Mojo module with no Python runtime.
+  - A compiled C library with no wrapper.
 answer: 0
-explain: Python interoperability loads an installed Python module. A compatible Python runtime must
-  be available; Python objects remain dynamic at this boundary.
+explain: The boundary uses Python objects and requires a compatible Python runtime.
 ```

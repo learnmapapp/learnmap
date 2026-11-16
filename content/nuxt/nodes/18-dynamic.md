@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about dynamic route files is correct?
+question: In `app/pages/courses/[id].vue`, where is the matched ID available?
 options:
-  - A bracketed filename names a route parameter. Here /courses/vue provides id equal to vue;
-    validate parameters before using them as domain identifiers.
-  - Every dynamic parameter is automatically a database ID.
-  - The filename parameter name has no effect on route.params.
+  - "`useRoute().params.id`."
+  - "`useRoute().query.id` regardless of the URL."
+  - "`window.id` as a guaranteed global."
 answer: 0
-explain: A bracketed filename names a route parameter. Here /courses/vue provides id equal to vue;
-  validate parameters before using them as domain identifiers.
+explain: The bracketed filename declares the route parameter name.
 ```

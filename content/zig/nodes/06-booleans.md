@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about boolean logic is correct?
+question: Which expression means “ready and not blocked” in Zig?
 options:
-  - Zig uses and, or, and ! for Boolean logic. Conditions require bool rather than treating integers
-    as truth values.
-  - Zero can be used directly as false.
-  - The && spelling is Zig’s Boolean conjunction.
+  - "`ready and !blocked`"
+  - "`ready && !blocked`"
+  - "`ready and blocked`"
 answer: 0
-explain: Zig uses and, or, and ! for Boolean logic. Conditions require bool rather than treating
-  integers as truth values.
+explain: Zig uses `and` for Boolean conjunction and `!` for negation.
 ```

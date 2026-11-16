@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about propagate errors is correct?
+question: What does `try operation()` do if the operation fails?
 options:
-  - try catches and discards every error.
-  - try changes every failure into null.
-  - try unwraps success or returns the error from the current function. It makes propagation concise
-    while preserving the caller’s choice of handling.
+  - Replaces the error with zero.
+  - Retries the operation automatically.
+  - Returns that error from the current function.
 answer: 2
-explain: try unwraps success or returns the error from the current function. It makes propagation
-  concise while preserving the caller’s choice of handling.
+explain: "`try` propagates failure and unwraps the payload on success."
 ```

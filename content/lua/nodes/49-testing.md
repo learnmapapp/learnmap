@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about assertion tests is correct?
+question: What happens when an assertion in a plain Lua test script fails?
 options:
-  - Tests should cover only a single happy path.
-  - A small test script can use assert and exit with an error on failure. Include empty inputs and
-    representative normal inputs.
-  - A printed success message proves every input works.
+  - It changes the expected value to match the actual result.
+  - It raises an error, causing an uncaught failure to stop the script.
+  - It prints a warning and automatically skips the failure.
 answer: 1
-explain: A small test script can use assert and exit with an error on failure. Include empty inputs
-  and representative normal inputs.
+explain: An uncaught assertion error makes the test run fail.
 ```

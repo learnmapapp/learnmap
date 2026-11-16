@@ -23,7 +23,7 @@ Compare the worked example with the starting code below. Identify the changed op
 This course targets **Astro 7**. Check your local tool version before following examples. See the [official reference](https://docs.astro.build/en/getting-started/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
 
 ```exercise
-goal: Repair the starting example using what you learned about meet astro.
+goal: Make the page heading say `Hello, Astro!`.
 lang: astro
 code: |-
   <html lang="en">
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about meet astro is correct?
+question: What does an ordinary Astro component ship by default?
 options:
-  - Astro pages require a React root.
-  - Astro renders components to HTML by default. Browser JavaScript is added when you request it
-    rather than for every component.
-  - Every Astro component automatically hydrates in the browser.
+  - A browser-side function that must create all initial HTML.
+  - Rendered HTML without automatically adding a client framework runtime.
+  - A hydrated React tree for every component.
 answer: 1
-explain: Astro renders components to HTML by default. Browser JavaScript is added when you request
-  it rather than for every component.
+explain: Client JavaScript is added explicitly where the page needs it.
 ```

@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about independent value copies is correct?
+question: After `var second = first` for a `String`, what does appending to `second` visibly change?
 options:
-  - String assignment produces independent value behavior. Updating the second string leaves the
-    first string’s visible contents unchanged.
-  - String assignment requires all later mutations to affect both bindings.
-  - Value semantics means every variable is immutable.
+  - Only `second`'s contents.
+  - Both strings' contents.
+  - Only `first`'s contents.
 answer: 0
-explain: String assignment produces independent value behavior. Updating the second string leaves
-  the first string’s visible contents unchanged.
+explain: String assignment preserves independent value behavior.
 ```

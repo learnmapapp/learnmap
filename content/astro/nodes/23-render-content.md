@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about render an entry is correct?
+question: What does `render(entry)` provide for an entry's body?
 options:
-  - getEntry always returns an entry even for a missing ID.
-  - Metadata is rendered only by copying raw HTML manually.
-  - render converts an entry’s body into a component. Check for absence before accessing metadata or
-    rendering content.
+  - A new route added automatically to pages.
+  - A client-side editor for the Markdown source.
+  - A `Content` component that can be rendered.
 answer: 2
-explain: render converts an entry’s body into a component. Check for absence before accessing
-  metadata or rendering content.
+explain: Querying metadata and rendering an entry's body are distinct steps.
 ```

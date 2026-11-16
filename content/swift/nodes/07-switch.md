@@ -42,11 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about exhaustive switch is correct?
+question: After a matching Swift `switch` case completes normally, what happens?
 options:
-  - A String switch can omit all fallback handling.
-  - Swift switch statements must cover all possible values. Cases do not fall through automatically.
-  - Every case needs break to prevent fallthrough.
+  - The case repeats until `break` is added.
+  - Execution continues after the switch.
+  - The next case executes automatically.
 answer: 1
-explain: Swift switch statements must cover all possible values. Cases do not fall through automatically.
+explain: Swift cases do not implicitly fall through.
 ```

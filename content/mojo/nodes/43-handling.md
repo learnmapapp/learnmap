@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about handle errors is correct?
+question: When does the `except` body execute in a `try`/`except` block?
 options:
-  - Errors can never be propagated to callers.
-  - try and except handle errors locally. Keep the protected block narrow so unrelated failures are
-    not accidentally treated as the expected case.
-  - except runs after every successful try block.
+  - Before the protected work starts.
+  - When the protected work raises an error.
+  - After every successful protected operation.
 answer: 1
-explain: try and except handle errors locally. Keep the protected block narrow so unrelated failures
-  are not accidentally treated as the expected case.
+explain: An error diverts control to the handler instead of the remaining protected statements.
 ```

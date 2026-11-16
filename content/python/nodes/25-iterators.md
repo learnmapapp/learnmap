@@ -31,15 +31,15 @@ A list can create a fresh iterator for each loop, while an iterator typically re
 `map`, `filter`, `zip`, and `enumerate` all return iterators. Lazy processing can avoid unnecessary intermediate collections, but errors in a transformation may appear only when someone consumes the iterator. [Generators](node:generators) let you write your own lazy producers with ordinary function syntax.
 
 ```exercise
-goal: "Give next a fallback so an empty stream does not raise StopIteration."
+goal: Give next a fallback so an empty stream does not raise StopIteration.
 lang: python
 code: |
   stream = iter([])
   print(next(stream))
 checks:
-  - match: "next\\(\\s*stream\\s*,\\s*[\"']done[\"']\\s*\\)"
-    message: "Use next(stream, \"done\")."
-hint: "Use next(stream, \"done\")."
+  - match: next\(\s*stream\s*,\s*["']done["']\s*\)
+    message: Use next(stream, "done").
+hint: Use `next(stream, "done")`.
 ```
 
 ```quiz

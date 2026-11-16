@@ -80,13 +80,13 @@ if err != nil { return err }
 ```
 
 ```exercise
-goal: Add the second step, matching {:ok, user} from fetch_user(id).
+goal: Add the second step, matching {:ok, user} from `fetch_user(id)`.
 code: |
   with {:ok, id} <- parse_id(params) do
     {:ok, user}
   end
 checks:
-  - match: 'with\s+\{:ok,\s*id\}\s*<-\s*parse_id\(params\),\s*\n?\s*\{:ok,\s*user\}\s*<-\s*fetch_user\(\s*id\s*\)\s+do'
-    message: 'After the first line, add  , {:ok, user} <- fetch_user(id)'
-output: '{:ok, %User{id: 7}}'
+  - match: with\s+\{:ok,\s*id\}\s*<-\s*parse_id\(params\),\s*\n?\s*\{:ok,\s*user\}\s*<-\s*fetch_user\(\s*id\s*\)\s+do
+    message: After the first line, add  , {:ok, user} <- fetch_user(id)
+output: "{:ok, %User{id: 7}}"
 ```

@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about process a list is correct?
+question: What total results from adding every element of `[2, 4, 6]` to an initial zero?
 options:
-  - Every loop iteration copies the entire list.
-  - A for loop visits list elements in order. Accumulation expresses a reduction without creating
-    intermediate collections.
-  - A list loop always visits elements in random order.
+  - "`24`"
+  - "`12`"
+  - "`6`"
 answer: 1
-explain: A for loop visits list elements in order. Accumulation expresses a reduction without
-  creating intermediate collections.
+explain: The accumulator adds each visited element once.
 ```

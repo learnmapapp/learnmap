@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reference identity is correct?
+question: After `let second = first` for a class instance, what does `first === second` mean?
 options:
-  - Assigning a class instance always clones it.
-  - Class instances have reference identity. A let class binding prevents rebinding while mutable
-    properties of the object may still change.
-  - let recursively freezes a class object.
+  - One reference contains a deep clone of the other.
+  - Both references identify the same instance.
+  - Both objects have equal fields but different identities.
 answer: 1
-explain: Class instances have reference identity. A let class binding prevents rebinding while
-  mutable properties of the object may still change.
+explain: The identity operator checks whether class references point to one instance.
 ```

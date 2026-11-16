@@ -33,7 +33,7 @@ Include an ordinary case, boundary cases, and intended failures. Use `with self.
 `setUp` runs before each test method and can prepare fresh state. Keep tests independent; one test should not depend on another having run first. Use a temporary directory rather than real personal files when testing file operations.
 
 ```exercise
-goal: "Correct the expected result when doubling three."
+goal: Correct the expected result when doubling three.
 lang: python
 code: |
   import unittest
@@ -45,9 +45,9 @@ code: |
       def test_positive(self):
           self.assertEqual(double(3), 5)
 checks:
-  - match: "self\\.assertEqual\\(\\s*double\\(\\s*3\\s*\\)\\s*,\\s*6\\s*\\)"
-    message: "Three doubled is six; use self.assertEqual(double(3), 6)."
-hint: "Three doubled is six; use self.assertEqual(double(3), 6)."
+  - match: self\.assertEqual\(\s*double\(\s*3\s*\)\s*,\s*6\s*\)
+    message: Three doubled is six; use self.assertEqual(double(3), 6).
+hint: Three doubled is six; use `self.assertEqual(double(3), 6)`.
 ```
 
 ```quiz

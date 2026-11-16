@@ -7,7 +7,7 @@ summary: Lua executes a script from top to bottom.
 kind: hub
 ---
 
-Lua executes a script from top to bottom. Save this example as hello.lua and run lua hello.lua.
+Lua executes a script from top to bottom. Save this example as `hello.lua` and run `lua hello.lua`.
 
 A useful term here is [[chunk]]: A sequence of Lua statements compiled and executed as a unit.
 
@@ -22,7 +22,7 @@ Compare the worked example with the starting code below. Identify the changed op
 This course targets **Lua 5.4**. Check your local tool version before following examples. See the [official reference](https://www.lua.org/manual/5.4/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
 
 ```exercise
-goal: Repair the starting example using what you learned about meet lua.
+goal: Make the script print `Hello, Lua!`.
 lang: lua
 code: print("Goodbye")
 checks:
@@ -35,11 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about meet lua is correct?
+question: How do you run the saved Lua script `hello.lua` from a terminal?
 options:
-  - print only accepts numbers.
-  - Lua executes a script from top to bottom. Save this example as hello.lua and run lua hello.lua.
-  - Every Lua script needs a main function.
+  - "`lua build hello.lua`"
+  - "`lua hello.lua`"
+  - "`lua require hello.lua`"
 answer: 1
-explain: Lua executes a script from top to bottom. Save this example as hello.lua and run lua hello.lua.
+explain: The standalone Lua interpreter executes the file passed as its argument.
 ```

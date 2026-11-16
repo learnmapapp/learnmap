@@ -85,11 +85,11 @@ Literals can carry their type as a suffix, and underscores make big numbers read
 If you don't specify, integers default to `i32` and floats to `f64`.
 
 ```quiz
-question: "Which type should hold the number of items in a list?"
+question: Which type should hold the number of items in a list?
 options:
-  - i32
-  - usize
-  - f64
+  - "`i32`"
+  - "`usize`"
+  - "`f64`"
 answer: 1
-explain: usize is the size of a pointer, and it's what len() returns and indexing expects.
+explain: "`usize` is the size of a pointer, and it's what `len()` returns and indexing expects."
 ```

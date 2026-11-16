@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about read-only inputs is correct?
+question: Which function interface best expresses that it only needs to read a string?
 options:
-  - Read-only inputs can always be passed on as mut without a change in permissions.
-  - Ordinary input parameters provide read access without requiring callers to request a copy.
-    Prefer read-only interfaces when mutation is unnecessary.
-  - Every input parameter must take ownership of the caller’s original value.
+  - "A `var text: String` input requiring ownership unnecessarily."
+  - "An ordinary `text: String` input."
+  - "A `mut text: String` input used for no mutation."
 answer: 1
-explain: Ordinary input parameters provide read access without requiring callers to request a copy.
-  Prefer read-only interfaces when mutation is unnecessary.
+explain: Request only the access needed by the operation.
 ```

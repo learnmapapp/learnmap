@@ -36,27 +36,29 @@ Passing `formAction` to the form arranges the action context. Manually dispatchi
 Successful function Actions can reset uncontrolled fields. Return an appropriate message and preserve input deliberately when the workflow requires it, especially after validation failure.
 
 ```exercise
-goal: "Connect the returned action function to the form."
+goal: Connect the returned action function to the form.
 lang: jsx
-code: |
+code: >
   import { useActionState } from "react";
+
   async function submit(previous, data) { return { message: String(data.get("name") ?? "") }; }
+
   export default function Form() {
     const [state, formAction, pending] = useActionState(submit, { message: "" });
     return <form action={submit}><label>Name <input name="name" /></label><button disabled={pending}>Save</button><p>{state.message}</p></form>;
   }
 checks:
-  - match: "action=\\{formAction\\}"
-    message: "Use formAction, the function returned by useActionState."
-hint: "Use formAction, the function returned by useActionState."
+  - match: action=\{formAction\}
+    message: Use formAction, the function returned by useActionState.
+hint: Use formAction, the function returned by `useActionState`.
 ```
 
 ```quiz
-question: "What are the first two arguments of a useActionState function used with a form?"
+question: What are the first two arguments of a `useActionState` function used with a form?
 options:
-  - "The click event and the DOM node."
-  - "Previous action state and submitted FormData."
-  - "Only the new field string."
+  - The click event and the DOM node.
+  - Previous action state and submitted FormData.
+  - Only the new field string.
 answer: 1
-explain: "useActionState prepends the previous action state before the submitted payload."
+explain: "`useActionState` prepends the previous action state before the submitted payload."
 ```

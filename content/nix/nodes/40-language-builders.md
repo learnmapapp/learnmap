@@ -50,11 +50,11 @@ The `*Hash` attributes cover **all** dependencies at once. Builds have no networ
 There are builders for Java (Maven and Gradle), Haskell, Elixir (`mixRelease`), Zig and many more. Search nixpkgs for `build*Package`.
 
 ```quiz
-question: "What does vendorHash in buildGoModule cover?"
+question: What does `vendorHash` in buildGoModule cover?
 options:
   - The source code of your project.
   - All the Go dependencies, fetched in a separate step.
   - The final binary.
 answer: 1
-explain: The builder fetches all module dependencies at once and checks them against vendorHash.
+explain: The builder fetches all module dependencies at once and checks them against `vendorHash`.
 ```

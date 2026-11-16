@@ -7,7 +7,7 @@ requires:
 summary: A TaskCard.vue file under app/components is available through Nuxt component auto-imports.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. A TaskCard.vue file under app/components is available through Nuxt component auto-imports. A leading colon binds an expression instead of a literal string.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. A `TaskCard.vue` file under `app/components` is available through Nuxt component auto-imports. A leading colon binds an expression instead of a literal string.
 
 ```vue
 <template><TaskCard title="Learn Nuxt" :done="false" /></template>
@@ -31,13 +31,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about auto-imported components is correct?
+question: Where does Nuxt look for the auto-imported `TaskCard.vue` in this course?
 options:
-  - done="false" always passes the Boolean false.
-  - Every component needs a manual global registration call.
-  - A TaskCard.vue file under app/components is available through Nuxt component auto-imports. A
-    leading colon binds an expression instead of a literal string.
+  - "`server/api/`."
+  - "`public/`."
+  - "`app/components/`."
 answer: 2
-explain: A TaskCard.vue file under app/components is available through Nuxt component auto-imports.
-  A leading colon binds an expression instead of a literal string.
+explain: Nuxt 4 uses the app component directory for component auto-imports.
 ```

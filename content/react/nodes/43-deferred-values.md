@@ -48,11 +48,11 @@ hint: "Use deferredQuery in the dependent filter."
 ```
 
 ```quiz
-question: "Does useDeferredValue automatically debounce network requests?"
+question: Does `useDeferredValue` automatically debounce network requests?
 options:
-  - "Yes, with a fixed half-second delay."
-  - "No, it controls rendering priority rather than request rate."
-  - "Only for text inputs."
+  - Yes, with a fixed half-second delay.
+  - No, it controls rendering priority rather than request rate.
+  - Only for text inputs.
 answer: 1
-explain: "Deferral schedules rendering; request debouncing and caching require separate mechanisms."
+explain: Deferral schedules rendering; request debouncing and caching require separate mechanisms.
 ```

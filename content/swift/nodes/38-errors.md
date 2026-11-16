@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about throwing functions is correct?
+question: How should a caller handle a function declared `throws`?
 options:
-  - throws functions silently convert all failures to nil.
-  - try can only be used inside catch.
-  - throws marks an error-producing function. Use try at the call site and handle failure with
-    do-catch or propagate it.
+  - Assume failure returns `nil`.
+  - Ignore the annotation because all errors become zero.
+  - Use `try` and catch or propagate the error.
 answer: 2
-explain: throws marks an error-producing function. Use try at the call site and handle failure with
-  do-catch or propagate it.
+explain: Throwing APIs make failure handling explicit at the call site.
 ```

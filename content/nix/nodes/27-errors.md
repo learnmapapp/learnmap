@@ -64,12 +64,12 @@ error("port needs root")
 ```
 
 ```exercise
-goal: Throw a helpful error when name is empty, instead of returning null.
+goal: Throw a helpful error when name is empty, instead of returning `null`.
 code: |
   { name }:
   if name == "" then null else { inherit name; }
 checks:
-  - match: 'then\s+throw\s+"[^"]+"'
-    message: 'Replace null with  throw "name must not be empty"'
-output: 'error: name must not be empty'
+  - match: then\s+throw\s+"[^"]+"
+    message: Replace null with  throw "name must not be empty"
+output: "error: name must not be empty"
 ```

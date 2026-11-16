@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about append elements is correct?
+question: After appending `6` to `[2, 4]`, what is the list's length?
 options:
-  - append prepends by default.
-  - A list’s allocation can never move.
-  - append adds an element to a list and may grow its backing allocation. Avoid assuming references
-    remain valid across growth.
+  - "`2`"
+  - "`6`"
+  - "`3`"
 answer: 2
-explain: append adds an element to a list and may grow its backing allocation. Avoid assuming
-  references remain valid across growth.
+explain: Append adds one element to the end of the list.
 ```

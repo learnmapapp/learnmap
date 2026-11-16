@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about derived state is correct?
+question: Why derive `doubled` with `computed(() => count.value * 2)`?
 options:
-  - computed derives a cached reactive value from dependencies. Avoid storing a second mutable copy
-    when a result can be derived.
-  - A computed result never updates after creation.
-  - Every derived value needs an independent writable ref.
+  - It tracks `count` and updates the derived value when needed.
+  - It creates a second unrelated mutable source of truth.
+  - It computes once and never follows changes.
 answer: 0
-explain: computed derives a cached reactive value from dependencies. Avoid storing a second mutable
-  copy when a result can be derived.
+explain: Computed values derive reactive state instead of duplicating it manually.
 ```

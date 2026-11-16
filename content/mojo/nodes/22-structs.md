@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about define a struct is correct?
+question: What does `@fieldwise_init` generate for the point struct?
 options:
-  - "@fieldwise_init automatically writes JSON serializers."
-  - A struct declares named typed fields. @fieldwise_init generates an initializer assigning one
-    input to each field.
-  - Struct fields are dynamically created by arbitrary assignments.
+  - A global mutable instance of the struct.
+  - An initializer with inputs for its fields.
+  - A JSON serializer for every field.
 answer: 1
-explain: A struct declares named typed fields. @fieldwise_init generates an initializer assigning
-  one input to each field.
+explain: It removes boilerplate for initializing each field from a corresponding input.
 ```

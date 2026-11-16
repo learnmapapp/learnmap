@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about page metadata is correct?
+question: What should a page's title and description describe?
 options:
-  - Give each public page a descriptive title and summary. Metadata should reflect the rendered page
-    rather than repeat unrelated keywords.
-  - A description tag guarantees a first-place search ranking.
-  - Every page should have the same generic title.
+  - The content of that particular page.
+  - The same unrelated keywords on every route.
+  - Only the name of the build tool.
 answer: 0
-explain: Give each public page a descriptive title and summary. Metadata should reflect the rendered
-  page rather than repeat unrelated keywords.
+explain: Accurate metadata helps readers and other tools identify the current content.
 ```

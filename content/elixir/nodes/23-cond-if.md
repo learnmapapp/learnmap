@@ -17,7 +17,7 @@ else
 end
 ```
 
-Without an `else`, a false `if` returns `nil`. There's also `unless`, which is `if not`.
+Without an `else`, a `false` `if` returns `nil`. There's also `unless`, which is `if not`.
 
 For a chain of conditions, use `cond`. It runs the first branch whose condition is truthy:
 

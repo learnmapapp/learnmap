@@ -37,11 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about fixed arrays is correct?
+question: What is part of the type `array[3, int]`?
 options:
-  - This array starts at index 1.
-  - An array has its bounds and element type in its type. This array uses indices 0 through 2.
-  - Arrays always grow when assigned beyond their bounds.
+  - Its eventual maximum heap capacity.
+  - Its fixed length and element type.
+  - Only its current contents.
 answer: 1
-explain: An array has its bounds and element type in its type. This array uses indices 0 through 2.
+explain: An array has a statically fixed shape.
 ```

@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about validated server actions is correct?
+question: What does an action's Zod input schema provide?
 options:
-  - Actions provide validated server entry points. Call actions.greet from astro:actions in a
-    browser script and handle its data and error results explicitly.
-  - Input validation automatically authenticates the caller.
-  - Actions run only during compilation.
+  - Validation of the declared input contract.
+  - Automatic authentication of every caller.
+  - Persistence of all submitted values.
 answer: 0
-explain: Actions provide validated server entry points. Call actions.greet from astro:actions in a
-  browser script and handle its data and error results explicitly.
+explain: Validation, authorization, and storage are separate responsibilities.
 ```

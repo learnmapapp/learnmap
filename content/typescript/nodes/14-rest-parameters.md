@@ -45,11 +45,11 @@ hint: "Add ... before values in the parameter list."
 ```
 
 ```quiz
-question: "What type does ...values: number[] have inside the function?"
+question: "What type does `...values: number[]` have inside the function?"
 options:
-  - "A number array."
-  - "A single number."
-  - "A tuple of exactly two numbers."
+  - A number array.
+  - A single number.
+  - A tuple of exactly two numbers.
 answer: 0
-explain: "Rest parameters collect the remaining arguments into an array."
+explain: Rest parameters collect the remaining arguments into an array.
 ```

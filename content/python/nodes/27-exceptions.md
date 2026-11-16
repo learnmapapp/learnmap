@@ -58,11 +58,11 @@ hint: "Catch ValueError instead of KeyError."
 ```
 
 ```quiz
-question: "Which error should you catch for int(\"hello\")?"
+question: Which error should you catch for `int("hello")`?
 options:
-  - "KeyError"
-  - "ValueError"
-  - "IndexError"
+  - KeyError
+  - ValueError
+  - IndexError
 answer: 1
-explain: "The input has the right broad type, but its value cannot be converted to an integer."
+explain: The input has the right broad type, but its value cannot be converted to an integer.
 ```

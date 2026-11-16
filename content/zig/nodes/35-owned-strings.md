@@ -49,13 +49,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about owned string copies is correct?
+question: What does `allocator.dupe(u8, text)` return?
 options:
-  - dupe returns an alias of the original string literal.
-  - String literals are mutable heap allocations.
-  - dupe allocates a copy that the caller owns. A mutable copy can be changed while a string literal
-    cannot.
+  - A borrowed alias of the original slice.
+  - A new string literal embedded at compile time.
+  - An allocated copy owned by the caller.
 answer: 2
-explain: dupe allocates a copy that the caller owns. A mutable copy can be changed while a string
-  literal cannot.
+explain: Release the copy with the same allocator after its last use.
 ```

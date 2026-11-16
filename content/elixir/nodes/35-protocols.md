@@ -79,13 +79,13 @@ type Area interface { Area() float64 }
 ```
 
 ```exercise
-goal: Implement String.Chars for Point so it prints as "(x, y)".
+goal: Implement `String.Chars` for Point so it prints as "(x, y)".
 code: |
   defimpl String.Chars, for: Point do
   end
 checks:
-  - match: 'def\s+to_string\('
-    message: 'The protocol needs a  def to_string(point)  function.'
+  - match: def\s+to_string\(
+    message: The protocol needs a  def to_string(point)  function.
   - match: '"\(#\{[^}]*x\}\s*,\s*#\{[^}]*y\}\)"'
     message: 'Return a string like "(#{p.x}, #{p.y})"'
 output: '"(1, 2)"'

@@ -7,7 +7,7 @@ requires:
 summary: A 404.astro page supplies helpful missing-route content.
 ---
 
-In your Astro project, save this as `src/pages/404.astro`. A 404.astro page supplies helpful missing-route content. Ensure your hosting platform serves the generated 404 output for unknown URLs.
+In your Astro project, save this as `src/pages/404.astro`. A `404.astro` page supplies helpful missing-route content. Ensure your hosting platform serves the generated 404 output for unknown URLs.
 
 ```astro
 <html lang="en"><head><title>Page not found</title></head>
@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about a useful 404 page is correct?
+question: What should a deployed `404.astro` page help users do?
 options:
-  - A 404 page must contain a JavaScript timer.
-  - A 404.astro page supplies helpful missing-route content. Ensure your hosting platform serves the
-    generated 404 output for unknown URLs.
-  - Any missing route automatically redirects to an arbitrary page.
+  - Run a required JavaScript timer before showing any message.
+  - Recover by navigating to a known page.
+  - Treat every missing route as a successful content page.
 answer: 1
-explain: A 404.astro page supplies helpful missing-route content. Ensure your hosting platform
-  serves the generated 404 output for unknown URLs.
+explain: Also configure the host to serve the missing-page output for unknown URLs.
 ```

@@ -57,13 +57,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about local bindings is correct?
+question: Inside a function, which declaration keeps `score` local?
 options:
-  - All variables are local by default.
-  - Local bindings can never change.
-  - Use local for bindings confined to the current scope; assigning an undeclared name otherwise
-    writes a global.
+  - "`score = 12`"
+  - "`_G.score = 12`"
+  - "`local score = 12`"
 answer: 2
-explain: Use local for bindings confined to the current scope; assigning an undeclared name
-  otherwise writes a global.
+explain: Use `local` to avoid assigning an undeclared name in the global environment.
 ```

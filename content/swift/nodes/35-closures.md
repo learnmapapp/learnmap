@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about closure expressions is correct?
+question: Which sort closure orders integers from smallest to largest?
 options:
-  - sorted mutates every array that shares its value.
-  - Closures cannot capture surrounding bindings.
-  - A closure packages behavior as a value. Trailing closure syntax keeps operations such as custom
-    sorting concise.
+  - "`{ left, right in left > right }`"
+  - "`{ left, right in left <= right }`"
+  - "`{ left, right in left < right }`"
 answer: 2
-explain: A closure packages behavior as a value. Trailing closure syntax keeps operations such as
-  custom sorting concise.
+explain: A sort predicate must describe a strict ordering.
 ```

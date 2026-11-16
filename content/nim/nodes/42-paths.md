@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about portable paths is correct?
+question: What does `getTempDir() / "example.json"` do?
 options:
-  - Use path joining from std/os instead of hard-coding separators. Computing a path does not create
-    the file.
-  - Joining paths automatically writes a file.
-  - Portable paths always use a literal backslash.
+  - Constructs a joined path.
+  - Creates and writes a JSON file.
+  - Changes the current working directory.
 answer: 0
-explain: Use path joining from std/os instead of hard-coding separators. Computing a path does not
-  create the file.
+explain: Path construction does not itself perform filesystem writes.
 ```

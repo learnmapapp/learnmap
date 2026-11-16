@@ -31,22 +31,22 @@ Compilation, bundling, and execution are separate jobs. A browser project often 
 Run commands from the project directory. When checking a configured project, invoke `tsc` without individual source filenames so the project settings apply.
 
 ```exercise
-goal: "Check the project without writing JavaScript files."
+goal: Check the project without writing JavaScript files.
 lang: shell
 code: |
   npx tsc
 checks:
-  - match: "npx\\s+tsc\\s+\\-\\-noEmit"
-    message: "Add --noEmit to the compiler command."
-hint: "Add --noEmit to the compiler command."
+  - match: npx\s+tsc\s+\-\-noEmit
+    message: Add --noEmit to the compiler command.
+hint: Add --`noEmit` to the compiler command.
 ```
 
 ```quiz
-question: "What does tsc --noEmit do?"
+question: What does `tsc --noEmit` do?
 options:
-  - "Runs the application."
-  - "Checks types without writing output files."
-  - "Installs all missing runtime dependencies."
+  - Runs the application.
+  - Checks types without writing output files.
+  - Installs all missing runtime dependencies.
 answer: 1
-explain: "The noEmit option preserves type checking while disabling generated files."
+explain: The `noEmit` option preserves type checking while disabling generated files.
 ```

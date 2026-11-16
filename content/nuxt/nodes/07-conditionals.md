@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about conditional rendering is correct?
+question: Does hiding an admin button with `v-if` secure its server endpoint?
 options:
-  - v-if and v-else always render both branches.
-  - v-if conditionally creates markup; v-else supplies the alternative. A UI condition does not
-    enforce server-side authorization.
-  - Hiding a button authorizes the corresponding API securely.
+  - Only when the button has a unique key.
+  - No; the endpoint must enforce authorization itself.
+  - Yes; the browser condition cannot be bypassed.
 answer: 1
-explain: v-if conditionally creates markup; v-else supplies the alternative. A UI condition does not
-  enforce server-side authorization.
+explain: A display condition controls UI, not who can send a server request.
 ```

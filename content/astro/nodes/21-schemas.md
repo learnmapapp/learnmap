@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about validate content metadata is correct?
+question: "What does a collection schema with `title: z.string()` establish?"
 options:
-  - A schema validates entry metadata and supplies useful inferred types. Astro 7 imports Zod
-    through astro/zod; give every note a string title in its frontmatter.
-  - Schemas validate only CSS colors.
-  - An invalid title is always silently changed into a string.
+  - The loaded metadata has a string title.
+  - Every article contains at least three paragraphs.
+  - A route exists for every title.
 answer: 0
-explain: A schema validates entry metadata and supplies useful inferred types. Astro 7 imports Zod
-  through astro/zod; give every note a string title in its frontmatter.
+explain: The schema checks the fields it declares, not page existence or all body content.
 ```

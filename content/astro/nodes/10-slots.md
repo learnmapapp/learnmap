@@ -7,7 +7,7 @@ requires:
 summary: A slot receives child markup from a parent.
 ---
 
-In your Astro project, save this as `src/components/Panel.astro`. A slot receives child markup from a parent. Render <Panel><p>Hello</p></Panel>; the fallback appears only when suitable content is absent.
+In your Astro project, save this as `src/components/Panel.astro`. A slot receives child markup from a parent. Render `<Panel><p>Hello</p></Panel>`; the fallback appears only when suitable content is absent.
 
 A useful term here is [[slot]]: A placeholder where a parent can supply child content.
 
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about default slots is correct?
+question: When does a default slot's fallback content appear?
 options:
-  - Fallback slot content always replaces supplied children.
-  - A slot receives child markup from a parent. Render <Panel><p>Hello</p></Panel>; the fallback
-    appears only when suitable content is absent.
-  - A slot is always a runtime browser portal.
+  - Only after React hydrates the parent.
+  - When no suitable child content is supplied.
+  - Whenever children are supplied.
 answer: 1
-explain: A slot receives child markup from a parent. Render <Panel><p>Hello</p></Panel>; the
-  fallback appears only when suitable content is absent.
+explain: A slot uses provided content when available and its fallback otherwise.
 ```

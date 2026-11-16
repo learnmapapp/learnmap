@@ -46,11 +46,11 @@ hint: "The callback returns a number, so use => number."
 ```
 
 ```quiz
-question: "What does (value: number) => string describe?"
+question: "What does `(value: number) => string` describe?"
 options:
-  - "An immediately executed conversion."
-  - "A function accepting a number and returning a string."
-  - "An object with a property called value."
+  - An immediately executed conversion.
+  - A function accepting a number and returning a string.
+  - An object with a property called value.
 answer: 1
-explain: "A function type describes a call signature."
+explain: A function type describes a call signature.
 ```

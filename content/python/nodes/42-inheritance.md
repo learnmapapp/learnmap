@@ -31,7 +31,7 @@ Use inheritance for an actual substitutable relationship: callers expecting the 
 Python also supports [[duck typing]]: callers can use an object's methods without requiring it to inherit a specific base class. [Protocols](node:protocols) can describe that interface to a type checker without forcing an inheritance hierarchy.
 
 ```exercise
-goal: "Reuse the parent greeting through super instead of recursively calling this method."
+goal: Reuse the parent greeting through super instead of recursively calling this method.
 lang: python
 code: |
   class Greeter:
@@ -44,17 +44,17 @@ code: |
 
   print(ExcitedGreeter().greet("Ada"))
 checks:
-  - match: "super\\(\\s*\\)\\.greet\\(\\s*name\\s*\\)"
-    message: "Replace self.greet(name) with super().greet(name)."
-hint: "Replace self.greet(name) with super().greet(name)."
+  - match: super\(\s*\)\.greet\(\s*name\s*\)
+    message: Replace self.greet(name) with super().greet(name).
+hint: Replace `self.greet(name)` with `super()`.`greet(name)`.
 ```
 
 ```quiz
-question: "If a subclass defines __init__, is its parent initializer called automatically?"
+question: If a subclass defines `__init__`, is its parent initializer called automatically?
 options:
-  - "Yes, with the same arguments."
-  - "No; call super().__init__ when the parent needs initialization."
-  - "Only for dataclasses."
+  - Yes, with the same arguments.
+  - No; call `super()`.`__init__` when the parent needs initialization.
+  - Only for dataclasses.
 answer: 1
-explain: "An explicit subclass initializer must delegate to the base initializer when needed."
+explain: An explicit subclass initializer must delegate to the base initializer when needed.
 ```

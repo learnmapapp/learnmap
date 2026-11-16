@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about key-value dictionaries is correct?
+question: What should a program do before relying on an externally supplied dictionary key?
 options:
-  - Dict[K, V] associates typed keys with typed values. Validate presence or handle missing-key
-    failure when a key comes from external input.
-  - Every missing key is inserted with zero automatically.
-  - A dictionary is always sorted by key.
+  - Check presence or handle the missing-key failure.
+  - Assume every missing key is automatically stored as zero.
+  - Treat all keys as valid list indices.
 answer: 0
-explain: Dict[K, V] associates typed keys with typed values. Validate presence or handle missing-key
-  failure when a key comes from external input.
+explain: A dictionary's key type does not guarantee that a particular key exists.
 ```

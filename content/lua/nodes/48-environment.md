@@ -7,7 +7,7 @@ requires:
 summary: os.getenv reads an environment variable and returns nil if it is absent.
 ---
 
-os.getenv reads an environment variable and returns nil if it is absent. Keep deployment-specific paths outside reusable logic.
+`os.getenv` reads an environment variable and returns `nil` if it is absent. Keep deployment-specific paths outside reusable logic.
 
 ```lua
 local home = os.getenv("HOME")
@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about environment access is correct?
+question: What does `os.getenv` return for an absent variable?
 options:
-  - os.getenv reads an environment variable and returns nil if it is absent. Keep
-    deployment-specific paths outside reusable logic.
-  - Missing environment variables always return an empty string.
-  - os.getenv modifies the environment.
+  - "`nil`"
+  - An empty string in every case.
+  - A raised error in every case.
 answer: 0
-explain: os.getenv reads an environment variable and returns nil if it is absent. Keep
-  deployment-specific paths outside reusable logic.
+explain: Check for absence before relying on an environment-specific value.
 ```

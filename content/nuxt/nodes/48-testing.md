@@ -7,7 +7,7 @@ requires:
 summary: Install @nuxt/test-utils, @vue/test-utils, Vitest, and happy-dom as development dependencies.
 ---
 
-In your Nuxt 4 project, save this as `tests/nuxt/task-card.test.ts`. Install @nuxt/test-utils, @vue/test-utils, Vitest, and happy-dom as development dependencies. Use the Nuxt test project configuration below, then run npx vitest run.
+In your Nuxt 4 project, save this as `tests/nuxt/task-card.test.ts`. Install `@nuxt/test-utils`, @vue/test-utils, Vitest, and happy-dom as development dependencies. Use the Nuxt test project configuration below, then run `npx vitest run`.
 
 ```typescript
 import { expect, it } from "vitest";
@@ -61,13 +61,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about nuxt component tests is correct?
+question: What does the provided TaskCard test verify?
 options:
-  - Install @nuxt/test-utils, @vue/test-utils, Vitest, and happy-dom as development dependencies.
-    Use the Nuxt test project configuration below, then run npx vitest run.
-  - Nuxt runtime tests need no test environment configuration.
-  - A component title test verifies API authorization too.
+  - The component displays the supplied title.
+  - Every API rejects unauthorized requests.
+  - All production routes are prerendered correctly.
 answer: 0
-explain: Install @nuxt/test-utils, @vue/test-utils, Vitest, and happy-dom as development
-  dependencies. Use the Nuxt test project configuration below, then run npx vitest run.
+explain: A focused component assertion does not cover unrelated server or deployment behavior.
 ```

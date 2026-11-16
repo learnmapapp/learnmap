@@ -60,11 +60,11 @@ String name = input != null ? input : "stranger";
 ```
 
 ```quiz
-question: "What does  0 || :fallback  return?"
+question: What does  `0 || :fallback`  return?
 options:
-  - ":fallback"
+  - :fallback
   - "0"
-  - "false"
+  - "`false`"
 answer: 1
-explain: 0 is truthy in Elixir, so || returns it. Only nil and false trigger the fallback.
+explain: 0 is truthy in Elixir, so || returns it. Only `nil` and `false` trigger the fallback.
 ```

@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about map iteration is correct?
+question: What order should you assume for ordinary `pairs(scores)` iteration?
 options:
-  - pairs visits table entries without a guaranteed order. Sort a separate list of keys when stable
-    output matters.
-  - pairs guarantees insertion order.
-  - pairs sorts keys alphabetically.
+  - No guaranteed order.
+  - Alphabetical order of string keys.
+  - The order entries were inserted.
 answer: 0
-explain: pairs visits table entries without a guaranteed order. Sort a separate list of keys when
-  stable output matters.
+explain: Sort a separate key list if output must have a stable order.
 ```

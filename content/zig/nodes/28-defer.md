@@ -50,13 +50,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about scope-exit cleanup is correct?
+question: When does an ordinary `defer` execute?
 options:
-  - Deferred actions run immediately at declaration.
-  - defer executes when the current scope exits. Place cleanup beside resource acquisition and
-    remember that deferred actions run in reverse order.
-  - defer executes only on errors.
+  - Immediately when it is declared.
+  - On exit from its enclosing scope.
+  - Only when that scope returns an error.
 answer: 1
-explain: defer executes when the current scope exits. Place cleanup beside resource acquisition and
-  remember that deferred actions run in reverse order.
+explain: Ordinary scope cleanup applies to both successful and error exits.
 ```

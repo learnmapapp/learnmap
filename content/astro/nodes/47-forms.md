@@ -59,15 +59,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about handle an html form is correct?
+question: Why validate a form title on the server even with `required` on the input?
 options:
-  - Client-side required fields make server validation unnecessary.
-  - FormData.get always returns a string.
-  - Validate submitted data on the server even when HTML has required fields. This demonstration
-    acknowledges input without persisting it; real mutations need appropriate authorization and
-    storage.
+  - "`required` automatically validates the server's database."
+  - Server validation is needed only for GET requests.
+  - Requests can bypass browser field validation.
 answer: 2
-explain: Validate submitted data on the server even when HTML has required fields. This
-  demonstration acknowledges input without persisting it; real mutations need appropriate
-  authorization and storage.
+explain: Browser constraints improve feedback but do not enforce the receiving boundary's contract.
 ```

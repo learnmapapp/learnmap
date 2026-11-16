@@ -7,7 +7,7 @@ requires:
 summary: Mojo spells Boolean constants True and False and combines conditions with and, or, and not.
 ---
 
-Mojo spells Boolean constants True and False and combines conditions with and, or, and not.
+Mojo spells Boolean constants `True` and `False` and combines conditions with and, or, and not.
 
 ```mojo
 def main() raises:
@@ -38,11 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about boolean expressions is correct?
+question: Which expression means “ready and not blocked” in Mojo?
 options:
-  - Mojo spells Boolean constants True and False and combines conditions with and, or, and not.
-  - Boolean constants must be lowercase.
-  - and is spelled && in Mojo.
+  - "`ready and not blocked`"
+  - "`ready && !blocked`"
+  - "`ready or blocked`"
 answer: 0
-explain: Mojo spells Boolean constants True and False and combines conditions with and, or, and not.
+explain: Mojo uses the word operators `and`, `or`, and `not`.
 ```

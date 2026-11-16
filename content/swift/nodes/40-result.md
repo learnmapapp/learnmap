@@ -8,7 +8,7 @@ requires:
 summary: Result represents success or typed failure as a value that can be stored or passed.
 ---
 
-Result represents success or typed failure as a value that can be stored or passed. It complements throwing APIs.
+`Result` represents success or typed failure as a value that can be stored or passed. It complements throwing APIs.
 
 ```swift
 enum LookupError: Error { case missing }
@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about explicit result values is correct?
+question: What does `Result<Int, LookupError>` represent?
 options:
-  - Result requires exceptions to be thrown when constructed.
-  - Result represents success or typed failure as a value that can be stored or passed. It
-    complements throwing APIs.
-  - Result can contain only success.
+  - Both a success and failure active simultaneously.
+  - An integer success or a `LookupError` failure.
+  - An optional integer with no failure information.
 answer: 1
-explain: Result represents success or typed failure as a value that can be stored or passed. It
-  complements throwing APIs.
+explain: "`Result` stores one of two explicitly modeled outcomes."
 ```

@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about scoped component css is correct?
+question: What does `<style scoped>` limit?
 options:
-  - A scoped style block always changes every p element globally.
-  - scoped styles target this component’s markup through generated attributes. Global design
-    defaults can be imported separately through Nuxt configuration.
-  - Scoped styles create a separate browser iframe.
+  - All styling to a separate browser iframe.
+  - Which component markup its generated selectors target.
+  - Every possible inherited CSS effect.
 answer: 1
-explain: scoped styles target this component’s markup through generated attributes. Global design
-  defaults can be imported separately through Nuxt configuration.
+explain: Vue scopes selectors with generated attributes rather than isolating an entire document.
 ```

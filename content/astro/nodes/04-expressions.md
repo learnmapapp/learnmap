@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about template expressions is correct?
+question: For `const completed = 3`, what does `{completed * 2}` render?
 options:
-  - Expressions can only contain string literals.
-  - Curly braces insert JavaScript expression results into markup. Text values are escaped;
-    rendering arbitrary HTML requires a separate deliberate operation.
-  - Every expression is inserted as trusted raw HTML.
+  - A button that increments `completed`.
+  - "`6`"
+  - The literal text `completed * 2`.
 answer: 1
-explain: Curly braces insert JavaScript expression results into markup. Text values are escaped;
-  rendering arbitrary HTML requires a separate deliberate operation.
+explain: A template expression inserts its evaluated result into the generated markup.
 ```

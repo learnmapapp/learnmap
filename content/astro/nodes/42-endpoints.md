@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about json endpoints is correct?
+question: What should an Astro endpoint return?
 options:
-  - An endpoint returns a Response rather than page markup. With static output this GET can be
-    prerendered; request-specific endpoints need on-demand rendering.
-  - Every endpoint is necessarily a live server function.
-  - A JSON endpoint must return an Astro component.
+  - A `Response`.
+  - A required React component.
+  - An Astro layout filename.
 answer: 0
-explain: An endpoint returns a Response rather than page markup. With static output this GET can be
-  prerendered; request-specific endpoints need on-demand rendering.
+explain: Endpoints produce responses such as JSON rather than page component markup.
 ```

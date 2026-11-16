@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about custom addition is correct?
+question: Which metamethod defines `a + b` for the vector tables in this lesson?
 options:
-  - The __add metamethod defines addition for these vector tables. Return another vector to preserve
-    behavior for later operations.
-  - __add changes the meaning of + globally.
-  - Metamethod names are arbitrary.
+  - "`__add`"
+  - "`__index`"
+  - "`__call`"
 answer: 0
-explain: The __add metamethod defines addition for these vector tables. Return another vector to
-  preserve behavior for later operations.
+explain: "`__add` implements addition; lookup and function-call behavior have different hooks."
 ```

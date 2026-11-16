@@ -43,7 +43,7 @@ if count.is_none() { println!("missing"); }
 ```
 
 ```exercise
-goal: "Keep zero as a real value; check specifically for None."
+goal: Keep zero as a real value; check specifically for `None`.
 lang: python
 code: |
   count = 0
@@ -53,16 +53,16 @@ code: |
       print(count)
 checks:
   - match: "^if\\s+count\\s+is\\s+None\\s*:"
-    message: "Replace not count with count is None."
-hint: "Replace not count with count is None."
+    message: Replace not count with count is None.
+hint: Replace not count with count is `None`.
 ```
 
 ```quiz
-question: "Which check distinguishes None from a valid zero?"
+question: Which check distinguishes `None` from a valid zero?
 options:
-  - "if not value"
-  - "if value is None"
-  - "if value == False"
+  - "`if not value`"
+  - "`if value is None`"
+  - "`if value == False`"
 answer: 1
-explain: "is None checks only the absence sentinel; zero is false but is not None."
+explain: is `None` checks only the absence sentinel; zero is `false` but is not `None`.
 ```

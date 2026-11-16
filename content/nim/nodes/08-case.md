@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about case selection is correct?
+question: What happens after a matching Nim `case` branch finishes?
 options:
-  - case falls through automatically to the next branch.
-  - Strings cannot be case selectors.
-  - case selects one matching branch. Use else when the listed alternatives do not exhaust the
-    selector type.
+  - Execution falls through into the next branch.
+  - The matching branch repeats automatically.
+  - Execution continues after the `case`.
 answer: 2
-explain: case selects one matching branch. Use else when the listed alternatives do not exhaust the
-  selector type.
+explain: Nim cases do not have implicit fallthrough.
 ```

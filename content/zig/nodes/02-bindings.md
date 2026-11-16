@@ -66,13 +66,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about const and var is correct?
+question: Which binding can be reassigned?
 options:
-  - const makes every pointed-to value mutable.
-  - Zig encourages var for every local.
-  - const prevents changing a binding; var supplies mutable storage. Zig diagnoses local var
-    declarations that are never mutated.
+  - "`const score: u8 = 1;`"
+  - "`const score = @as(u8, 1);`"
+  - "`var score: u8 = 1;`"
 answer: 2
-explain: const prevents changing a binding; var supplies mutable storage. Zig diagnoses local var
-  declarations that are never mutated.
+explain: Use `var` for mutable storage and `const` when the binding does not change.
 ```

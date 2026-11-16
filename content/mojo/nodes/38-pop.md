@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about remove an element is correct?
+question: What does `pop()` do to `[2, 4, 6]`?
 options:
-  - pop never changes list length.
-  - Popping an empty list always returns zero.
-  - pop removes and returns the final element by default. Ensure the list is nonempty before
-    removing an item.
+  - Returns `2` and leaves `[4, 6]`.
+  - Returns `6` without changing the list.
+  - Returns `6` and leaves `[2, 4]`.
 answer: 2
-explain: pop removes and returns the final element by default. Ensure the list is nonempty before
-  removing an item.
+explain: With no index argument, pop removes the final element.
 ```

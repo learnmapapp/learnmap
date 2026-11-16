@@ -7,7 +7,7 @@ requires:
 summary: A content collection loads entries through a loader.
 ---
 
-In your Astro project, save this as `src/content.config.ts`. A content collection loads entries through a loader. Create Markdown files under src/data/notes; this location does not create page routes automatically.
+In your Astro project, save this as `src/content.config.ts`. A content collection loads entries through a loader. Create Markdown files under `src/data/notes`; this location does not create page routes automatically.
 
 A useful term here is [[content collection]]: A named set of loaded content entries with an optional validated schema.
 
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about define a collection is correct?
+question: Does loading files into a content collection create page routes automatically?
 options:
-  - Every collection entry automatically becomes a route.
-  - A loader must make a network request.
-  - A content collection loads entries through a loader. Create Markdown files under src/data/notes;
-    this location does not create page routes automatically.
+  - Yes; every entry immediately creates a public page.
+  - Only entries whose title contains a space.
+  - No; define pages that query and render the entries.
 answer: 2
-explain: A content collection loads entries through a loader. Create Markdown files under
-  src/data/notes; this location does not create page routes automatically.
+explain: Collection loading and page routing are separate responsibilities.
 ```

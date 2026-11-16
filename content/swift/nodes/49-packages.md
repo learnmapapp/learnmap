@@ -8,7 +8,7 @@ requires:
 summary: Swift Package Manager organizes source targets and test targets through Package.swift.
 ---
 
-Swift Package Manager organizes source targets and test targets through Package.swift. Add a test target when the chosen template does not create one.
+Swift Package Manager organizes source targets and test targets through `Package.swift`. Add a test target when the chosen template does not create one.
 
 ```shell
 swift package init --type executable
@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about swift packages is correct?
+question: Which Swift Package Manager command executes package tests?
 options:
-  - Package.swift is a JSON file.
-  - Swift Package Manager organizes source targets and test targets through Package.swift. Add a
-    test target when the chosen template does not create one.
-  - swift build always executes unit tests.
+  - "`swift package describe`"
+  - "`swift test`"
+  - "`swift build`"
 answer: 1
-explain: Swift Package Manager organizes source targets and test targets through Package.swift. Add
-  a test target when the chosen template does not create one.
+explain: Building and describing a package do not execute its test suite.
 ```

@@ -7,7 +7,7 @@ requires:
 summary: Install Vitest and run npx vitest run.
 ---
 
-In your Astro project, save this as `tests/published.test.ts`. Install Vitest and run npx vitest run. Test plain data helpers directly; also run npm run build and check generated pages and links.
+In your Astro project, save this as `tests/published.test.ts`. Install Vitest and run `npx vitest run`. Test plain data helpers directly; also run `npm run build` and check generated pages and links.
 
 ```typescript
 import { describe, expect, it } from "vitest";
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about test content helpers is correct?
+question: What does the draft-filter unit test actually verify?
 options:
-  - Astro content helpers cannot be tested without a browser.
-  - Install Vitest and run npx vitest run. Test plain data helpers directly; also run npm run build
-    and check generated pages and links.
-  - A unit test automatically verifies every deployed URL.
+  - That the hosting adapter handles all requests correctly.
+  - That the helper excludes draft entries.
+  - That every deployed route and link works.
 answer: 1
-explain: Install Vitest and run npx vitest run. Test plain data helpers directly; also run npm run
-  build and check generated pages and links.
+explain: A focused unit test checks its behavior; a build and page checks cover other boundaries.
 ```

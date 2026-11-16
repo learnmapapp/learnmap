@@ -49,13 +49,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about fallible return types is correct?
+question: What does `error{Empty}!usize` describe?
 options:
-  - A fallible function cannot return a normal value.
-  - E!T represents either an error from E or a successful T. A !T return type lets the compiler
-    infer the function’s error set.
-  - "!T means an optional T."
+  - A successful value that cannot fail.
+  - A successful `usize` or `error.Empty`.
+  - A `usize` or `null`.
 answer: 1
-explain: E!T represents either an error from E or a successful T. A !T return type lets the compiler
-  infer the function’s error set.
+explain: An error union pairs a success payload type with a possible error set.
 ```

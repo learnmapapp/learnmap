@@ -54,13 +54,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about trait contracts is correct?
+question: How does a struct adopt the `Readable` trait?
 options:
-  - Matching method names alone automatically declares conformance.
-  - Traits directly allocate instance fields.
-  - A trait lists required capabilities. A struct explicitly declares conformance and supplies the
-    required implementations.
+  - Define any method with a similar name, without declaring conformance.
+  - Import the trait and leave its requirements unimplemented.
+  - Declare conformance and implement its requirements.
 answer: 2
-explain: A trait lists required capabilities. A struct explicitly declares conformance and supplies
-  the required implementations.
+explain: Trait conformance is explicit and checked by the compiler.
 ```

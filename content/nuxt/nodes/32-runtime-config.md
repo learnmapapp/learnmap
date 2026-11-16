@@ -7,7 +7,7 @@ requires:
 summary: Public runtimeConfig is exposed to browser code; private keys belong on the server.
 ---
 
-In your Nuxt 4 project, save this as `nuxt.config.ts`. Public runtimeConfig is exposed to browser code; private keys belong on the server. Override matching keys through NUXT_ environment variables such as NUXT_API_SECRET.
+In your Nuxt 4 project, save this as `nuxt.config.ts`. Public runtimeConfig is exposed to browser code; private keys belong on the server. Override matching keys through NUXT_ environment variables such as `NUXT_API_SECRET`.
 
 ```typescript
 export default defineNuxtConfig({
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about runtime configuration is correct?
+question: Which value belongs under `runtimeConfig.public`?
 options:
-  - Putting a secret under public encrypts it.
-  - Every runtimeConfig key is automatically private.
-  - Public runtimeConfig is exposed to browser code; private keys belong on the server. Override
-    matching keys through NUXT_ environment variables such as NUXT_API_SECRET.
+  - A private signing secret.
+  - A database administrator password.
+  - An API base path safe to reveal to visitors.
 answer: 2
-explain: Public runtimeConfig is exposed to browser code; private keys belong on the server.
-  Override matching keys through NUXT_ environment variables such as NUXT_API_SECRET.
+explain: Public runtime configuration is exposed to browser code.
 ```

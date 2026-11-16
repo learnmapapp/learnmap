@@ -49,13 +49,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about prototype objects is correct?
+question: In the task prototype pattern, where should each task's `done` value live?
 options:
-  - Every instance must copy every method.
-  - All instances necessarily share their done field.
-  - A prototype table shares methods through __index while each instance keeps its own fields. Lua
-    supplies this pattern through tables, not class syntax.
+  - In the shared prototype as the only mutable state.
+  - In a global named `done`.
+  - In the individual instance table.
 answer: 2
-explain: A prototype table shares methods through __index while each instance keeps its own fields.
-  Lua supplies this pattern through tables, not class syntax.
+explain: Instances keep independent fields while sharing methods through `__index`.
 ```

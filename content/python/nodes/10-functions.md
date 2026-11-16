@@ -46,7 +46,7 @@ function double(number) {
 ```
 
 ```exercise
-goal: "Return the doubled number instead of only printing it."
+goal: Return the doubled number instead of only printing it.
 lang: python
 code: |
   def double(number):
@@ -54,17 +54,17 @@ code: |
 
   print(double(21))
 checks:
-  - match: "^\\s+return\\s+number\\s*\\*\\s*2\\s*$"
-    message: "Replace print(number * 2) with return number * 2."
-hint: "Replace print(number * 2) with return number * 2."
+  - match: ^\s+return\s+number\s*\*\s*2\s*$
+    message: Replace print(number * 2) with return number * 2.
+hint: Replace `print(number * 2)` with return number * 2.
 ```
 
 ```quiz
-question: "What happens when a function reaches its end without return?"
+question: What happens when a function reaches its end without return?
 options:
-  - "It returns the last expression automatically."
-  - "It returns None."
-  - "It always raises an error."
+  - It returns the last expression automatically.
+  - It returns `None`.
+  - It always raises an error.
 answer: 1
-explain: "Unlike Rust blocks, Python functions do not implicitly return the final expression."
+explain: Unlike Rust blocks, Python functions do not implicitly return the final expression.
 ```

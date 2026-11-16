@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about argument labels is correct?
+question: "For `func greet(person name: String)`, which call uses the correct argument label?"
 options:
-  - The internal name must always be used at the call site.
-  - Argument labels cannot be customized.
-  - An external argument label can differ from the internal parameter name. An underscore omits the
-    external label.
+  - '`greet(name: "Ada")`'
+  - '`greet("Ada")`'
+  - '`greet(person: "Ada")`'
 answer: 2
-explain: An external argument label can differ from the internal parameter name. An underscore omits
-  the external label.
+explain: "`person` is the external label; `name` is used inside the function."
 ```

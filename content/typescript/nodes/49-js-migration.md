@@ -40,11 +40,11 @@ hint: "Replace @ts-nocheck with @ts-check."
 ```
 
 ```quiz
-question: "Which option enables project-wide checking of included JavaScript files?"
+question: Which option enables project-wide checking of included JavaScript files?
 options:
-  - "checkJs"
-  - "skipLibCheck"
-  - "noEmit alone"
+  - "`checkJs`"
+  - "`skipLibCheck`"
+  - "`noEmit` alone"
 answer: 0
-explain: "checkJs checks JavaScript; allowJs controls its inclusion in the project."
+explain: "`checkJs` checks JavaScript; `allowJs` controls its inclusion in the project."
 ```

@@ -8,7 +8,7 @@ requires:
 summary: Codable can synthesize encoding and decoding for compatible stored properties.
 ---
 
-Codable can synthesize encoding and decoding for compatible stored properties. Decoding checks types, but domain constraints still need validation.
+`Codable` can synthesize encoding and decoding for compatible stored properties. Decoding checks types, but domain constraints still need validation.
 
 ```swift
 import Foundation
@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about encode typed json is correct?
+question: What does synthesized `Codable` decoding establish?
 options:
-  - Decoding validates every business rule automatically.
-  - Codable works only with classes.
-  - Codable can synthesize encoding and decoding for compatible stored properties. Decoding checks
-    types, but domain constraints still need validation.
+  - That every custom business rule is automatically satisfied.
+  - That custom validating initializers are always called.
+  - That encoded data fits the declared decoding structure and types.
 answer: 2
-explain: Codable can synthesize encoding and decoding for compatible stored properties. Decoding
-  checks types, but domain constraints still need validation.
+explain: Domain validation may require custom decoding beyond synthesized type checks.
 ```

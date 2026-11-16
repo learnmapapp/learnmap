@@ -44,11 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about mutating methods is correct?
+question: What does `mutating` allow on a struct instance method?
 options:
-  - Every struct method can mutate let instances.
-  - mutating is required for methods that only read properties.
-  - A struct method that changes stored state uses mutating. Call it through a mutable var instance.
+  - Changing properties through a `let` struct binding.
+  - Making every property globally shared.
+  - Changing the receiver's stored properties.
 answer: 2
-explain: A struct method that changes stored state uses mutating. Call it through a mutable var instance.
+explain: Mutating methods require a mutable value receiver.
 ```

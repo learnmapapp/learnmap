@@ -62,13 +62,13 @@ let handles: Vec<_> = urls.iter().map(|u| tokio::spawn(get(u))).collect();
 ```
 
 ```exercise
-goal: Run the work with Task.async and wait for it with Task.await.
+goal: Run the work with `Task.async` and wait for it with `Task.await`.
 code: |
   report = build_report()
 checks:
-  - match: 'Task\.async\(\s*(fn\s*->\s*build_report\(\)\s*end|&build_report/0)\s*\)'
-    message: 'Start with  task = Task.async(fn -> build_report() end)'
-  - match: 'Task\.await\('
+  - match: Task\.async\(\s*(fn\s*->\s*build_report\(\)\s*end|&build_report/0)\s*\)
+    message: Start with  task = Task.async(fn -> build_report() end)
+  - match: Task\.await\(
     message: Then get the result with Task.await(task).
-output: '%Report{...}'
+output: "%Report{...}"
 ```

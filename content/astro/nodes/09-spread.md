@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about spread attributes is correct?
+question: What does `<a {...attributes}>` do?
 options:
-  - Spread syntax forwards object properties into element attributes. Keep security-sensitive
-    attributes under explicit control when data is untrusted.
-  - Spread attributes disable all escaping.
-  - Spread syntax only works on imported React components.
+  - Uses the object's entries as element attributes.
+  - Renders the object as visible text.
+  - Registers every entry as a click listener.
 answer: 0
-explain: Spread syntax forwards object properties into element attributes. Keep security-sensitive
-  attributes under explicit control when data is untrusted.
+explain: Spread syntax forwards the supplied attributes into the element.
 ```

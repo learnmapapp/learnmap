@@ -7,7 +7,7 @@ requires:
 summary: A .md file under src/pages becomes a page.
 ---
 
-In your Astro project, save this as `src/pages/note.md`. A .md file under src/pages becomes a page. Frontmatter stores metadata; the Markdown heading supplies visible content. A Markdown layout receives metadata through Astro.props.frontmatter.
+In your Astro project, save this as `src/pages/note.md`. A .md file under `src/pages` becomes a page. Frontmatter stores metadata; the Markdown heading supplies visible content. A Markdown layout receives metadata through `Astro.props.frontmatter`.
 
 ```markdown
 ---
@@ -42,14 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about markdown pages is correct?
+question: Which file creates the `/note` Markdown page?
 options:
-  - A .md file under src/pages becomes a page. Frontmatter stores metadata; the Markdown heading
-    supplies visible content. A Markdown layout receives metadata through Astro.props.frontmatter.
-  - Markdown files can never use layouts.
-  - Every Markdown page needs hydration.
+  - "`src/pages/note.md`"
+  - "`src/components/note.md`"
+  - "`src/data/note.md` alone."
 answer: 0
-explain: A .md file under src/pages becomes a page. Frontmatter stores metadata; the Markdown
-  heading supplies visible content. A Markdown layout receives metadata through
-  Astro.props.frontmatter.
+explain: A Markdown file in pages defines a route; a data file needs a rendering route.
 ```

@@ -82,17 +82,17 @@ return fmt.Errorf("load config: %w", err)
 ```
 
 ```exercise
-goal: Implement From<ParseIntError> for AppError, wrapping it in the Parse variant.
+goal: Implement `From<ParseIntError>` for AppError, wrapping it in the Parse variant.
 code: |
   enum AppError {
       Parse(ParseIntError),
   }
 checks:
-  - match: 'impl\s+From<\s*ParseIntError\s*>\s+for\s+AppError'
-    message: "Start with  impl From<ParseIntError> for AppError {"
-  - match: 'fn\s+from\s*\(\s*\w+\s*:\s*ParseIntError\s*\)\s*->\s*(Self|AppError)'
+  - match: impl\s+From<\s*ParseIntError\s*>\s+for\s+AppError
+    message: Start with  impl From<ParseIntError> for AppError {
+  - match: fn\s+from\s*\(\s*\w+\s*:\s*ParseIntError\s*\)\s*->\s*(Self|AppError)
     message: "Add  fn from(e: ParseIntError) -> Self"
-  - match: 'AppError::Parse\(\s*\w+\s*\)|Self::Parse\(\s*\w+\s*\)'
+  - match: AppError::Parse\(\s*\w+\s*\)|Self::Parse\(\s*\w+\s*\)
     message: Return AppError::Parse(e).
 output: '"x".parse::<i32>()? now becomes AppError::Parse'
 ```

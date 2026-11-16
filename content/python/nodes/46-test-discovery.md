@@ -41,14 +41,14 @@ An import error is a test-run failure, not a reason to duplicate the function in
 A useful project check is: recreate the environment, install declared dependencies, run discovery, and try the command-line entry point. These steps can later run in continuous integration with the same commands.
 
 ```exercise
-goal: "Run discovery in the tests directory with the test_*.py pattern."
+goal: Run discovery in the tests directory with the `test_`*`.py` pattern.
 lang: shell
 code: |
   python3 -m unittest discover -s src -p "test_*.py" -v
 checks:
-  - match: "^python3\\s+-m\\s+unittest\\s+discover\\s+-s\\s+tests\\s+-p\\s+[\"']test_\\*\\.py[\"']\\s+-v\\s*$"
-    message: "Set the discovery start directory with -s tests."
-hint: "Set the discovery start directory with -s tests."
+  - match: ^python3\s+-m\s+unittest\s+discover\s+-s\s+tests\s+-p\s+["']test_\*\.py["']\s+-v\s*$
+    message: Set the discovery start directory with -s tests.
+hint: Set the discovery start directory with -s tests.
 ```
 
 ```quiz

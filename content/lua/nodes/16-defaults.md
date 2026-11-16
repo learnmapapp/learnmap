@@ -8,7 +8,7 @@ requires:
 summary: Missing arguments arrive as nil.
 ---
 
-Missing arguments arrive as nil. The or idiom supplies a default for both nil and false, so use an explicit nil check when false is meaningful.
+Missing arguments arrive as `nil`. The or idiom supplies a default for both `nil` and `false`, so use an explicit `nil` check when `false` is meaningful.
 
 ```lua
 local function greet(name)
@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about default arguments is correct?
+question: With `name = name or "friend"`, what happens when `name` is `false`?
 options:
-  - or preserves false instead of choosing a fallback.
-  - Missing arguments arrive as nil. The or idiom supplies a default for both nil and false, so use
-    an explicit nil check when false is meaningful.
-  - Lua supplies defaults from parameter annotations.
+  - It becomes the string `"false"`.
+  - It becomes `"friend"`.
+  - It stays `false`.
 answer: 1
-explain: Missing arguments arrive as nil. The or idiom supplies a default for both nil and false, so
-  use an explicit nil check when false is meaningful.
+explain: The `or` fallback applies to both `false` and `nil`.
 ```

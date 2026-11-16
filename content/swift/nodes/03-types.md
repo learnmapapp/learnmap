@@ -7,7 +7,7 @@ requires:
 summary: Swift checks types at compile time and uses explicit numeric conversions.
 ---
 
-Swift checks types at compile time and uses explicit numeric conversions. An Int and a Double do not combine through arbitrary implicit conversion.
+Swift checks types at compile time and uses explicit numeric conversions. An `Int` and a Double do not combine through arbitrary implicit conversion.
 
 ```swift
 let count: Int = 4
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about types and conversions is correct?
+question: How can you multiply an `Int` count by a `Double` ratio explicitly?
 options:
-  - Swift checks types at compile time and uses explicit numeric conversions. An Int and a Double do
-    not combine through arbitrary implicit conversion.
-  - Every numeric conversion is implicit.
-  - An Int annotation permits later assignment of a String.
+  - "`Double(count) * ratio`"
+  - "`String(count) * ratio`"
+  - "`count * Int.self`"
 answer: 0
-explain: Swift checks types at compile time and uses explicit numeric conversions. An Int and a
-  Double do not combine through arbitrary implicit conversion.
+explain: Convert the integer to the numeric type expected by the operation.
 ```

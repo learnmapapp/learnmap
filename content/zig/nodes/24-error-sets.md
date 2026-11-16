@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about named errors is correct?
+question: What does `error{ Empty, Invalid }` define?
 options:
-  - An error set names possible failures. Keep domain errors small and descriptive so callers can
-    handle the relevant cases.
-  - Error sets store arbitrary payload strings.
-  - Declaring an error automatically throws it.
+  - A set of named failure values.
+  - A struct storing two message strings.
+  - An exception that is raised immediately.
 answer: 0
-explain: An error set names possible failures. Keep domain errors small and descriptive so callers
-  can handle the relevant cases.
+explain: An error set describes which named errors a value may contain.
 ```

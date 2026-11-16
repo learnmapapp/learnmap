@@ -7,7 +7,7 @@ requires:
 summary: comptime requires evaluation during compilation.
 ---
 
-comptime requires evaluation during compilation. The same ordinary function can also run at runtime when its inputs are not compile-time known.
+`comptime` requires evaluation during compilation. The same ordinary function can also run at runtime when its inputs are not compile-time known.
 
 A useful term here is [[comptime]]: Evaluation or information required at compilation rather than at program runtime.
 
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time values is correct?
+question: What does a `comptime` block require?
 options:
-  - comptime requires evaluation during compilation. The same ordinary function can also run at
-    runtime when its inputs are not compile-time known.
-  - All function calls are necessarily runtime-only.
-  - comptime creates a hidden background thread.
+  - Evaluation during compilation.
+  - Evaluation on a background runtime thread.
+  - Evaluation only when the first visitor opens a page.
 answer: 0
-explain: comptime requires evaluation during compilation. The same ordinary function can also run at
-  runtime when its inputs are not compile-time known.
+explain: The code must be evaluable before the executable runs.
 ```

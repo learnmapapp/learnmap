@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about mutable arguments is correct?
+question: Which parameter convention explicitly allows updating the caller's value?
 options:
-  - mut grants a function mutable access to the caller’s storage. This makes intentional changes
-    part of the interface.
-  - mut always creates an unrelated private copy.
-  - Every read-only parameter can be changed without restriction.
+  - "`mut value: Int`"
+  - "`value: Int` alone."
+  - A compile-time parameter named `value`.
 answer: 0
-explain: mut grants a function mutable access to the caller’s storage. This makes intentional
-  changes part of the interface.
+explain: A `mut` parameter grants mutable access to caller-owned storage.
 ```

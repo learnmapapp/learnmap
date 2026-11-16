@@ -7,7 +7,7 @@ requires:
 summary: useAsyncData wraps an asynchronous data operation with a stable key and SSR-aware payload handling.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. useAsyncData wraps an asynchronous data operation with a stable key and SSR-aware payload handling. Keep the handler free from unrelated side effects.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. `useAsyncData` wraps an asynchronous data operation with a stable key and SSR-aware payload handling. Keep the handler free from unrelated side effects.
 
 ```vue
 <script setup lang="ts">
@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about named async data is correct?
+question: What does the key in `useAsyncData("course-title", handler)` identify?
 options:
-  - useAsyncData wraps an asynchronous data operation with a stable key and SSR-aware payload
-    handling. Keep the handler free from unrelated side effects.
-  - Async data handlers are the ideal place for analytics mutations.
-  - Keys have no effect on shared async data.
+  - The shared async-data entry.
+  - A required database password.
+  - The current DOM element's class.
 answer: 0
-explain: useAsyncData wraps an asynchronous data operation with a stable key and SSR-aware payload
-  handling. Keep the handler free from unrelated side effects.
+explain: Choose stable keys that correspond to the data being loaded.
 ```

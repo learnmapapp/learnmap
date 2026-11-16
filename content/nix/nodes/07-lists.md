@@ -83,11 +83,12 @@ packages = [ pkgs.git ] ++ lib.optionals isLinux [ pkgs.strace ];
 ```
 
 ```quiz
-question: "How many elements does  [ map (x: x) [ 1 ] ]  have?"
+question: "How many elements does  `[ map (x: x) [ 1 ] ]`  have?"
 options:
   - "1"
   - "3"
   - "2"
 answer: 1
-explain: "Without parentheses, spaces separate elements: map, (x: x) and [ 1 ] are three separate elements. Write [ (map (x: x) [ 1 ]) ] for one."
+explain: "Without parentheses, spaces separate elements: map, (x: x) and [ 1 ] are three separate
+  elements. Write `[ (map (x: x) [ 1 ]) ]` for one."
 ```

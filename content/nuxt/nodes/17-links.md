@@ -32,13 +32,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about nuxt navigation is correct?
+question: What does `<NuxtLink to="/about">` provide?
 options:
-  - NuxtLink automatically creates the destination route.
-  - All links must perform full document reloads.
-  - NuxtLink handles application navigation and can prefetch linked pages. Use ordinary links when
-    the destination requires ordinary external navigation semantics.
+  - Automatic creation of the `/about` page file.
+  - A server-side authorization check.
+  - Application navigation to an existing route.
 answer: 2
-explain: NuxtLink handles application navigation and can prefetch linked pages. Use ordinary links
-  when the destination requires ordinary external navigation semantics.
+explain: NuxtLink supports navigation and prefetching; destinations still need routes.
 ```

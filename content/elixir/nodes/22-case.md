@@ -84,7 +84,7 @@ code: |
     :green -> "go"
   end
 checks:
-  - match: '_\s*->\s*:unknown'
-    message: 'Add a last clause:  _ -> :unknown'
-output: ":unknown"
+  - match: _\s*->\s*:unknown
+    message: "Add a last clause:  _ -> :unknown"
+output: :unknown
 ```

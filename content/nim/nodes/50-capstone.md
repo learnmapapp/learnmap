@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about task cli is correct?
+question: Where should the task CLI reject missing or empty titles?
 options:
-  - Valid JSON guarantees a meaningful nonempty title.
-  - Command-line programs cannot be unit tested.
-  - Keep argument validation separate from task creation and JSON serialization. Extend this tool
-    with a storage module and tests for empty arguments and invalid files.
+  - Only while displaying the saved JSON.
+  - After treating every empty title as complete.
+  - At argument validation before creating its JSON task.
 answer: 2
-explain: Keep argument validation separate from task creation and JSON serialization. Extend this
-  tool with a storage module and tests for empty arguments and invalid files.
+explain: Validate input before constructing and serializing the domain value.
 ```

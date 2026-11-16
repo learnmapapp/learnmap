@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about route errors is correct?
+question: Which status best describes a requested course that does not exist?
 options:
-  - All failures have the same HTTP meaning.
-  - createError expresses a failure with an appropriate HTTP status. On server-rendered requests a
-    missing resource should be distinguished from an unexpected server error.
-  - Every missing resource should always return 200.
+  - "`500` for every missing course."
+  - "`404`."
+  - "`200`."
 answer: 1
-explain: createError expresses a failure with an appropriate HTTP status. On server-rendered
-  requests a missing resource should be distinguished from an unexpected server error.
+explain: A missing resource differs from a successful response or unexpected server failure.
 ```

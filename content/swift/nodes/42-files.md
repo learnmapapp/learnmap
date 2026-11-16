@@ -50,13 +50,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about file urls and data is correct?
+question: Why do the Foundation file read and write calls use `try`?
 options:
-  - Foundation file APIs accept URLs and can throw. Use a temporary location for experiments and
-    clean up the example file afterward.
-  - File writes can never fail.
-  - A URL is always an HTTP network address.
+  - Filesystem operations can fail.
+  - The file contents must be a Swift type declaration.
+  - Every URL points to a web server.
 answer: 0
-explain: Foundation file APIs accept URLs and can throw. Use a temporary location for experiments
-  and clean up the example file afterward.
+explain: Permissions, missing paths, and other I/O conditions can produce errors.
 ```

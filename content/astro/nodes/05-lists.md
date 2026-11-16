@@ -64,13 +64,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about render a list is correct?
+question: How does `topics.map(topic => <li>{topic}</li>)` affect a static page?
 options:
-  - Rendering a list requires hydration.
-  - Astro templates cannot use arrays.
-  - Use map to render repeated markup from data. Astro generates HTML for the result without
-    requiring a client-side list renderer.
+  - It requires React hydration before any list item appears.
+  - It creates routes for every topic automatically.
+  - It generates a list item for each topic during rendering.
 answer: 2
-explain: Use map to render repeated markup from data. Astro generates HTML for the result without
-  requiring a client-side list renderer.
+explain: Ordinary repeated markup can be rendered into HTML without an interactive framework.
 ```

@@ -7,7 +7,7 @@ requires:
 summary: require finds modules through Lua loaders and caches loaded values in package.loaded.
 ---
 
-require finds modules through Lua loaders and caches loaded values in package.loaded. Use dotted module names rather than hard-coded source paths.
+require finds modules through Lua loaders and caches loaded values in `package.loaded`. Use dotted module names rather than hard-coded source paths.
 
 ```lua
 local mathlib = require("math")
@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about load a module is correct?
+question: What normally happens when `require` loads the same module again?
 options:
-  - require executes a loaded module anew on every call.
-  - require accepts only absolute filesystem paths.
-  - require finds modules through Lua loaders and caches loaded values in package.loaded. Use dotted
-    module names rather than hard-coded source paths.
+  - It executes the source from scratch every time.
+  - It returns a fresh empty table every time.
+  - It reuses the cached value from `package.loaded`.
 answer: 2
-explain: require finds modules through Lua loaders and caches loaded values in package.loaded. Use
-  dotted module names rather than hard-coded source paths.
+explain: Lua caches loaded modules unless that cache is deliberately changed.
 ```

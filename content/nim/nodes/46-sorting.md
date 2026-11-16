@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about sorting sequences is correct?
+question: What does `scores.sort()` do to a mutable sequence?
 options:
-  - Sorting changes the element type.
-  - sort mutates a collection into its chosen order. Copy first if callers need to retain the
-    original sequence.
-  - sort always returns a fresh collection.
+  - Returns only the smallest element.
+  - Reorders that sequence in place.
+  - Returns a separate sorted sequence without changing it.
 answer: 1
-explain: sort mutates a collection into its chosen order. Copy first if callers need to retain the
-  original sequence.
+explain: Copy first when the original order must be retained.
 ```

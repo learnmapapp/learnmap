@@ -60,13 +60,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about var and let is correct?
+question: Which binding can be reassigned after initialization?
 options:
-  - let permits reassignment just like var.
-  - var values must be initialized at compile time.
-  - var creates mutable storage; let prevents reassignment of the binding. Prefer let when the value
-    does not need to change.
+  - A `let` binding.
+  - A `const` binding.
+  - A `var` binding.
 answer: 2
-explain: var creates mutable storage; let prevents reassignment of the binding. Prefer let when the
-  value does not need to change.
+explain: Use `var` for mutable storage and `let` for a runtime value that is not rebound.
 ```

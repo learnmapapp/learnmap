@@ -7,7 +7,7 @@ requires:
 summary: table.insert appends by default; table.remove shifts later sequence elements down.
 ---
 
-table.insert appends by default; table.remove shifts later sequence elements down. Removing index 1 implements a small queue, but shifts cost time.
+`table.insert` appends by default; `table.remove` shifts later sequence elements down. Removing index 1 implements a small queue, but shifts cost time.
 
 ```lua
 local queue = {"first"}
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about grow a sequence is correct?
+question: After `local q = {"first", "second"}`, what does `table.remove(q, 1)` do?
 options:
-  - table.insert always prepends.
-  - table.insert appends by default; table.remove shifts later sequence elements down. Removing
-    index 1 implements a small queue, but shifts cost time.
-  - Removing an entry leaves an interior nil hole.
+  - Returns `"first"` and leaves an empty index 1.
+  - Returns `"first"` and shifts `"second"` to index 1.
+  - Returns `"second"` and leaves `"first"` at index 1.
 answer: 1
-explain: table.insert appends by default; table.remove shifts later sequence elements down. Removing
-  index 1 implements a small queue, but shifts cost time.
+explain: Removing from a sequence shifts later elements down.
 ```

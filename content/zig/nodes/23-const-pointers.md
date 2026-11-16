@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about read-only access is correct?
+question: What does `*const u8` prohibit?
 options:
-  - const pointer bindings always freeze pointed-to storage.
-  - "*const T permits writes through the pointer."
-  - "*const T prevents writing through that pointer. A const pointer binding and a pointer to const
-    data are separate concepts."
+  - Changing the value through every possible mutable alias.
+  - Reading the pointed-to byte.
+  - Writing through that pointer.
 answer: 2
-explain: "*const T prevents writing through that pointer. A const pointer binding and a pointer to
-  const data are separate concepts."
+explain: Read-only access through one pointer is distinct from globally immutable storage.
 ```

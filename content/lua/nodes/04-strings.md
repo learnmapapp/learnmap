@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about quoted strings is correct?
+question: Which expression joins the strings `first` and `last`?
 options:
-  - String indices can be assigned directly.
-  - Concatenate strings with two dots. Strings are immutable byte sequences, so concatenation
-    produces a new value.
-  - The + operator joins strings.
+  - "`first & last`"
+  - "`first .. last`"
+  - "`first + last`"
 answer: 1
-explain: Concatenate strings with two dots. Strings are immutable byte sequences, so concatenation
-  produces a new value.
+explain: Lua uses `..` for string concatenation.
 ```

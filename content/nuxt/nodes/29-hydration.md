@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about consistent initial html is correct?
+question: Why set browser-ready state in `onMounted`?
 options:
-  - Random values generated independently always hydrate identically.
-  - window is available in every server-rendered setup function.
-  - The server and initial client render should agree. Move browser-only checks into a mounted hook
-    or use an appropriate client-only boundary.
+  - The hook runs before server rendering begins.
+  - It makes independently generated random markup identical.
+  - The initial server and client markup can agree before the browser-only update.
 answer: 2
-explain: The server and initial client render should agree. Move browser-only checks into a mounted
-  hook or use an appropriate client-only boundary.
+explain: Consistent initial rendering avoids hydration mismatches.
 ```

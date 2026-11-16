@@ -42,7 +42,7 @@ Floats round the usual way, with helpers in `Float` and `Integer`:
 "FF"
 ```
 
-`1 == 1.0` is true (same value), but `1 === 1.0` is false (different types).
+`1 == 1.0` is `true` (same value), but `1 === 1.0` is `false` (different types).
 
 ```compare python
 10 / 2   # 5.0, same as Elixir

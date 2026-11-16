@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about return a module is correct?
+question: In the module pattern `local M = {}; ...; return M`, what is exported?
 options:
-  - Module return values must be strings.
-  - A common module convention collects public functions in a local table and returns it. Private
-    locals stay outside that returned API.
-  - Every module must put its API in globals.
+  - Only functions whose names start with an underscore.
+  - The table returned as `M`.
+  - Every local declared in the file.
 answer: 1
-explain: A common module convention collects public functions in a local table and returns it.
-  Private locals stay outside that returned API.
+explain: The returned table defines the public API; other locals can remain private.
 ```

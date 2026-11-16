@@ -7,7 +7,7 @@ requires:
 summary: xpcall runs a message handler while the failed stack is still available.
 ---
 
-xpcall runs a message handler while the failed stack is still available. debug.traceback can attach useful call context.
+xpcall runs a message handler while the failed stack is still available. `debug.traceback` can attach useful call context.
 
 ```lua
 local ok, message = xpcall(function()
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about error context is correct?
+question: Why pass `debug.traceback` as the message handler to `xpcall`?
 options:
-  - xpcall runs a message handler while the failed stack is still available. debug.traceback can
-    attach useful call context.
-  - xpcall handlers run only after all stack context is discarded.
-  - debug.traceback prevents all errors.
+  - To add call-stack context to an error.
+  - To retry the failed function automatically.
+  - To convert every failed call into a successful result.
 answer: 0
-explain: xpcall runs a message handler while the failed stack is still available. debug.traceback
-  can attach useful call context.
+explain: The handler can inspect the failed stack before it is unwound.
 ```

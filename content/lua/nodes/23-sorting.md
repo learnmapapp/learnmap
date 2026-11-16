@@ -8,7 +8,7 @@ requires:
 summary: table.sort changes the sequence in place.
 ---
 
-table.sort changes the sequence in place. Its comparator must describe a strict ordering; using <= breaks that contract.
+`table.sort` changes the sequence in place. Its comparator must describe a strict ordering; using <= breaks that contract.
 
 ```lua
 local items = {7, 2, 5}
@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about custom sorting is correct?
+question: Which comparator gives `table.sort` an ascending numeric order?
 options:
-  - table.sort returns a newly sorted table.
-  - A comparator should return true for equal values.
-  - table.sort changes the sequence in place. Its comparator must describe a strict ordering; using
-    <= breaks that contract.
+  - "`function(a, b) return a > b end`"
+  - "`function(a, b) return a <= b end`"
+  - "`function(a, b) return a < b end`"
 answer: 2
-explain: table.sort changes the sequence in place. Its comparator must describe a strict ordering;
-  using <= breaks that contract.
+explain: The comparator must express a strict ordering; equal values must not compare less.
 ```

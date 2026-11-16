@@ -58,13 +58,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed variables is correct?
+question: "After `var score: Int = 1`, what can be assigned to `score`?"
 options:
-  - var permits changing an Int into a String.
-  - All variables are immutable by default.
-  - var declares mutable typed storage. The compiler can infer a type from an initializer, but
-    reassignment does not change that type.
+  - A string that changes its type to `String`.
+  - Any value because `var` disables typing.
+  - Another compatible integer value.
 answer: 2
-explain: var declares mutable typed storage. The compiler can infer a type from an initializer, but
-  reassignment does not change that type.
+explain: The binding is mutable, but its declared type remains fixed.
 ```

@@ -43,17 +43,17 @@ services.greeter = {
 - `mkIf` only applies the config when the condition holds. Use it instead of `if … then … else`, which would cause infinite recursion when reading `config`.
 
 ```exercise
-goal: Add a `port` option with type lib.types.port and default 8080.
+goal: Add a `port` option with type `lib.types.port` and default 8080.
 code: |
   options.services.greeter = {
     enable = lib.mkEnableOption "the greeter service";
   };
 checks:
-  - match: 'port\s*=\s*lib\.mkOption\s*\{'
-    message: 'Add  port = lib.mkOption { … };'
-  - match: 'type\s*=\s*lib\.types\.port\s*;'
-    message: 'Set  type = lib.types.port;'
-  - match: 'default\s*=\s*8080\s*;'
-    message: 'Set  default = 8080;'
-output: "services.greeter.port = 8080"
+  - match: port\s*=\s*lib\.mkOption\s*\{
+    message: Add  port = lib.mkOption { … };
+  - match: type\s*=\s*lib\.types\.port\s*;
+    message: Set  type = lib.types.port;
+  - match: default\s*=\s*8080\s*;
+    message: Set  default = 8080;
+output: services.greeter.port = 8080
 ```

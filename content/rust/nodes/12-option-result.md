@@ -99,11 +99,11 @@ if let Some(user) = find_user(42) {
 The full toolbox, like `map`, `unwrap_or` and `and_then`, is in [Option and Result helpers](node:option-combinators), and the deep dive on `?` is in [The ? operator](node:question-mark).
 
 ```quiz
-question: "What's the type of \"42\".parse::<i32>()?"
+question: What's the type of "42".parse::`<i32>`()?
 options:
-  - i32
-  - Option<i32>
-  - Result<i32, ParseIntError>
+  - "`i32`"
+  - "`Option<i32>`"
+  - "`Result<i32, ParseIntError>`"
 answer: 2
-explain: Parsing can fail with an explanation, so it returns a Result with the error type.
+explain: Parsing can fail with an explanation, so it returns a `Result` with the error type.
 ```

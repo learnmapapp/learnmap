@@ -7,7 +7,7 @@ requires:
 summary: comptime binds information evaluated during compilation.
 ---
 
-comptime binds information evaluated during compilation. It can name values, types, or other compile-time expressions.
+`comptime` binds information evaluated during compilation. It can name values, types, or other compile-time expressions.
 
 A useful term here is [[comptime]]: Information evaluated and available during compilation.
 
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time constants is correct?
+question: When is a value declared with `comptime` determined?
 options:
-  - comptime is only another spelling of mutable var.
-  - comptime binds information evaluated during compilation. It can name values, types, or other
-    compile-time expressions.
-  - comptime values must come from a runtime input prompt.
+  - When the executable exits.
+  - During compilation.
+  - At every loop iteration.
 answer: 1
-explain: comptime binds information evaluated during compilation. It can name values, types, or
-  other compile-time expressions.
+explain: Compile-time information is available before runtime execution.
 ```

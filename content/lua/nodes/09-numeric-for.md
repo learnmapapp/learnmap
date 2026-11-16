@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about numeric for loops is correct?
+question: Which values does `for n = 1, 3 do` visit?
 options:
-  - A numeric for includes its final bound when the step reaches it. A third expression supplies a
-    step, including negative steps.
-  - The upper bound is always excluded.
-  - Numeric for only counts downward.
+  - "`1, 2, 3`"
+  - "`1, 2`"
+  - "`0, 1, 2`"
 answer: 0
-explain: A numeric for includes its final bound when the step reaches it. A third expression
-  supplies a step, including negative steps.
+explain: A numeric `for` includes the final bound when its step reaches it.
 ```

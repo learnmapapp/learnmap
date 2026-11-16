@@ -32,7 +32,7 @@ Development Strict Mode deliberately exercises setup, cleanup, and setup again. 
 Using an updater for the timer's count avoids capturing a stale count value, so the interval need not be recreated for every tick.
 
 ```exercise
-goal: "Clear the interval when the effect is cleaned up."
+goal: Clear the interval when the effect is cleaned up.
 lang: jsx
 code: |
   import { useEffect, useState } from "react";
@@ -45,9 +45,9 @@ code: |
     return <p>{seconds}</p>;
   }
 checks:
-  - match: "return\\s+\\(\\)\\s+=>\\s+clearInterval\\(id\\);"
-    message: "Return a cleanup that calls clearInterval(id)."
-hint: "Return a cleanup that calls clearInterval(id)."
+  - match: return\s+\(\)\s+=>\s+clearInterval\(id\);
+    message: Return a cleanup that calls clearInterval(id).
+hint: Return a cleanup that calls `clearInterval(id)`.
 ```
 
 ```quiz

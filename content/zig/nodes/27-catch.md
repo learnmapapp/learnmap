@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about handle errors is correct?
+question: What does `operation() catch 10` do on failure?
 options:
-  - catch handles an error union locally, with either a fallback or an error capture. Unlike try, it
-    need not propagate the failure.
-  - catch executes on every successful value.
-  - catch always terminates the process.
+  - Uses `10` as the local fallback.
+  - Returns the error from the current function.
+  - Treats `10` as an optional error code.
 answer: 0
-explain: catch handles an error union locally, with either a fallback or an error capture. Unlike
-  try, it need not propagate the failure.
+explain: "`catch` handles the failure locally instead of necessarily propagating it."
 ```

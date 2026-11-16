@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about keyed tables is correct?
+question: What does `counts.getOrDefault("Lua", 0)` do if the key is absent?
 options:
-  - Table maps typed keys to typed values. getOrDefault handles absence explicitly without raising a
-    missing-key error.
-  - Every missing table key automatically stores zero.
-  - Table iteration is guaranteed to be sorted.
+  - Returns `0` without inserting it.
+  - Stores `0` under the key.
+  - Raises a missing-key error.
 answer: 0
-explain: Table maps typed keys to typed values. getOrDefault handles absence explicitly without
-  raising a missing-key error.
+explain: The fallback lookup does not mutate the table.
 ```

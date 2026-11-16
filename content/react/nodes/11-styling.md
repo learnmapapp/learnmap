@@ -42,11 +42,11 @@ hint: "Use a style object with backgroundColor."
 ```
 
 ```quiz
-question: "Why are there two brace pairs in style={{ color: \"teal\" }}?"
+question: 'Why are there two brace pairs in `style={{ color: "teal" }}`?'
 options:
-  - "One enters JavaScript; one creates an object."
-  - "React requires every prop to use double braces."
-  - "The first one declares CSS."
+  - One enters JavaScript; one creates an object.
+  - React requires every prop to use double braces.
+  - The first one declares CSS.
 answer: 0
-explain: "The style value is a JavaScript object embedded in JSX."
+explain: The style value is a JavaScript object embedded in JSX.
 ```

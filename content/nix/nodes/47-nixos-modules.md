@@ -49,14 +49,14 @@ networking.firewall.enable = lib.mkForce false;
 ```
 
 ```exercise
-goal: Import ./users.nix into this config.
+goal: Import `./users.nix` into this config.
 code: |
   { ... }:
   {
     imports = [ ./hardware-configuration.nix ];
   }
 checks:
-  - match: 'imports\s*=\s*\[[^\]]*\./users\.nix[^\]]*\]\s*;'
+  - match: imports\s*=\s*\[[^\]]*\./users\.nix[^\]]*\]\s*;
     message: Add ./users.nix to the imports list.
-output: "building the system configuration…"
+output: building the system configuration…
 ```

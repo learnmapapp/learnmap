@@ -7,7 +7,7 @@ requires:
 summary: Logical operators combine Bool values.
 ---
 
-Logical operators combine Bool values. Swift does not treat integers or strings as implicit truth values.
+Logical operators combine `Bool` values. Swift does not treat integers or strings as implicit truth values.
 
 ```swift
 let signedIn = true
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about boolean conditions is correct?
+question: Which value can be used directly as a Swift `if` condition?
 options:
-  - Zero can be used directly as an if condition.
-  - "&& always evaluates its right operand."
-  - Logical operators combine Bool values. Swift does not treat integers or strings as implicit
-    truth values.
+  - Any nonzero `Int`.
+  - Any nonempty `String`.
+  - A `Bool`.
 answer: 2
-explain: Logical operators combine Bool values. Swift does not treat integers or strings as implicit
-  truth values.
+explain: Swift requires a Boolean condition rather than implicit truthiness.
 ```

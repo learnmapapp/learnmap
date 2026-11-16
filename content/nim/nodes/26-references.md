@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reference objects is correct?
+question: Two bindings refer to the same `ref object`. Who sees a field mutation through one?
 options:
-  - Copying a ref always clones the object.
-  - let prevents all mutation through a reference.
-  - A ref object is accessed through a managed reference. Copying that reference makes both bindings
-    refer to the same object.
+  - Only the binding used for the assignment.
+  - Neither until the reference is copied again.
+  - Both bindings see the updated object.
 answer: 2
-explain: A ref object is accessed through a managed reference. Copying that reference makes both
-  bindings refer to the same object.
+explain: Copying a reference preserves shared object identity.
 ```

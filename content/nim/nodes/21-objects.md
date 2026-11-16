@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about object types is correct?
+question: After copying a value object, what does changing a scalar field in the copy do?
 options:
-  - An object groups named fields into a distinct type. A value object is copied by value rather
-    than automatically sharing one reference.
-  - Every object is automatically a reference object.
-  - Object fields cannot be changed.
+  - Changes that copy's field.
+  - Changes the original object's scalar field too.
+  - Converts both objects into references.
 answer: 0
-explain: An object groups named fields into a distinct type. A value object is copied by value
-  rather than automatically sharing one reference.
+explain: Ordinary value objects have value semantics; reference objects are a separate choice.
 ```

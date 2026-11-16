@@ -76,12 +76,12 @@ func TestHello(t *testing.T) { if Hello("Drop") != "Hello, Drop!" { t.Fail() } }
 ```
 
 ```exercise
-goal: Write the assertion that add(2, 3) equals 5.
+goal: Write the assertion that `add(2, 3)` equals 5.
 code: |
   test "adds numbers" do
   end
 checks:
-  - match: 'assert\s+(Math\.)?add\(\s*2\s*,\s*3\s*\)\s*==\s*5'
-    message: 'Inside the test:  assert add(2, 3) == 5'
-output: "1 test, 0 failures"
+  - match: assert\s+(Math\.)?add\(\s*2\s*,\s*3\s*\)\s*==\s*5
+    message: "Inside the test:  assert add(2, 3) == 5"
+output: 1 test, 0 failures
 ```

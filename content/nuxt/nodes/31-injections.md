@@ -7,7 +7,7 @@ requires:
 summary: useNuxtApp exposes capabilities injected by plugins.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. useNuxtApp exposes capabilities injected by plugins. This example depends on the shout plugin from the previous lesson.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. `useNuxtApp` exposes capabilities injected by plugins. This example depends on the shout plugin from the previous lesson.
 
 ```vue
 <script setup lang="ts">
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about use injected helpers is correct?
+question: How does the page access the `shout` helper provided by its plugin?
 options:
-  - useNuxtApp must be called only from a shell script.
-  - useNuxtApp exposes capabilities injected by plugins. This example depends on the shout plugin
-    from the previous lesson.
-  - Injected helpers are automatically HTTP API endpoints.
+  - Read `route.params.shout`.
+  - Read `$shout` from `useNuxtApp()`.
+  - Call a generated `/api/shout` route.
 answer: 1
-explain: useNuxtApp exposes capabilities injected by plugins. This example depends on the shout
-  plugin from the previous lesson.
+explain: Plugin-provided capabilities are available through the Nuxt app instance.
 ```

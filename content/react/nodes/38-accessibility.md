@@ -42,11 +42,11 @@ hint: "Use a button with native keyboard behavior."
 ```
 
 ```quiz
-question: "Should useId generate keys for records in a changing list?"
+question: Should `useId` generate keys for records in a changing list?
 options:
-  - "Yes, that is its main purpose."
-  - "No, list keys should come from data identity."
-  - "Only for filtered lists."
+  - Yes, that is its main purpose.
+  - No, list keys should come from data identity.
+  - Only for filtered lists.
 answer: 1
-explain: "useId supports accessibility relationships, while list keys represent logical record identity."
+explain: "`useId` supports accessibility relationships, while list keys represent logical record identity."
 ```

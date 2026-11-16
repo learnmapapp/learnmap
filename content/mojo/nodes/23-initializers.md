@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about custom initializers is correct?
+question: What must a successful custom initializer do with the struct's fields?
 options:
-  - Field declarations can always carry arbitrary runtime initializers.
-  - out self means the instance is already fully initialized.
-  - An initializer uses out self to construct an instance and must initialize its fields before
-    returning successfully.
+  - Leave unused fields uninitialized for later callers.
+  - Assign runtime defaults in their field declarations instead.
+  - Initialize every field before returning.
 answer: 2
-explain: An initializer uses out self to construct an instance and must initialize its fields before
-  returning successfully.
+explain: Construction must establish a usable initialized instance.
 ```

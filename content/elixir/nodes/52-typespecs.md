@@ -60,11 +60,11 @@ fn area(w: f64, h: f64) -> f64 { w * h }
 ```
 
 ```exercise
-goal: Add a spec saying greet takes a String.t() and returns a String.t().
+goal: Add a spec saying greet takes a `String.t()` and returns a `String.t()`.
 code: |
   def greet(name), do: "Hi " <> name
 checks:
-  - match: '@spec\s+greet\(\s*String\.t\(\)\s*\)\s*::\s*String\.t\(\)'
-    message: 'Above the def:  @spec greet(String.t()) :: String.t()'
+  - match: "@spec\\s+greet\\(\\s*String\\.t\\(\\)\\s*\\)\\s*::\\s*String\\.t\\(\\)"
+    message: "Above the def:  @spec greet(String.t()) :: String.t()"
 output: '"Hi Drop"'
 ```

@@ -64,7 +64,7 @@ There is no `%` operator. `lib.mod 7 2` from nixpkgs gives you the remainder.
 In configs, numbers mostly show up as ports, sizes and timeouts, and NixOS options check their type, so `port = "80";` is caught as an error.
 
 ```quiz
-question: "What does  5 / 2  give in Nix?"
+question: What does  `5 / 2`  give in Nix?
 options:
   - "2.5"
   - "2"

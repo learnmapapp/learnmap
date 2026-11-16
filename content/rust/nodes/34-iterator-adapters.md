@@ -25,7 +25,7 @@ The ones you'll use all the time:
 | Adapter | Does |
 | --- | --- |
 | `map(f)` | transform each item |
-| `filter(f)` | keep items where `f` is true |
+| `filter(f)` | keep items where `f` is `true` |
 | `enumerate()` | pair each item with its index |
 | `zip(other)` | pair items from two iterators |
 | `take(n)`, `skip(n)` | first n, or all but the first n |

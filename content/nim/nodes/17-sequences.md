@@ -55,12 +55,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about growable sequences is correct?
+question: Which expression creates a growable sequence?
 options:
-  - seq length is part of its static type.
-  - Adding an element returns an unrelated immutable sequence.
-  - A seq is a growable ordered collection; @[...] constructs one. Its length is available through
-    len.
+  - "`[2, 4, 6]`"
+  - "`{2, 4, 6}`"
+  - "`@[2, 4, 6]`"
 answer: 2
-explain: A seq is a growable ordered collection; @[...] constructs one. Its length is available through len.
+explain: "`@[]` constructs a sequence; ordinary brackets construct an array."
 ```

@@ -51,11 +51,11 @@ val pkg by lazy { build() }
 ```
 
 ```quiz
-question: "What does  let x = throw \"no\"; in [ 1 2 ]  return?"
+question: What does  `let x = throw "no"; in [ 1 2 ]`  return?
 options:
   - An error, "no".
-  - "[ 1 2 ]"
-  - "null"
+  - "`[ 1 2 ]`"
+  - "`null`"
 answer: 1
 explain: x is never used, so the throw is never evaluated.
 ```

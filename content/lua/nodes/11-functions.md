@@ -55,13 +55,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about define functions is correct?
+question: For `local function square(n) return n * n end`, what is `square(6)`?
 options:
-  - Functions cannot be assigned to variables.
-  - Function arguments require static type annotations.
-  - Functions receive arguments and return results. Use a local function declaration to keep the
-    function name scoped.
+  - "`12`"
+  - "`6`"
+  - "`36`"
 answer: 2
-explain: Functions receive arguments and return results. Use a local function declaration to keep
-  the function name scoped.
+explain: The function multiplies its input by itself and returns the result.
 ```

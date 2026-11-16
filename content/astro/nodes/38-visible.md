@@ -7,7 +7,7 @@ requires:
 summary: client:visible waits until the island enters the viewport.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. client:visible waits until the island enters the viewport. It suits interactive content farther down the page.
+In your Astro project, save this as `src/pages/index.astro`. `client:visible` waits until the island enters the viewport. It suits interactive content farther down the page.
 
 ```astro
 ---
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about hydrate when visible is correct?
+question: What triggers `client:visible` hydration?
 options:
-  - client:visible hydrates every offscreen island immediately.
-  - Visibility directives remove all initial HTML.
-  - client:visible waits until the island enters the viewport. It suits interactive content farther
-    down the page.
+  - The static compiler starting.
+  - Any unrelated click anywhere on the site.
+  - The island entering the viewport.
 answer: 2
-explain: client:visible waits until the island enters the viewport. It suits interactive content
-  farther down the page.
+explain: Visibility-based hydration delays work for offscreen interactive content.
 ```

@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about arena lifetimes is correct?
+question: When do slices backed by an arena become invalid?
 options:
-  - Every arena allocation must outlive the arena.
-  - An arena groups allocations under one lifetime and releases them together at deinit. Do not
-    retain pointers after the arena is destroyed.
-  - Arena-backed slices remain valid after deinit.
+  - Never, because arenas keep memory permanently alive.
+  - When the arena releases their backing storage.
+  - Only when each slice is explicitly set to `null`.
 answer: 1
-explain: An arena groups allocations under one lifetime and releases them together at deinit. Do not
-  retain pointers after the arena is destroyed.
+explain: Do not retain references beyond the arena's lifetime.
 ```

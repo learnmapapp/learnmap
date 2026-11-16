@@ -29,7 +29,7 @@ The Hooks ESLint rules catch many invalid calls and missing dependencies. Do not
 React's newer `use` API has specific exceptions to some call-order rules; those exceptions do not apply to `useState` or `useEffect`. Learn the ordinary rules first and consult the API contract when using a different primitive.
 
 ```exercise
-goal: "Call useState unconditionally before the early return."
+goal: Call `useState` unconditionally before the early return.
 lang: jsx
 code: |
   import { useState } from "react";
@@ -39,17 +39,17 @@ code: |
     return <button onClick={() => setExpanded(previous => !previous)}>{String(expanded)}</button>;
   }
 checks:
-  - match: "const\\s+\\[expanded,\\s+setExpanded\\]\\s+=\\s+useState\\(false\\);"
-    message: "Declare the Hook at the top level before the early return."
-hint: "Declare the Hook at the top level before the early return."
+  - match: const\s+\[expanded,\s+setExpanded\]\s+=\s+useState\(false\);
+    message: Declare the Hook at the top level before the early return.
+hint: Declare the Hook at the top level before the early return.
 ```
 
 ```quiz
-question: "Where should useState appear relative to a conditional early return?"
+question: Where should `useState` appear relative to a conditional early return?
 options:
-  - "After it, only when the branch renders."
-  - "Before it at the component's top level."
-  - "Inside the click handler."
+  - After it, only when the branch renders.
+  - Before it at the component's top level.
+  - Inside the click handler.
 answer: 1
-explain: "Ordinary Hooks must preserve a consistent top-level call sequence."
+explain: Ordinary Hooks must preserve a consistent top-level call sequence.
 ```

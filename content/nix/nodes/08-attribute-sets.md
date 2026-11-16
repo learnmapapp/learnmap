@@ -114,10 +114,10 @@ Attribute names can be strings, which lets you use any characters, or computed w
 Next up: let the attributes refer to each other with [rec](node:rec), and copy names in quickly with [inherit](node:inherit).
 
 ```quiz
-question: "What does  { a = 1; } ? b  return?"
+question: What does  `{ a = 1; } ? b`  return?
 options:
-  - "null"
-  - "false"
+  - "`null`"
+  - "`false`"
   - An error.
 answer: 1
 explain: The ? operator checks for an attribute and returns a boolean.

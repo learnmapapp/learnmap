@@ -7,7 +7,7 @@ requires:
 summary: Move reusable markup into src/components.
 ---
 
-In your Astro project, save this as `src/components/Card.astro`. Move reusable markup into src/components. Import it from a page with import Card from "../components/Card.astro" and render <Card />.
+In your Astro project, save this as `src/components/Card.astro`. Move reusable markup into `src/components`. Import it from a page with `import Card from "../components/Card.astro"` and render `<Card />`.
 
 A useful term here is [[component]]: A reusable unit of markup and rendering logic imported into another page or component.
 
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reusable components is correct?
+question: Where should a reusable card component live without creating its own route?
 options:
-  - Component files must all live directly inside src/pages.
-  - Move reusable markup into src/components. Import it from a page with import Card from
-    "../components/Card.astro" and render <Card />.
-  - Every reusable component needs a route.
+  - "`public/Card.astro`"
+  - "`src/components/Card.astro`"
+  - "`src/pages/Card.astro`"
 answer: 1
-explain: Move reusable markup into src/components. Import it from a page with import Card from
-  "../components/Card.astro" and render <Card />.
+explain: Files in components are imported for reuse; files in pages define routes.
 ```

@@ -5,10 +5,10 @@ branch: tools
 requires:
   - imports
   - comptime
-summary: "@embedFile includes file bytes at compile time."
+summary: "`@embedFile` includes file bytes at compile time."
 ---
 
-@embedFile includes file bytes at compile time. This example embeds its own zig_embed.zig file; adjust the path if you save it under another name.
+`@embedFile` includes file bytes at compile time. This example embeds its own `zig_embed.zig` file; adjust the path if you save it under another name.
 
 ```zig
 const std = @import("std");
@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time assets is correct?
+question: When are the bytes requested by `@embedFile` read?
 options:
-  - "@embedFile rereads the file on every function call."
-  - Embedded data requires a deployed filesystem file.
-  - "@embedFile includes file bytes at compile time. This example embeds its own zig_embed.zig file;
-    adjust the path if you save it under another name."
+  - At every call to `main`.
+  - Only after the source file is deployed alongside the binary.
+  - During compilation.
 answer: 2
-explain: "@embedFile includes file bytes at compile time. This example embeds its own zig_embed.zig
-  file; adjust the path if you save it under another name."
+explain: The resulting executable includes the embedded file data.
 ```

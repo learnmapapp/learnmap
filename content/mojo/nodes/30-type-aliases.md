@@ -7,7 +7,7 @@ requires:
 summary: A comptime name can refer to a type.
 ---
 
-A comptime name can refer to a type. Use a meaningful alias to express a consistent numeric policy across a module.
+A `comptime` name can refer to a type. Use a meaningful alias to express a consistent numeric policy across a module.
 
 ```mojo
 def main() raises:
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time type names is correct?
+question: What does `comptime Number = Float64` let the program do?
 options:
-  - A comptime name can refer to a type. Use a meaningful alias to express a consistent numeric
-    policy across a module.
-  - Type names are always runtime strings.
-  - A type alias makes existing values change their representation automatically.
+  - Use `Number` as a compile-time name for `Float64`.
+  - Convert every existing variable into a float automatically.
+  - Store a runtime string containing the type's name.
 answer: 0
-explain: A comptime name can refer to a type. Use a meaningful alias to express a consistent numeric
-  policy across a module.
+explain: The alias names a type; it does not perform conversions by itself.
 ```

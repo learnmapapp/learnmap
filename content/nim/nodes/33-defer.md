@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about scope cleanup is correct?
+question: When does a deferred action run?
 options:
-  - defer schedules work for the current scope’s exit. Use it near resource acquisition so cleanup
-    remains visible.
-  - defer runs immediately before the next statement.
-  - defer is ignored on normal returns.
+  - When control leaves its enclosing scope.
+  - Immediately before the next statement.
+  - Only at process shutdown.
 answer: 0
-explain: defer schedules work for the current scope’s exit. Use it near resource acquisition so
-  cleanup remains visible.
+explain: "`defer` keeps cleanup tied to the scope that owns the resource."
 ```

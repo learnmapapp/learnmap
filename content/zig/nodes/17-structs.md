@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about struct fields is correct?
+question: "For a field declared `done: bool = false`, what happens if initialization omits it?"
 options:
-  - Struct fields cannot have defaults.
-  - All struct values require heap allocation.
-  - Structs combine named fields and defaults into a domain type. Field initialization makes which
-    data is being supplied visible.
+  - The field is left `undefined`.
+  - The initializer always fails.
+  - The field uses `false`.
 answer: 2
-explain: Structs combine named fields and defaults into a domain type. Field initialization makes
-  which data is being supplied visible.
+explain: A declared field default supplies an omitted initializer value.
 ```

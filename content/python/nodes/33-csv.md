@@ -36,7 +36,7 @@ Use `newline=""` when opening files for CSV reading or writing so the module can
 A useful automation pipeline is: discover files with `Path.glob`, read records, validate and convert fields, then write a summary. Keep that transformation in a function so the next branch can test it independently of real files.
 
 ```exercise
-goal: "Convert CSV scores to integers before summing them."
+goal: Convert CSV scores to integers before summing them.
 lang: python
 code: |
   import csv
@@ -46,9 +46,9 @@ code: |
   total = sum(row["score"] for row in rows)
   print(total)
 checks:
-  - match: "sum\\(\\s*int\\(\\s*row\\[[\"']score[\"']\\]\\s*\\)\\s+for"
-    message: "Wrap row[\"score\"] in int(...) before summing."
-hint: "Wrap row[\"score\"] in int(...) before summing."
+  - match: sum\(\s*int\(\s*row\[["']score["']\]\s*\)\s+for
+    message: Wrap row["score"] in int(...) before summing.
+hint: Wrap row["score"] in `int(...)` before summing.
 ```
 
 ```quiz

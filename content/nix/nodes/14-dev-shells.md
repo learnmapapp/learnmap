@@ -77,9 +77,9 @@ Tired of typing `nix-shell`? [direnv](node:direnv) loads it for you when you `cd
 ```quiz
 question: Where do you put commands that should run every time the shell starts?
 options:
-  - "In packages."
-  - "In shellHook."
-  - "In .bashrc."
+  - In packages.
+  - In `shellHook`.
+  - In .bashrc.
 answer: 1
-explain: shellHook is a script that runs when you enter the shell.
+explain: "`shellHook` is a script that runs when you enter the shell."
 ```

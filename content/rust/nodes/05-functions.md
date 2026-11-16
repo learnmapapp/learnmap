@@ -82,11 +82,11 @@ Functions can be declared anywhere in the file, before or after they're used, an
 A function that never returns, like one that always panics or loops forever, has the return type `!`.
 
 ```quiz
-question: "What does  fn hi() { }  return?"
+question: What does `fn hi() { }` return?
 options:
-  - Nothing at all; it's not a value.
-  - "() , the unit type"
-  - null
+  - Nothing; the call has no value.
+  - "`()` — the unit value."
+  - "`null`."
 answer: 1
-explain: Functions without a return type return (), the empty tuple. There's no null in Rust.
+explain: A function without an explicit return type returns the unit value `()`; Rust has no `null` value.
 ```

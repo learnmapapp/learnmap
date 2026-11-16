@@ -47,13 +47,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about keyed storage is correct?
+question: Does `StringHashMap` automatically duplicate and own its key bytes?
 options:
-  - get returns zero for every missing key.
-  - StringHashMap compares byte-string keys by contents. It does not automatically copy or free the
-    memory owned by your key strings.
-  - StringHashMap always owns and duplicates every key string.
+  - Only when the key contains uppercase letters.
+  - No; key storage ownership remains the caller's responsibility.
+  - Yes; every insertion always duplicates and frees key bytes.
 answer: 1
-explain: StringHashMap compares byte-string keys by contents. It does not automatically copy or free
-  the memory owned by your key strings.
+explain: The map manages its internal storage, not arbitrary memory owned by its keys.
 ```

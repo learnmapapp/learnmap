@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about associated values is correct?
+question: What does `case .success(let count)` extract from `Outcome.success(8)`?
 options:
-  - Associated values attach case-specific data to an enum. Pattern matching extracts the data for
-    the selected case.
-  - Associated values must be identical for every case.
-  - An enum case can never carry data.
+  - The associated integer `8`.
+  - The string `"success"`.
+  - The enum's total number of cases.
 answer: 0
-explain: Associated values attach case-specific data to an enum. Pattern matching extracts the data
-  for the selected case.
+explain: Associated values carry data specific to the selected case.
 ```

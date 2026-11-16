@@ -22,7 +22,7 @@ Compare the worked example with the starting code below. Identify the changed op
 This course targets **Nuxt 4 with Vue 3**. Check your local tool version before following examples. See the [official reference](https://nuxt.com/docs/4.x/getting-started/introduction) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
 
 ```exercise
-goal: Repair the starting example using what you learned about meet nuxt.
+goal: Make the page heading say `Hello, Nuxt!`.
 lang: vue
 code: |-
   <template>
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about meet nuxt is correct?
+question: Which UI framework supplies Nuxt's components and reactivity?
 options:
-  - Every page needs a manually configured React router.
-  - Nuxt combines Vue components, routing, server rendering, and server endpoints. This first
-    example uses the root app component before enabling pages.
-  - Nuxt can render only inside a browser.
+  - Svelte.
+  - Vue.
+  - React.
 answer: 1
-explain: Nuxt combines Vue components, routing, server rendering, and server endpoints. This first
-  example uses the root app component before enabling pages.
+explain: Nuxt builds application features around Vue, including routing and server rendering.
 ```

@@ -7,7 +7,7 @@ requires:
 summary: The .
 ---
 
-The ... expression receives extra arguments. select("#", ...) counts all arguments, including trailing or interior nil values.
+The ... expression receives extra arguments. `select("#", ...)` counts all arguments, including trailing or interior `nil` values.
 
 ```lua
 local function count(...)
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about variable arguments is correct?
+question: How many arguments does `select("#", 10, nil, 30)` count?
 options:
-  - The ... expression receives extra arguments. select("#", ...) counts all arguments, including
-    trailing or interior nil values.
-  - The length of {...} reliably counts trailing nil arguments.
-  - Variadic functions cannot receive nil.
+  - "`3`"
+  - "`2`"
+  - "`1`"
 answer: 0
-explain: The ... expression receives extra arguments. select("#", ...) counts all arguments,
-  including trailing or interior nil values.
+explain: The argument count includes `nil` values.
 ```

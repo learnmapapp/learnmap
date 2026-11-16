@@ -34,7 +34,7 @@ Run `python3 greet.py Ada --count 2`, or use `python3 greet.py --help` to inspec
 Keep parsing in `main` and put transformations in separate functions. That makes them usable from tests or another module without inventing command-line arguments. Passing an explicit argument list to `parse_args` is also useful for small tests.
 
 ```exercise
-goal: "Parse --count as an integer instead of leaving it as text."
+goal: Parse --count as an integer instead of leaving it as text.
 lang: python
 code: |
   import argparse
@@ -44,17 +44,17 @@ code: |
   args = parser.parse_args(["--count", "3"])
   print(args.count + 1)
 checks:
-  - match: "add_argument\\(\\s*[\"']--count[\"']\\s*,\\s*type\\s*=\\s*int"
-    message: "Add type=int to the --count argument."
-hint: "Add type=int to the --count argument."
+  - match: add_argument\(\s*["']--count["']\s*,\s*type\s*=\s*int
+    message: Add type=int to the --count argument.
+hint: Add `type=int` to the --count argument.
 ```
 
 ```quiz
-question: "What does type=int on an argparse argument do?"
+question: What does `type=int` on an argparse argument do?
 options:
-  - "Converts accepted text to an integer and rejects invalid integer text."
-  - "Guarantees the value is positive."
-  - "Makes the argument a list."
+  - Converts accepted text to an integer and rejects invalid integer text.
+  - Guarantees the value is positive.
+  - Makes the argument a list.
 answer: 0
-explain: "Type conversion checks integer syntax. Validate positive ranges separately."
+explain: Type conversion checks integer syntax. Validate positive ranges separately.
 ```

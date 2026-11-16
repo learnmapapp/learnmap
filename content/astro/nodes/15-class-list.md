@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about conditional classes is correct?
+question: 'What does `class:list={["nav-link", { active: true }]}` include?'
 options:
-  - class:list combines strings and conditional object keys into a class attribute during rendering.
-    It does not make active a client-side reactive value.
-  - class:list is a JavaScript event listener.
-  - Object keys are included only when their values are false.
+  - The `nav-link` and `active` classes.
+  - Only the literal text `[object Object]`.
+  - Only the `nav-link` class.
 answer: 0
-explain: class:list combines strings and conditional object keys into a class attribute during
-  rendering. It does not make active a client-side reactive value.
+explain: Truthy object entries contribute their keys to the generated class list.
 ```

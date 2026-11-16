@@ -32,7 +32,7 @@ The helper throws because untyped callers or invalid external input can still vi
 A `never` return type describes a function that cannot finish normally, such as one that always throws. It differs from `void`, where normal completion is allowed but no useful return value is expected.
 
 ```exercise
-goal: "Use never for the impossible remaining mode."
+goal: Use `never` for the impossible remaining mode.
 lang: typescript
 code: |
   type Mode = "read" | "edit";
@@ -47,17 +47,17 @@ code: |
     }
   }
 checks:
-  - match: "remaining:\\s+never"
-    message: "Annotate remaining as never so adding a variant breaks checking."
-hint: "Annotate remaining as never so adding a variant breaks checking."
+  - match: remaining:\s+never
+    message: Annotate remaining as never so adding a variant breaks checking.
+hint: Annotate remaining as `never` so adding a variant breaks checking.
 ```
 
 ```quiz
-question: "What should the remaining value type be after handling every union variant?"
+question: What should the remaining value type be after handling every union variant?
 options:
-  - "any"
-  - "unknown"
-  - "never"
+  - any
+  - "`unknown`"
+  - "`never`"
 answer: 2
-explain: "No possible member remains, so the type is never."
+explain: No possible member remains, so the type is `never`.
 ```

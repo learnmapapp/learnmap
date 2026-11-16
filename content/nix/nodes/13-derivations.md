@@ -75,11 +75,11 @@ $ nix derivation show nixpkgs#hello
 Ready to package something properly? Continue with [mkDerivation](node:mkderivation).
 
 ```quiz
-question: A build script tries to curl a file from the internet. What happens?
+question: In a sandboxed Linux Nix build, where should network source downloads normally happen?
 options:
-  - It works, Nix just downloads it.
-  - It fails, because the build sandbox has no network.
-  - Nix asks for permission.
+  - In a browser script after installation.
+  - In a declared fixed-output fetcher.
+  - In an arbitrary curl call inside the build phase.
 answer: 1
-explain: Only fetchers with a fixed hash may download. Everything else runs offline.
+explain: Normal sandboxed build phases have no network; declared fetchers provide controlled source inputs.
 ```

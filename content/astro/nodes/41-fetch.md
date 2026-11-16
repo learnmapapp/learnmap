@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about fetch during rendering is correct?
+question: When does frontmatter `fetch` run on a prerendered page?
 options:
-  - Every frontmatter fetch automatically polls in the visitor’s browser.
-  - fetch rejects automatically for every HTTP error status.
-  - For prerendered pages, this request runs at build time; on-demand pages run it per request.
-    Validate external response data before using it in a real application.
+  - Every time the visitor moves the pointer.
+  - Automatically every second in the browser.
+  - During the build.
 answer: 2
-explain: For prerendered pages, this request runs at build time; on-demand pages run it per request.
-  Validate external response data before using it in a real application.
+explain: On-demand pages can fetch per request; prerendered pages fetch while generating output.
 ```

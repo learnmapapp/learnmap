@@ -50,11 +50,11 @@ hint: "Use age < 18 in the if condition."
 ```
 
 ```quiz
-question: "How many branches run in a single if/elif/else statement?"
+question: How many branches run in a single if/elif/else statement?
 options:
-  - "All branches whose conditions are true."
-  - "At most one."
-  - "Exactly two."
+  - All branches whose conditions are `true`.
+  - At most one.
+  - Exactly two.
 answer: 1
-explain: "Python executes the first matching branch, or else when no condition matches."
+explain: Python executes the first matching branch, or else when no condition matches.
 ```

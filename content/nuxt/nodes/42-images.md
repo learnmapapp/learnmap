@@ -7,7 +7,7 @@ requires:
 summary: Install @nuxt/image before enabling it.
 ---
 
-In your Nuxt 4 project, save this as `nuxt.config.ts`. Install @nuxt/image before enabling it. Then use NuxtImg with a real source, dimensions, and useful alt text, and choose an image provider supported by the host.
+In your Nuxt 4 project, save this as `nuxt.config.ts`. Install `@nuxt/image` before enabling it. Then use NuxtImg with a real source, dimensions, and useful alt text, and choose an image provider supported by the host.
 
 ```typescript
 export default defineNuxtConfig({ modules: ["@nuxt/image"] });
@@ -31,13 +31,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about nuxt image module is correct?
+question: What is required before enabling `@nuxt/image` in `modules`?
 options:
-  - Install @nuxt/image before enabling it. Then use NuxtImg with a real source, dimensions, and
-    useful alt text, and choose an image provider supported by the host.
-  - Adding a module downloads every image in the world.
-  - NuxtImg can optimize a nonexistent source without errors.
+  - Install the module package.
+  - Rename every image to `.vue`.
+  - Disable all server rendering.
 answer: 0
-explain: Install @nuxt/image before enabling it. Then use NuxtImg with a real source, dimensions,
-  and useful alt text, and choose an image provider supported by the host.
+explain: Configuration references a real installed integration; sources and provider settings still matter.
 ```

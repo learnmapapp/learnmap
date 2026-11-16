@@ -8,7 +8,7 @@ requires:
 summary: Nimble manages package metadata and project tasks.
 ---
 
-Nimble manages package metadata and project tasks. Configure a test task in the .nimble file so nimble test has a reproducible meaning.
+Nimble manages package metadata and project tasks. Configure a test task in the `.nimble` file so `nimble test` has a reproducible meaning.
 
 ```shell
 nimble init
@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about nimble packages is correct?
+question: What makes `nimble test` reproducible for this project?
 options:
-  - A .nimble file replaces all source modules.
-  - Nimble manages package metadata and project tasks. Configure a test task in the .nimble file so
-    nimble test has a reproducible meaning.
-  - nimble test invents missing tests automatically.
+  - Running `nimble init` before every test.
+  - A defined test task in its `.nimble` file.
+  - Naming the source directory `test` alone.
 answer: 1
-explain: Nimble manages package metadata and project tasks. Configure a test task in the .nimble
-  file so nimble test has a reproducible meaning.
+explain: The package's task definition records which test command to execute.
 ```

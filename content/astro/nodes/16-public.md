@@ -7,7 +7,7 @@ requires:
 summary: Place a logo.svg file in public and reference it from the site root.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. Place a logo.svg file in public and reference it from the site root. Public files are copied directly; meaningful images need useful alternative text.
+In your Astro project, save this as `src/pages/index.astro`. Place a `logo.svg` file in public and reference it from the site root. Public files are copied directly; meaningful images need useful alternative text.
 
 ```astro
 <img src="/logo.svg" width="80" height="80" alt="Study club" />
@@ -31,13 +31,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about public assets is correct?
+question: Where should `/logo.svg` live for a direct public asset reference?
 options:
-  - A filename alone provides a screen-reader description.
-  - Place a logo.svg file in public and reference it from the site root. Public files are copied
-    directly; meaningful images need useful alternative text.
-  - public files require an import before every reference.
+  - "`src/components/public/logo.svg`"
+  - "`public/logo.svg`"
+  - "`src/pages/logo.svg`"
 answer: 1
-explain: Place a logo.svg file in public and reference it from the site root. Public files are
-  copied directly; meaningful images need useful alternative text.
+explain: Public assets are served from the site root and copied directly.
 ```

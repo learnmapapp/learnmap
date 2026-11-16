@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about named arguments is correct?
+question: "For `subtract(left: Int, right: Int)`, what is `subtract(right=2, left=9)`?"
 options:
-  - Named argument order always changes subtraction semantics.
-  - Named arguments must have string values.
-  - Named arguments make the role of each input clear, particularly when types match. Match names to
-    the declaration.
+  - "`-7`"
+  - "`11`"
+  - "`7`"
 answer: 2
-explain: Named arguments make the role of each input clear, particularly when types match. Match
-  names to the declaration.
+explain: Named arguments match declaration names even when supplied in another order.
 ```

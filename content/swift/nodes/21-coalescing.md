@@ -7,7 +7,7 @@ requires:
 summary: The ?? operator supplies a fallback only when an optional is nil.
 ---
 
-The ?? operator supplies a fallback only when an optional is nil. It preserves a present empty string.
+The ?? operator supplies a fallback only when an optional is `nil`. It preserves a present empty string.
 
 ```swift
 let requested: String? = nil
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about optional fallback is correct?
+question: What does `name ?? "Guest"` return if `name` contains an empty string?
 options:
-  - The ?? operator supplies a fallback only when an optional is nil. It preserves a present empty
-    string.
-  - ?? replaces every empty string too.
-  - ?? force-unwraps nil without a fallback.
+  - The empty string.
+  - '`"Guest"`.'
+  - "`nil`."
 answer: 0
-explain: The ?? operator supplies a fallback only when an optional is nil. It preserves a present
-  empty string.
+explain: Nil coalescing replaces absence, not a present empty value.
 ```

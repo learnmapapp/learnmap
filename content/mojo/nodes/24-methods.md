@@ -51,13 +51,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about read-only methods is correct?
+question: How does `point.total()` obtain the point's coordinates?
 options:
-  - Methods organize behavior beside the data it uses. A self receiver can read fields without
-    granting mutation of the instance.
-  - Every method implicitly mutates its receiver.
-  - Methods must be defined outside their struct.
+  - Through its `self` receiver.
+  - Through automatically created global `x` and `y` variables.
+  - Through a hidden Python dictionary.
 answer: 0
-explain: Methods organize behavior beside the data it uses. A self receiver can read fields without
-  granting mutation of the instance.
+explain: Methods access instance fields through their receiver.
 ```

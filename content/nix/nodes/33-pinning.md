@@ -44,11 +44,12 @@ Updating means changing the commit and hash by hand, which is tedious. Tools hel
 ```
 
 ```quiz
-question: "Why is  import <nixpkgs> { }  not reproducible?"
+question: Why is  `import <nixpkgs> { }`  not reproducible?
 options:
   - It downloads packages over HTTP.
   - It depends on which nixpkgs version each machine has.
   - It isn't lazy.
 answer: 1
-explain: "<nixpkgs> comes from NIX_PATH, which differs per machine. Pin it with fetchTarball, npins or flakes."
+explain: "`<nixpkgs>` comes from `NIX_PATH`, which differs per machine. Pin it with fetchTarball,
+  npins or flakes."
 ```

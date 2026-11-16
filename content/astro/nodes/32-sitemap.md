@@ -7,7 +7,7 @@ requires:
 summary: Install @astrojs/sitemap and replace example.com with the deployed origin.
 ---
 
-In your Astro project, save this as `astro.config.mjs`. Install @astrojs/sitemap and replace example.com with the deployed origin. Build and inspect generated sitemap URLs before publishing.
+In your Astro project, save this as `astro.config.mjs`. Install `@astrojs/sitemap` and replace example.com with the deployed origin. Build and inspect generated sitemap URLs before publishing.
 
 ```javascript
 import { defineConfig } from "astro/config";
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about a sitemap integration is correct?
+question: What should replace `https://example.com` in sitemap configuration?
 options:
-  - A sitemap makes private content access-controlled.
-  - The example.com origin is automatically replaced by every host.
-  - Install @astrojs/sitemap and replace example.com with the deployed origin. Build and inspect
-    generated sitemap URLs before publishing.
+  - The developer's local filesystem path.
+  - An arbitrary origin shared by every project.
+  - The actual deployed public origin.
 answer: 2
-explain: Install @astrojs/sitemap and replace example.com with the deployed origin. Build and
-  inspect generated sitemap URLs before publishing.
+explain: Generated sitemap URLs must identify the site's real public pages.
 ```

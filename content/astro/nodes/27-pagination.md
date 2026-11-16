@@ -50,13 +50,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about paginated routes is correct?
+question: "With four entries and `pageSize: 2`, how many archive pages are needed?"
 options:
-  - paginate generates route entries plus page metadata. A rest page parameter also supports the
-    first page without an explicit numeric segment.
-  - paginate requires loading every page in the browser.
-  - page.url.next is always present on the final page.
+  - "`2`"
+  - "`4`"
+  - "`1`"
 answer: 0
-explain: paginate generates route entries plus page metadata. A rest page parameter also supports
-  the first page without an explicit numeric segment.
+explain: Pagination divides the entries into groups of two.
 ```

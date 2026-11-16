@@ -58,13 +58,13 @@ for _, x := range xs { acc += x }
 ```
 
 ```exercise
-goal: Use Enum.reduce to multiply all numbers together (start at 1).
+goal: Use `Enum.reduce` to multiply all numbers together (start at 1).
 code: |
   Enum.reduce([2, 3, 4], 0, fn x, acc -> x + acc end)
 checks:
-  - match: 'Enum\.reduce\(\s*\[2,\s*3,\s*4\]\s*,\s*1\s*,'
+  - match: Enum\.reduce\(\s*\[2,\s*3,\s*4\]\s*,\s*1\s*,
     message: The starting value for a product is 1.
-  - match: 'fn\s+(\w+)\s*,\s*(\w+)\s*->\s*(\1\s*\*\s*\2|\2\s*\*\s*\1)\s+end'
+  - match: fn\s+(\w+)\s*,\s*(\w+)\s*->\s*(\1\s*\*\s*\2|\2\s*\*\s*\1)\s+end
     message: Multiply x by acc.
 output: "24"
 ```

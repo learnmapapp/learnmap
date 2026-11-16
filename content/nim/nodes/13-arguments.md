@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about named and default arguments is correct?
+question: If `prefix` defaults to `"Hello"`, what does omitting that argument do?
 options:
-  - Default parameters are mutable globals.
-  - Default arguments make an omitted value explicit. Named arguments improve clarity when several
-    parameters have the same type.
-  - Named arguments must be in declaration order.
+  - Reuses the preceding call's argument.
+  - Uses `"Hello"` for that call.
+  - Passes an uninitialized string.
 answer: 1
-explain: Default arguments make an omitted value explicit. Named arguments improve clarity when
-  several parameters have the same type.
+explain: Defaults supply values for omitted arguments.
 ```

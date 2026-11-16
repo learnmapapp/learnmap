@@ -83,11 +83,11 @@ data
 `then/2` lets you pipe into a function where the value isn't the first argument: `|> then(&Map.put(acc, :data, &1))`.
 
 ```quiz
-question: "What does  |> IO.inspect()  return in the middle of a pipeline?"
+question: What does  `|> IO.inspect()`  return in the middle of a pipeline?
 options:
-  - ":ok"
+  - :ok
   - The same value it received, after printing it.
-  - "nil"
+  - "`nil`"
 answer: 1
-explain: IO.inspect returns its argument, so you can drop it anywhere in a pipeline for debugging.
+explain: "`IO.inspect` returns its argument, so you can drop it anywhere in a pipeline for debugging."
 ```

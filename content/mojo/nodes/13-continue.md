@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about skip an iteration is correct?
+question: What does `continue` do inside the odd-number filtering example?
 options:
-  - continue repeats the current iteration without advancing.
-  - continue skips the rest of the current iteration. Here it filters even values so only odd values
-    are printed.
-  - continue terminates the loop permanently.
+  - Restarts the loop at its first value.
+  - Skips the remaining work for the current iteration.
+  - Exits the loop permanently.
 answer: 1
-explain: continue skips the rest of the current iteration. Here it filters even values so only odd
-  values are printed.
+explain: The loop advances to its next iteration without executing the skipped body statements.
 ```

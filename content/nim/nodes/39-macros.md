@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about inspect syntax trees is correct?
+question: What does a Nim macro receive when inspecting an `untyped` body?
 options:
-  - Macros receive and return syntax trees at compile time. This inspection macro prints a tree and
-    returns the original program unchanged.
-  - Macros receive only already-executed runtime values.
-  - A macro must return a string of source text.
+  - A syntax tree.
+  - The body's completed runtime result.
+  - A compiled machine-code executable.
 answer: 0
-explain: Macros receive and return syntax trees at compile time. This inspection macro prints a tree
-  and returns the original program unchanged.
+explain: Macros inspect and transform code during compilation.
 ```

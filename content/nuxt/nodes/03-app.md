@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about enable page rendering is correct?
+question: What does `<NuxtPage />` render?
 options:
-  - NuxtPage renders the active file-based page. NuxtLayout applies the selected layout around it;
-    put application code under app in Nuxt 4.
-  - NuxtPage automatically renders every page at once.
-  - Nuxt 4 pages must live inside server/api.
+  - The currently selected page route.
+  - Every page simultaneously.
+  - Only components stored under `server/api`.
 answer: 0
-explain: NuxtPage renders the active file-based page. NuxtLayout applies the selected layout around
-  it; put application code under app in Nuxt 4.
+explain: The page outlet connects the root app to file-based routing.
 ```

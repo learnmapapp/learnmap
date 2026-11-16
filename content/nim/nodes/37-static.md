@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time checks is correct?
+question: What happens if a `doAssert` in a `static` block fails?
 options:
-  - Compile-time evaluation can never call a func.
-  - A static block executes during compilation. It can reject violated invariants before the program
-    runs.
-  - static executes after main returns.
+  - The check is silently skipped in all builds.
+  - Compilation fails.
+  - The check waits until normal program startup.
 answer: 1
-explain: A static block executes during compilation. It can reject violated invariants before the
-  program runs.
+explain: A static block executes while compiling.
 ```

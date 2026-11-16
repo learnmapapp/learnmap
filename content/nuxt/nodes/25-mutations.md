@@ -58,13 +58,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about event-driven mutations is correct?
+question: Which request belongs in a user-triggered task creation handler?
 options:
-  - A GET request body is the normal way to create a task.
-  - Use $fetch for a mutation triggered by an event. Implement the server endpoint separately and
-    show a useful failure state instead of assuming the request succeeds.
-  - A mutation should run on every server and client setup pass.
+  - A call that mutates imported module state for all users.
+  - "`$fetch` with a POST body."
+  - A GET request that creates data during every setup pass.
 answer: 1
-explain: Use $fetch for a mutation triggered by an event. Implement the server endpoint separately
-  and show a useful failure state instead of assuming the request succeeds.
+explain: An explicit event handler avoids repeating a mutation as part of rendering.
 ```

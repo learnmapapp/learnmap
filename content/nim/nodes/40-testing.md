@@ -8,7 +8,7 @@ requires:
 summary: std/unittest groups checks into named suites and tests.
 ---
 
-std/unittest groups checks into named suites and tests. Run a test file with nim c -r tests.nim and include boundary inputs.
+std/unittest groups checks into named suites and tests. Run a test file with `nim c -r tests.nim` and include boundary inputs.
 
 ```nim
 import std/unittest
@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about unit test suites is correct?
+question: Which command compiles and runs the example unit test file?
 options:
-  - Tests cannot share a suite name.
-  - std/unittest groups checks into named suites and tests. Run a test file with nim c -r tests.nim
-    and include boundary inputs.
-  - check automatically proves all possible inputs.
+  - "`nim check tests.nim`"
+  - "`nim c -r tests.nim`"
+  - "`nim c tests.nim`"
 answer: 1
-explain: std/unittest groups checks into named suites and tests. Run a test file with nim c -r
-  tests.nim and include boundary inputs.
+explain: The `-r` flag runs the compiled tests; checking or compiling alone does not execute them.
 ```

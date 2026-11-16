@@ -48,7 +48,7 @@ fn first_name(names: &[String]) -> Option<&str> {
 ```
 
 ```exercise
-goal: "Declare that first_name can return a string or None."
+goal: Declare that first_name can return a string or `None`.
 lang: python
 code: |
   def first_name(names: list[str]) -> str:
@@ -59,16 +59,17 @@ code: |
   print(first_name([]))
 checks:
   - match: "\\)\\s*->\\s*str\\s*\\|\\s*None\\s*:"
-    message: "Change the return annotation to str | None."
-hint: "Change the return annotation to str | None."
+    message: Change the return annotation to str | None.
+hint: Change the return annotation to str | `None`.
 ```
 
 ```quiz
-question: "Does number: int = \"hello\" automatically convert the string or raise because of the annotation?"
+question: 'Does `number: int = "hello"` automatically convert the string or raise because of the annotation?'
 options:
-  - "Yes, it converts to an integer."
-  - "Yes, annotations enforce every assignment."
-  - "No, annotations alone do neither."
+  - Yes, it converts to an integer.
+  - Yes, annotations enforce every assignment.
+  - No, annotations alone do neither.
 answer: 2
-explain: "A static checker can flag the mismatch, but the annotation itself does not perform runtime validation."
+explain: A static checker can flag the mismatch, but the annotation itself does not perform runtime
+  validation.
 ```

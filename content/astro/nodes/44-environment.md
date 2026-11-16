@@ -4,10 +4,10 @@ icon: 🔧
 branch: server
 requires:
   - setup
-summary: Use .env for local configuration.
+summary: Use `.env` for local configuration.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. Use .env for local configuration. PUBLIC_ values are safe to expose to client code; keep credentials in server-only configuration and never print secrets into markup.
+In your Astro project, save this as `src/pages/index.astro`. Use `.env` for local configuration. `PUBLIC_` values are safe to expose to client code; keep credentials in server-only configuration and never print secrets into markup.
 
 ```astro
 ---
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about public and private configuration is correct?
+question: Which kind of value belongs in a `PUBLIC_` environment variable?
 options:
-  - A PUBLIC_ prefix encrypts a secret.
-  - Values rendered into HTML remain private from visitors.
-  - Use .env for local configuration. PUBLIC_ values are safe to expose to client code; keep
-    credentials in server-only configuration and never print secrets into markup.
+  - A private API signing secret.
+  - An unencrypted database password.
+  - Configuration that is safe for visitors to see.
 answer: 2
-explain: Use .env for local configuration. PUBLIC_ values are safe to expose to client code; keep
-  credentials in server-only configuration and never print secrets into markup.
+explain: Public-prefixed configuration can be exposed to client code.
 ```

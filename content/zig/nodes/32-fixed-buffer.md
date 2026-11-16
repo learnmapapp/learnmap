@@ -49,13 +49,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about bounded allocation is correct?
+question: What happens when a fixed-buffer allocator cannot satisfy a request?
 options:
-  - A fixed buffer expands automatically using the heap.
-  - undefined initializes all bytes to zero.
-  - FixedBufferAllocator allocates inside caller-provided storage and reports exhaustion. The
-    backing buffer must outlive every allocation.
+  - It automatically expands using a hidden heap allocator.
+  - It overwrites adjacent stack storage by design.
+  - It reports an allocation failure.
 answer: 2
-explain: FixedBufferAllocator allocates inside caller-provided storage and reports exhaustion. The
-  backing buffer must outlive every allocation.
+explain: Its storage is bounded by the supplied backing buffer.
 ```

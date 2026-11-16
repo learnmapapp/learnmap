@@ -9,7 +9,7 @@ Elixir is a functional language that runs on the [[beam|BEAM]], the same virtual
 
 So Elixir gives you:
 
-- **Readable syntax**, with a strong Ruby influence.
+- **`Readable` syntax**, with a strong Ruby influence.
 - **[[immutable|Immutable]] data**. Nothing changes under your feet.
 - **Lightweight processes**. Run hundreds of thousands of them, each isolated, each able to crash and be restarted without taking the rest down.
 

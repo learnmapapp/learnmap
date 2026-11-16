@@ -8,7 +8,7 @@ summary: Type annotations document contracts; conversions such as float(count) m
   explicit when combining distinct types.
 ---
 
-Type annotations document contracts; conversions such as float(count) make numeric intent explicit when combining distinct types.
+Type annotations document contracts; conversions such as `float(count)` make numeric intent explicit when combining distinct types.
 
 ```nim
 let count: int = 4
@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about explicit types is correct?
+question: How do you explicitly convert an integer `count` to a floating-point value?
 options:
-  - A bool is a string type.
-  - Type annotations document contracts; conversions such as float(count) make numeric intent
-    explicit when combining distinct types.
-  - Nim implicitly accepts every string as a number.
+  - '`count & ""`'
+  - "`float(count)`"
+  - "`$count`"
 answer: 1
-explain: Type annotations document contracts; conversions such as float(count) make numeric intent
-  explicit when combining distinct types.
+explain: "`float` performs numeric conversion; `$` produces a string."
 ```

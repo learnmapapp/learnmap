@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about read and update elements is correct?
+question: For `[2, 4, 6]`, which assignment changes the middle element?
 options:
-  - List indices are zero-based and must be in bounds. Validate externally supplied indices before
-    reading or writing an element.
-  - The first List element is at index 1.
-  - Any out-of-bounds write automatically extends a List.
+  - "`values[1] = 9`"
+  - "`values[0] = 9`"
+  - "`values[2] = 9`"
 answer: 0
-explain: List indices are zero-based and must be in bounds. Validate externally supplied indices
-  before reading or writing an element.
+explain: List indices start at zero.
 ```

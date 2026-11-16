@@ -44,11 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about unique values is correct?
+question: How many values remain after adding `"Mojo"` twice to an empty set?
 options:
-  - Sets guarantee insertion-order traversal.
-  - Set stores unique hashable values. Adding an existing value does not increase its length.
-  - Sets count every duplicate insertion.
+  - "`0`"
+  - "`1`"
+  - "`2`"
 answer: 1
-explain: Set stores unique hashable values. Adding an existing value does not increase its length.
+explain: Sets retain unique values rather than duplicate occurrences.
 ```

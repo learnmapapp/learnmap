@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about pointers to storage is correct?
+question: What does `pointer.*` mean?
 options:
-  - A pointer always owns its target.
-  - "& takes an address and .* dereferences a pointer. The pointer must not outlive the storage it
-    references."
-  - Returning a pointer automatically extends a local variable’s lifetime.
+  - Clone the pointed-to allocation.
+  - Dereference the pointer.
+  - Take the address of the pointer.
 answer: 1
-explain: "& takes an address and .* dereferences a pointer. The pointer must not outlive the storage
-  it references."
+explain: Dereferencing accesses the storage a pointer refers to.
 ```

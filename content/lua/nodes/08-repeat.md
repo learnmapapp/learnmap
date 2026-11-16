@@ -7,7 +7,7 @@ requires:
 summary: repeat checks its condition after the body, so the body executes at least once.
 ---
 
-repeat checks its condition after the body, so the body executes at least once. It stops when the condition becomes true.
+repeat checks its condition after the body, so the body executes at least once. It stops when the condition becomes `true`.
 
 ```lua
 local count = 0
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about repeat until is correct?
+question: When can `repeat ... until condition` stop?
 options:
-  - until repeats while its condition is true.
-  - repeat may skip its body entirely.
-  - repeat checks its condition after the body, so the body executes at least once. It stops when
-    the condition becomes true.
+  - Before its first body execution if `condition` is `true`.
+  - After a body execution makes `condition` `false`.
+  - After a body execution makes `condition` `true`.
 answer: 2
-explain: repeat checks its condition after the body, so the body executes at least once. It stops
-  when the condition becomes true.
+explain: The condition is checked after the body, and `true` ends the loop.
 ```

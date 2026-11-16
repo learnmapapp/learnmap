@@ -63,11 +63,11 @@ next := append(slices.Clone(list), 4)
 ```
 
 ```quiz
-question: "After  m = %{a: 1};  Map.put(m, :b, 2);  what is m?"
+question: "After  `m = %{a: 1};`  `Map.put(m, :b, 2)`;  what is m?"
 options:
-  - "%{a: 1, b: 2}"
-  - "%{a: 1}"
+  - "`%{a: 1, b: 2}`"
+  - "`%{a: 1}`"
   - An error
 answer: 1
-explain: Map.put returns a new map. The result was thrown away, so m is unchanged.
+explain: "`Map.put` returns a new map. The result was thrown away, so m is unchanged."
 ```

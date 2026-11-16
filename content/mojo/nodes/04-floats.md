@@ -7,7 +7,7 @@ requires:
 summary: Float32 and Float64 trade storage and precision.
 ---
 
-Float32 and Float64 trade storage and precision. Binary floating-point approximates many decimal values; compare computed results with a suitable tolerance.
+`Float32` and `Float64` trade storage and precision. Binary floating-point approximates many decimal values; compare computed results with a suitable tolerance.
 
 ```mojo
 def main() raises:
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about floating-point computation is correct?
+question: Why use a tolerance when checking a floating-point calculation?
 options:
-  - Float32 always has greater precision than Float64.
-  - Float32 and Float64 trade storage and precision. Binary floating-point approximates many decimal
-    values; compare computed results with a suitable tolerance.
-  - Every decimal is exactly representable in Float64.
+  - "`Float64` can represent only whole numbers."
+  - Binary floating-point approximates many decimal values.
+  - Every floating-point operation returns a random value.
 answer: 1
-explain: Float32 and Float64 trade storage and precision. Binary floating-point approximates many
-  decimal values; compare computed results with a suitable tolerance.
+explain: Exact equality can be inappropriate for results affected by rounding.
 ```

@@ -40,7 +40,7 @@ Move the decoder, result types, and client into separate modules. For a fetch ad
 Test a valid record, invalid fields, a malformed response, and a rejected read. Type-check consumers so they handle both result variants. Add cancellation or domain-specific validation when your real application needs those contracts.
 
 ```exercise
-goal: "Read external input as unknown so decoding remains necessary."
+goal: Read external input as `unknown` so decoding remains necessary.
 lang: typescript
 code: |
   async function readValue(read: () => Promise<any>): Promise<unknown> {
@@ -48,17 +48,17 @@ code: |
   }
   readValue(async () => ({ name: "Ada", score: 42 })).then(value => console.log(value));
 checks:
-  - match: "read:\\s+\\(\\)\\s+=>\\s+Promise<unknown>"
-    message: "Use Promise<unknown> at the untrusted read boundary."
-hint: "Use Promise<unknown> at the untrusted read boundary."
+  - match: read:\s+\(\)\s+=>\s+Promise<unknown>
+    message: Use Promise<unknown> at the untrusted read boundary.
+hint: Use `Promise<unknown>` at the untrusted read boundary.
 ```
 
 ```quiz
-question: "Which part establishes that unknown input really fits Learner?"
+question: Which part establishes that `unknown` input really fits Learner?
 options:
-  - "The Promise annotation alone."
-  - "The runtime decoder checks."
-  - "The filename extension."
+  - The Promise annotation alone.
+  - The runtime decoder checks.
+  - The filename extension.
 answer: 1
-explain: "The decoder connects runtime validation to the returned static contract."
+explain: The decoder connects runtime validation to the returned static contract.
 ```

@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about for with indices is correct?
+question: What does `for (values, 0..) |value, index|` capture?
 options:
-  - A for loop can traverse multiple inputs, including an index range. Captures bind the current
-    values without hidden iterator allocation.
-  - for indices always begin at 1.
-  - Every for loop allocates an iterator on the heap.
+  - An element and its zero-based index.
+  - Two copies of the element.
+  - An element and the total collection length.
 answer: 0
-explain: A for loop can traverse multiple inputs, including an index range. Captures bind the
-  current values without hidden iterator allocation.
+explain: The second iterable supplies consecutive indices starting at zero.
 ```

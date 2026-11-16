@@ -79,11 +79,11 @@ Almost every function that can fail returns one of these. Because they're plain 
 Tuples are for small, fixed groups of values. Reading an element by position is fast (`elem(tuple, 0)`), but adding elements means copying, so don't use them as growable lists.
 
 ```quiz
-question: What does a function usually return when it fails in Elixir?
+question: Which return value convention represents a recoverable failure?
 options:
-  - "nil"
-  - "An {:error, reason} tuple"
-  - "-1"
+  - The integer `0` for every failure.
+  - An `{:error, reason}` tuple.
+  - An `{:ok, reason}` tuple.
 answer: 1
-explain: "{:ok, value} and {:error, reason} are the convention, and pattern matching makes them easy to handle."
+explain: Tagged result tuples let callers distinguish success and failure with pattern matching.
 ```

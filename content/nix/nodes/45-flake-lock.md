@@ -46,9 +46,9 @@ Flakes only see files that git knows about. A new file you haven't `git add`-ed 
 ```quiz
 question: You only want a newer nixpkgs, and leave the other inputs alone. What do you run?
 options:
-  - "nix flake update"
-  - "nix flake update nixpkgs"
-  - "rm flake.lock"
+  - "`nix flake update`"
+  - "`nix flake update nixpkgs`"
+  - rm `flake.lock`
 answer: 1
-explain: Naming an input updates only that one in flake.lock.
+explain: Naming an input updates only that one in `flake.lock`.
 ```

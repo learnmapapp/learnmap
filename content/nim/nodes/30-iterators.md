@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about custom iterators is correct?
+question: What does `yield n` do in a Nim iterator?
 options:
-  - An iterator yields values to a for loop. This iterator centralizes traversal logic without
-    constructing a sequence first.
-  - yield immediately ends every iterator.
-  - An iterator must allocate a collection of all results.
+  - Supplies a value to the consuming loop.
+  - Ends the iterator permanently.
+  - Appends a value to an implicit sequence.
 answer: 0
-explain: An iterator yields values to a for loop. This iterator centralizes traversal logic without
-  constructing a sequence first.
+explain: An iterator yields incrementally without requiring a complete result collection.
 ```

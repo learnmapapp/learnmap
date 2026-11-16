@@ -53,7 +53,7 @@ Some crates you'll meet everywhere:
 | `rand` | random numbers |
 
 ```tip
-docs.rs hosts the documentation for every crate on crates.io, generated from its doc comments. `cargo doc --open` builds the same docs for your project and all its dependencies, offline.
+`docs.rs` hosts the documentation for every crate on crates.io, generated from its doc comments. `cargo doc --open` builds the same docs for your project and all its dependencies, offline.
 ```
 
 ```compare javascript
@@ -79,9 +79,10 @@ go get github.com/google/uuid  // go.mod + go.sum
 ```quiz
 question: Which file pins the exact versions of every dependency?
 options:
-  - Cargo.toml
-  - Cargo.lock
-  - src/main.rs
+  - "`Cargo.toml`"
+  - "`Cargo.lock`"
+  - "`src/main.rs`"
 answer: 1
-explain: Cargo.toml says which versions are acceptable; Cargo.lock records exactly which ones were used.
+explain: "`Cargo.toml` says which versions are acceptable; `Cargo.lock` records exactly which ones
+  were used."
 ```

@@ -33,7 +33,7 @@ Ordinary `zip` stops when the shortest input is exhausted. Extra values disappea
 Do not use a separate counter that you must increment by hand when `enumerate` already expresses the intent. Pairing and unpacking keep the relationship between values visible in the loop header.
 
 ```exercise
-goal: "Reject unequal lengths instead of silently dropping an extra score."
+goal: Reject unequal lengths instead of silently dropping an extra score.
 lang: python
 code: |
   names = ["Ada", "Grace"]
@@ -41,17 +41,17 @@ code: |
   for name, score in zip(names, scores):
       print(name, score)
 checks:
-  - match: "zip\\(\\s*names\\s*,\\s*scores\\s*,\\s*strict\\s*=\\s*True\\s*\\)"
-    message: "Add strict=True to zip(names, scores)."
-hint: "Add strict=True to zip(names, scores)."
+  - match: zip\(\s*names\s*,\s*scores\s*,\s*strict\s*=\s*True\s*\)
+    message: Add strict=True to zip(names, scores).
+hint: Add strict=`True` to `zip(names, scores)`.
 ```
 
 ```quiz
-question: "What does zip do by default when input lengths differ?"
+question: What does zip do by default when input lengths differ?
 options:
-  - "Pads with None."
-  - "Raises before iteration begins."
-  - "Stops at the shortest input."
+  - Pads with `None`.
+  - Raises before iteration begins.
+  - Stops at the shortest input.
 answer: 2
-explain: "Use strict=True when unequal lengths should be an error."
+explain: Use strict=`True` when unequal lengths should be an error.
 ```

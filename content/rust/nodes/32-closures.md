@@ -67,14 +67,14 @@ double := func(x int) int { return x * 2 }
 ```
 
 ```exercise
-goal: Write a closure `is_even` that returns true for even numbers.
+goal: Write a closure `is_even` that returns `true` for even numbers.
 code: |
   let is_even = ;
   println!("{}", is_even(4));
 checks:
-  - match: 'let\s+is_even\s*=\s*\|\s*\w+(\s*:\s*\w+)?\s*\|'
+  - match: let\s+is_even\s*=\s*\|\s*\w+(\s*:\s*\w+)?\s*\|
     message: "A closure starts with its parameter between pipes: |n| ..."
-  - match: '%\s*2\s*==\s*0'
-    message: "Even means n % 2 == 0."
+  - match: "%\\s*2\\s*==\\s*0"
+    message: Even means n % 2 == 0.
 output: "true"
 ```

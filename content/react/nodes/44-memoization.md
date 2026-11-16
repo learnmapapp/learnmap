@@ -45,11 +45,11 @@ hint: "Include scores in the dependency list."
 ```
 
 ```quiz
-question: "Should correctness depend on useMemo never recalculating?"
+question: Should correctness depend on `useMemo` never recalculating?
 options:
-  - "Yes, the cache is permanent state."
-  - "No, memoization is a performance optimization."
-  - "Only for arrays."
+  - Yes, the cache is permanent state.
+  - No, memoization is a performance optimization.
+  - Only for arrays.
 answer: 1
-explain: "A memoized calculation must stay pure and correct if React recalculates it."
+explain: A memoized calculation must stay pure and correct if React recalculates it.
 ```

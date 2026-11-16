@@ -77,11 +77,11 @@ worker.postMessage("hello"); worker.onmessage = (e) => e.data;
 ```
 
 ```quiz
-question: When does `for value in rx` stop looping?
+question: When does iteration over a channel receiver finish?
 options:
-  - After the first message.
-  - When every Sender has been dropped.
-  - Never, you have to break out.
+  - Immediately after the first message is received.
+  - After all senders are dropped and buffered messages are drained.
+  - Immediately after the first sender is dropped.
 answer: 1
-explain: Once no Sender exists, no more messages can arrive, so the iterator ends.
+explain: The receiver consumes queued messages, then ends when no more can arrive.
 ```

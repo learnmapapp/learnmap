@@ -72,11 +72,12 @@ worker.onerror = (e) => console.log("worker died", e);
 ```
 
 ```quiz
-question: You want to be notified when a process you don't own dies, without crashing yourself. What do you use?
+question: You want to be notified when a process you don't own dies, without crashing yourself. What
+  do you use?
 options:
   - spawn_link
   - A monitor
-  - Process.flag(:trap_exit, false)
+  - "`Process.flag(:trap_exit, false)`"
 answer: 1
 explain: Monitors are one-way and only deliver a :DOWN message.
 ```

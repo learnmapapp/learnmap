@@ -38,7 +38,7 @@ print(add_item("b"))  # ['b']
 The `is None` check also preserves an explicitly supplied empty list. A truthiness check would replace it, changing the caller-visible behavior.
 
 ```exercise
-goal: "Replace the shared default list with None; the body already handles it."
+goal: Replace the shared default list with `None`; the body already handles it.
 lang: python
 code: |
   def add_item(item, items=[]):
@@ -50,9 +50,9 @@ code: |
   print(add_item("a"))
   print(add_item("b"))
 checks:
-  - match: "def\\s+add_item\\(\\s*item\\s*,\\s*items\\s*=\\s*None\\s*\\)"
-    message: "Use items=None in the signature."
-hint: "Use items=None in the signature."
+  - match: def\s+add_item\(\s*item\s*,\s*items\s*=\s*None\s*\)
+    message: Use items=None in the signature.
+hint: Use items=`None` in the signature.
 ```
 
 ```quiz

@@ -8,7 +8,7 @@ requires:
 summary: For static output, getStaticPaths enumerates the parameter values to build.
 ---
 
-In your Astro project, save this as `src/pages/topics/[topic].astro`. For static output, getStaticPaths enumerates the parameter values to build. A bracketed filename names the parameter available through Astro.params.
+In your Astro project, save this as `src/pages/topics/[topic].astro`. For static output, `getStaticPaths` enumerates the parameter values to build. A bracketed filename names the parameter available through `Astro.params`.
 
 ```astro
 ---
@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about generate dynamic routes is correct?
+question: Why does a static `[topic].astro` route need `getStaticPaths`?
 options:
-  - Astro.params contains every browser local-storage entry.
-  - For static output, getStaticPaths enumerates the parameter values to build. A bracketed filename
-    names the parameter available through Astro.params.
-  - A static dynamic route can guess all possible parameter values.
+  - To create arbitrary dynamic URLs only after deployment.
+  - To enumerate the parameter values to generate at build time.
+  - To read every future visitor's browser history.
 answer: 1
-explain: For static output, getStaticPaths enumerates the parameter values to build. A bracketed
-  filename names the parameter available through Astro.params.
+explain: A static build must know which concrete route paths to produce.
 ```

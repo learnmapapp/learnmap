@@ -7,7 +7,7 @@ requires:
 summary: Choose f32 or f64 deliberately.
 ---
 
-Choose f32 or f64 deliberately. Binary floating-point cannot represent every decimal fraction exactly, so use tolerances for approximate calculations.
+Choose `f32` or `f64` deliberately. Binary floating-point cannot represent every decimal fraction exactly, so use tolerances for approximate calculations.
 
 ```zig
 const std = @import("std");
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about floating-point values is correct?
+question: Why might computed floating-point results need a tolerance comparison?
 options:
-  - Every decimal fraction has an exact binary floating representation.
-  - f32 always offers more precision than f64.
-  - Choose f32 or f64 deliberately. Binary floating-point cannot represent every decimal fraction
-    exactly, so use tolerances for approximate calculations.
+  - Floating-point values can only store whole numbers.
+  - Every operation uses random rounding.
+  - Many decimal fractions have no exact binary representation.
 answer: 2
-explain: Choose f32 or f64 deliberately. Binary floating-point cannot represent every decimal
-  fraction exactly, so use tolerances for approximate calculations.
+explain: Choose a tolerance appropriate to the calculation and its expected error.
 ```

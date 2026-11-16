@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about parse json data is correct?
+question: After `parseJson`, what still needs checking for external data?
 options:
-  - Parsing JSON automatically validates your domain schema.
-  - JSON nodes carry runtime kinds. Validate required fields and their types before converting
-    untrusted input.
-  - Every JSON field is a string.
+  - Whether JSON syntax was skipped by the parser.
+  - Required fields, their kinds, and domain constraints.
+  - Whether every field has already become a string.
 answer: 1
-explain: JSON nodes carry runtime kinds. Validate required fields and their types before converting
-  untrusted input.
+explain: Parsing checks syntax, not the application's complete data contract.
 ```

@@ -4,10 +4,10 @@ icon: 🔁
 branch: tools
 requires:
   - functions
-summary: "@import loads a module namespace."
+summary: "`@import` loads a module namespace."
 ---
 
-@import loads a module namespace. Import local .zig files with relative paths and keep public APIs explicit.
+`@import` loads a module namespace. Import local `.zig` files with relative paths and keep public APIs explicit.
 
 ```zig
 const std = @import("std");
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about import namespaces is correct?
+question: What does `@import("std")` provide?
 options:
-  - "@import loads a module namespace. Import local .zig files with relative paths and keep public
-    APIs explicit."
-  - "@import executes a shell command."
-  - Imported declarations are all automatically public.
+  - The standard-library module namespace.
+  - An automatically allocated instance of every library type.
+  - A shell command that installs Zig.
 answer: 0
-explain: "@import loads a module namespace. Import local .zig files with relative paths and keep
-  public APIs explicit."
+explain: Imports make module declarations available to code.
 ```

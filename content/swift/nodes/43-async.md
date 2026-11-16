@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about async functions is correct?
+question: What does `await` mark in an asynchronous function?
 options:
-  - An async function always runs in parallel with its caller.
-  - async marks a function that can suspend. await identifies a potential suspension point; async
-    does not itself guarantee parallel execution.
-  - Every await starts a new operating-system thread.
+  - A guarantee that two operations run in parallel.
+  - A potential suspension point.
+  - A guaranteed new OS thread.
 answer: 1
-explain: async marks a function that can suspend. await identifies a potential suspension point;
-  async does not itself guarantee parallel execution.
+explain: Async work can suspend without promising a particular thread or parallel execution.
 ```

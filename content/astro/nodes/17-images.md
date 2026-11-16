@@ -8,7 +8,7 @@ requires:
 summary: Add a real cover.jpg under src/assets before running this page.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. Add a real cover.jpg under src/assets before running this page. Image can use imported metadata to generate optimized image output.
+In your Astro project, save this as `src/pages/index.astro`. Add a real `cover.jpg` under src/assets before running this page. Image can use imported metadata to generate optimized image output.
 
 ```astro
 ---
@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about optimized images is correct?
+question: What does importing a local image for `Image` allow Astro to use?
 options:
-  - Every Image source must be a public URL string.
-  - The alt prop is replaced automatically with the filename.
-  - Add a real cover.jpg under src/assets before running this page. Image can use imported metadata
-    to generate optimized image output.
+  - A guarantee that the alt text describes its contents.
+  - Automatic creation of a missing source image.
+  - Image metadata and build-time optimization.
 answer: 2
-explain: Add a real cover.jpg under src/assets before running this page. Image can use imported
-  metadata to generate optimized image output.
+explain: A real imported image supplies metadata; authors still provide useful alternative text.
 ```

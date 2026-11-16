@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about response middleware is correct?
+question: For prerendered output, when does request middleware perform its build-time work?
 options:
-  - Middleware can inspect requests and transform responses. In a static build its work happens
-    during prerendering; live request behavior needs a server deployment.
-  - Middleware always runs in the visitor’s browser.
-  - Static hosting supplies a new server execution for every request.
+  - While the pages are generated.
+  - For every future request on a static-only host.
+  - Only in the visitor's browser.
 answer: 0
-explain: Middleware can inspect requests and transform responses. In a static build its work happens
-  during prerendering; live request behavior needs a server deployment.
+explain: Live per-request middleware behavior needs a server deployment.
 ```

@@ -8,7 +8,7 @@ requires:
 summary: pcall catches a raised error and returns false plus the error value.
 ---
 
-pcall catches a raised error and returns false plus the error value. On success it returns true followed by the function results.
+pcall catches a raised error and returns `false` plus the error value. On success it returns `true` followed by the function results.
 
 A useful term here is [[protected call]]: A function invocation that catches Lua errors and reports success as a return value.
 
@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about protected calls is correct?
+question: If a function raises an error, what does `pcall` return?
 options:
-  - pcall always rethrows the error.
-  - pcall returns only a Boolean.
-  - pcall catches a raised error and returns false plus the error value. On success it returns true
-    followed by the function results.
+  - "`true` followed by the error value."
+  - Only `nil`, with no error information.
+  - "`false` followed by the error value."
 answer: 2
-explain: pcall catches a raised error and returns false plus the error value. On success it returns
-  true followed by the function results.
+explain: Protected calls report failure as return values instead of letting that error escape.
 ```

@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about configured redirects is correct?
+question: What should you verify after configuring `/journal` to redirect to `/notes/`?
 options:
-  - Redirect configuration automatically creates destination content.
-  - Every host implements redirects with identical status behavior.
-  - Configure a redirect when moving a public URL. Static and adapter deployments may implement
-    redirects differently, so verify the generated hosting behavior.
+  - A redirect automatically creates all destination content.
+  - All hosts necessarily use the same redirect mechanism.
+  - The destination exists and the deployed host implements the redirect.
 answer: 2
-explain: Configure a redirect when moving a public URL. Static and adapter deployments may implement
-  redirects differently, so verify the generated hosting behavior.
+explain: Redirect behavior depends on static output or the selected adapter and host.
 ```

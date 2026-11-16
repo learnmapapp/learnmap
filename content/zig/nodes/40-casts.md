@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about checked conversions is correct?
+question: How does `@intCast` differ from `@truncate`?
 options:
-  - "@truncate reports an error union for lost bits."
-  - "@intCast converts to an inferred integer destination and requires the value to fit. @truncate
-    deliberately discards high bits and expresses a different operation."
-  - "@intCast always truncates overflowing bits."
+  - "`@truncate` returns an error union while `@intCast` returns an optional."
+  - "`@intCast` requires representability; `@truncate` deliberately discards high bits."
+  - Both always discard high bits without a representability requirement.
 answer: 1
-explain: "@intCast converts to an inferred integer destination and requires the value to fit.
-  @truncate deliberately discards high bits and expresses a different operation."
+explain: Choose the conversion that expresses the intended treatment of out-of-range values.
 ```

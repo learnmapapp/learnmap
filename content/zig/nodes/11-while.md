@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about while loops is correct?
+question: "When does the continue expression in `while (condition) : (step)` run?"
 options:
-  - The continue expression runs before the first condition check.
-  - A while loop always executes at least once.
-  - A while loop can include a continue expression after the colon. It runs after each completed
-    iteration or continue.
+  - Before the first condition check.
+  - Only after the condition becomes `false`.
+  - After a completed iteration or `continue`.
 answer: 2
-explain: A while loop can include a continue expression after the colon. It runs after each
-  completed iteration or continue.
+explain: The continue expression advances loop state between iterations.
 ```

@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about generic procedures is correct?
+question: What type does `first(["Nim", "Lua"])` return in `first[T]`?
 options:
-  - Generic procedures remove the need to validate input lengths.
-  - T is always a runtime string describing a type.
-  - Generic parameters preserve type information while sharing an algorithm. The first operation
-    still needs a nonempty-input contract.
+  - "`int`"
+  - "`seq[string]`"
+  - "`string`"
 answer: 2
-explain: Generic parameters preserve type information while sharing an algorithm. The first
-  operation still needs a nonempty-input contract.
+explain: The type parameter preserves the input element type in the result.
 ```

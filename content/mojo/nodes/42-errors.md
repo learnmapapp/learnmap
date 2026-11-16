@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about raise an error is correct?
+question: What does `raises` in a function signature declare?
 options:
-  - raises declares a fallible function. Raise Error with a useful message when an input violates
-    the function’s contract.
-  - Current def functions always raise by default.
-  - Raising an error silently returns zero.
+  - The function may return through an error path.
+  - Every call must always fail.
+  - The result automatically becomes optional.
 answer: 0
-explain: raises declares a fallible function. Raise Error with a useful message when an input
-  violates the function’s contract.
+explain: Callers must handle or propagate a possible error.
 ```

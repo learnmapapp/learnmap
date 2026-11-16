@@ -40,11 +40,11 @@ hint: "Use numbers[:3]; the stop index is excluded."
 ```
 
 ```quiz
-question: "What does [0, 1, 2, 3][1:3] return?"
+question: What does `[0, 1, 2, 3][1:3]` return?
 options:
   - "[1, 2]"
   - "[1, 2, 3]"
   - "[0, 1, 2]"
 answer: 0
-explain: "The start index 1 is included; the stop index 3 is excluded."
+explain: The start index 1 is included; the stop index 3 is excluded.
 ```

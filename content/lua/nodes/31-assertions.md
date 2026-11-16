@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about validate assumptions is correct?
+question: What does `assert(false, "number required")` do?
 options:
-  - assert accepts only Boolean first arguments.
-  - assert returns its arguments when the first is truthy and raises an error otherwise. Validate
-    public function inputs near the boundary.
-  - assert silently returns false on failure.
+  - Returns `nil` and the supplied message.
+  - Raises an error with the supplied message.
+  - Returns `false` and continues.
 answer: 1
-explain: assert returns its arguments when the first is truthy and raises an error otherwise.
-  Validate public function inputs near the boundary.
+explain: A falsey first argument makes `assert` raise an error.
 ```

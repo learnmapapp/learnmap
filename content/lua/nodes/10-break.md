@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about exit a loop is correct?
+question: What does `break` exit when loops are nested?
 options:
-  - break skips only the current print and resumes the loop.
-  - break exits the innermost loop. This example prints 1 through 3 because the exit happens before
-    print.
-  - break exits the whole program.
+  - The entire enclosing function.
+  - The innermost enclosing loop.
+  - Every enclosing loop.
 answer: 1
-explain: break exits the innermost loop. This example prints 1 through 3 because the exit happens
-  before print.
+explain: Execution continues after the nearest loop containing the `break`.
 ```

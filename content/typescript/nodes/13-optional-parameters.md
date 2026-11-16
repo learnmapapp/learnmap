@@ -33,7 +33,7 @@ Do not mark a callback parameter optional just because the callback implementati
 Use an options object when several optional positional arguments become difficult to read.
 
 ```exercise
-goal: "Default factor to two so multiply(21) is valid."
+goal: Default factor to two so `multiply(21)` is valid.
 lang: typescript
 code: |
   function multiply(value: number, factor: number): number {
@@ -41,17 +41,17 @@ code: |
   }
   console.log(multiply(21));
 checks:
-  - match: "factor\\s+=\\s+2"
-    message: "Give factor a default of 2."
-hint: "Give factor a default of 2."
+  - match: factor\s+=\s+2
+    message: Give factor a default of 2.
+hint: Give factor a default of 2.
 ```
 
 ```quiz
-question: "When does a default parameter initializer apply?"
+question: When does a default parameter initializer apply?
 options:
-  - "For every falsy argument."
-  - "Only for null."
-  - "When omitted or passed undefined."
+  - For every falsy argument.
+  - Only for `null`.
+  - When omitted or passed undefined.
 answer: 2
-explain: "Zero, false, and an empty string are valid supplied values; they do not trigger defaults."
+explain: Zero, `false`, and an empty string are valid supplied values; they do not trigger defaults.
 ```

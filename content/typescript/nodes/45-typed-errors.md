@@ -43,11 +43,11 @@ hint: "Use instanceof Error to justify reading error.message."
 ```
 
 ```quiz
-question: "Why is a catch variable unknown under strict checking?"
+question: Why is a catch variable `unknown` under strict checking?
 options:
-  - "Because only strings can be thrown."
-  - "Because JavaScript can throw values that are not Error objects."
-  - "Because the function must be async."
+  - Because only strings can be thrown.
+  - Because JavaScript can throw values that are not Error objects.
+  - Because the function must be async.
 answer: 1
-explain: "The runtime permits arbitrary thrown values, so property access needs narrowing."
+explain: The runtime permits arbitrary thrown values, so property access needs narrowing.
 ```

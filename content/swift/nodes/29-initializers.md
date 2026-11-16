@@ -7,7 +7,7 @@ requires:
 summary: A failable initializer returns nil when an input cannot produce a valid instance.
 ---
 
-A failable initializer returns nil when an input cannot produce a valid instance. Initialize every stored property before success.
+A failable initializer returns `nil` when an input cannot produce a valid instance. Initialize every stored property before success.
 
 ```swift
 struct User {
@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about custom initialization is correct?
+question: What does `init?` use to reject invalid input?
 options:
-  - A failable initializer must throw instead of returning nil.
-  - Stored properties can remain uninitialized after successful initialization.
-  - A failable initializer returns nil when an input cannot produce a valid instance. Initialize
-    every stored property before success.
+  - An uninitialized stored property.
+  - A mandatory `false` return value.
+  - "`return nil`."
 answer: 2
-explain: A failable initializer returns nil when an input cannot produce a valid instance.
-  Initialize every stored property before success.
+explain: A failable initializer produces no instance when validation fails.
 ```

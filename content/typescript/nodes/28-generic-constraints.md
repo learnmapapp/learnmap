@@ -42,11 +42,11 @@ hint: "Require T to provide length: number."
 ```
 
 ```quiz
-question: "Does T extends { name: string } mean T has no other required fields?"
+question: "Does `T extends { name: string }` mean T has no other required fields?"
 options:
-  - "Yes."
-  - "No, T can contain additional requirements."
-  - "Only if T is inferred."
+  - Yes.
+  - No, T can contain additional requirements.
+  - Only if T is inferred.
 answer: 1
-explain: "The constraint is a minimum capability; a particular T can be more specific."
+explain: The constraint is a minimum capability; a particular T can be more specific.
 ```

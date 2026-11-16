@@ -7,7 +7,7 @@ requires:
 summary: Lua functions can return several values.
 ---
 
-Lua functions can return several values. Multiple assignment captures them in order, with missing results filled by nil.
+Lua functions can return several values. Multiple assignment captures them in order, with missing results filled by `nil`.
 
 ```lua
 local function bounds()
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about multiple returns is correct?
+question: A function returns `2, 8`. What does `local low, high = bounds()` assign?
 options:
-  - Lua functions can return several values. Multiple assignment captures them in order, with
-    missing results filled by nil.
-  - Multiple returns always produce a table.
-  - Missing results are filled with zero.
+  - "`low` is `2`, and `high` is `8`."
+  - "`low` is a table, and `high` is `nil`."
+  - "`low` is `8`, and `high` is `2`."
 answer: 0
-explain: Lua functions can return several values. Multiple assignment captures them in order, with
-  missing results filled by nil.
+explain: Multiple assignment captures returned values in order.
 ```

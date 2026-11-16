@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about build and run production is correct?
+question: Which command starts the default built Node server?
 options:
-  - A static host can run Node server APIs without a runtime.
-  - The default Node server build writes .output. Test the built server with production
-    configuration; for static hosting use a suitable generated-output workflow instead.
-  - The development server is identical to every production preset.
+  - "`npm run dev` as the built artifact."
+  - "`node .output/server/index.mjs`."
+  - "`node app/app.vue`."
 answer: 1
-explain: The default Node server build writes .output. Test the built server with production
-  configuration; for static hosting use a suitable generated-output workflow instead.
+explain: Build output and development serving have different entry points.
 ```

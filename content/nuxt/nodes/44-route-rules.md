@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about per-route rendering rules is correct?
+question: "Does setting `ssr: true` make a dashboard private?"
 options:
-  - "Setting ssr: true makes a route private."
-  - All pages must use the same rendering strategy.
-  - Route rules express rendering or caching behavior by path. SSR does not authenticate dashboard
-    users; authorization remains a server responsibility.
+  - Yes; rendered pages cannot be requested anonymously.
+  - Only when the path contains `dashboard`.
+  - No; server authorization is still required.
 answer: 2
-explain: Route rules express rendering or caching behavior by path. SSR does not authenticate
-  dashboard users; authorization remains a server responsibility.
+explain: Rendering strategy does not establish who is allowed to access data.
 ```

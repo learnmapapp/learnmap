@@ -38,15 +38,15 @@ with announce():
 The code before `yield` enters; the `finally` block performs cleanup. This decorator is an advanced convenience; when an API already provides a context manager, use that directly. A `with` statement guarantees the exit protocol, but does not automatically suppress errors.
 
 ```exercise
-goal: "Open the file with a context manager so it is closed automatically."
+goal: Open the file with a context manager so it is closed automatically.
 lang: python
 code: |
   handle = open("notes.txt", "w", encoding="utf-8")
   handle.write("Hello\n")
 checks:
-  - match: "^with\\s+open\\([^\\n]+\\)\\s+as\\s+handle:\\n[ \\t]+handle\\.write\\("
+  - match: ^with\s+open\([^\n]+\)\s+as\s+handle:\n[ \t]+handle\.write\(
     message: "Use with open(...) as handle: and indent the write inside it."
-hint: "Use with open(...) as handle: and indent the write inside it."
+hint: "Use with `open(...)` as handle: and indent the write inside it."
 ```
 
 ```quiz

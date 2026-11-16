@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about sets of values is correct?
+question: What does inserting an existing permission into a set change?
 options:
-  - Sets preserve duplicate counts.
-  - Built-in sets accept arbitrary object values.
-  - Built-in sets efficiently represent membership over small ordinal types, including enums.
-    Repeated elements do not add duplicates.
+  - It adds a second occurrence.
+  - It moves the permission to the end.
+  - It leaves membership unchanged.
 answer: 2
-explain: Built-in sets efficiently represent membership over small ordinal types, including enums.
-  Repeated elements do not add duplicates.
+explain: Sets represent membership, not duplicate counts or insertion order.
 ```

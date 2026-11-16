@@ -7,7 +7,7 @@ requires:
 summary: Props receive data supplied by a parent.
 ---
 
-In your Astro project, save this as `src/components/Card.astro`. Props receive data supplied by a parent. Render this version with <Card title="Astro" /> and let TypeScript describe required inputs.
+In your Astro project, save this as `src/components/Card.astro`. Props receive data supplied by a parent. Render this version with `<Card title="Astro" />` and let TypeScript describe required inputs.
 
 A useful term here is [[prop]]: An input passed from a parent to a component.
 
@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed component props is correct?
+question: How does an Astro child read props supplied by its parent?
 options:
-  - Astro.props reads only URL query parameters.
-  - Optional props can never have defaults.
-  - Props receive data supplied by a parent. Render this version with <Card title="Astro" /> and let
-    TypeScript describe required inputs.
+  - Through `Astro.params` for every prop.
+  - Through `window.props` in frontmatter.
+  - Through `Astro.props`.
 answer: 2
-explain: Props receive data supplied by a parent. Render this version with <Card title="Astro" />
-  and let TypeScript describe required inputs.
+explain: Props are component inputs, while params describe route parameters.
 ```

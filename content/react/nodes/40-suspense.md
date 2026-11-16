@@ -42,11 +42,11 @@ hint: "Name the prop fallback."
 ```
 
 ```quiz
-question: "Does an arbitrary fetch inside useEffect automatically trigger Suspense?"
+question: Does an arbitrary fetch inside `useEffect` automatically trigger Suspense?
 options:
-  - "Yes."
-  - "No, the work must integrate with Suspense."
-  - "Only if the URL ends in JSON."
+  - Yes.
+  - No, the work must integrate with Suspense.
+  - Only if the URL ends in JSON.
 answer: 1
-explain: "Effect-based fetching is not automatically a Suspense data source."
+explain: Effect-based fetching is not automatically a Suspense data source.
 ```

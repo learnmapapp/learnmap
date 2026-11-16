@@ -31,13 +31,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about cross compilation is correct?
+question: What does `-target x86_64-linux` select during compilation?
 options:
-  - -target changes the host operating system.
-  - The -target option selects an output platform. Producing a binary for another platform does not
-    make it runnable on the host machine.
-  - Cross compilation automatically emulates the target program.
+  - An emulator that runs the output automatically.
+  - The output binary's target platform.
+  - The host operating system's current desktop settings.
 answer: 1
-explain: The -target option selects an output platform. Producing a binary for another platform does
-  not make it runnable on the host machine.
+explain: Cross compilation produces target code without making it runnable on the host.
 ```

@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about public declarations is correct?
+question: What does `pub` on a declaration allow?
 options:
-  - pub changes a variable into heap storage.
-  - pub exposes a declaration to importing code. Keep implementation details private and export the
-    smallest useful interface.
-  - Every declaration is public by default.
+  - Mutation of every field inside the declaration.
+  - Access from importing code.
+  - Automatic heap allocation.
 answer: 1
-explain: pub exposes a declaration to importing code. Keep implementation details private and export
-  the smallest useful interface.
+explain: Public visibility exposes an API without changing its memory semantics.
 ```

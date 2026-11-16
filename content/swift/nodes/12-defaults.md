@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about default parameters is correct?
+question: "For `func add(_ value: Int, amount: Int = 1)`, what does `add(4)` use for `amount`?"
 options:
-  - A default parameter lets a caller omit that argument. Explicitly supplied values still override
-    the default.
-  - Default parameters cannot be overridden.
-  - Default values must be written at every call.
+  - "`1`"
+  - "`0`"
+  - The value from the previous call.
 answer: 0
-explain: A default parameter lets a caller omit that argument. Explicitly supplied values still
-  override the default.
+explain: An omitted argument uses the default declared in the signature.
 ```

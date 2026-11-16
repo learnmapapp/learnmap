@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about tuple results is correct?
+question: "For a result declared `(low: Int, high: Int)`, how do you read the lower bound?"
 options:
-  - Every tuple element must have the same type.
-  - Tuple element names create a new class.
-  - A tuple groups a fixed collection of values and can name its elements. It is useful for small
-    related return values.
+  - '`result["low"]`'
+  - "`result.low()`"
+  - "`result.low`"
 answer: 2
-explain: A tuple groups a fixed collection of values and can name its elements. It is useful for
-  small related return values.
+explain: Named tuple elements are available through dot access.
 ```

@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about explicit numeric conversions is correct?
+question: "Which expression explicitly converts `count: Int` to `Float64`?"
 options:
-  - Conversion changes the type of every existing binding.
-  - Numeric constructors can only be used at compile time.
-  - Type constructors express numeric conversion. Convert deliberately at boundaries rather than
-    relying on accidental mixed-type arithmetic.
+  - "`String(count)`"
+  - "`count: Float64` as a runtime expression."
+  - "`Float64(count)`"
 answer: 2
-explain: Type constructors express numeric conversion. Convert deliberately at boundaries rather
-  than relying on accidental mixed-type arithmetic.
+explain: A numeric type constructor expresses conversion to that type.
 ```

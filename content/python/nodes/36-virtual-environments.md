@@ -28,14 +28,14 @@ Do not commit `.venv/` to version control. Environments contain machine-specific
 An environment isolates installed packages; it is not an operating-system sandbox. Programs inside it can still read and write files according to your normal permissions. [Dependencies](node:dependencies) shows how to describe what belongs in the environment.
 
 ```exercise
-goal: "Create an environment named .venv using the venv module."
+goal: Create an environment named .venv using the venv module.
 lang: shell
 code: |
   python3 -m venv env
 checks:
-  - match: "^python3\\s+-m\\s+venv\\s+\\.venv\\s*$"
-    message: "Use python3 -m venv .venv."
-hint: "Use python3 -m venv .venv."
+  - match: ^python3\s+-m\s+venv\s+\.venv\s*$
+    message: Use python3 -m venv .venv.
+hint: Use `python3 -m venv .venv`.
 ```
 
 ```quiz

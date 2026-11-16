@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about compile-time parameters is correct?
+question: In `scale[3](4)`, which value is the compile-time parameter?
 options:
-  - Square brackets and parentheses always have identical roles.
-  - Compile-time parameters are read from command-line arguments at runtime.
-  - Square brackets supply compile-time parameters; parentheses supply runtime arguments.
-    Specialization can remove decisions from hot loops.
+  - "`4`"
+  - The returned product only.
+  - "`3`"
 answer: 2
-explain: Square brackets supply compile-time parameters; parentheses supply runtime arguments.
-  Specialization can remove decisions from hot loops.
+explain: Square brackets supply parameters; parentheses supply runtime arguments.
 ```

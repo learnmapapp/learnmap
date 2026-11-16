@@ -36,7 +36,7 @@ function useCounter() {
 ```
 
 ```exercise
-goal: "Use the setter to request a counter update."
+goal: Use the setter to request a counter update.
 lang: jsx
 code: |
   import { useState } from "react";
@@ -45,17 +45,17 @@ code: |
     return <button onClick={() => count + 1}>{count}</button>;
   }
 checks:
-  - match: "onClick=\\{\\(\\)\\s+=>\\s+setCount\\(count\\s+\\+\\s+1\\)\\}"
-    message: "Call setCount(count + 1) in the handler."
-hint: "Call setCount(count + 1) in the handler."
+  - match: onClick=\{\(\)\s+=>\s+setCount\(count\s+\+\s+1\)\}
+    message: Call setCount(count + 1) in the handler.
+hint: Call `setCount(count + 1)` in the handler.
 ```
 
 ```quiz
-question: "Why does a plain local let count = 0 not replace useState?"
+question: Why does a plain local `let count = 0` not replace `useState`?
 options:
-  - "Local variables automatically update the DOM."
-  - "It resets during rendering and assignment does not request a render."
-  - "React forbids local variables."
+  - Local variables automatically update the DOM.
+  - It resets during rendering and assignment does not request a render.
+  - React forbids local variables.
 answer: 1
-explain: "State persists across renders and its setter notifies React to render again."
+explain: State persists across renders and its setter notifies React to render again.
 ```

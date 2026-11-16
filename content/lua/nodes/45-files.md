@@ -7,7 +7,7 @@ requires:
 summary: io.open can fail, so check its first result before reading.
 ---
 
-io.open can fail, so check its first result before reading. The r mode reads an existing file; w would truncate a file when opened.
+`io.open` can fail, so check its first result before reading. The r mode reads an existing file; w would truncate a file when opened.
 
 ```lua
 local file, message = io.open("tasks.txt", "r")
@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about read a file is correct?
+question: What should you check before reading from `io.open(path, "r")`?
 options:
-  - io.open can fail, so check its first result before reading. The r mode reads an existing file; w
-    would truncate a file when opened.
-  - Opening in w mode preserves existing contents.
-  - io.open always returns a valid file handle.
+  - Whether it returned a file handle.
+  - Whether the pathname ends in `.txt`.
+  - Whether the file is already empty.
 answer: 0
-explain: io.open can fail, so check its first result before reading. The r mode reads an existing
-  file; w would truncate a file when opened.
+explain: Opening can fail and return `nil` plus an error message.
 ```

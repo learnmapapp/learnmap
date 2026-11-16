@@ -7,7 +7,7 @@ requires:
 summary: Integer types encode signedness and bit width.
 ---
 
-Integer types encode signedness and bit width. Widening a u8 into u16 preserves its range without an explicit narrowing cast.
+Integer types encode signedness and bit width. Widening a `u8` into `u16` preserves its range without an explicit narrowing cast.
 
 ```zig
 const std = @import("std");
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about integer types is correct?
+question: Which value fits in `u8`?
 options:
-  - Integer types encode signedness and bit width. Widening a u8 into u16 preserves its range
-    without an explicit narrowing cast.
-  - u8 can represent negative integers.
-  - Every integer type occupies exactly 64 bits.
+  - "`200`"
+  - "`-1`"
+  - "`256`"
 answer: 0
-explain: Integer types encode signedness and bit width. Widening a u8 into u16 preserves its range
-  without an explicit narrowing cast.
+explain: An unsigned 8-bit integer ranges from 0 through 255.
 ```

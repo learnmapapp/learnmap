@@ -83,11 +83,11 @@ error[E0308]: `if` and `else` have incompatible types
 `else if` chains work as usual, but once you have more than two or three, a `match` usually reads better.
 
 ```quiz
-question: "Which numbers does  for i in 0..3  produce?"
+question: Which numbers does  `for i in 0..3`  produce?
 options:
   - 0, 1, 2
   - 0, 1, 2, 3
   - 1, 2, 3
 answer: 0
-explain: a..b excludes b. Use 0..=3 to include it.
+explain: "`a..b` excludes b. Use `0..=3` to include it."
 ```

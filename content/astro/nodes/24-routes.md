@@ -7,7 +7,7 @@ requires:
 summary: src/pages/about.astro maps to /about/.
 ---
 
-In your Astro project, save this as `src/pages/about.astro`. src/pages/about.astro maps to /about/. Use ordinary anchors for navigation and organize nested folders to reflect URL structure.
+In your Astro project, save this as `src/pages/about.astro`. `src/pages/about.astro` maps to /about/. Use ordinary anchors for navigation and organize nested folders to reflect URL structure.
 
 ```astro
 <h1>About this study club</h1>
@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about file-based routes is correct?
+question: Which URL corresponds to `src/pages/about.astro`?
 options:
-  - src/pages/about.astro maps to /about/. Use ordinary anchors for navigation and organize nested
-    folders to reflect URL structure.
-  - Every component automatically becomes a route.
-  - Astro navigation always requires a client router.
+  - "`/about/`"
+  - "`/src/pages/about.astro`"
+  - "`/components/about/`"
 answer: 0
-explain: src/pages/about.astro maps to /about/. Use ordinary anchors for navigation and organize
-  nested folders to reflect URL structure.
+explain: The pages directory maps file names into public routes.
 ```

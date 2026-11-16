@@ -83,9 +83,9 @@ Stuck in a half-written expression? Type `#iex:break` on its own line to start o
 ```quiz
 question: Which IEx helper shows the documentation of a function?
 options:
-  - "i"
-  - "h"
-  - "doc"
+  - i
+  - h
+  - doc
 answer: 1
-explain: "h, for help: h String.upcase shows its docs and examples."
+explain: "h, for help: h `String.upcase` shows its docs and examples."
 ```

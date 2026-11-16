@@ -7,7 +7,7 @@ requires:
 summary: Set stores unique Hashable values without a defined iteration order.
 ---
 
-Set stores unique Hashable values without a defined iteration order. Membership checks express intent directly.
+Set stores unique `Hashable` values without a defined iteration order. Membership checks express intent directly.
 
 ```swift
 let topics: Set<String> = ["Swift", "Lua", "Swift"]
@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about unique sets is correct?
+question: How many elements are in `Set(["Swift", "Lua", "Swift"])`?
 options:
-  - A Set preserves duplicates.
-  - A Set guarantees insertion order.
-  - Set stores unique Hashable values without a defined iteration order. Membership checks express
-    intent directly.
+  - "`3`"
+  - "`1`"
+  - "`2`"
 answer: 2
-explain: Set stores unique Hashable values without a defined iteration order. Membership checks
-  express intent directly.
+explain: A set contains unique values, so the duplicate is not retained.
 ```

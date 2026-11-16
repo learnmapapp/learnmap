@@ -8,7 +8,7 @@ requires:
 summary: string.gsub returns both the transformed string and replacement count.
 ---
 
-string.gsub returns both the transformed string and replacement count. The original string remains unchanged.
+`string.gsub` returns both the transformed string and replacement count. The original string remains unchanged.
 
 ```lua
 local result, count = string.gsub("a-b-c", "-", "/")
@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about replace matches is correct?
+question: What are the results of `string.gsub("a-b-c", "-", "/")`?
 options:
-  - gsub mutates the original string.
-  - gsub can never return a count.
-  - string.gsub returns both the transformed string and replacement count. The original string
-    remains unchanged.
+  - '`"a/b/c"` and `3`.'
+  - '`"a/b-c"` and `1`.'
+  - '`"a/b/c"` and `2`.'
 answer: 2
-explain: string.gsub returns both the transformed string and replacement count. The original string
-  remains unchanged.
+explain: "`gsub` returns the new string and the number of replacements."
 ```

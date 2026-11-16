@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about while loops is correct?
+question: What happens when a `while` condition is initially `false`?
 options:
-  - Changing the controlling variable is forbidden.
-  - while checks its condition before each iteration. Update the controlling state so the loop can
-    finish.
-  - while always executes its body once.
+  - The body runs until a separate `break`.
+  - The body is not executed.
+  - The body executes once before checking.
 answer: 1
-explain: while checks its condition before each iteration. Update the controlling state so the loop
-  can finish.
+explain: "`while` checks its condition before entering the body."
 ```

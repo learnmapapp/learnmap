@@ -23,7 +23,7 @@ Labels document the positions but do not become runtime property names. A tuple 
 
 Use tuples for compact, established pairs such as coordinates or a value and setter. If many positions have unclear meanings, a named object is often easier to use correctly.
 
-`readonly [number, number]` prevents assignment through that tuple reference. Optional and rest elements can describe more flexible argument lists, but an ordinary array is clearer when position does not carry distinct meaning.
+`readonly [number, number]` prevents assignment through that tuple reference. `Optional` and rest elements can describe more flexible argument lists, but an ordinary array is clearer when position does not carry distinct meaning.
 
 A plain `[3, 4]` without context usually infers `number[]`, not a two-element tuple. Supply an annotation or use a const assertion when fixed positions matter.
 
@@ -40,11 +40,11 @@ hint: "Change the tuple type to [string, number]."
 ```
 
 ```quiz
-question: "Do labels in [name: string, score: number] create object properties?"
+question: "Do labels in `[name: string, score: number]` create object properties?"
 options:
-  - "Yes, result.name reads the first value."
-  - "No, access is still positional."
-  - "Only after compilation."
+  - Yes, result.name reads the first value.
+  - No, access is still positional.
+  - Only after compilation.
 answer: 1
-explain: "Tuple labels help readers and tooling; the runtime value remains an array."
+explain: Tuple labels help readers and tooling; the runtime value remains an array.
 ```

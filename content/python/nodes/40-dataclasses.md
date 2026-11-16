@@ -53,7 +53,7 @@ struct Lesson {
 ```
 
 ```exercise
-goal: "Create an independent lessons list for each Course."
+goal: Create an independent lessons list for each Course.
 lang: python
 code: |
   from dataclasses import dataclass, field
@@ -65,17 +65,17 @@ code: |
 
   print(Course("Python"))
 checks:
-  - match: "lessons:\\s*list\\[str\\]\\s*=\\s*field\\(\\s*default_factory\\s*=\\s*list\\s*\\)"
-    message: "Replace [] with field(default_factory=list)."
-hint: "Replace [] with field(default_factory=list)."
+  - match: lessons:\s*list\[str\]\s*=\s*field\(\s*default_factory\s*=\s*list\s*\)
+    message: Replace [] with field(default_factory=list).
+hint: Replace [] with `field(default_factory=list)`.
 ```
 
 ```quiz
-question: "Why use field(default_factory=list)?"
+question: Why use `field(default_factory=list)`?
 options:
-  - "To share one list between every instance."
-  - "To create a separate list for each instance."
-  - "To convert every field to text."
+  - To share one list between every instance.
+  - To create a separate list for each instance.
+  - To convert every field to text.
 answer: 1
-explain: "The factory creates a new list during each instance's initialization."
+explain: The factory creates a new list during each instance's initialization.
 ```

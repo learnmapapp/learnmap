@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about while loops is correct?
+question: When does a `while` loop first check its condition?
 options:
-  - The condition is checked only after the loop.
-  - A while loop checks its condition before each iteration. Update the value that controls
-    termination.
-  - The body always runs once.
+  - After executing its body twice.
+  - Before executing its body.
+  - After executing its body once.
 answer: 1
-explain: A while loop checks its condition before each iteration. Update the value that controls
-  termination.
+explain: An initially `false` condition means the body never executes.
 ```

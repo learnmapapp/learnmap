@@ -7,7 +7,7 @@ requires:
 summary: SIMD lane indices are zero-based.
 ---
 
-SIMD lane indices are zero-based. Distinguish reading one lane from reducing all lanes to a single aggregate.
+`SIMD` lane indices are zero-based. Distinguish reading one lane from reducing all lanes to a single aggregate.
 
 ```mojo
 def main() raises:
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about inspect vector lanes is correct?
+question: For the vector lanes `2, 4, 6, 8`, what does index `2` read?
 options:
-  - SIMD lanes start at index 1.
-  - Reading one lane sums the whole vector.
-  - SIMD lane indices are zero-based. Distinguish reading one lane from reducing all lanes to a
-    single aggregate.
+  - "`4`"
+  - "`8`"
+  - "`6`"
 answer: 2
-explain: SIMD lane indices are zero-based. Distinguish reading one lane from reducing all lanes to a
-  single aggregate.
+explain: Lane indexing is zero-based.
 ```

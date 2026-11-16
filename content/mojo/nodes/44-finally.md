@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about always-run cleanup is correct?
+question: Which exits trigger the `finally` block?
 options:
-  - finally runs only when an error occurs.
-  - finally prevents all errors from propagating.
-  - finally runs when control leaves the protected block. Use it for cleanup that must happen on
-    both success and failure.
+  - Only successful exits.
+  - Only exits caused by errors.
+  - Both successful and error exits from the protected work.
 answer: 2
-explain: finally runs when control leaves the protected block. Use it for cleanup that must happen
-  on both success and failure.
+explain: Finally keeps cleanup independent of the operation's outcome.
 ```

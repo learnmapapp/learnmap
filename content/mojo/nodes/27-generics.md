@@ -58,13 +58,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about trait-constrained functions is correct?
+question: "What capability does `T: Readable` guarantee to `read_value`?"
 options:
-  - A type parameter constrained by a trait lets a function use that trait’s required methods while
-    retaining a concrete input type.
-  - Generic functions bypass trait checks.
-  - A type parameter can only be Int.
+  - The operations required by `Readable`.
+  - That every `T` is a `Float64`.
+  - That `T` contains no mutable fields.
 answer: 0
-explain: A type parameter constrained by a trait lets a function use that trait’s required methods
-  while retaining a concrete input type.
+explain: A trait constraint supplies the capabilities generic code may rely on.
 ```

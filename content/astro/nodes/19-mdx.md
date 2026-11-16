@@ -7,7 +7,7 @@ requires:
 summary: Install @astrojs/mdx before enabling it.
 ---
 
-In your Astro project, save this as `astro.config.mjs`. Install @astrojs/mdx before enabling it. Configuration files are plain JavaScript; MDX allows component imports inside .mdx content.
+In your Astro project, save this as `astro.config.mjs`. Install `@astrojs/mdx` before enabling it. Configuration files are plain JavaScript; MDX allows component imports inside .mdx content.
 
 ```javascript
 import { defineConfig } from "astro/config";
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about mdx components is correct?
+question: Which integration enables MDX component imports in `.mdx` content?
 options:
-  - astro.config.mjs uses Markdown frontmatter.
-  - Install @astrojs/mdx before enabling it. Configuration files are plain JavaScript; MDX allows
-    component imports inside .mdx content.
-  - MDX integration is installed automatically by every Astro template.
+  - "`@astrojs/rss`"
+  - "`@astrojs/mdx`"
+  - "`@astrojs/sitemap`"
 answer: 1
-explain: Install @astrojs/mdx before enabling it. Configuration files are plain JavaScript; MDX
-  allows component imports inside .mdx content.
+explain: Enable the MDX integration before using its extended content syntax.
 ```

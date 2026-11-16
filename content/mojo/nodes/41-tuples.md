@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about group fixed results is correct?
+question: For `var point = (3, 4)`, what is `point[0]`?
 options:
-  - Tuples always grow on append.
-  - Tuple indices are one-based.
-  - A tuple groups a fixed number of values and supports index access. Prefer a named struct when
-    field meaning is part of a public API.
+  - "`4`"
+  - The whole tuple.
+  - "`3`"
 answer: 2
-explain: A tuple groups a fixed number of values and supports index access. Prefer a named struct
-  when field meaning is part of a public API.
+explain: Tuple index zero refers to its first element.
 ```

@@ -33,7 +33,7 @@ An ordinary error in a click handler still needs explicit handling; a boundary i
 Place boundaries around meaningful areas so a failed widget need not remove the whole application. A retry design must actually reset the failed boundary and the underlying cause, not merely hide the fallback text.
 
 ```exercise
-goal: "Switch the boundary into fallback state when a descendant fails."
+goal: Switch the boundary into fallback state when a descendant fails.
 lang: jsx
 code: |
   import { Component } from "react";
@@ -44,9 +44,9 @@ code: |
   }
   export default function App() { return <Boundary><h1>Lessons</h1></Boundary>; }
 checks:
-  - match: "return\\s+\\{\\s+failed:\\s+true\\s+\\};"
+  - match: return\s+\{\s+failed:\s+true\s+\};
     message: "Return failed: true from getDerivedStateFromError."
-hint: "Return failed: true from getDerivedStateFromError."
+hint: "Return failed: `true` from getDerivedStateFromError."
 ```
 
 ```quiz

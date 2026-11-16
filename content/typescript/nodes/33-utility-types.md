@@ -32,7 +32,7 @@ A finite-key `Record` requires each listed key. `Record<string, T>` describes a 
 `Exclude`, `Extract`, and `NonNullable` operate on union members; `Parameters`, `ReturnType`, and `Awaited` inspect other type relationships. Name the transformed result when it represents a domain concept rather than repeating a long utility expression everywhere.
 
 ```exercise
-goal: "Describe a patch that can omit the unchanged properties."
+goal: Describe a patch that can omit the unchanged properties.
 lang: typescript
 code: |
   type Learner = { name: string; score: number };
@@ -40,17 +40,17 @@ code: |
   const patch: Patch = { score: 42 };
   console.log(patch);
 checks:
-  - match: "type\\s+Patch\\s+=\\s+Partial<Learner>;"
-    message: "Use Partial<Learner> for the patch contract."
-hint: "Use Partial<Learner> for the patch contract."
+  - match: type\s+Patch\s+=\s+Partial<Learner>;
+    message: Use Partial<Learner> for the patch contract.
+hint: Use `Partial<Learner>` for the patch contract.
 ```
 
 ```quiz
-question: "Does Partial<Learner> recursively make every nested field optional?"
+question: Does `Partial<Learner>` recursively make every nested field optional?
 options:
-  - "Yes."
-  - "No, it changes the top-level properties."
-  - "Only when Learner is an interface."
+  - Yes.
+  - No, it changes the top-level properties.
+  - Only when Learner is an interface.
 answer: 1
-explain: "The built-in Partial is a shallow property transformation."
+explain: The built-in Partial is a shallow property transformation.
 ```

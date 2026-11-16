@@ -7,7 +7,7 @@ requires:
 summary: useHead manages document metadata during server rendering and navigation.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. useHead manages document metadata during server rendering and navigation. Supply page-specific values so browser tabs and assistive tools describe the current page.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. `useHead` manages document metadata during server rendering and navigation. Supply page-specific values so browser tabs and assistive tools describe the current page.
 
 ```vue
 <script setup lang="ts">
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about document head metadata is correct?
+question: 'What does `useHead({ title: "Study dashboard" })` manage?'
 options:
-  - Changing a visible h1 automatically sets every document title.
-  - Head metadata can only be set after mounting.
-  - useHead manages document metadata during server rendering and navigation. Supply page-specific
-    values so browser tabs and assistive tools describe the current page.
+  - The visible first heading automatically.
+  - The server route's filename.
+  - The document title during rendering and navigation.
 answer: 2
-explain: useHead manages document metadata during server rendering and navigation. Supply
-  page-specific values so browser tabs and assistive tools describe the current page.
+explain: Head metadata and visible page content are separate responsibilities.
 ```

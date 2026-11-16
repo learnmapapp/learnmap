@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reactive refs is correct?
+question: How do you increment a `ref(0)` named `count` inside script?
 options:
-  - Every template ref access requires writing .value.
-  - Assigning a plain local number always makes it reactive.
-  - ref creates reactive state. Use .value in script; Vue unwraps refs when rendering them in
-    templates. Nuxt auto-imports common Vue APIs.
+  - "`count += 1`"
+  - "`count.current += 1`"
+  - "`count.value += 1`"
 answer: 2
-explain: ref creates reactive state. Use .value in script; Vue unwraps refs when rendering them in
-  templates. Nuxt auto-imports common Vue APIs.
+explain: Refs expose their stored value through `.value` in script.
 ```

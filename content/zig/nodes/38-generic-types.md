@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about functions returning types is correct?
+question: Why can `Box(u8)` be used as a type?
 options:
-  - Types can only be hard-coded at the top level.
-  - A generic container requires heap allocation.
-  - A compile-time function can return a type. This is how reusable containers express their element
-    type without runtime type erasure.
+  - "`u8` is converted into a runtime class name."
+  - Every function call can return a runtime type value.
+  - The compile-time function returns a type.
 answer: 2
-explain: A compile-time function can return a type. This is how reusable containers express their
-  element type without runtime type erasure.
+explain: Types and type-producing functions participate in compile-time programming.
 ```

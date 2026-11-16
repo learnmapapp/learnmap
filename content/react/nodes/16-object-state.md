@@ -44,11 +44,11 @@ hint: "Spread previous before replacing score."
 ```
 
 ```quiz
-question: "Does setProfile({ score: 1 }) automatically preserve a name field?"
+question: "Does `setProfile({ score: 1 })` automatically preserve a name field?"
 options:
-  - "Yes, useState merges object fields."
-  - "No, it replaces the stored object."
-  - "Only for nested fields."
+  - Yes, `useState` merges object fields.
+  - No, it replaces the stored object.
+  - Only for nested fields.
 answer: 1
-explain: "The useState setter replaces its value; copy the properties that should remain."
+explain: The `useState` setter replaces its value; copy the properties that should remain.
 ```

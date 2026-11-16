@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about find a pattern is correct?
+question: Which Lua pattern matches one or more digits?
 options:
-  - Lua patterns use % classes, such as %d for digits. They are a smaller pattern language than
-    regular expressions.
-  - Lua patterns use backslash-d for digit classes.
-  - The + modifier matches exactly one character.
+  - '`"%d+"`'
+  - '`"%a+"`'
+  - '`"%s+"`'
 answer: 0
-explain: Lua patterns use % classes, such as %d for digits. They are a smaller pattern language than
-  regular expressions.
+explain: "`%d` matches digits; `%a` matches letters and `%s` matches whitespace."
 ```

@@ -43,11 +43,11 @@ hint: "Use typeof defaults in the type alias."
 ```
 
 ```quiz
-question: "What is produced by type Settings = typeof defaults?"
+question: What is produced by `type Settings = typeof defaults`?
 options:
-  - "A duplicate runtime object."
-  - "A static type derived from defaults."
-  - "The string \"object\"."
+  - A duplicate runtime object.
+  - A static type derived from defaults.
+  - The string "object".
 answer: 1
-explain: "In a type position, typeof refers to the inferred type of the value."
+explain: In a type position, typeof refers to the inferred type of the value.
 ```

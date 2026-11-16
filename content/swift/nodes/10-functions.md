@@ -55,13 +55,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about define functions is correct?
+question: What does the single-expression body `value * value` return for an input of `6`?
 options:
-  - Return types are written before func.
-  - A function declares parameter and result types. A single-expression body can return that
-    expression without writing return.
-  - Every Swift function must return Void.
+  - "`6`"
+  - "`36`"
+  - "`12`"
 answer: 1
-explain: A function declares parameter and result types. A single-expression body can return that
-  expression without writing return.
+explain: A single-expression function can return that expression without an explicit `return`.
 ```

@@ -59,13 +59,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about task tracker is correct?
+question: How should the tracker reject an empty task title?
 options:
-  - Put all task state in unrelated global variables.
-  - Persistence removes the need for validation.
-  - Separate task validation, state changes, and display. Extend this tracker with a module, a
-    persistence format, and tests for invalid titles before adding features.
+  - Wait until the title is printed.
+  - Mark every empty-title task complete automatically.
+  - Validate it in `Task.new` before creating a usable task.
 answer: 2
-explain: Separate task validation, state changes, and display. Extend this tracker with a module, a
-  persistence format, and tests for invalid titles before adding features.
+explain: Keep domain validation at construction so later operations receive valid tasks.
 ```

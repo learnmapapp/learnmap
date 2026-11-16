@@ -28,7 +28,7 @@ Handlers receive an event object. `event.preventDefault()` prevents a browser de
 Keep render calculations pure. Sending a request or writing an application record generally belongs in a user handler or an explicitly managed synchronization boundary, not in the component body just because it runs often.
 
 ```exercise
-goal: "Pass the handler without calling it during rendering."
+goal: Pass the handler without calling it during rendering.
 lang: jsx
 code: |
   export default function SaveButton() {
@@ -36,17 +36,17 @@ code: |
     return <button onClick={handleClick()}>Save</button>;
   }
 checks:
-  - match: "onClick=\\{handleClick\\}"
-    message: "Pass handleClick rather than handleClick()."
-hint: "Pass handleClick rather than handleClick()."
+  - match: onClick=\{handleClick\}
+    message: Pass handleClick rather than handleClick().
+hint: Pass handleClick rather than `handleClick()`.
 ```
 
 ```quiz
-question: "What does onClick={handleClick()} do during render?"
+question: What does `onClick={handleClick()}` do during render?
 options:
-  - "Registers the function without calling it."
-  - "Calls handleClick immediately."
-  - "Automatically waits for a click."
+  - Registers the function without calling it.
+  - Calls handleClick immediately.
+  - Automatically waits for a click.
 answer: 1
-explain: "Parentheses execute the function; pass a function for React to call later."
+explain: Parentheses execute the function; pass a function for React to call later.
 ```

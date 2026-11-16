@@ -42,7 +42,7 @@ The assertions:
 
 | Macro | Checks |
 | --- | --- |
-| `assert!(cond)` | cond is true |
+| `assert!(cond)` | cond is `true` |
 | `assert_eq!(a, b)` | a == b, and prints both when not |
 | `assert_ne!(a, b)` | a != b |
 
@@ -83,14 +83,14 @@ func TestAdd(t *testing.T) { if add(2, 2) != 4 { t.Fatal("wrong") } }
 ```
 
 ```exercise
-goal: Turn this into a test that checks double(21) equals 42.
+goal: Turn this into a test that checks `double(21)` equals 42.
 code: |
   fn doubles() {
   }
 checks:
-  - match: '#\[test\]\s*fn\s+doubles'
+  - match: "#\\[test\\]\\s*fn\\s+doubles"
     message: "Put #[test] on the line above fn doubles."
-  - match: 'assert_eq!\(\s*double\(\s*21\s*\)\s*,\s*42\s*\)|assert_eq!\(\s*42\s*,\s*double\(\s*21\s*\)\s*\)'
+  - match: assert_eq!\(\s*double\(\s*21\s*\)\s*,\s*42\s*\)|assert_eq!\(\s*42\s*,\s*double\(\s*21\s*\)\s*\)
     message: Inside, write assert_eq!(double(21), 42);
 output: test doubles ... ok
 ```

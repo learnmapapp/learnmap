@@ -8,7 +8,7 @@ requires:
 summary: Run zig test file.zig to discover test blocks.
 ---
 
-Run zig test file.zig to discover test blocks. std.testing.allocator can also detect leaked allocations in tests.
+Run `zig test file.zig` to discover test blocks. `std.testing.allocator` can also detect leaked allocations in tests.
 
 ```zig
 const std = @import("std");
@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about built-in tests is correct?
+question: Which command discovers and runs Zig `test` blocks?
 options:
-  - Run zig test file.zig to discover test blocks. std.testing.allocator can also detect leaked
-    allocations in tests.
-  - zig build-exe runs every test block automatically.
-  - Test names must be valid identifier tokens.
+  - "`zig test file.zig`"
+  - "`zig build-exe file.zig`"
+  - "`zig fmt file.zig`"
 answer: 0
-explain: Run zig test file.zig to discover test blocks. std.testing.allocator can also detect leaked
-  allocations in tests.
+explain: The test command builds and executes the test runner.
 ```

@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about formatting output is correct?
+question: Who owns the storage used by `std.fmt.bufPrint(&buffer, ...)`?
 options:
-  - The returned slice outlives its stack buffer automatically.
-  - bufPrint formats into caller-provided storage and can fail if it does not fit. The returned
-    slice borrows that buffer.
-  - bufPrint always returns an owned heap string.
+  - The formatting function after it returns.
+  - The caller that supplied `buffer`.
+  - A new heap allocation hidden inside the result slice.
 answer: 1
-explain: bufPrint formats into caller-provided storage and can fail if it does not fit. The returned
-  slice borrows that buffer.
+explain: The returned slice borrows the supplied buffer, so that storage must remain alive.
 ```

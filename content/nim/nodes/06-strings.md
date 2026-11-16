@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about string operations is correct?
+question: Which import provides `strip` and `toUpperAscii`?
 options:
-  - Import strutils for operations such as strip and toUpperAscii. ASCII case conversion is not full
-    Unicode case folding.
-  - String helpers are all built into the syntax.
-  - toUpperAscii implements every Unicode casing rule.
+  - "`import std/strutils`"
+  - "`import std/json`"
+  - "`import std/tables`"
 answer: 0
-explain: Import strutils for operations such as strip and toUpperAscii. ASCII case conversion is not
-  full Unicode case folding.
+explain: "`strutils` contains these string manipulation helpers."
 ```

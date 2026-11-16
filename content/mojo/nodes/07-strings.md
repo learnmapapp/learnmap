@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about string values is correct?
+question: What does adding two `String` values with `+` produce?
 options:
-  - Strings are integer arrays with unrestricted element mutation.
-  - String stores text as a value. Concatenation builds a combined string; use typed values when
-    passing text through function interfaces.
-  - The + operator can never concatenate Strings.
+  - A tuple holding both original strings.
+  - A string containing their concatenated text.
+  - The sum of their byte lengths as an `Int`.
 answer: 1
-explain: String stores text as a value. Concatenation builds a combined string; use typed values
-  when passing text through function interfaces.
+explain: String addition combines text into a string value.
 ```

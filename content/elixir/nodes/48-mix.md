@@ -82,9 +82,9 @@ In IEx, `recompile()` picks up your code changes without restarting.
 ```quiz
 question: How do you get an interactive shell with your project's code loaded?
 options:
-  - mix shell
-  - iex -S mix
-  - mix run --iex
+  - "`mix shell`"
+  - "`iex -S mix`"
+  - "`mix run --iex`"
 answer: 1
-explain: "iex -S mix starts IEx and runs the project inside it."
+explain: "`iex -S mix` starts IEx and runs the project inside it."
 ```

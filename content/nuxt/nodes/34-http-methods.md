@@ -7,7 +7,7 @@ requires:
 summary: The .post.ts suffix selects POST requests.
 ---
 
-In your Nuxt 4 project, save this as `server/api/tasks.post.ts`. The .post.ts suffix selects POST requests. Reading a body does not validate its runtime shape; the next lesson adds explicit validation.
+In your Nuxt 4 project, save this as `server/api/tasks.post.ts`. The `.post.ts` suffix selects POST requests. Reading a body does not validate its runtime shape; the next lesson adds explicit validation.
 
 ```typescript
 export default defineEventHandler(async (event) => {
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about method-specific handlers is correct?
+question: What does the `.post.ts` suffix on a server handler select?
 options:
-  - .post.ts automatically accepts only GET requests.
-  - The .post.ts suffix selects POST requests. Reading a body does not validate its runtime shape;
-    the next lesson adds explicit validation.
-  - A TypeScript annotation validates all incoming JSON at runtime.
+  - Every method without distinction.
+  - POST requests.
+  - Only GET requests.
 answer: 1
-explain: The .post.ts suffix selects POST requests. Reading a body does not validate its runtime
-  shape; the next lesson adds explicit validation.
+explain: Method-specific files keep request handling explicit.
 ```

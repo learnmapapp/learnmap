@@ -35,7 +35,7 @@ for path in sorted(folder.glob("*.txt")):
 Relative paths are resolved from the process's current working directory, which is not necessarily the script's directory. When you need files shipped beside a script, a starting point such as `Path(__file__).resolve().parent` is more explicit. Paths can also be passed directly to `open`.
 
 ```exercise
-goal: "Use Path and / to build the path to daily.txt."
+goal: Use Path and / to build the path to `daily.txt`.
 lang: python
 code: |
   from pathlib import Path
@@ -43,17 +43,18 @@ code: |
   report = "reports/daily.txt"
   print(report.name)
 checks:
-  - match: "Path\\(\\s*[\"']reports[\"']\\s*\\)\\s*/\\s*[\"']daily\\.txt[\"']"
-    message: "Build report with Path(\"reports\") / \"daily.txt\"."
-hint: "Build report with Path(\"reports\") / \"daily.txt\"."
+  - match: Path\(\s*["']reports["']\s*\)\s*/\s*["']daily\.txt["']
+    message: Build report with Path("reports") / "daily.txt".
+hint: Build report with `Path("reports")` / "`daily.txt`".
 ```
 
 ```quiz
-question: "Does Path(\"reports\") / \"daily.txt\" create that file?"
+question: Does `Path("reports")` / "`daily.txt`" create that file?
 options:
-  - "Yes, immediately."
-  - "Only if the parent exists."
-  - "No, it constructs a path object."
+  - Yes, immediately.
+  - Only if the parent exists.
+  - No, it constructs a path object.
 answer: 2
-explain: "Path construction describes a location. A write or explicit creation operation changes the filesystem."
+explain: Path construction describes a location. A write or explicit creation operation changes the
+  filesystem.
 ```

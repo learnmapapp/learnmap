@@ -52,13 +52,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about a learning publication is correct?
+question: Why should the publication's listing omit draft entries?
 options:
-  - A link alone creates its destination page.
-  - Draft status must always be ignored in production.
-  - Connect the earlier layout, notes schema, and generated note routes. Add two notes, mark one as
-    draft, build the project, and verify only the published note appears.
+  - Because draft titles cannot be strings.
+  - Because an anchor creates its own destination page.
+  - To link only content intended for publication.
 answer: 2
-explain: Connect the earlier layout, notes schema, and generated note routes. Add two notes, mark
-  one as draft, build the project, and verify only the published note appears.
+explain: Use a consistent publication policy when generating listings and article routes.
 ```

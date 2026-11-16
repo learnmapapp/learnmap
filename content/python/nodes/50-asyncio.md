@@ -41,7 +41,7 @@ async function main() {
 ```
 
 ```exercise
-goal: "Await the sleep so the coroutine actually waits cooperatively."
+goal: Await the sleep so the coroutine actually waits cooperatively.
 lang: python
 code: |
   import asyncio
@@ -52,9 +52,9 @@ code: |
 
   asyncio.run(main())
 checks:
-  - match: "^\\s+await\\s+asyncio\\.sleep\\(\\s*0\\.01\\s*\\)"
-    message: "Add await before asyncio.sleep(0.01)."
-hint: "Add await before asyncio.sleep(0.01)."
+  - match: ^\s+await\s+asyncio\.sleep\(\s*0\.01\s*\)
+    message: Add await before asyncio.sleep(0.01).
+hint: Add await before `asyncio.sleep(0.01)`.
 ```
 
 ```quiz

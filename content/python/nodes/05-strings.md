@@ -40,11 +40,11 @@ hint: "Use name[-1] for the last character."
 ```
 
 ```quiz
-question: "What does \"Python\"[-1] return?"
+question: What does `"Python"[-1]` return?
 options:
-  - "P"
-  - "n"
-  - "An error because negative indexes are forbidden."
+  - P
+  - n
+  - An error because negative indexes are forbidden.
 answer: 1
-explain: "Negative indexes count backward from the end, so -1 selects the last character."
+explain: Negative indexes count backward from the end, so -1 selects the last character.
 ```

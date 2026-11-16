@@ -7,7 +7,7 @@ requires:
 summary: Create a /api/course endpoint returning a title.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. Create a /api/course endpoint returning a title. useFetch transfers server-fetched data in the Nuxt payload to avoid an unnecessary hydration refetch; handle failure and loading explicitly.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. Create a /api/course endpoint returning a title. `useFetch` transfers server-fetched data in the Nuxt payload to avoid an unnecessary hydration refetch; handle failure and loading explicitly.
 
 A useful term here is [[payload]]: Data serialized by Nuxt from server rendering for the browser to reuse during hydration.
 
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about ssr-aware fetching is correct?
+question: Why use `useFetch` for initial data in server-rendered setup?
 options:
-  - A bare $fetch in setup always avoids duplicate server/client fetching.
-  - useFetch never exposes errors.
-  - Create a /api/course endpoint returning a title. useFetch transfers server-fetched data in the
-    Nuxt payload to avoid an unnecessary hydration refetch; handle failure and loading explicitly.
+  - It makes every remote response trustworthy.
+  - It prevents all possible request failures.
+  - It transfers fetched data in the payload for hydration reuse.
 answer: 2
-explain: Create a /api/course endpoint returning a title. useFetch transfers server-fetched data in
-  the Nuxt payload to avoid an unnecessary hydration refetch; handle failure and loading explicitly.
+explain: SSR-aware data handling avoids an unnecessary duplicate fetch during hydration.
 ```

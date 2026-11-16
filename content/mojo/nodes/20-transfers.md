@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about transfer ownership is correct?
+question: What does `consume(text^)` explicitly do when the callee takes a `var` argument?
 options:
-  - The ^ sigil clones the value while retaining the original.
-  - Transferred storage can always be read through the old binding.
-  - A var parameter takes ownership of a value. The postfix ^ explicitly transfers the original,
-    leaving that binding unavailable until reinitialized.
+  - Clones the value while preserving the original binding's value.
+  - Creates a read-only alias with unlimited lifetime.
+  - Transfers the value, leaving `text` uninitialized until reassigned.
 answer: 2
-explain: A var parameter takes ownership of a value. The postfix ^ explicitly transfers the
-  original, leaving that binding unavailable until reinitialized.
+explain: The transfer sigil expresses that the original value is consumed.
 ```

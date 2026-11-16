@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about side-effect-free functions is correct?
+question: Which operation belongs in a side-effect-free `func`?
 options:
-  - func declares a procedure checked for side effects. Keep computation separate from echo, file
-    access, or other external effects.
-  - func freely writes global state.
-  - func forces evaluation at compile time in every call.
+  - Calculating and returning a numeric result.
+  - Writing a message with `echo`.
+  - Updating a mutable global counter.
 answer: 0
-explain: func declares a procedure checked for side effects. Keep computation separate from echo,
-  file access, or other external effects.
+explain: "`func` checks for side effects; keep output and external mutation elsewhere."
 ```

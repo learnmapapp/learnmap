@@ -43,11 +43,11 @@ hint: "Use the number 42 rather than the string \"42\"."
 ```
 
 ```quiz
-question: "What does a required score: number property mean?"
+question: "What does a required `score: number` property mean?"
 options:
-  - "The object must provide a compatible numeric score."
-  - "TypeScript inserts a zero if it is missing."
-  - "The object can never have extra properties."
+  - The object must provide a compatible numeric score.
+  - TypeScript inserts a zero if it is missing.
+  - The object can never have extra properties.
 answer: 0
-explain: "Required properties must be supplied; annotations do not invent runtime values."
+explain: Required properties must be supplied; annotations do not invent runtime values.
 ```

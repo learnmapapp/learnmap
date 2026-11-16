@@ -53,13 +53,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about return paths is correct?
+question: Why does the absolute-value function return from both its negative and nonnegative paths?
 options:
-  - Every normal path through a value-returning function must produce a compatible result. An early
-    return can handle one branch cleanly.
-  - Only the first branch needs a result.
-  - A missing Int result is automatically filled with zero.
+  - Each normal path must supply an integer result.
+  - A missing return automatically supplies zero.
+  - Returning from one branch also returns from every other branch.
 answer: 0
-explain: Every normal path through a value-returning function must produce a compatible result. An
-  early return can handle one branch cleanly.
+explain: All successful paths must uphold the declared result contract.
 ```

@@ -7,7 +7,7 @@ requires:
 summary: defineEmits declares events a component can send to its parent.
 ---
 
-In your Nuxt 4 project, save this as `app/components/FinishButton.vue`. defineEmits declares events a component can send to its parent. The parent handles @finish and owns the resulting state change.
+In your Nuxt 4 project, save this as `app/components/FinishButton.vue`. `defineEmits` declares events a component can send to its parent. The parent handles @finish and owns the resulting state change.
 
 ```vue
 <script setup lang="ts">
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed component events is correct?
+question: "For `defineEmits<{ finish: [id: string] }>()`, which payload matches `finish`?"
 options:
-  - defineEmits declares events a component can send to its parent. The parent handles @finish and
-    owns the resulting state change.
-  - Component events automatically update an unrelated global store.
-  - Every emitted event becomes an HTTP request.
+  - A task ID string.
+  - A required array of all tasks.
+  - A DOM node with no task ID.
 answer: 0
-explain: defineEmits declares events a component can send to its parent. The parent handles @finish
-  and owns the resulting state change.
+explain: The event contract declares one string argument for this event.
 ```

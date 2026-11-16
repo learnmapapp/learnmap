@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about simd vectors is correct?
+question: What is `@reduce(.Add, @Vector(4, i32){ 2, 4, 6, 8 })`?
 options:
-  - Vector multiplication computes a dot product automatically.
-  - "@splat initializes only the first lane."
-  - Vector arithmetic operates lane by lane. @splat fills each lane and @reduce combines lanes using
-    a selected operation.
+  - A vector containing `2, 4, 6, 8`.
+  - "`8`"
+  - "`20`"
 answer: 2
-explain: Vector arithmetic operates lane by lane. @splat fills each lane and @reduce combines lanes
-  using a selected operation.
+explain: An additive horizontal reduction sums the vector's lanes.
 ```

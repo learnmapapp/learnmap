@@ -23,7 +23,7 @@ The result is a `string[]` because the predicate narrows each retained item. Mod
 
 The checker trusts the declared relationship; it does not prove that your implementation checked every property. An incorrect guard can make unsafe operations appear valid.
 
-For an object guard, check that the value is non-null, has the required keys, and contains compatible values. Test both accepted and rejected inputs. A guard for a class-like shape does not establish prototype identity unless that is what the code actually tests.
+For an object guard, check that the value is non-`null`, has the required keys, and contains compatible values. Test both accepted and rejected inputs. A guard for a class-like shape does not establish prototype identity unless that is what the code actually tests.
 
 Use guards for a clear reusable check; use a decoder when you also need detailed validation errors or normalization.
 

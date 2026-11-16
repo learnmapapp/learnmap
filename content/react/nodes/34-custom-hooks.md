@@ -39,7 +39,7 @@ Two calls to this Hook have independent state and subscriptions. Extracting a Ho
 Name Hooks after their purpose, such as `useOnlineStatus`, rather than generic lifecycle wrappers that hide dependencies. Preserve setup and cleanup inside the reusable logic, and expose a small interface that matches what the caller needs.
 
 ```exercise
-goal: "Name the reusable Hook with the use prefix."
+goal: Name the reusable Hook with the use prefix.
 lang: jsx
 code: |
   import { useState } from "react";
@@ -52,9 +52,9 @@ code: |
     return <button onClick={toggle}>{enabled ? "On" : "Off"}</button>;
   }
 checks:
-  - match: "function\\s+useToggle\\(\\)"
-    message: "Name the Hook useToggle so its role and call rules are explicit."
-hint: "Name the Hook useToggle so its role and call rules are explicit."
+  - match: function\s+useToggle\(\)
+    message: Name the Hook useToggle so its role and call rules are explicit.
+hint: Name the Hook `useToggle` so its role and call rules are explicit.
 ```
 
 ```quiz

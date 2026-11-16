@@ -7,7 +7,7 @@ requires:
 summary: useCookie exposes an SSR-aware cookie ref for serializable preferences.
 ---
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. useCookie exposes an SSR-aware cookie ref for serializable preferences. Authentication cookies need appropriate server-only access and security settings.
+In your Nuxt 4 project, save this as `app/pages/index.vue`. `useCookie` exposes an SSR-aware cookie ref for serializable preferences. Authentication cookies need appropriate server-only access and security settings.
 
 ```vue
 <script setup lang="ts">
@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about cookie preferences is correct?
+question: What does `useCookie` provide for the theme preference?
 options:
-  - useCookie exposes an SSR-aware cookie ref for serializable preferences. Authentication cookies
-    need appropriate server-only access and security settings.
-  - A theme cookie is proof of authentication.
-  - Every cookie should be readable by browser JavaScript.
+  - An SSR-aware cookie ref.
+  - Proof that the visitor is authenticated.
+  - An encrypted secret store by default.
 answer: 0
-explain: useCookie exposes an SSR-aware cookie ref for serializable preferences. Authentication
-  cookies need appropriate server-only access and security settings.
+explain: A preference cookie is client-controlled input, not an authorization credential.
 ```

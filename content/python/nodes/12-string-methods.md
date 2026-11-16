@@ -32,24 +32,24 @@ print(name)                         # python
 For case-insensitive text matching, `casefold()` is designed for Unicode caseless comparison. `strip("ab")` removes any `a` or `b` characters at either end; it does not remove an exact prefix. Use `removeprefix("ab")` when that is what you mean.
 
 ```exercise
-goal: "Strip the surrounding whitespace before splitting names."
+goal: Strip the surrounding whitespace before splitting names.
 lang: python
 code: |
   line = "  Ada,Grace\n"
   names = line.split(",")
   print(names)
 checks:
-  - match: "line\\.strip\\(\\s*\\)\\.split\\("
-    message: "Call line.strip().split(\",\")."
-hint: "Call line.strip().split(\",\")."
+  - match: line\.strip\(\s*\)\.split\(
+    message: Call line.strip().split(",").
+hint: Call `line.strip()`.`split(",")`.
 ```
 
 ```quiz
-question: "What does text.strip() change?"
+question: What does `text.strip()` return?
 options:
-  - "All spaces anywhere in the text."
-  - "Surrounding whitespace in a new string."
-  - "The original string in place."
+  - The value `None` after mutating text.
+  - A string without leading and trailing whitespace.
+  - The original string with all interior spaces removed.
 answer: 1
-explain: "Strings are immutable. strip returns a copy with leading and trailing whitespace removed."
+explain: Strings are immutable; strip returns a result without changing the original binding's string.
 ```

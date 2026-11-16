@@ -42,11 +42,11 @@ hint: "Define the alias as string | number."
 ```
 
 ```quiz
-question: "Does type Learner = ... create a runtime validator?"
+question: Does `type Learner = ...` create a runtime validator?
 options:
-  - "Yes."
-  - "No, it only names a static type."
-  - "Only if exported."
+  - Yes.
+  - No, it only names a static type.
+  - Only if exported.
 answer: 1
-explain: "Type aliases are erased and do not create runtime behavior."
+explain: Type aliases are erased and do not create runtime behavior.
 ```

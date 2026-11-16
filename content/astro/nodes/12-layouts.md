@@ -51,13 +51,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about shared layouts is correct?
+question: What makes the shared `Base.astro` layout reusable?
 options:
-  - A layout is an ordinary component that wraps page content. Import it into a page and pass a
-    meaningful title for each route.
-  - Layouts require a special global registry.
-  - A layout’s title must be identical for all pages.
+  - It receives page inputs and renders child content through a slot.
+  - It must contain a copy of every page's body.
+  - It creates every child page route automatically.
 answer: 0
-explain: A layout is an ordinary component that wraps page content. Import it into a page and pass a
-  meaningful title for each route.
+explain: An Astro layout is a normal component used to wrap other content.
 ```

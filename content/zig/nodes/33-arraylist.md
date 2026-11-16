@@ -8,7 +8,7 @@ requires:
 summary: In Zig 0.15.2 ArrayList receives an allocator for allocating operations.
 ---
 
-In Zig 0.15.2 ArrayList receives an allocator for allocating operations. Growing a list can invalidate slices and pointers into its old storage.
+In Zig 0.15.2 `ArrayList` receives an allocator for allocating operations. Growing a list can invalidate slices and pointers into its old storage.
 
 ```zig
 const std = @import("std");
@@ -49,13 +49,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about growable lists is correct?
+question: In Zig 0.15.2, which append call supplies the allocator explicitly?
 options:
-  - In Zig 0.15.2 ArrayList receives an allocator for allocating operations. Growing a list can
-    invalidate slices and pointers into its old storage.
-  - ArrayList append never needs an allocator in this version.
-  - Pointers into an ArrayList stay valid through every reallocation.
+  - "`try values.append(allocator, 7)`"
+  - "`try values.append(7)`"
+  - "`values.items.append(7)`"
 answer: 0
-explain: In Zig 0.15.2 ArrayList receives an allocator for allocating operations. Growing a list can
-  invalidate slices and pointers into its old storage.
+explain: Allocating `ArrayList` operations in this version take an allocator argument.
 ```

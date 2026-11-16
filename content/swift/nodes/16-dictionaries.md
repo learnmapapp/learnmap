@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about key-value dictionaries is correct?
+question: 'What does `scores["Missing", default: 0]` return when no entry exists?'
 options:
-  - Dictionary iteration is always sorted by key.
-  - Dictionary lookup usually returns an optional because a key can be absent. A default subscript
-    supplies an explicit fallback.
-  - Every lookup is guaranteed to find a value.
+  - A missing-key exception.
+  - "`0`"
+  - "`nil`"
 answer: 1
-explain: Dictionary lookup usually returns an optional because a key can be absent. A default
-  subscript supplies an explicit fallback.
+explain: The default subscript supplies a fallback value.
 ```

@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about ranges and loops is correct?
+question: Which range visits `0, 1, 2`?
 options:
-  - The .. range includes both ends; ..< excludes the upper bound. Pick the form that matches your
-    indexing contract.
-  - ..< includes the upper bound.
-  - .. always excludes the lower bound.
+  - "`0..<3`"
+  - "`0..3`"
+  - "`1..3`"
 answer: 0
-explain: The .. range includes both ends; ..< excludes the upper bound. Pick the form that matches
-  your indexing contract.
+explain: "`..<` excludes its upper bound; `..` includes it."
 ```

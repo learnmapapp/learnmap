@@ -52,10 +52,10 @@ File("src").absolutePath
 ```
 
 ```quiz
-question: "What is  ./src  relative to?"
+question: What is  ./src  relative to?
 options:
   - The folder you ran nix from.
-  - The .nix file it's written in.
+  - The `.nix` file it's written in.
   - The Nix store.
 answer: 1
 explain: Paths are resolved relative to the file, so a project builds the same from anywhere.

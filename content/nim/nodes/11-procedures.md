@@ -53,13 +53,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed procedures is correct?
+question: "In `proc square(n: int): int`, what does the final `int` describe?"
 options:
-  - Every procedure returns a string.
-  - Parameter types are inferred from every call separately.
-  - A proc declares typed parameters and an optional result type. Small procedures isolate behavior
-    that can be tested independently.
+  - The number of parameters.
+  - The procedure's visibility.
+  - The result type.
 answer: 2
-explain: A proc declares typed parameters and an optional result type. Small procedures isolate
-  behavior that can be tested independently.
+explain: The type after the parameter list is the returned value's type.
 ```

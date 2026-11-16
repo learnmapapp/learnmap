@@ -46,10 +46,10 @@ code: |
     networking.hostName = "workstation";
   }
 checks:
-  - match: 'virtualisation\.docker\.enable\s*=\s*true\s*;'
-    message: "The option is virtualisation.docker.enable (British spelling!)."
-output: "building the system configuration…"
-hint: "virtualisation.docker.enable = true;"
+  - match: virtualisation\.docker\.enable\s*=\s*true\s*;
+    message: The option is virtualisation.docker.enable (British spelling!).
+output: building the system configuration…
+hint: virtualisation.docker.enable = `true`;
 ```
 
 ## Where to go from here
@@ -64,10 +64,10 @@ NixOS is a deep topic, but it's built from things you already know: attribute se
 - [Home Manager](node:home-manager): your dotfiles, declared the same way.
 
 ```quiz
-question: You run nixos-rebuild switch and the new config breaks your Wi-Fi. What's the quickest way back?
+question: You run `nixos-rebuild switch` and the new config breaks your Wi-Fi. What's the quickest way back?
 options:
   - Reinstall NixOS.
-  - Run nixos-rebuild switch --rollback, or pick the previous generation at boot.
+  - Run `nixos-rebuild switch --rollback`, or pick the previous generation at boot.
   - Edit files in /etc by hand.
 answer: 1
 explain: The previous generation is still in the store, so rolling back is instant.

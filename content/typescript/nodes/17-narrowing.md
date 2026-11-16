@@ -44,11 +44,11 @@ hint: "Narrow with typeof value === \"string\"."
 ```
 
 ```quiz
-question: "Why is typeof value === \"object\" insufficient to exclude null?"
+question: Why is `typeof value === "object"` insufficient to exclude `null`?
 options:
-  - "null also reports object."
-  - "typeof never works in TypeScript."
-  - "All arrays report string."
+  - "`null` also reports object."
+  - typeof never works in TypeScript.
+  - All arrays report string.
 answer: 0
-explain: "JavaScript reports typeof null as object, so explicitly exclude null."
+explain: JavaScript reports typeof `null` as object, so explicitly exclude `null`.
 ```

@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about extend existing types is correct?
+question: Which addition is supported by an extension of `Int`?
 options:
-  - Extensions can freely add stored fields to Int.
-  - Extensions alter every existing operator automatically.
-  - Extensions add computed properties, methods, and conformances. They do not add stored instance
-    properties to an existing type.
+  - A new stored instance field.
+  - A replacement set of built-in integer values.
+  - A computed `isEven` property.
 answer: 2
-explain: Extensions add computed properties, methods, and conformances. They do not add stored
-  instance properties to an existing type.
+explain: Extensions can add behavior and computed properties without adding stored instance storage.
 ```

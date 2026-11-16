@@ -49,11 +49,11 @@ hint: "Reject the value when typeof value is not string."
 ```
 
 ```quiz
-question: "Does JSON.parse prove that a response contains a numeric score?"
+question: Does `JSON.parse` prove that a response contains a numeric score?
 options:
-  - "Yes, JSON is already typed."
-  - "No, it only parses valid JSON syntax."
-  - "Only for objects."
+  - Yes, JSON is already typed.
+  - No, it only parses valid JSON syntax.
+  - Only for objects.
 answer: 1
-explain: "The application must check the fields it depends on after parsing."
+explain: The application must check the fields it depends on after parsing.
 ```

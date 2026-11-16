@@ -7,7 +7,7 @@ requires:
 summary: client:idle defers hydration until an idle opportunity.
 ---
 
-In your Astro project, save this as `src/pages/index.astro`. client:idle defers hydration until an idle opportunity. Use it for interaction that is useful but not immediately required.
+In your Astro project, save this as `src/pages/index.astro`. `client:idle` defers hydration until an idle opportunity. Use it for interaction that is useful but not immediately required.
 
 ```astro
 ---
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about hydrate during idle time is correct?
+question: When is `client:idle` appropriate?
 options:
-  - Idle hydration happens only during static compilation.
-  - client:idle defers hydration until an idle opportunity. Use it for interaction that is useful
-    but not immediately required.
-  - client:idle guarantees zero browser JavaScript.
+  - For removing all JavaScript from a framework component.
+  - For interaction that can wait for an idle opportunity.
+  - For a control that must respond before any JavaScript loads.
 answer: 1
-explain: client:idle defers hydration until an idle opportunity. Use it for interaction that is
-  useful but not immediately required.
+explain: Deferring hydration changes timing, not whether interactive code is required.
 ```

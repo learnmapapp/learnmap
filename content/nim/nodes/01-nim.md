@@ -7,7 +7,7 @@ summary: Save a .nim file and run nim c -r hello.nim.
 kind: hub
 ---
 
-Save a .nim file and run nim c -r hello.nim. Nim compiles the program before executing it.
+Save a `.nim` file and run `nim c -r hello.nim`. Nim compiles the program before executing it.
 
 ```nim
 echo "Hello, Nim!"
@@ -20,7 +20,7 @@ Compare the worked example with the starting code below. Identify the changed op
 This course targets **Nim 2.2+**. Check your local tool version before following examples. See the [official reference](https://nim-lang.org/docs/tut1.html) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
 
 ```exercise
-goal: Repair the starting example using what you learned about meet nim.
+goal: Make the program print `Hello, Nim!`.
 lang: nim
 code: echo "Goodbye"
 checks:
@@ -33,11 +33,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about meet nim is correct?
+question: What does the terminal command `nim c -r hello.nim` do?
 options:
-  - Every Nim program needs a main procedure.
-  - Save a .nim file and run nim c -r hello.nim. Nim compiles the program before executing it.
-  - Nim source executes only in a browser.
+  - Opens the source in an interactive REPL.
+  - Compiles the source and runs the resulting program.
+  - Checks formatting without compiling.
 answer: 1
-explain: Save a .nim file and run nim c -r hello.nim. Nim compiles the program before executing it.
+explain: "`c` requests native compilation; `-r` runs the result."
 ```

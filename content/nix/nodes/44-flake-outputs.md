@@ -43,13 +43,13 @@ And the commands that use them:
 `nix flake show` lists everything a flake provides.
 
 ```exercise
-goal: Add a dev shell with pkgs.go as the default devShell.
+goal: Add a dev shell with `pkgs.go` as the default devShell.
 code: |
   {
     packages.x86_64-linux.default = pkgs.hello;
   }
 checks:
-  - match: 'devShells\.x86_64-linux\.default\s*=\s*pkgs\.mkShell\s*\{[^}]*packages\s*=\s*\[[^\]]*pkgs\.go\b'
-    message: 'Add  devShells.x86_64-linux.default = pkgs.mkShell { packages = [ pkgs.go ]; };'
-output: "nix develop → [go 1.23]"
+  - match: devShells\.x86_64-linux\.default\s*=\s*pkgs\.mkShell\s*\{[^}]*packages\s*=\s*\[[^\]]*pkgs\.go\b
+    message: Add  devShells.x86_64-linux.default = pkgs.mkShell { packages = [ pkgs.go ]; };
+output: nix develop → [go 1.23]
 ```

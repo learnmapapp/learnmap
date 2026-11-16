@@ -42,9 +42,10 @@ $ nixos-rebuild switch --flake .#server --target-host root@server.example.org
 ```quiz
 question: You want to try a risky change, and get the old system back with a simple reboot. Which command?
 options:
-  - "nixos-rebuild switch"
-  - "nixos-rebuild test"
-  - "nixos-rebuild boot"
+  - "`nixos-rebuild switch`"
+  - "`nixos-rebuild test`"
+  - "`nixos-rebuild boot`"
 answer: 1
-explain: test activates the new config now, but the boot default stays the same, so rebooting brings back the old one.
+explain: test activates the new config now, but the boot default stays the same, so rebooting brings
+  back the old one.
 ```

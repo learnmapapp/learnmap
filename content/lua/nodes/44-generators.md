@@ -8,7 +8,7 @@ requires:
 summary: coroutine.wrap exposes a coroutine as a callable iterator.
 ---
 
-coroutine.wrap exposes a coroutine as a callable iterator. A generator used in generic for must eventually finish or return nil.
+`coroutine.wrap` exposes a coroutine as a callable iterator. A generator used in generic for must eventually finish or return `nil`.
 
 ```lua
 local numbers = coroutine.wrap(function()
@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about coroutine generators is correct?
+question: What does `coroutine.wrap` return?
 options:
-  - wrap returns a coroutine thread requiring resume.
-  - Generic for ends only when an iterator returns false.
-  - coroutine.wrap exposes a coroutine as a callable iterator. A generator used in generic for must
-    eventually finish or return nil.
+  - A thread that must be passed to `coroutine.resume`.
+  - A table containing every result in advance.
+  - A function that resumes the coroutine when called.
 answer: 2
-explain: coroutine.wrap exposes a coroutine as a callable iterator. A generator used in generic for
-  must eventually finish or return nil.
+explain: The wrapper exposes coroutine execution through an ordinary function call.
 ```

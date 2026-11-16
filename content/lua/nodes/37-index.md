@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about fallback lookup is correct?
+question: When does a table-valued `__index` supply a fallback field?
 options:
-  - __index permanently copies fallback entries into the table.
-  - When a normal lookup finds no key, __index can supply fallback fields from another table or a
-    function.
-  - __index runs even when the key exists.
+  - Only when assigning a new key.
+  - When the original table does not contain that key.
+  - Whenever the original table contains that key.
 answer: 1
-explain: When a normal lookup finds no key, __index can supply fallback fields from another table or
-  a function.
+explain: An ordinary successful lookup takes precedence over the fallback.
 ```

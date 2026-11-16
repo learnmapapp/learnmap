@@ -8,7 +8,7 @@ requires:
 summary: Use nim c -r for iteration and -d:release for an optimized native build.
 ---
 
-Use nim c -r for iteration and -d:release for an optimized native build. Keep tests separate from performance measurements.
+Use `nim c -r` for iteration and `-d:release` for an optimized native build. Keep tests separate from performance measurements.
 
 ```shell
 nim c -r hello.nim
@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about build configurations is correct?
+question: Which command requests an optimized native build?
 options:
-  - Use nim c -r for iteration and -d:release for an optimized native build. Keep tests separate
-    from performance measurements.
-  - Release builds execute all possible tests automatically.
-  - Compilation requires a browser.
+  - "`nim c -d:release hello.nim`"
+  - "`nim check hello.nim`"
+  - "`nim c --compileOnly hello.nim`"
 answer: 0
-explain: Use nim c -r for iteration and -d:release for an optimized native build. Keep tests
-  separate from performance measurements.
+explain: The release define selects optimized compilation; it does not automatically run tests.
 ```

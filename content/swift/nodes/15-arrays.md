@@ -53,13 +53,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about ordered arrays is correct?
+question: How can you safely ask an array for its first element when it may be empty?
 options:
-  - Array stores ordered elements of one type with zero-based indices. Subscripts require a valid
-    index; first provides an optional for potentially empty arrays.
-  - An out-of-bounds subscript returns nil.
-  - Array indices start at 1.
+  - Use its optional `first` property.
+  - Read index `0` and expect `nil` on absence.
+  - Read index `1` and expect `nil` on absence.
 answer: 0
-explain: Array stores ordered elements of one type with zero-based indices. Subscripts require a
-  valid index; first provides an optional for potentially empty arrays.
+explain: Out-of-bounds subscripts trap; `first` represents absence with an optional.
 ```

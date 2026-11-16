@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about public interfaces is correct?
+question: What does the `*` in `proc publicDouble*` mean?
 options:
-  - All top-level procedures are exported by default.
-  - isMainModule is true in every imported file.
-  - A trailing * exports a declaration from its module. when isMainModule runs a demonstration only
-    when that file is the entry point.
+  - The procedure accepts any number of arguments.
+  - The result must be a pointer.
+  - The declaration is exported from its module.
 answer: 2
-explain: A trailing * exports a declaration from its module. when isMainModule runs a demonstration
-  only when that file is the entry point.
+explain: The export marker makes a declaration available to importing modules.
 ```

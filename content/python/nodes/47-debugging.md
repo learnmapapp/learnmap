@@ -36,7 +36,7 @@ Use `repr(value)` or an f-string's `!r` conversion to reveal hidden spaces and e
 Turn the reproducing example into a regression test. Fixing the underlying assumption and keeping that test makes the next failure easier to prevent.
 
 ```exercise
-goal: "Reject an empty input explicitly instead of returning a misleading average."
+goal: Reject an empty input explicitly instead of returning a misleading average.
 lang: python
 code: |
   def average(values):
@@ -46,9 +46,9 @@ code: |
 
   print(average([2, 4, 6]))
 checks:
-  - match: "^\\s+raise\\s+ValueError\\(\\s*[\"']values must not be empty[\"']\\s*\\)"
-    message: "Raise ValueError(\"values must not be empty\") for the empty input."
-hint: "Raise ValueError(\"values must not be empty\") for the empty input."
+  - match: ^\s+raise\s+ValueError\(\s*["']values must not be empty["']\s*\)
+    message: Raise ValueError("values must not be empty") for the empty input.
+hint: Raise `ValueError("values must not be empty")` for the empty input.
 ```
 
 ```quiz

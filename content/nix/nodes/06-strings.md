@@ -94,8 +94,8 @@ For long scripts and config files, see [Indented strings](node:multiline-strings
 ```quiz
 question: How do you turn my-app into my_app?
 options:
-  - '"my-app".replace("-", "_")'
-  - "builtins.replaceStrings [ \"-\" ] [ \"_\" ] \"my-app\""
+  - '"my-app".`replace("-", "_")`'
+  - '`builtins.replaceStrings` [ "-" ] [ "_" ] "my-app"'
   - '"my-app" // { "-" = "_"; }'
 answer: 1
 explain: replaceStrings takes a list of things to find and a list of replacements.

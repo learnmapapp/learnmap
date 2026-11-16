@@ -34,7 +34,7 @@ with open("player.json", "w", encoding="utf-8") as handle:
 Malformed input raises `json.JSONDecodeError`. Parsing establishes valid JSON syntax, not your application's schema: check the expected keys and value types after loading. Ordinary JSON does not automatically encode custom classes, sets, or datetime objects; convert them into supported values first.
 
 ```exercise
-goal: "Parse the JSON string instead of serializing it again."
+goal: Parse the JSON string instead of serializing it again.
 lang: python
 code: |
   import json
@@ -43,9 +43,9 @@ code: |
   player = json.dumps(text)
   print(player["score"])
 checks:
-  - match: "player\\s*=\\s*json\\.loads\\(\\s*text\\s*\\)"
-    message: "Replace json.dumps(text) with json.loads(text)."
-hint: "Replace json.dumps(text) with json.loads(text)."
+  - match: player\s*=\s*json\.loads\(\s*text\s*\)
+    message: Replace json.dumps(text) with json.loads(text).
+hint: Replace `json.dumps(text)` with `json.loads(text)`.
 ```
 
 ```quiz

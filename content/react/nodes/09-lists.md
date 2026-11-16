@@ -41,11 +41,11 @@ hint: "Add return inside the braced map callback."
 ```
 
 ```quiz
-question: "What is required when a map callback uses a braced function body?"
+question: What is required when a map callback uses a braced function body?
 options:
-  - "An explicit return for the JSX."
-  - "A new React root."
-  - "A useEffect call."
+  - An explicit return for the JSX.
+  - A new React root.
+  - A `useEffect` call.
 answer: 0
-explain: "A braced arrow function body does not implicitly return its final expression."
+explain: A braced arrow function body does not implicitly return its final expression.
 ```

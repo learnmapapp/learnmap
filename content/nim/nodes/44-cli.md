@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about command-line arguments is correct?
+question: What is `commandLineParams()[0]` when a user supplies one argument?
 options:
-  - The first user argument always has index 1.
-  - commandLineParams includes the executable name.
-  - commandLineParams returns user arguments without the executable name. Check length before
-    indexing and document required arguments.
+  - The executable name.
+  - The second user-supplied argument.
+  - The first user-supplied argument.
 answer: 2
-explain: commandLineParams returns user arguments without the executable name. Check length before
-  indexing and document required arguments.
+explain: The returned sequence excludes the executable name; check its length before indexing.
 ```

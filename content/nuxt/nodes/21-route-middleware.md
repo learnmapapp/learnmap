@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about route middleware is correct?
+question: What should route middleware return when redirecting?
 options:
-  - A .global route middleware runs on navigation. Return navigation results and avoid redirecting a
-    destination back to itself. This does not replace API authorization.
-  - A client route guard alone secures every server endpoint.
-  - Redirect loops are automatically impossible.
+  - The result of `navigateTo(...)`.
+  - The literal string `"redirected"` only.
+  - An unrelated component's markup.
 answer: 0
-explain: A .global route middleware runs on navigation. Return navigation results and avoid
-  redirecting a destination back to itself. This does not replace API authorization.
+explain: Returning the navigation result lets the router handle the redirect correctly.
 ```

@@ -50,11 +50,11 @@ hint: "Return player[1] from the key function."
 ```
 
 ```quiz
-question: "What does sorted(values) return?"
+question: What does `sorted(values)` return?
 options:
-  - "A new sorted list."
-  - "None, after modifying values."
-  - "A sorting function."
+  - A new sorted list.
+  - "`None`, after modifying values."
+  - A sorting function.
 answer: 0
-explain: "sorted builds a new list; list.sort modifies a list in place."
+explain: sorted builds a new list; list.sort modifies a list in place.
 ```

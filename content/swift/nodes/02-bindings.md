@@ -58,13 +58,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about let and var is correct?
+question: Which declaration permits later reassignment of `score`?
 options:
-  - let and var both allow reassignment.
-  - var makes the value a global.
-  - let defines a constant binding; var permits reassignment. Start with let and introduce mutation
-    only where the program needs it.
+  - "`let score = 1`"
+  - "`let score: Int = 1`"
+  - "`var score = 1`"
 answer: 2
-explain: let defines a constant binding; var permits reassignment. Start with let and introduce
-  mutation only where the program needs it.
+explain: "`var` allows reassignment; both `let` forms declare constant bindings."
 ```

@@ -9,7 +9,7 @@ summary: A Vue single-file component combines setup logic, a template, and optio
 
 In your Nuxt 4 project, save this as `app/pages/index.vue`. A Vue single-file component combines setup logic, a template, and optional styles. Double braces render escaped text from setup bindings.
 
-A useful term here is [[single-file component]]: A .vue file containing template, script, and optional style sections.
+A useful term here is [[single-file component]]: A `.vue` file containing template, script, and optional style sections.
 
 ```vue
 <script setup lang="ts">
@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about single-file components is correct?
+question: What does `{{ title }}` in a Vue template render?
 options:
-  - setup bindings cannot be referenced from the template.
-  - A Vue single-file component combines setup logic, a template, and optional styles. Double braces
-    render escaped text from setup bindings.
-  - Double braces always render trusted raw HTML.
+  - The literal variable name without evaluation.
+  - The binding's value as escaped text.
+  - Trusted raw HTML in every case.
 answer: 1
-explain: A Vue single-file component combines setup logic, a template, and optional styles. Double
-  braces render escaped text from setup bindings.
+explain: Ordinary interpolation displays a value without treating it as arbitrary HTML.
 ```

@@ -40,11 +40,11 @@ Add `.direnv/` to `.gitignore`; it's direnv's cache folder.
 ```
 
 ```quiz
-question: Why do you have to run direnv allow?
+question: Why do you have to run `direnv allow`?
 options:
   - To install direnv.
-  - Because .envrc runs code, so you approve it first.
+  - Because `.envrc` runs code, so you approve it first.
   - To download the packages.
 answer: 1
-explain: An .envrc from a cloned repo could run anything, so direnv only loads ones you've approved.
+explain: An `.envrc` from a cloned repo could run anything, so direnv only loads ones you've approved.
 ```

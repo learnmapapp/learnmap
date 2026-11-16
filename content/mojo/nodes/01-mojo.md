@@ -7,7 +7,7 @@ summary: Save hello.mojo and run mojo run hello.mojo.
 kind: hub
 ---
 
-Save hello.mojo and run mojo run hello.mojo. This course uses Mojo 1.2.0, including def functions and std-prefixed library imports.
+Save `hello.mojo` and run `mojo run hello.mojo`. This course uses Mojo 1.2.0, including def functions and std-prefixed library imports.
 
 ```mojo
 def main() raises:
@@ -21,7 +21,7 @@ Compare the worked example with the starting code below. Identify the changed op
 This course targets **Mojo 1.2.0**. Check your local tool version before following examples. See the [official reference](https://mojolang.org/docs/manual/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
 
 ```exercise
-goal: Repair the starting example using what you learned about meet mojo.
+goal: Make the program print `Hello, Mojo!`.
 lang: mojo
 code: |-
   def main() raises:
@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about meet mojo is correct?
+question: Which terminal command compiles and executes `hello.mojo`?
 options:
-  - A Mojo file must be interpreted by Python.
-  - Save hello.mojo and run mojo run hello.mojo. This course uses Mojo 1.2.0, including def
-    functions and std-prefixed library imports.
-  - All historical Mojo tutorials use the same current syntax.
+  - "`mojo build hello.mojo` alone."
+  - "`mojo run hello.mojo`"
+  - "`mojo format hello.mojo`"
 answer: 1
-explain: Save hello.mojo and run mojo run hello.mojo. This course uses Mojo 1.2.0, including def
-  functions and std-prefixed library imports.
+explain: "`run` executes the program; `build` creates an executable without running it."
 ```

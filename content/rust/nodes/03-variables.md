@@ -90,7 +90,7 @@ if happy {
 Unused variables trigger a warning. Prefix the name with an underscore, like `_unused`, to say "I know".
 
 ```quiz
-question: "What happens with  let x = 5; let x = x + 1;  ?"
+question: What happens with  `let x = 5; let x = x + 1;`  ?
 options:
   - A compile error, x is immutable.
   - It creates a new variable x that shadows the first one.

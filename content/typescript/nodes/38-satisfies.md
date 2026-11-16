@@ -24,7 +24,7 @@ A broad annotation on `palette` would expose union-valued properties and require
 
 Unlike an unchecked assertion, `satisfies` reports incompatibility. It does not parse external data or freeze the object. Contextual typing can influence inference, so inspect the resulting type instead of assuming the operator never affects it.
 
-For a static settings object, `as const satisfies Settings` can preserve literal readonly information and verify the intended shape together. Use the two features for their separate jobs: retaining precise inference and checking compatibility.
+For a static settings object, `as const satisfies Settings` can preserve literal `readonly` information and verify the intended shape together. Use the two features for their separate jobs: retaining precise inference and checking compatibility.
 
 ```exercise
 goal: "Check the palette contract instead of asserting it."

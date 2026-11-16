@@ -91,7 +91,7 @@ Returning a value moves it back out. You *could* pass ownership back and forth a
 Where does this come from? Strings, vectors and boxes keep their data on the **heap**, and the variable on the stack is just a small handle to it. Ownership decides which handle frees the heap data. Plain numbers live entirely on the stack, so copying them is cheap and safe.
 
 ```quiz
-question: "let a = vec![1]; let b = a;  Which variable can you still use?"
+question: "`let a = vec![1]; let b = a;`  Which variable can you still use?"
 options:
   - Both
   - Only a

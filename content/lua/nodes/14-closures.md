@@ -50,13 +50,12 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about captured state is correct?
+question: Two functions returned by separate calls to `counter()` capture a local `value`. What
+  state do they use?
 options:
-  - Captured locals disappear when counter returns.
-  - Every counter automatically shares one global value.
-  - A closure retains access to locals from its enclosing function. Each call to counter creates a
-    separate captured value.
+  - One shared global `value`.
+  - A new zero value on every increment call.
+  - A separate captured `value` for each counter.
 answer: 2
-explain: A closure retains access to locals from its enclosing function. Each call to counter
-  creates a separate captured value.
+explain: Each call to the factory creates a new local retained by its closure.
 ```

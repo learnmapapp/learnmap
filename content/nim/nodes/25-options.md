@@ -7,7 +7,7 @@ requires:
 summary: Option[T] models a possibly absent value.
 ---
 
-Option[T] models a possibly absent value. Check isSome before get, or use a suitable explicit fallback.
+`Option`[T] models a possibly absent value. Check isSome before get, or use a suitable explicit fallback.
 
 A useful term here is [[option]]: A container that explicitly represents either a present value or absence.
 
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about optional values is correct?
+question: What should you establish before calling `score.get()`?
 options:
-  - get on an empty Option is always safe.
-  - Option[T] models a possibly absent value. Check isSome before get, or use a suitable explicit
-    fallback.
-  - none(int) contains the integer zero.
+  - That the option is stored in a `var`.
+  - That the `Option` contains a value.
+  - That the contained number is positive.
 answer: 1
-explain: Option[T] models a possibly absent value. Check isSome before get, or use a suitable
-  explicit fallback.
+explain: "`isSome` checks presence; it does not constrain the stored value's range."
 ```

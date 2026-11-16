@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about create a project is correct?
+question: Which command normally generates an Astro project's production output?
 options:
-  - The dev server is the production deployment artifact.
-  - npm run build opens an interactive lesson editor.
-  - Create a new practice project, choose a minimal template, and use Astro 7. The dev server
-    supports editing; build produces deployable output.
+  - "`npm run dev`"
+  - "`npm run preview`"
+  - "`npm run build`"
 answer: 2
-explain: Create a new practice project, choose a minimal template, and use Astro 7. The dev server
-  supports editing; build produces deployable output.
+explain: Build creates output; dev serves source during editing and preview serves a built site.
 ```

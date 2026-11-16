@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about conditional loops is correct?
+question: What does `dec remaining` do inside the countdown loop?
 options:
-  - while always runs at least once.
-  - while repeats while a Boolean condition holds. dec mutates a numeric variable by one unless a
-    step is supplied.
-  - dec returns a fresh variable without changing its input.
+  - Sets `remaining` to zero immediately.
+  - Decreases `remaining` by one.
+  - Returns a new unchanged copy.
 answer: 1
-explain: while repeats while a Boolean condition holds. dec mutates a numeric variable by one unless
-  a step is supplied.
+explain: "`dec` mutates its numeric argument."
 ```

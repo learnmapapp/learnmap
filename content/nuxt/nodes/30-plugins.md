@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about application plugins is correct?
+question: Which plugin filename marks a browser-only integration?
 options:
-  - Nuxt plugins run during app creation and can provide shared capabilities. Use a .client suffix
-    for integrations that require browser globals.
-  - All plugins run exclusively in the browser.
-  - A plugin should store every user’s private data in one module global.
+  - "`analytics.client.ts`."
+  - "`analytics.server.ts`."
+  - "`analytics.global.ts` alone."
 answer: 0
-explain: Nuxt plugins run during app creation and can provide shared capabilities. Use a .client
-  suffix for integrations that require browser globals.
+explain: The client suffix scopes the plugin to the browser environment.
 ```

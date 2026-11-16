@@ -27,7 +27,7 @@ Store the selected id, then find the current record. Copying the entire selected
 
 Instead of independent `isLoading`, `isSuccess`, and `isError` booleans, consider one status such as `"idle"`, `"loading"`, `"success"`, or `"error"`. That makes conflicting combinations harder to represent.
 
-Group fields that always change together, and separate values with different lifecycles. State design is about ownership and valid transitions, not minimizing the raw number of useState calls.
+Group fields that always change together, and separate values with different lifecycles. State design is about ownership and valid transitions, not minimizing the raw number of `useState` calls.
 
 ```exercise
 goal: "Find the selected record by its stable identifier."

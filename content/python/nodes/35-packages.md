@@ -33,24 +33,24 @@ Outside the package, use `from studytools.helpers import double`. A leading dot 
 Namespace packages can omit `__init__.py`, but a regular package is a simple starting point for your own application. An import package and a published distribution are related concepts, not identical names: a distribution installed with pip may supply a differently named import package.
 
 ```exercise
-goal: "Import helpers relative to the current package."
+goal: Import helpers relative to the current package.
 lang: python
 code: |
   from helpers import double
 
   print(double(21))
 checks:
-  - match: "^from\\s+\\.helpers\\s+import\\s+double\\s*$"
-    message: "Use from .helpers import double inside studytools/__main__.py."
-hint: "Use from .helpers import double inside studytools/__main__.py."
+  - match: ^from\s+\.helpers\s+import\s+double\s*$
+    message: Use from .helpers import double inside studytools/__main__.py.
+hint: Use from .helpers import double inside `studytools/__main__.py`.
 ```
 
 ```quiz
-question: "Which file is run by python3 -m studytools?"
+question: Which file is run by `python3 -m studytools`?
 options:
-  - "studytools/helpers.py"
-  - "studytools/__main__.py"
-  - "Every file alphabetically."
+  - "`studytools/helpers.py`"
+  - "`studytools/__main__.py`"
+  - Every file alphabetically.
 answer: 1
-explain: "A package entry point lives in __main__.py."
+explain: A package entry point lives in `__main__.py`.
 ```

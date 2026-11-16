@@ -31,13 +31,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about install a nuxt module is correct?
+question: What does `npx nuxt module add @nuxt/image` normally do?
 options:
-  - Every npm package is automatically a Nuxt module.
-  - The module CLI installs a package and updates configuration. Review module options,
-    compatibility, and resulting changes before adopting additional integrations.
-  - Installing a module removes the need to read its configuration.
+  - Creates an API endpoint for every image automatically.
+  - Installs the module and updates project configuration.
+  - Removes all existing image files.
 answer: 1
-explain: The module CLI installs a package and updates configuration. Review module options,
-  compatibility, and resulting changes before adopting additional integrations.
+explain: Review the package's compatibility and options after adding it.
 ```

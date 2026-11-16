@@ -69,13 +69,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about keyed lists is correct?
+question: Which key is most suitable for reorderable records with stable IDs?
 options:
-  - Keys should change randomly on every render.
-  - The list index is always the best identity for reorderable records.
-  - Use v-for to render a collection and a stable unique key to preserve item identity as the list
-    changes. Prefer a domain ID over an editable label.
+  - A new random value on each render.
+  - Its current array index regardless of reordering.
+  - The record's ID.
 answer: 2
-explain: Use v-for to render a collection and a stable unique key to preserve item identity as the
-  list changes. Prefer a domain ID over an editable label.
+explain: Stable keys preserve identity when items move.
 ```

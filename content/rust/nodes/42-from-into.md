@@ -76,13 +76,13 @@ Fahrenheit.fromCelsius(c);
 ```
 
 ```exercise
-goal: "Implement From<u32> for Legs, so `let l: Legs = 10.into();` works."
+goal: "Implement `From<u32>` for Legs, so `let l: Legs = 10.into();` works."
 code: |
   struct Legs(u32);
 checks:
-  - match: 'impl\s+From<\s*u32\s*>\s+for\s+Legs'
-    message: "Start with  impl From<u32> for Legs {"
-  - match: 'fn\s+from\s*\(\s*\w+\s*:\s*u32\s*\)\s*->\s*(Self|Legs)'
+  - match: impl\s+From<\s*u32\s*>\s+for\s+Legs
+    message: Start with  impl From<u32> for Legs {
+  - match: fn\s+from\s*\(\s*\w+\s*:\s*u32\s*\)\s*->\s*(Self|Legs)
     message: "Add  fn from(n: u32) -> Self { Legs(n) }"
 output: Legs(10)
 ```

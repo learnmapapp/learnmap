@@ -91,9 +91,9 @@ Debug builds compile fast but run slower; release builds are the other way aroun
 ```quiz
 question: You only want to know whether your code compiles, as fast as possible. Which command?
 options:
-  - cargo run
-  - cargo check
-  - cargo build --release
+  - "`cargo run`"
+  - "`cargo check`"
+  - "`cargo build --release`"
 answer: 1
-explain: cargo check skips generating machine code, so it's the quickest feedback loop.
+explain: "`cargo check` skips generating machine code, so it's the quickest feedback loop."
 ```

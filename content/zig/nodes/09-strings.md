@@ -7,7 +7,7 @@ requires:
 summary: Strings commonly use []const u8.
 ---
 
-Strings commonly use []const u8. Compare their contents with std.mem.eql; a byte length is not necessarily a count of Unicode characters.
+Strings commonly use []const `u8`. Compare their contents with `std.mem.eql`; a byte length is not necessarily a count of Unicode characters.
 
 ```zig
 const std = @import("std");
@@ -44,13 +44,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about utf-8 byte strings is correct?
+question: How should you compare the contents of two byte-string slices?
 options:
-  - Strings commonly use []const u8. Compare their contents with std.mem.eql; a byte length is not
-    necessarily a count of Unicode characters.
-  - All string lengths count visual characters.
-  - Comparing arbitrary slices with == compares their complete contents.
+  - "`std.mem.eql(u8, left, right)`"
+  - "`left == right`"
+  - "`left.len == right.len` alone."
 answer: 0
-explain: Strings commonly use []const u8. Compare their contents with std.mem.eql; a byte length is
-  not necessarily a count of Unicode characters.
+explain: Equal lengths do not establish equal contents; `std.mem.eql` compares elements.
 ```

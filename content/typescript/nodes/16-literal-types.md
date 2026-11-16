@@ -45,11 +45,11 @@ hint: "Use the union \"queued\" | \"done\"."
 ```
 
 ```quiz
-question: "Is every string assignable to \"left\" | \"right\"?"
+question: Is every string assignable to `"left" | "right"`?
 options:
-  - "Yes, because both members are strings."
-  - "No, only those exact values are accepted."
-  - "Only if it is stored with const."
+  - Yes, because both members are strings.
+  - No, only those exact values are accepted.
+  - Only if it is stored with const.
 answer: 1
-explain: "A union of string literals is narrower than the general string type."
+explain: A union of string literals is narrower than the general string type.
 ```

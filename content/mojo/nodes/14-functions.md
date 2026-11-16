@@ -57,13 +57,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about typed function signatures is correct?
+question: "In `def square(value: Int) -> Int`, what does `-> Int` specify?"
 options:
-  - All parameter types are inferred from later calls.
-  - A result type is placed before def.
-  - Ordinary function parameters need types, and -> declares a result. Keep numeric work in small
-    functions that can be tested separately.
+  - A mutable input parameter.
+  - An ownership transfer at the call site.
+  - The result type.
 answer: 2
-explain: Ordinary function parameters need types, and -> declares a result. Keep numeric work in
-  small functions that can be tested separately.
+explain: The arrow introduces the function's declared return type.
 ```

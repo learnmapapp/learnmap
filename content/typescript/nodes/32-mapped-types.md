@@ -26,7 +26,7 @@ const complete: Editable<Draft> = { title: "Types" };
 console.log(complete.title);
 ```
 
-`-readonly` removes the readonly modifier and `-?` removes optionality. A mapped type over `keyof T` normally preserves those modifiers unless you change them.
+`-readonly` removes the `readonly` modifier and `-?` removes optionality. A mapped type over `keyof T` normally preserves those modifiers unless you change them.
 
 Use these transformations for related contracts, not to hide a complicated API behind layers of unreadable machinery. The standard library already supplies many common versions as [utility types](node:utility-types).
 
@@ -44,11 +44,11 @@ hint: "Use boolean as the mapped property value type."
 ```
 
 ```quiz
-question: "Does a mapped type copy an object at runtime?"
+question: Does a mapped type copy an object at runtime?
 options:
-  - "Yes."
-  - "No, it constructs a static type."
-  - "Only when it uses keyof."
+  - Yes.
+  - No, it constructs a static type.
+  - Only when it uses `keyof`.
 answer: 1
-explain: "Mapped types are erased; actual value transformation still needs JavaScript."
+explain: Mapped types are erased; actual value transformation still needs JavaScript.
 ```

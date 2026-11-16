@@ -65,11 +65,11 @@ hint: "Add @property directly above def area."
 ```
 
 ```quiz
-question: "How do you read an area method decorated with @property?"
+question: How do you read an area method decorated with @property?
 options:
-  - "rectangle.area"
-  - "rectangle.area()"
-  - "property(rectangle)"
+  - rectangle.area
+  - "`rectangle.area()`"
+  - "`property(rectangle)`"
 answer: 0
-explain: "Properties expose a method through ordinary attribute access."
+explain: Properties expose a method through ordinary attribute access.
 ```

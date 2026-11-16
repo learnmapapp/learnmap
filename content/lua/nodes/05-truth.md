@@ -7,7 +7,7 @@ requires:
 summary: Only false and nil are falsey in Lua; zero and the empty string are truthy.
 ---
 
-Only false and nil are falsey in Lua; zero and the empty string are truthy. The or operator returns an operand.
+Only `false` and `nil` are falsey in Lua; zero and the empty string are truthy. The or operator returns an operand.
 
 A useful term here is [[nil]]: The value representing absence; assigning it to a table key removes that entry.
 
@@ -22,7 +22,7 @@ print(enabled or "fallback", name == nil)
 Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
 
 ```exercise
-goal: Repair the starting example using what you learned about truth and nil.
+goal: Repair the starting example using what you learned about truth and `nil`.
 lang: lua
 code: |-
   local enabled = true
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about truth and nil is correct?
+question: Which Lua value makes an `if` condition `false`?
 options:
-  - Zero is falsey.
-  - or always returns a Boolean.
-  - Only false and nil are falsey in Lua; zero and the empty string are truthy. The or operator
-    returns an operand.
+  - "`0`"
+  - '`""`'
+  - "`nil`"
 answer: 2
-explain: Only false and nil are falsey in Lua; zero and the empty string are truthy. The or operator
-  returns an operand.
+explain: Only `nil` and `false` are falsey; zero and empty strings are truthy.
 ```

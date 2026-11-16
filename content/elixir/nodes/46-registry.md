@@ -68,7 +68,7 @@ rooms.entry(id).or_insert_with(|| Room::new(id));
 ```
 
 ```quiz
-question: Why shouldn't you name a process with String.to_atom(user_input)?
+question: Why shouldn't you name a process with `String.to_atom(user_input)`?
 options:
   - Atoms are slow to compare.
   - Atoms are never garbage collected, so you could run out.

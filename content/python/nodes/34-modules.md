@@ -46,7 +46,7 @@ console.log(double(21));
 ```
 
 ```exercise
-goal: "Use the correct module entry-point sentinel."
+goal: Use the correct module entry-point sentinel.
 lang: python
 code: |
   def main():
@@ -56,16 +56,16 @@ code: |
       main()
 checks:
   - match: "if\\s+__name__\\s*==\\s*[\"']__main__[\"']\\s*:"
-    message: "The sentinel has two underscores on each side: \"__main__\"."
-hint: "The sentinel has two underscores on each side: \"__main__\"."
+    message: 'The sentinel has two underscores on each side: "__main__".'
+hint: 'The sentinel has two underscores on each side: "`__main__`".'
 ```
 
 ```quiz
-question: "Why guard main() with if __name__ == \"__main__\"?"
+question: Why guard `main()` with `if __name__ == "__main__"`?
 options:
-  - "To stop Python from importing any functions."
-  - "To run script work only when that module is the entry point."
-  - "To make the module private."
+  - To stop Python from importing any functions.
+  - To run script work only when that module is the entry point.
+  - To make the module private.
 answer: 1
-explain: "The guard keeps entry-point behavior from running when another module imports the file."
+explain: The guard keeps entry-point behavior from running when another module imports the file.
 ```

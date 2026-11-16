@@ -52,13 +52,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about switch expressions is correct?
+question: What should happen when an exhaustive enum `switch` misses a newly added tag?
 options:
-  - Zig switch cases fall through automatically.
-  - switch always requires an else branch even for exhaustive enums.
-  - switch can produce a value and must cover the possible inputs. Enum cases help the compiler
-    identify missing alternatives.
+  - The switch silently chooses its first branch.
+  - The missing tag becomes `null`.
+  - Compilation should identify the unhandled case.
 answer: 2
-explain: switch can produce a value and must cover the possible inputs. Enum cases help the compiler
-  identify missing alternatives.
+explain: Explicit exhaustive handling lets type changes surface in affected switches.
 ```

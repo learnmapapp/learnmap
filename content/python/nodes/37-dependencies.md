@@ -29,22 +29,22 @@ python -m pip install -r requirements.txt
 For a distributable package, declare project metadata and direct dependencies in `pyproject.toml`; the build backend and your chosen environment tool determine the rest of the workflow. Version ranges describe compatibility; an application lockfile or pinned environment describes a particular resolution. Keep credentials and environment directories out of committed dependency files.
 
 ```exercise
-goal: "Install the dependencies listed in requirements.txt."
+goal: Install the dependencies listed in `requirements.txt`.
 lang: shell
 code: |
   python -m pip install requirements.txt
 checks:
-  - match: "^python\\s+-m\\s+pip\\s+install\\s+-r\\s+requirements\\.txt\\s*$"
-    message: "Add -r so pip reads the requirements file."
-hint: "Add -r so pip reads the requirements file."
+  - match: ^python\s+-m\s+pip\s+install\s+-r\s+requirements\.txt\s*$
+    message: Add -r so pip reads the requirements file.
+hint: Add -r so pip reads the requirements file.
 ```
 
 ```quiz
-question: "Why prefer python -m pip to a bare pip command?"
+question: Why prefer `python -m pip` to a bare pip command?
 options:
-  - "It installs only standard-library modules."
-  - "It uses pip belonging to the selected Python interpreter."
-  - "It removes the need for an environment."
+  - It installs only standard-library modules.
+  - It uses pip belonging to the selected Python interpreter.
+  - It removes the need for an environment.
 answer: 1
-explain: "The module invocation links package installation to the interpreter you selected."
+explain: The module invocation links package installation to the interpreter you selected.
 ```

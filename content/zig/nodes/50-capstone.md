@@ -53,13 +53,12 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about a task store is correct?
+question: The list owns its allocation while task titles borrow string literals. What changes if
+  titles become allocated input?
 options:
-  - Deinitializing a list always frees memory owned by every nested field.
-  - Borrowed strings can safely refer to expired stack buffers.
-  - "Make ownership visible: this list owns its allocation while titles borrow string literals. If
-    titles become allocated input, add per-title cleanup and allocation-failure tests."
+  - List deinitialization automatically frees every nested allocation.
+  - Allocated titles can be treated as immortal literals.
+  - Each owned title needs an explicit cleanup policy too.
 answer: 2
-explain: "Make ownership visible: this list owns its allocation while titles borrow string literals.
-  If titles become allocated input, add per-title cleanup and allocation-failure tests."
+explain: Container storage and element-owned resources have separate lifetimes.
 ```

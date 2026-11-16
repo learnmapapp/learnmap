@@ -28,7 +28,7 @@ function announce(message: string): void {
 announce("ready");
 ```
 
-`void` is not the same as `never`. A function that returns normally without a useful result differs from one that cannot finish normally.
+`void` is not the same as never. A function that returns normally without a useful result differs from one that cannot finish normally.
 
 The checker verifies calls and return statements, but annotations do not validate arbitrary JavaScript callers at runtime. Keep runtime checks when the function sits on an untrusted boundary. Avoid implicit `any` parameters, which discard information at precisely the point where callers need a contract.
 

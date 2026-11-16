@@ -46,13 +46,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about labeled blocks is correct?
+question: How does a labeled block produce a value?
 options:
-  - break can target only loops.
-  - A labeled block always creates a thread.
-  - A labeled block can produce a value through break :label value. This expresses local selection
-    without a helper function.
+  - With `continue :label value`.
+  - By assigning to the label's name.
+  - With `break :label value`.
 answer: 2
-explain: A labeled block can produce a value through break :label value. This expresses local
-  selection without a helper function.
+explain: A labeled break supplies the block expression's result.
 ```

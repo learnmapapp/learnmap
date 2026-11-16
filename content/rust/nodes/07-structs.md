@@ -101,11 +101,11 @@ let injured = Crab { legs: 9, ..ferris };
 A whole struct is mutable or not; you can't mark single fields as `mut`. Print one while debugging with `#[derive(Debug)]` and `{:?}`.
 
 ```quiz
-question: "How do you call an associated function without self, like new?"
+question: How do you call an associated function without self, like new?
 options:
-  - Crab.new("Ferris")
-  - Crab::new("Ferris")
-  - new Crab("Ferris")
+  - '`Crab.new("Ferris")`'
+  - Crab::`new("Ferris")`
+  - new `Crab("Ferris")`
 answer: 1
-explain: "Associated functions are called on the type with ::, methods on a value with a dot."
+explain: Associated functions are called on the type with ::, methods on a value with a dot.
 ```

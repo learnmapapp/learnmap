@@ -5,7 +5,7 @@ branch: errors
 requires: [option-result, closures]
 summary: map, and_then, unwrap_or and ok_or instead of match.
 ---
-`match` works for everything, but Option and Result come with small helpers that make code read like a sentence.
+`match` works for everything, but `Option` and `Result` come with small helpers that make code read like a sentence.
 
 **Defaults** when there's nothing:
 
@@ -28,7 +28,7 @@ let age: Option<u8> = form.get("age")
     .and_then(|s| s.parse().ok());
 ```
 
-`map` is for functions that always succeed, `and_then` for ones returning another Option (it avoids `Option<Option<T>>`).
+`map` is for functions that always succeed, `and_then` for ones returning another `Option` (it avoids `Option<Option<T>>`).
 
 **Converting** between the two:
 

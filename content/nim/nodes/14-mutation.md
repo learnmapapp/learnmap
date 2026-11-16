@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about mutable parameters is correct?
+question: Which parameter declaration allows changing the caller's integer?
 options:
-  - Every ordinary int parameter aliases mutable caller storage.
-  - A var parameter can always receive a numeric literal.
-  - A var parameter allows a procedure to mutate the caller’s storage. The call must supply a
-    suitable mutable value.
+  - "`value: int`"
+  - "`value: static[int]`"
+  - "`value: var int`"
 answer: 2
-explain: A var parameter allows a procedure to mutate the caller’s storage. The call must supply a
-  suitable mutable value.
+explain: A `var` parameter receives mutable access to the caller's storage.
 ```

@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about stop a loop is correct?
+question: Which loop does `break` exit?
 options:
-  - break exits the nearest loop. Place it before or after work according to whether the terminating
-    value should be processed.
-  - break exits every caller in the program.
-  - break restarts the loop from zero.
+  - The nearest enclosing loop.
+  - Every loop in the call stack.
+  - The entire program.
 answer: 0
-explain: break exits the nearest loop. Place it before or after work according to whether the
-  terminating value should be processed.
+explain: Execution continues after that loop.
 ```

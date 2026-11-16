@@ -36,13 +36,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about distinct domain types is correct?
+question: Why define `UserId = distinct int`?
 options:
-  - distinct creates a type separate from its underlying representation. Explicit conversions
-    prevent accidental mixing of unrelated identifiers.
-  - A distinct type is merely an interchangeable alias.
-  - All underlying operators are automatically available unchanged.
+  - To require deliberate conversion between user IDs and unrelated integers.
+  - To make user IDs interchangeable with every integer type.
+  - To turn each integer into a string automatically.
 answer: 0
-explain: distinct creates a type separate from its underlying representation. Explicit conversions
-  prevent accidental mixing of unrelated identifiers.
+explain: A distinct type creates a separate static domain type.
 ```

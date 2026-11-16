@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about sequence boundaries is correct?
+question: When is `#values` reliable as a sequence length?
 options:
-  - A nil entry preserves a sequence slot.
-  - "Use # for contiguous sequences. Holes make the boundary ambiguous, so remove the final element
-    here instead of introducing an interior gap."
-  - "# counts all keys in every table."
+  - When arbitrary missing indices should count as elements.
+  - When the integer keys run contiguously from 1.
+  - When the table contains only string keys.
 answer: 1
-explain: "Use # for contiguous sequences. Holes make the boundary ambiguous, so remove the final
-  element here instead of introducing an interior gap."
+explain: Holes can make the sequence boundary ambiguous.
 ```

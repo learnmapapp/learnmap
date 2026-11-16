@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about lazy component imports is correct?
+question: What does the `Lazy` prefix request for `LazyTaskCard`?
 options:
-  - Lazy means the component never ships any JavaScript.
-  - A Lazy prefix creates a database query automatically.
-  - The Lazy prefix requests a lazy-loaded component. Conditional rendering controls when it is
-    needed; test loading behavior in a production build.
+  - Automatic persistence of the component's props.
+  - A component that never needs browser code.
+  - A lazy-loaded component import.
 answer: 2
-explain: The Lazy prefix requests a lazy-loaded component. Conditional rendering controls when it is
-  needed; test loading behavior in a production build.
+explain: Conditional use can postpone loading; verify the behavior in a production build.
 ```

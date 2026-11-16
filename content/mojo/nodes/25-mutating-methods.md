@@ -51,13 +51,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about mutating methods is correct?
+question: Which receiver permits an increment method to update the instance's field?
 options:
-  - mut self means return a fresh unrelated object.
-  - Use mut self when a method updates fields. The receiver’s state change is then visible after the
-    call.
-  - A plain self receiver always grants unrestricted field mutation.
+  - A compile-time alias of the struct name.
+  - "`mut self`"
+  - Plain `self` without mutable access.
 answer: 1
-explain: Use mut self when a method updates fields. The receiver’s state change is then visible
-  after the call.
+explain: The receiver convention makes instance mutation part of the method's interface.
 ```

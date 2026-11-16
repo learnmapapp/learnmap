@@ -7,7 +7,7 @@ requires:
 summary: Named slots separate content regions.
 ---
 
-In your Astro project, save this as `src/components/Aside.astro`. Named slots separate content regions. A parent can supply <h2 slot="heading">Notes</h2> alongside default body content.
+In your Astro project, save this as `src/components/Aside.astro`. Named slots separate content regions. A parent can supply `<h2 slot="heading">Notes</h2>` alongside default body content.
 
 ```astro
 <aside>
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about named slots is correct?
+question: How does a parent fill `<slot name="heading" />`?
 options:
-  - Every slot must have the same name.
-  - Named slots can only receive numbers.
-  - Named slots separate content regions. A parent can supply <h2 slot="heading">Notes</h2>
-    alongside default body content.
+  - Set a URL parameter called `heading`.
+  - Name a CSS class `heading`.
+  - Supply child markup with `slot="heading"`.
 answer: 2
-explain: Named slots separate content regions. A parent can supply <h2 slot="heading">Notes</h2>
-  alongside default body content.
+explain: The slot attribute selects the receiving named content region.
 ```

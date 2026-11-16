@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about computed properties is correct?
+question: Why compute `area` from `width * height` rather than store a separate copy?
 options:
-  - A computed property derives a result instead of storing a separate copy. This keeps dependent
-    data consistent automatically.
-  - Computed properties always store an independent cached field.
-  - A computed property must have a setter.
+  - It stays derived from the current dimensions.
+  - It automatically saves the rectangle to disk.
+  - It makes every property mutable.
 answer: 0
-explain: A computed property derives a result instead of storing a separate copy. This keeps
-  dependent data consistent automatically.
+explain: A computed property avoids a separate value that can become inconsistent.
 ```

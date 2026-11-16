@@ -8,7 +8,7 @@ requires:
 summary: inout allows a function to update a caller’s variable.
 ---
 
-inout allows a function to update a caller’s variable. The & at the call site makes that mutation visible.
+`inout` allows a function to update a caller’s variable. The & at the call site makes that mutation visible.
 
 ```swift
 func advance(_ value: inout Int) {
@@ -43,13 +43,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about mutating arguments is correct?
+question: How do you pass mutable `count` to a parameter declared `inout Int`?
 options:
-  - All parameters are implicitly inout.
-  - inout allows a function to update a caller’s variable. The & at the call site makes that
-    mutation visible.
-  - inout accepts immutable let constants for mutation.
+  - "`advance(inout: count)`"
+  - "`advance(&count)`"
+  - "`advance(count)`"
 answer: 1
-explain: inout allows a function to update a caller’s variable. The & at the call site makes that
-  mutation visible.
+explain: The ampersand makes the call's mutable access explicit.
 ```

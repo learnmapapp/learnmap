@@ -7,7 +7,7 @@ requires:
 summary: string.sub uses inclusive byte positions, with negative positions counting from the end.
 ---
 
-string.sub uses inclusive byte positions, with negative positions counting from the end. Byte slicing can split a UTF-8 character.
+`string.sub` uses inclusive byte positions, with negative positions counting from the end. Byte slicing can split a UTF-8 character.
 
 ```lua
 local text = "learn.lua"
@@ -34,13 +34,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about slice bytes is correct?
+question: What does `string.sub("learn.lua", 1, 5)` return?
 options:
-  - The end position is excluded.
-  - All string positions count Unicode characters.
-  - string.sub uses inclusive byte positions, with negative positions counting from the end. Byte
-    slicing can split a UTF-8 character.
+  - '`"lear"`'
+  - '`"earn."`'
+  - '`"learn"`'
 answer: 2
-explain: string.sub uses inclusive byte positions, with negative positions counting from the end.
-  Byte slicing can split a UTF-8 character.
+explain: Lua substring positions are byte-based and include both specified endpoints.
 ```

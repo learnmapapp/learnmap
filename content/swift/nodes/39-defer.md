@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about guaranteed cleanup is correct?
+question: If two `defer` blocks are registered in one scope, which runs first on exit?
 options:
-  - defer runs when its enclosing scope exits, including an error exit. Multiple deferred blocks run
-    in reverse registration order.
-  - defer always runs immediately.
-  - Deferred blocks run in registration order.
+  - The one registered last.
+  - The one registered first.
+  - Whichever block has fewer statements.
 answer: 0
-explain: defer runs when its enclosing scope exits, including an error exit. Multiple deferred
-  blocks run in reverse registration order.
+explain: Deferred actions execute in reverse registration order.
 ```

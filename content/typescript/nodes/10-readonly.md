@@ -18,18 +18,18 @@ function total(values: readonly number[]): number {
 console.log(point.x, total([1, 2, 3]));
 ```
 
-A function accepting a readonly array promises not to mutate it through that parameter. Both mutable arrays and readonly arrays can be passed to it.
+A function accepting a `readonly` array promises not to mutate it through that parameter. Both mutable arrays and `readonly` arrays can be passed to it.
 
 ## Compile-time restrictions
 
 `const` prevents rebinding the variable, while `readonly` restricts writes through a type. Neither automatically freezes runtime objects. Another mutable alias may still be able to change the same object.
 
-Readonly is also shallow by default. A readonly property containing a mutable array prevents replacing that array reference, but not necessarily pushing into the array. Describe nested levels separately when that distinction matters.
+Readonly is also shallow by default. A `readonly` property containing a mutable array prevents replacing that array reference, but not necessarily pushing into the array. Describe nested levels separately when that distinction matters.
 
-Return a new object or array for an update rather than forcing a readonly value back into a mutable type with an assertion.
+Return a new object or array for an update rather than forcing a `readonly` value back into a mutable type with an assertion.
 
 ```exercise
-goal: "Accept a readonly array without requiring mutable access."
+goal: Accept a `readonly` array without requiring mutable access.
 lang: typescript
 code: |
   function total(values: number[]): number {
@@ -38,17 +38,17 @@ code: |
   const values: readonly number[] = [1, 2];
   console.log(total(values));
 checks:
-  - match: "function\\s+total\\(\\s*values:\\s*readonly\\s+number\\[\\]"
-    message: "Add readonly to the parameter array type."
-hint: "Add readonly to the parameter array type."
+  - match: function\s+total\(\s*values:\s*readonly\s+number\[\]
+    message: Add readonly to the parameter array type.
+hint: Add `readonly` to the parameter array type.
 ```
 
 ```quiz
-question: "Does readonly automatically call Object.freeze at runtime?"
+question: Does `readonly` automatically call `Object.freeze` at runtime?
 options:
-  - "Yes."
-  - "No, it is a static restriction."
-  - "Only for arrays."
+  - Yes.
+  - No, it is a static restriction.
+  - Only for arrays.
 answer: 1
-explain: "Readonly type syntax restricts checked access; it does not implement runtime freezing."
+explain: Readonly type syntax restricts checked access; it does not implement runtime freezing.
 ```

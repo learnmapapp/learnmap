@@ -39,23 +39,23 @@ let score = scores.get("Grace").copied().unwrap_or(0);
 ```
 
 ```exercise
-goal: "Return zero for a missing player without inserting a key."
+goal: Return zero for a missing player without inserting a key.
 lang: python
 code: |
   scores = {"Ada": 10}
   print(scores["Grace"])
 checks:
-  - match: "scores\\.get\\(\\s*[\"']Grace[\"']\\s*,\\s*0\\s*\\)"
-    message: "Use scores.get(\"Grace\", 0)."
-hint: "Use scores.get(\"Grace\", 0)."
+  - match: scores\.get\(\s*["']Grace["']\s*,\s*0\s*\)
+    message: Use scores.get("Grace", 0).
+hint: Use `scores.get("Grace", 0)`.
 ```
 
 ```quiz
-question: "What happens when scores.get(\"Missing\", 0) finds no entry?"
+question: What happens when `scores.get("Missing", 0)` finds no entry?
 options:
-  - "It inserts Missing with value 0."
-  - "It returns 0 without inserting a key."
-  - "It raises KeyError."
+  - It inserts Missing with value 0.
+  - It returns 0 without inserting a key.
+  - It raises KeyError.
 answer: 1
-explain: "get returns the fallback but leaves the dictionary unchanged."
+explain: get returns the fallback but leaves the dictionary unchanged.
 ```

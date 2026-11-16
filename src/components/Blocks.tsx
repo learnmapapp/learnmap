@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import type { ExerciseSpec, QuizSpec, ReplEntry } from '../content/markdown';
-import { runChecks } from '../content/markdown';
+import { renderInline, runChecks, type ExerciseSpec, type QuizSpec, type ReplEntry } from '../content/markdown';
 import { compareLang } from '../compareLangs';
 import { hasEditorHost, notifyHost } from '../host';
 import { loadCode, saveCode } from '../progress';
@@ -127,7 +126,7 @@ export function Exercise({
       </div>
       {showHint && !ok && (
         <p className="hint">
-          <Icon name="bulb" size={16} /> {spec.hint}
+          <Icon name="bulb" size={16} /> <span dangerouslySetInnerHTML={{ __html: renderInline(spec.hint) }} />
         </p>
       )}
     </div>

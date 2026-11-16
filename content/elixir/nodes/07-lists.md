@@ -99,9 +99,9 @@ For more on writing your own list functions, see [Recursion](node:recursion).
 ```quiz
 question: Which is the fastest way to add an element to a list?
 options:
-  - "list ++ [x]"
-  - "[x | list]"
-  - "List.insert_at(list, -1, x)"
+  - "`list ++ [x]`"
+  - "`[x | list]`"
+  - "`List.insert_at(list, -1, x)`"
 answer: 1
 explain: Prepending just makes a new node pointing at the old list. Appending has to copy the whole thing.
 ```

@@ -35,13 +35,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about numbers and division is correct?
+question: What does `17 // 5` evaluate to in Lua 5.4?
 options:
-  - The / operator performs floating division; // rounds the quotient down, and % returns the
-    corresponding remainder.
-  - // rounds toward zero for negative values.
-  - Lua has no integer arithmetic.
+  - "`3`"
+  - "`3.4`"
+  - "`2`"
 answer: 0
-explain: The / operator performs floating division; // rounds the quotient down, and % returns the
-  corresponding remainder.
+explain: The floor-division operator rounds the quotient down.
 ```

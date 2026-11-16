@@ -48,9 +48,9 @@ Language libraries live in sets: `python3Packages.requests`, `nodePackages.prett
 ```quiz
 question: You need Python's requests library from nixpkgs. Where is it?
 options:
-  - "pkgs.requests"
-  - "pkgs.python3Packages.requests"
-  - "pkgs.pip.requests"
+  - "`pkgs.requests`"
+  - "`pkgs.python3Packages.requests`"
+  - "`pkgs.pip.requests`"
 answer: 1
 explain: Language libraries live in per-language sets like python3Packages.
 ```

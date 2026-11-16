@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about refresh fetched data is correct?
+question: What does the `refresh` function returned by `useFetch` do?
 options:
-  - refresh requires reloading the whole document.
-  - Refreshing data always clears every useState value.
-  - The refresh function reruns the associated data operation. Wrap the call in an event handler so
-    the browser event is not mistaken for refresh options.
+  - Reloads every browser tab.
+  - Clears all application state.
+  - Reruns that data operation.
 answer: 2
-explain: The refresh function reruns the associated data operation. Wrap the call in an event
-  handler so the browser event is not mistaken for refresh options.
+explain: Refresh is scoped to the fetched data rather than the entire browser session.
 ```

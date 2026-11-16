@@ -36,7 +36,7 @@ The HTML needs a matching `<div id="root"></div>`. Create a root once, then let 
 A development build is useful for feedback, while a deployment needs the production output. This map's course content does not install a second application in the repository.
 
 ```exercise
-goal: "Render the component as JSX rather than passing its function itself."
+goal: Render the component as JSX rather than passing its function itself.
 lang: jsx
 code: |
   import { createRoot } from "react-dom/client";
@@ -44,9 +44,9 @@ code: |
   const container = document.getElementById("root");
   if (container) createRoot(container).render(App);
 checks:
-  - match: "\\.render\\(<App\\s+/>\\)"
-    message: "Pass <App /> to render."
-hint: "Pass <App /> to render."
+  - match: \.render\(<App\s+/>\)
+    message: Pass <App /> to render.
+hint: Pass `<App />` to render.
 ```
 
 ```quiz

@@ -58,11 +58,11 @@ Useful commands:
 ```
 
 ```quiz
-question: In nix repl, how do you load nixpkgs?
+question: In `nix repl`, how do you load nixpkgs?
 options:
-  - "import nixpkgs"
-  - ":l <nixpkgs>"
-  - ":load pkgs"
+  - import nixpkgs
+  - :l `<nixpkgs>`
+  - :load pkgs
 answer: 1
-explain: ":l loads a file, and <nixpkgs> finds nixpkgs on your NIX_PATH."
+explain: :l loads a file, and `<nixpkgs>` finds nixpkgs on your `NIX_PATH`.
 ```

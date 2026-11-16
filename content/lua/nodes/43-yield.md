@@ -42,13 +42,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about suspend and resume is correct?
+question: Where does execution continue after a yielded coroutine is resumed?
 options:
-  - yield permanently destroys the coroutine.
-  - yield returns control to the resumer. The next successful resume continues after the yield
-    rather than restarting the function.
-  - resume always restarts at the first statement.
+  - After the coroutine's final return.
+  - After its suspended `yield` call.
+  - At the first line of the coroutine again.
 answer: 1
-explain: yield returns control to the resumer. The next successful resume continues after the yield
-  rather than restarting the function.
+explain: Yield preserves the coroutine's execution position.
 ```

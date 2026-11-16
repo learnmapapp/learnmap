@@ -41,13 +41,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about reactive query parameters is correct?
+question: Why normalize `route.query.q` before treating it as a search string?
 options:
-  - Copying a route value once always follows future navigation.
-  - Query values can be absent or non-scalar. Derive a normalized value reactively so navigation
-    updates the displayed search.
-  - Query values are always single strings.
+  - Normalization prevents all network failures.
+  - It may be absent or have a non-scalar query shape.
+  - Query values are always valid numbers.
 answer: 1
-explain: Query values can be absent or non-scalar. Derive a normalized value reactively so
-  navigation updates the displayed search.
+explain: Check the value's shape and derive it reactively when navigation can change it.
 ```

@@ -28,7 +28,7 @@ Property keys can be strings, numbers, or symbols. Index signatures can make `ke
 `Object.keys` returns runtime enumerable string keys, not a universally safe `Array<keyof T>`. Runtime objects can contain additional properties beyond a static contract, so avoid asserting every returned key without considering that boundary.
 
 ```exercise
-goal: "Restrict the key type to keys of the supplied object."
+goal: Restrict the key type to keys of the supplied object.
 lang: typescript
 code: |
   function read<T, K extends string>(value: T, key: K): T[K] {
@@ -36,17 +36,17 @@ code: |
   }
   console.log(read({ score: 42 }, "score"));
 checks:
-  - match: "K\\s+extends\\s+keyof\\s+T"
-    message: "Use K extends keyof T."
-hint: "Use K extends keyof T."
+  - match: K\s+extends\s+keyof\s+T
+    message: Use K extends keyof T.
+hint: Use `K extends keyof T`.
 ```
 
 ```quiz
-question: "What does K extends keyof T ensure in a property reader?"
+question: What does `K extends keyof T` ensure in a property reader?
 options:
-  - "K is a key allowed by T."
-  - "Every key exists on every runtime object."
-  - "K is always a number."
+  - K is a key allowed by T.
+  - Every key exists on every runtime object.
+  - K is always a number.
 answer: 0
-explain: "It relates the selected static key to the object type; it is not external-data validation."
+explain: It relates the selected static key to the object type; it is not external-data validation.
 ```

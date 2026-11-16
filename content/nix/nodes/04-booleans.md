@@ -68,11 +68,11 @@ assert enableTLS -> certificate != null;
 If TLS is off, the assertion passes no matter what. If it's on, there must be a certificate.
 
 ```quiz
-question: "What is  false -> false ?"
+question: What is  `false -> false` ?
 options:
-  - "true"
-  - "false"
+  - "`true`"
+  - "`false`"
   - An error.
 answer: 0
-explain: Implication only fails when the left is true and the right is false.
+explain: Implication only fails when the left is `true` and the right is `false`.
 ```

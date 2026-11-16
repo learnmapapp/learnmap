@@ -45,13 +45,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about convert python results is correct?
+question: How does this Mojo 1.2 example convert a Python integer object into `Int`?
 options:
-  - Conversions from Python can never fail.
-  - Convert a Python result into a Mojo type when entering typed computation. Conversion can fail,
-    so keep failure handling at the interoperability boundary.
-  - Every Python object is already a statically typed Mojo Int.
+  - "`Int[type=result]`"
+  - "`Int(py=result)`"
+  - "`result as Int`"
 answer: 1
-explain: Convert a Python result into a Mojo type when entering typed computation. Conversion can
-  fail, so keep failure handling at the interoperability boundary.
+explain: The named `py` initializer performs the explicit Python-to-Mojo conversion.
 ```

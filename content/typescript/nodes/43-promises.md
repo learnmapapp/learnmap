@@ -40,11 +40,11 @@ hint: "Resolve the numeric value 42."
 ```
 
 ```quiz
-question: "What does Promise<number> describe?"
+question: What does `Promise<number>` describe?
 options:
-  - "A future fulfillment value of number."
-  - "A rejection that must be a number."
-  - "An operation that cannot fail."
+  - A future fulfillment value of number.
+  - A rejection that must be a number.
+  - An operation that cannot fail.
 answer: 0
-explain: "The type parameter describes fulfillment; rejection is a separate runtime path."
+explain: The type parameter describes fulfillment; rejection is a separate runtime path.
 ```

@@ -7,7 +7,7 @@ requires:
 summary: Slots let a parent provide markup inside a reusable child.
 ---
 
-In your Nuxt 4 project, save this as `app/components/Panel.vue`. Slots let a parent provide markup inside a reusable child. Supply a named heading with <template #heading> and ordinary children for the default slot.
+In your Nuxt 4 project, save this as `app/components/Panel.vue`. Slots let a parent provide markup inside a reusable child. Supply a named heading with `<template #heading>` and ordinary children for the default slot.
 
 A useful term here is [[slot]]: A child component placeholder filled with markup supplied by its parent.
 
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about slot composition is correct?
+question: How does a parent supply a named `heading` slot?
 options:
-  - Slots can only be rendered once in an application.
-  - "Slots let a parent provide markup inside a reusable child. Supply a named heading with
-    <template #heading> and ordinary children for the default slot."
-  - Every slot must contain a string prop.
+  - Set a route query key called `heading`.
+  - "Use `<template #heading>...</template>`."
+  - Create a global variable called `heading`.
 answer: 1
-explain: "Slots let a parent provide markup inside a reusable child. Supply a named heading with
-  <template #heading> and ordinary children for the default slot."
+explain: Named slots pass markup into the child's corresponding content region.
 ```

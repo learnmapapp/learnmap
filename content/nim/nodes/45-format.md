@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about string interpolation is correct?
+question: What does `fmt"{name} completed {count} lessons"` produce?
 options:
-  - std/strformat provides fmt strings with expressions in braces. Use explicit formatting when
-    presentation precision matters.
-  - fmt strings perform network requests to fill placeholders.
-  - Interpolated expressions must all be strings.
+  - Text with the expressions interpolated.
+  - A JSON object with two fields.
+  - A mutation of the original variables.
 answer: 0
-explain: std/strformat provides fmt strings with expressions in braces. Use explicit formatting when
-  presentation precision matters.
+explain: "`fmt` constructs formatted text from the supplied expressions."
 ```

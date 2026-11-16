@@ -58,11 +58,11 @@ d.mapValues { it.value * 10 }
 ```
 
 ```exercise
-goal: Join the list with commas using lib.concatStringsSep.
+goal: Join the list with commas using `lib.concatStringsSep`.
 code: |
   builtins.toString [ "web" "db" "cache" ]
 checks:
-  - match: 'lib\.concatStringsSep\s+",\s*"\s+\['
-    message: 'Use  lib.concatStringsSep ", " [ … ]'
+  - match: lib\.concatStringsSep\s+",\s*"\s+\[
+    message: Use  lib.concatStringsSep ", " [ … ]
 output: '"web, db, cache"'
 ```

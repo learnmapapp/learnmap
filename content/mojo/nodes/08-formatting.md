@@ -39,13 +39,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about template strings is correct?
+question: Which Mojo 1.2 spelling interpolates `name` into a template string?
 options:
-  - Current Mojo template strings require JavaScript backticks.
-  - The t prefix creates an OS thread.
-  - Mojo 1.2 template strings use the t prefix and braces for expressions. Formatting syntax is
-    version-sensitive, so use the pinned toolchain.
+  - '`"Hello, {name}"`'
+  - '`"Hello, ${name}"`'
+  - '`t"Hello, {name}"`'
 answer: 2
-explain: Mojo 1.2 template strings use the t prefix and braces for expressions. Formatting syntax is
-  version-sensitive, so use the pinned toolchain.
+explain: The `t` prefix enables the template-string expression syntax used in this course.
 ```

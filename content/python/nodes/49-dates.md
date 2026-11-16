@@ -28,7 +28,7 @@ The standard library's `zoneinfo.ZoneInfo` supports named zones such as `Austral
 Prefer ISO 8601 text for interchange when a human-readable format is needed. For elapsed-time measurement in a running process, use `time.perf_counter()` rather than a wall clock that can be adjusted.
 
 ```exercise
-goal: "Create an aware UTC timestamp rather than a naive local one."
+goal: Create an aware UTC timestamp rather than a naive local one.
 lang: python
 code: |
   from datetime import datetime, timezone
@@ -36,17 +36,17 @@ code: |
   now = datetime.now()
   print(now.isoformat())
 checks:
-  - match: "datetime\\.now\\(\\s*timezone\\.utc\\s*\\)"
-    message: "Pass timezone.utc to datetime.now."
-hint: "Pass timezone.utc to datetime.now."
+  - match: datetime\.now\(\s*timezone\.utc\s*\)
+    message: Pass timezone.utc to datetime.now.
+hint: Pass `timezone.utc` to `datetime.now`.
 ```
 
 ```quiz
-question: "Which call creates a timezone-aware UTC timestamp?"
+question: Which call creates a timezone-aware UTC timestamp?
 options:
-  - "datetime.now()"
-  - "datetime.now(timezone.utc)"
-  - "date.today()"
+  - "`datetime.now()`"
+  - "`datetime.now(timezone.utc)`"
+  - "`date.today()`"
 answer: 1
-explain: "Supplying timezone.utc gives the datetime an explicit UTC timezone."
+explain: Supplying `timezone.utc` gives the datetime an explicit UTC timezone.
 ```

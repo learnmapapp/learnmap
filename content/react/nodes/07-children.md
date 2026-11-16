@@ -40,11 +40,11 @@ hint: "Render children inside the section."
 ```
 
 ```quiz
-question: "Where does JSX nested inside <Card>...</Card> arrive?"
+question: Where does JSX nested inside `<Card>...</Card>` arrive?
 options:
-  - "In the children prop."
-  - "As a global variable."
-  - "In the DOM before React renders."
+  - In the children prop.
+  - As a global variable.
+  - In the DOM before React renders.
 answer: 0
-explain: "Nested content is supplied through children."
+explain: Nested content is supplied through children.
 ```

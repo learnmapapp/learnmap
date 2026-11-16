@@ -86,11 +86,11 @@ outputs = inputs@{ self, nixpkgs, ... }: {
 ```
 
 ```quiz
-question: "In  { a, b ? 2 }: a + b , what happens when you call it with { a = 1; c = 3; }?"
+question: "In  `{ a, b ? 2 }: a + b` , what happens when you call it with `{ a = 1; c = 3; }`?"
 options:
-  - "It returns 3."
+  - It returns 3.
   - "An error: c is not expected."
-  - "It returns 6."
+  - It returns 6.
 answer: 1
 explain: Without ..., unexpected attributes are an error.
 ```

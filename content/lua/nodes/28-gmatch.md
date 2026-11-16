@@ -8,7 +8,7 @@ requires:
 summary: string.gmatch returns an iterator yielding successive matches.
 ---
 
-string.gmatch returns an iterator yielding successive matches. Captures change which pieces the iterator yields.
+`string.gmatch` returns an iterator yielding successive matches. Captures change which pieces the iterator yields.
 
 ```lua
 for word in string.gmatch("red blue green", "%a+") do
@@ -37,13 +37,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about iterate matches is correct?
+question: Which operation visits every word matched by a pattern?
 options:
-  - gmatch modifies the source string.
-  - string.gmatch returns an iterator yielding successive matches. Captures change which pieces the
-    iterator yields.
-  - gmatch returns only the first match.
+  - Read the replacement count from `string.gsub`.
+  - Iterate the function returned by `string.gmatch`.
+  - Call `string.match` once.
 answer: 1
-explain: string.gmatch returns an iterator yielding successive matches. Captures change which pieces
-  the iterator yields.
+explain: "`gmatch` supplies successive matches through an iterator."
 ```

@@ -61,11 +61,11 @@ func sum(xs []int) int { if len(xs) == 0 { return 0 }; return xs[0] + sum(xs[1:]
 ```
 
 ```exercise
-goal: Add the base case so len([]) returns 0.
+goal: Add the base case so `len([])` returns 0.
 code: |
   def len([_ | tail]), do: 1 + len(tail)
 checks:
-  - match: 'def\s+len\(\s*\[\s*\]\s*\)\s*,\s*do:\s*0'
-    message: 'Add  def len([]), do: 0'
+  - match: def\s+len\(\s*\[\s*\]\s*\)\s*,\s*do:\s*0
+    message: "Add  def len([]), do: 0"
 output: "3"
 ```

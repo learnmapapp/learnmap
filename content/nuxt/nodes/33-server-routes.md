@@ -7,7 +7,7 @@ requires:
 summary: A file under server/api creates an API endpoint at the project root.
 ---
 
-In your Nuxt 4 project, save this as `server/api/course.get.ts`. A file under server/api creates an API endpoint at the project root. Nitro serializes this returned object into JSON.
+In your Nuxt 4 project, save this as `server/api/course.get.ts`. A file under `server/api` creates an API endpoint at the project root. Nitro serializes this returned object into JSON.
 
 A useful term here is [[Nitro]]: The server engine used by Nuxt to build and run server routes.
 
@@ -38,13 +38,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about a server api route is correct?
+question: Which URL is handled by `server/api/course.get.ts`?
 options:
-  - A file under server/api creates an API endpoint at the project root. Nitro serializes this
-    returned object into JSON.
-  - Nuxt 4 server/api belongs inside app/components.
-  - Returning an object requires manually calling JSON.stringify.
+  - GET `/api/course`.
+  - POST `/app/course`.
+  - GET `/server/api/course.get.ts`.
 answer: 0
-explain: A file under server/api creates an API endpoint at the project root. Nitro serializes this
-  returned object into JSON.
+explain: The file path and suffix define the route and HTTP method.
 ```

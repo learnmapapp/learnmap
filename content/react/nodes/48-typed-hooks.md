@@ -24,7 +24,7 @@ export default function Tasks() {
 }
 ```
 
-The generic arguments explain the array element and DOM reference contracts. The ref still needs a null check before use.
+The generic arguments explain the array element and DOM reference contracts. The ref still needs a `null` check before use.
 
 ## Model transitions too
 
@@ -49,11 +49,11 @@ hint: "Use Task[] as the state type argument."
 ```
 
 ```quiz
-question: "Why supply useState<Task[]>([]) for an empty initial array?"
+question: Why supply `useState<Task[]>([])` for an empty initial array?
 options:
-  - "An empty initializer cannot describe the intended Task element contract."
-  - "All state needs explicit generic arguments."
-  - "It validates fetched tasks automatically."
+  - An empty initializer cannot describe the intended Task element contract.
+  - All state needs explicit generic arguments.
+  - It validates fetched tasks automatically.
 answer: 0
-explain: "The explicit type tells the checker what later array elements should be."
+explain: The explicit type tells the checker what later array elements should be.
 ```

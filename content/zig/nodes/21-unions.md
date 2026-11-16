@@ -7,7 +7,7 @@ requires:
 summary: union(enum) pairs a tag with a case-specific payload.
 ---
 
-union(enum) pairs a tag with a case-specific payload. Switch captures give access to the active payload only.
+`union(enum)` pairs a tag with a case-specific payload. Switch captures give access to the active payload only.
 
 ```zig
 const std = @import("std");
@@ -48,13 +48,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about tagged unions is correct?
+question: How do you safely use a `union(enum)` payload?
 options:
-  - union(enum) pairs a tag with a case-specific payload. Switch captures give access to the active
-    payload only.
-  - All union payloads are active at the same time.
-  - A tagged union stores only strings.
+  - Switch on the active tag and capture that case's payload.
+  - Read every payload field unconditionally.
+  - Assume the first declared payload is always active.
 answer: 0
-explain: union(enum) pairs a tag with a case-specific payload. Switch captures give access to the
-  active payload only.
+explain: Only the selected union alternative has an active payload.
 ```

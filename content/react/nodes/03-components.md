@@ -47,11 +47,11 @@ hint: "Capitalize the component name in JSX."
 ```
 
 ```quiz
-question: "Why does <LessonBadge /> start with a capital letter?"
+question: Why does `<LessonBadge />` start with a capital letter?
 options:
-  - "It marks a user-defined component rather than a built-in tag."
-  - "All JSX tags must use capitals."
-  - "It makes the result a class instance."
+  - It marks a user-defined component rather than a built-in tag.
+  - All JSX tags must use capitals.
+  - It makes the result a class instance.
 answer: 0
-explain: "Capitalized JSX names refer to component values; lowercase names describe built-in elements."
+explain: Capitalized JSX names refer to component values; lowercase names describe built-in elements.
 ```

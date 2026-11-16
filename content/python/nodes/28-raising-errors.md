@@ -34,7 +34,7 @@ def parse_count(text):
 For a domain-specific failure, define a subclass of `Exception`, such as `class ConfigError(Exception): pass`. Callers can then catch that category without catching every possible failure. Use ordinary validation for external input; `assert` is intended for internal assumptions and can be disabled with Python's optimization option.
 
 ```exercise
-goal: "Reject a nonpositive count with ValueError instead of returning zero."
+goal: Reject a nonpositive count with ValueError instead of returning zero.
 lang: python
 code: |
   def divide(total, count):
@@ -44,17 +44,17 @@ code: |
 
   print(divide(12, 3))
 checks:
-  - match: "^\\s+raise\\s+ValueError\\(\\s*[\"']count must be positive[\"']\\s*\\)"
-    message: "Replace return 0 with raise ValueError(\"count must be positive\")."
-hint: "Replace return 0 with raise ValueError(\"count must be positive\")."
+  - match: ^\s+raise\s+ValueError\(\s*["']count must be positive["']\s*\)
+    message: Replace return 0 with raise ValueError("count must be positive").
+hint: Replace return 0 with raise `ValueError("count must be positive")`.
 ```
 
 ```quiz
-question: "Why use raise NewError(...) from error?"
+question: Why use raise `NewError(...)` from error?
 options:
-  - "To preserve the original exception as the cause."
-  - "To suppress all tracebacks."
-  - "To convert every error into a return value."
+  - To preserve the original exception as the cause.
+  - To suppress all tracebacks.
+  - To convert every error into a return value.
 answer: 0
-explain: "Explicit chaining adds useful context while retaining the lower-level failure."
+explain: Explicit chaining adds useful context while retaining the lower-level failure.
 ```

@@ -40,13 +40,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about ranges and iteration is correct?
+question: Which values does `range(1, 4)` provide?
 options:
-  - range includes its stop argument.
-  - range always allocates a List of every integer.
-  - range excludes its stop value. This loop sums 1 through 5 without creating a list of all those
-    integers.
+  - "`1, 2, 3, 4`"
+  - "`0, 1, 2, 3`"
+  - "`1, 2, 3`"
 answer: 2
-explain: range excludes its stop value. This loop sums 1 through 5 without creating a list of all
-  those integers.
+explain: The start is included and the stop is excluded.
 ```

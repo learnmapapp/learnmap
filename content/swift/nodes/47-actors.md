@@ -55,13 +55,11 @@ hint: Compare the worked example with the starting code below. Identify the chan
 ```
 
 ```quiz
-question: Which statement about isolated actor state is correct?
+question: Why does an outside caller generally `await` an actor-isolated method?
 options:
-  - Actors guarantee invariants remain unchanged across every await.
-  - All actor methods are callable synchronously from any context.
-  - An actor isolates its mutable state. Calls from outside that isolation generally require await,
-    and invariants must be reconsidered across suspension points.
+  - Every actor call creates a new process.
+  - Actor fields are shared without coordination.
+  - Access must cross the actor's isolation boundary.
 answer: 2
-explain: An actor isolates its mutable state. Calls from outside that isolation generally require
-  await, and invariants must be reconsidered across suspension points.
+explain: Actors coordinate access to isolated state; suspension can still affect higher-level invariants.
 ```

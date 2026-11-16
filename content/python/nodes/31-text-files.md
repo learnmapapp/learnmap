@@ -49,11 +49,11 @@ hint: "Pass encoding=\"utf-8\" to write_text."
 ```
 
 ```quiz
-question: "Which operation loads the complete file as a string?"
+question: Which operation loads the complete file as a string?
 options:
-  - "Path.read_text()"
-  - "Iterating an open file line by line."
-  - "Path.name"
+  - "`Path.read_text()`"
+  - Iterating an open file line by line.
+  - Path.name
 answer: 0
-explain: "read_text reads and decodes the whole file; line iteration is the streaming option."
+explain: read_text reads and decodes the whole file; line iteration is the streaming option.
 ```

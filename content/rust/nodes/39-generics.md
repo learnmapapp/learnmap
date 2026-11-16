@@ -71,15 +71,15 @@ class Pair(Generic[T]): ...   # type hints only
 ```
 
 ```exercise
-goal: Make Wrapper generic, so it can hold any type instead of only i32.
+goal: Make Wrapper generic, so it can hold any type instead of only `i32`.
 code: |
   struct Wrapper {
       value: i32,
   }
 checks:
-  - match: 'struct\s+Wrapper\s*<\s*T\s*>'
+  - match: struct\s+Wrapper\s*<\s*T\s*>
     message: "Declare the type parameter: struct Wrapper<T>"
-  - match: 'value\s*:\s*T\b'
+  - match: value\s*:\s*T\b
     message: "Use it for the field: value: T"
 output: 'Wrapper { value: "crab" }'
 ```
