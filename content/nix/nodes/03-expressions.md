@@ -7,7 +7,7 @@ summary: In Nix, everything evaluates to a value.
 ---
 In most languages you write **statements**: do this, then that. Nix only has **expressions**: things that evaluate to a [[value]].
 
-Here's what that looks like in `nix repl`, the interactive prompt:
+The easiest way to see that is `nix repl`, Nix's interactive prompt. Type `nix repl` in a terminal, enter an expression, and it prints the value (`:q` quits):
 
 ```repl
 > 1 + 2

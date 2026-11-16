@@ -75,11 +75,11 @@ $ nix derivation show nixpkgs#hello
 Ready to package something properly? Continue with [mkDerivation](node:mkderivation).
 
 ```quiz
-question: In a sandboxed Linux Nix build, where should network source downloads normally happen?
+question: Your build script runs `curl` to download a library halfway through the build. What happens?
 options:
-  - In a browser script after installation.
-  - In a declared fixed-output fetcher.
-  - In an arbitrary curl call inside the build phase.
+  - It works, as long as the URL is reachable.
+  - It fails. The sandbox has no network, so downloads must be declared up front with a fetcher and a hash.
+  - Nix caches the download for next time.
 answer: 1
-explain: Normal sandboxed build phases have no network; declared fetchers provide controlled source inputs.
+explain: Inside the sandbox there's no network. Fetchers download sources before the build and check them against a known hash.
 ```

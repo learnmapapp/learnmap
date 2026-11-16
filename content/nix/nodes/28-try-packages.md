@@ -34,7 +34,7 @@ Python 3.12.8
 `nixpkgs#cowsay` is a **flake reference**: "the `cowsay` package from the `nixpkgs` flake". Arguments after `--` go to the program.
 
 ```tip
-These commands are part of the "new" Nix CLI. If you get an error about experimental features, add `experimental-features = nix-command flakes` to `~/.config/nix/nix.conf`.
+`nix shell` and `nix run` belong to the newer Nix CLI. An "experimental feature" error means it isn't switched on yet; the [first lesson](node:nix) shows the one line that fixes it.
 ```
 
 ```compare javascript

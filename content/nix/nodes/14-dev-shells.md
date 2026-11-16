@@ -32,7 +32,7 @@ v22.11.0
 Leave the shell, and those tools are gone again. Nothing was installed globally, and the next project can use a completely different Node version without any conflict.
 
 ```tip
-With [flakes](node:flakes) you'll write the same thing as a `devShells` output and enter it with `nix develop`. Tools like `direnv` can even switch shells automatically when you `cd` into a folder.
+With [flakes](node:flakes) you'll write the same thing as a `devShells` output and enter it with `nix develop`.
 ```
 
 ```exercise

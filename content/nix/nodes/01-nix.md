@@ -47,12 +47,28 @@ The map has five branches around this starting point:
 
 You don't need all of it. Want a dev shell for one project? That's a short route. Want to run NixOS on a server? Pick that goal, and the map lights up the way there.
 
+## Following along
+
+You can read every lesson right here, and the exercises run in your browser. To try the commands on your own machine, install Nix from [nixos.org/download](https://nixos.org/download). It runs on Linux and macOS (and on Windows through WSL), next to your existing package manager. You don't need NixOS for any of this.
+
+After installing, open a new terminal and check that it works:
+
+```shell
+$ nix --version
+```
+
+A few lessons use the newer `nix` commands and flakes. If Nix complains that they are "experimental", add this line to `~/.config/nix/nix.conf` and you're set:
+
+```text title=~/.config/nix/nix.conf
+experimental-features = nix-command flakes
+```
+
 ```quiz
-question: What does pinning the same Nix inputs give two machines?
+question: You only want a reproducible dev environment for one project, on your Mac. Do you need to switch to NixOS?
 options:
-  - A guarantee that every build is bit-for-bit deterministic.
-  - The same selected input revisions rather than independently chosen latest versions.
-  - A guarantee that they download today's latest packages.
+  - Yes, Nix only works on NixOS.
+  - No. Nix the package manager runs on macOS and other Linux distributions too.
+  - Only if the project uses flakes.
 answer: 1
-explain: Pinning fixes input selection; reproducibility also depends on the build and platform.
+explain: NixOS is one way to use Nix, not a requirement. Dev shells work wherever Nix is installed.
 ```
