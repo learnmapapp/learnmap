@@ -5,57 +5,91 @@ branch: "collections"
 requires: ["lists", "loops"]
 summary: "Map unique keys to values and handle missing entries deliberately."
 ---
-
-A [[dictionary]] maps keys to values. Keys are unique and must be [[hashable]], such as strings, numbers, or tuples whose elements are all hashable.
-
-```python
-scores = {"Ada": 10, "Grace": 12}
-scores["Ada"] += 5
-scores["Linus"] = 8
-print(scores["Ada"])             # 15
-print(scores.get("Missing", 0))   # 0
-```
-
-Indexing with a missing key raises `KeyError`. `get(key, default)` returns a fallback without inserting it. `key in scores` checks keys, not values.
-
-## Walk through entries
+A [[dictionary]] maps keys to values. Think phone book: you look up a name, you get a number.
 
 ```python
-for name, score in scores.items():
-    print(name, score)
+phone = {"Ada": "555-0101", "Grace": "555-0199"}
+print(phone["Ada"])          # 555-0101
+phone["Linus"] = "555-0123"  # add or overwrite
+del phone["Grace"]           # remove
 ```
 
-`items()` supplies key-value pairs. `keys()` and `values()` provide views of each side. Dictionaries preserve insertion order; updating an existing key does not move it to the end.
+Keys are usually strings, but any [[hashable]] value works: numbers, tuples, even `True`. Values can be anything at all.
 
-Use a dictionary when you need a lookup by name or identifier, rather than repeatedly searching a list. Do not add or delete keys while iterating over the same dictionary; gather changes first or iterate over a copy. Lists cannot be dictionary keys because their contents can change.
+## Three ways to ask for a missing key
+
+Here's what happens when the key isn't there, and the three ways to deal with it:
+
+```repl
+> scores = {"Ada": 10}
+> scores["Grace"]
+error: KeyError: 'Grace'
+> scores.get("Grace")
+> scores.get("Grace", 0)
+0
+> "Grace" in scores
+False
+```
+
+- `scores[key]` when the key **must** be there. A `KeyError` is the right outcome if it isn't.
+- `scores.get(key, default)` when missing is normal. Without a default you get `None`, which is why that line shows nothing.
+- `key in scores` when you just want to know.
+
+## Counting things
+
+The classic dictionary job: counting. Here's a word counter:
+
+```python
+counts = {}
+for word in "the cat and the hat".split():
+    counts[word] = counts.get(word, 0) + 1
+print(counts)   # {'the': 2, 'cat': 1, 'and': 1, 'hat': 1}
+```
+
+`get(word, 0)` means "the current count, or 0 if this is the first time".
+
+## Looping over a dictionary
+
+A plain `for` gives you the keys. Use `.items()` to get each key and value together:
+
+```python
+for word, n in counts.items():
+    print(f"{word}: {n}")
+```
+
+Dictionaries remember the order you inserted things in, so this prints them in the order they were first seen.
 
 ```compare javascript
 const scores = new Map([["Ada", 10]]);
-console.log(scores.get("Grace") ?? 0);
+scores.get("Grace") ?? 0;
 ```
 
-```compare rust
-let score = scores.get("Grace").copied().unwrap_or(0);
+```compare java
+Map<String, Integer> scores = new HashMap<>();
+scores.getOrDefault("Grace", 0);
 ```
 
 ```exercise
-goal: Return zero for a missing player without inserting a key.
+goal: "Grace has no score yet, and this crashes with a `KeyError`. Print `0` for her instead, without adding her to the dictionary."
 lang: python
 code: |
   scores = {"Ada": 10}
   print(scores["Grace"])
 checks:
-  - match: scores\.get\(\s*["']Grace["']\s*,\s*0\s*\)
+  - match: 'scores\.get\(\s*["'']Grace["'']\s*,\s*0\s*\)'
     message: Use scores.get("Grace", 0).
-hint: Use `scores.get("Grace", 0)`.
+hint: get takes a second argument, the default.
+solution: |
+  scores = {"Ada": 10}
+  print(scores.get("Grace", 0))
 ```
 
 ```quiz
-question: What happens when `scores.get("Missing", 0)` finds no entry?
+question: "What does `{\"a\": 1}.get(\"b\")` return?"
 options:
-  - It inserts Missing with value 0.
-  - It returns 0 without inserting a key.
-  - It raises KeyError.
+  - "`0`"
+  - "`None`"
+  - It raises a KeyError.
 answer: 1
-explain: get returns the fallback but leaves the dictionary unchanged.
+explain: get never raises. Without a default, a missing key gives None.
 ```

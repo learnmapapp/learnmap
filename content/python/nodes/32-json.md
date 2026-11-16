@@ -5,36 +5,83 @@ branch: "files"
 requires: ["text-files", "dictionaries"]
 summary: "Turn structured text into Python values, and serialize them again."
 ---
+JSON is the lingua franca of APIs and config files, and it maps neatly onto Python:
 
-JSON is a common format for configuration and exchanged data. The standard library's `json` module converts between JSON text and Python values:
+| JSON | Python |
+| --- | --- |
+| object `{}` | `dict` |
+| array `[]` | `list` |
+| string | `str` |
+| number | `int` or `float` |
+| `true` / `false` | `True` / `False` |
+| `null` | `None` |
+
+The `json` module converts between the two. The names are easy to mix up, so here's a memory aid: the **s** stands for **string**.
+
+| Function | Direction |
+| --- | --- |
+| `json.loads(text)` | JSON string → Python |
+| `json.dumps(value)` | Python → JSON string |
+| `json.load(file)` | JSON file → Python |
+| `json.dump(value, file)` | Python → JSON file |
+
+## Round trip: a settings file
+
+Let's save some settings, then read them back:
 
 ```python
 import json
+from pathlib import Path
 
-text = '{"name": "Ada", "active": true, "score": null}'
-player = json.loads(text)
-print(player["name"])          # Ada
-print(player["active"] is True) # True
-print(player["score"] is None)  # True
+settings = {
+    "theme": "dark",
+    "font_size": 14,
+    "plugins": ["git", "vim"],
+}
+
+path = Path("settings.json")
+path.write_text(json.dumps(settings, indent=2), encoding="utf-8")
 ```
 
-JSON `true`, `false`, and `null` become Python `True`, `False`, and `None`. Arrays become lists; objects become dictionaries with string keys. JSON requires double-quoted strings and does not accept Python comments.
+`indent=2` makes the file pleasant to read:
 
-## Strings versus files
+```json
+{
+  "theme": "dark",
+  "font_size": 14,
+  "plugins": ["git", "vim"]
+}
+```
 
-`loads` and `dumps` work with strings. `load` and `dump` read or write file-like objects:
+And loading it back gives a regular dictionary:
 
 ```python
-import json
-
-with open("player.json", "w", encoding="utf-8") as handle:
-    json.dump({"name": "Ada", "score": 42}, handle, indent=2)
+loaded = json.loads(path.read_text(encoding="utf-8"))
+print(loaded["plugins"][0])   # git
 ```
 
-Malformed input raises `json.JSONDecodeError`. Parsing establishes valid JSON syntax, not your application's schema: check the expected keys and value types after loading. Ordinary JSON does not automatically encode custom classes, sets, or datetime objects; convert them into supported values first.
+## Things JSON can't hold
+
+JSON only knows the types in the first table. Try to dump a date, a set or your own class and you'll get:
+
+```repl
+> json.dumps({"tags": {"a", "b"}})
+error: TypeError: Object of type set is not JSON serializable
+```
+
+Convert first, for example a set to a sorted list, or a date to `date.isoformat()`. Also note that JSON object keys are always strings: `{1: "a"}` comes back as `{"1": "a"}`.
+
+```compare javascript
+JSON.parse(text);              // like json.loads
+JSON.stringify(value, null, 2); // like json.dumps(value, indent=2)
+```
+
+```compare go
+json.Unmarshal(data, &settings)   // into a struct with tags
+```
 
 ```exercise
-goal: Parse the JSON string instead of serializing it again.
+goal: "`text` is already JSON, so turning it into JSON again gives a string. Parse it into a dictionary instead."
 lang: python
 code: |
   import json
@@ -43,17 +90,23 @@ code: |
   player = json.dumps(text)
   print(player["score"])
 checks:
-  - match: player\s*=\s*json\.loads\(\s*text\s*\)
+  - match: 'player\s*=\s*json\.loads\(\s*text\s*\)'
     message: Replace json.dumps(text) with json.loads(text).
-hint: Replace `json.dumps(text)` with `json.loads(text)`.
+hint: loads reads a string; dumps writes one.
+solution: |
+  import json
+
+  text = '{"score": 42}'
+  player = json.loads(text)
+  print(player["score"])
 ```
 
 ```quiz
-question: "Which function parses JSON from a string?"
+question: "What does `json.loads('{\"ok\": true, \"n\": null}')` return?"
 options:
-  - "json.dumps"
-  - "json.loads"
-  - "json.dump"
-answer: 1
-explain: "loads reads a string; dumps produces a string. The forms without s use file-like objects."
+  - "`{'ok': True, 'n': None}`"
+  - "`{'ok': 'true', 'n': 'null'}`"
+  - "`{\"ok\": true, \"n\": null}` as a string"
+answer: 0
+explain: true becomes True and null becomes None. You get a real dictionary back.
 ```

@@ -5,50 +5,92 @@ branch: "basics"
 requires: ["numbers", "strings"]
 summary: "True, False, comparisons, and truthy values."
 ---
+Comparisons give you a boolean: `True` or `False`. Note the capital letters:
 
-Comparisons produce `True` or `False`, with capital first letters:
-
-```python
-age = 20
-print(age >= 18)             # True
-print(18 <= age < 65)        # True
-print(age != 0 and age < 30) # True
-print(not False)            # True
+```repl
+> 3 > 2
+True
+> "cat" == "dog"
+False
+> 0 <= 25 <= 30
+True
 ```
 
-Combine conditions with `and`, `or`, and `not`, rather than `&&` or `!`. Comparisons can be chained: `0 <= temperature <= 30` checks both bounds and evaluates the middle expression once.
+That last one is a Python treat: comparisons chain, just like in maths. And instead of `&&`, `||` and `!`, Python spells them out: `and`, `or`, `not`.
 
-## Truthiness
+## Game: true or false?
 
-Empty strings and collections, numeric zero, and `None` are `false` in a condition. Most other values are `true`. `bool(value)` converts that truthiness into an explicit boolean.
+Python lets you use **any** value in an `if`, not just booleans. Before you peek at the table, guess what each of these counts as:
 
-`and` and `or` short-circuit and return an operand, not necessarily a boolean. For example, `"" or "guest"` returns `"guest"`. That makes fallback expressions convenient, but `count or 10` also replaces a legitimate zero.
+| Value | Counts as |
+| --- | --- |
+| `0` | false |
+| `42` | true |
+| `""` (empty string) | false |
+| `"False"` (a string!) | true |
+| `[]` (empty list) | false |
+| `[0]` (a list with one item) | true |
+| `None` | false |
 
-Use `==` to compare values. Reserve `is` for object identity and sentinel checks such as `value is None`, covered in [None](node:none).
+The rule: **zero, empty and `None` are false; everything else is true**. Python calls this *truthiness*. It makes checks short:
+
+```python
+items = []
+if not items:
+    print("Your basket is empty")
+```
+
+`bool(value)` tells you how Python sees any value.
+
+## `or` returns a value, not just True
+
+`and` and `or` stop as soon as they know the answer, and they return the value they stopped at:
+
+```repl
+> "" or "guest"
+'guest'
+> "Ada" or "guest"
+'Ada'
+```
+
+That makes a neat fallback: `name = typed_name or "guest"`. But careful: `limit = user_limit or 10` also replaces a perfectly valid `0` with 10, because `0` is false.
+
+```tip
+Use `==` to compare values. Python also has `is`, which checks whether two names point at the very same object. Its main everyday use is `x is None`, covered in [None](node:none).
+```
 
 ```compare javascript
-const isAdult = age >= 18 && age < 65;
+// Same idea, different list: in JS, [] is truthy.
+// In Python, an empty list is false.
+```
+
+```compare go
+// Go has no truthiness at all: if needs a real bool.
 ```
 
 ```exercise
-goal: "Check that age is at least 18 and less than 65."
+goal: "`is_working_age` should be True only when age is at least 18 **and** under 65. Fix the condition."
 lang: python
 code: |
   age = 20
-  is_adult = age >= 18 or age < 65
-  print(is_adult)
+  is_working_age = age >= 18 or age < 65
+  print(is_working_age)
 checks:
-  - match: "age\\s*>=\\s*18\\s+and\\s+age\\s*<\\s*65"
-    message: "Combine the two comparisons with and."
-hint: "Combine the two comparisons with and."
+  - match: 'age\s*>=\s*18\s+and\s+age\s*<\s*65|18\s*<=\s*age\s*<\s*65'
+    message: "Both conditions must hold, so combine them with and."
+hint: With or, an age of 90 still passes, because 90 >= 18.
+solution: |
+  age = 20
+  is_working_age = age >= 18 and age < 65
+  print(is_working_age)
 ```
 
 ```quiz
-question: What does `"" or "guest"` evaluate to?
+question: "What does `\"\" or \"guest\"` evaluate to?"
 options:
-  - The empty string.
-  - The string `"guest"`.
-  - The Boolean `True`.
+  - "`True`"
+  - "`'guest'`"
+  - "`''`"
 answer: 1
-explain: The empty string is falsey, so or returns the fallback operand.
+explain: The empty string counts as false, so or moves on and returns the second value.
 ```

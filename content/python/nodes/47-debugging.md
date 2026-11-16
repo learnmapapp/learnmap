@@ -5,38 +5,85 @@ branch: "quality"
 requires: ["unittest"]
 summary: "Read tracebacks, reproduce a failure, and inspect state with breakpoint."
 ---
+**Bug report:** "The average of my scores is wrong. Sometimes it crashes."
 
-Debugging starts by making the failure repeatable. Capture a small input, read the last traceback line for the error, and follow the relevant frames back into your code.
+```python title=stats.py
+def average(values):
+    if not values:
+        return 0
+    return sum(values) / len(values)
+
+scores = load_scores("week1.csv")
+print(f"Average: {average(scores):.1f}")
+```
+
+Let's investigate like a detective, with three tools.
+
+## Tool 1: read the clues (tracebacks)
+
+When it crashes, start at the **last line** of the [traceback](node:exceptions), then go up to the first line that's in your own code. That tells you what failed and where.
+
+## Tool 2: quick print statements
+
+The f-string `=` trick prints both the expression and its value. It's perfect for a quick look:
+
+```python
+scores = load_scores("week1.csv")
+print(f"{scores=}")
+```
+
+```text
+scores=['90', '85', '77']
+```
+
+Clue found: the scores are **strings**, straight from the CSV. And when the file is empty, `average` quietly returns `0`, which looks like a real average.
+
+## Tool 3: stop the program and look around
+
+Put `breakpoint()` on any line. When Python reaches it, it pauses and opens `pdb`, the built-in debugger, right in your terminal:
+
+```python
+def average(values):
+    breakpoint()
+    return sum(values) / len(values)
+```
+
+At the `(Pdb)` prompt, you can type any expression to inspect it, plus a few commands:
+
+| Command | Does |
+| --- | --- |
+| `p values` | print a value |
+| `n` | run the next line |
+| `s` | step into a function call |
+| `c` | continue until the next breakpoint |
+| `q` | quit |
+
+Your editor's debugger (VS Code, PyCharm) does the same with clickable breakpoints, and that's often more comfortable.
+
+## The fix
+
+Two fixes: convert to numbers when loading, and stop hiding the empty case. A `0` that means "no data" is a bug waiting to happen; an explicit error points straight at the problem:
 
 ```python
 def average(values):
     if not values:
         raise ValueError("values must not be empty")
     return sum(values) / len(values)
-
-print(average([2, 4, 6]))  # 4.0
 ```
 
-The empty-input case deserves a test. Decide its intended behavior before patching the symptom; returning a fabricated zero would change the function's meaning.
+Then write a [unit test](node:unittest) that reproduces the bug, so it can't come back.
 
-## Stop at the interesting point
-
-Insert `breakpoint()` before the failure and run the script locally. Python's default debugger lets you inspect and step:
-
-```text
-p values     # inspect an expression
-n            # run the next line in this frame
-s            # step into a call
-c            # continue
-q            # quit
+```compare javascript
+debugger;   // pauses here when DevTools is open
 ```
 
-Use `repr(value)` or an f-string's `!r` conversion to reveal hidden spaces and escapes. A few focused prints can be useful too, but remove temporary probes after finding the cause.
-
-Turn the reproducing example into a regression test. Fixing the underlying assumption and keeping that test makes the next failure easier to prevent.
+```compare java
+// Set a breakpoint in the IDE and run in debug mode; there's no
+// common in-code equivalent.
+```
 
 ```exercise
-goal: Reject an empty input explicitly instead of returning a misleading average.
+goal: "Returning 0 for an empty list hides the problem. Raise `ValueError(\"values must not be empty\")` instead."
 lang: python
 code: |
   def average(values):
@@ -46,17 +93,24 @@ code: |
 
   print(average([2, 4, 6]))
 checks:
-  - match: ^\s+raise\s+ValueError\(\s*["']values must not be empty["']\s*\)
+  - match: '^\s+raise\s+ValueError\(\s*["'']values must not be empty["'']\s*\)'
     message: Raise ValueError("values must not be empty") for the empty input.
-hint: Raise `ValueError("values must not be empty")` for the empty input.
+hint: Replace the return 0 line.
+solution: |
+  def average(values):
+      if not values:
+          raise ValueError("values must not be empty")
+      return sum(values) / len(values)
+
+  print(average([2, 4, 6]))
 ```
 
 ```quiz
-question: "What is the best first step when diagnosing an intermittent failure?"
+question: "What does `breakpoint()` do when Python reaches it?"
 options:
-  - "Change several unrelated lines at once."
-  - "Create a small reproducible case and inspect the traceback."
-  - "Catch every exception and ignore it."
+  - It ends the program with a stack trace.
+  - It pauses and opens the pdb debugger at that line.
+  - It prints all local variables and continues.
 answer: 1
-explain: "A repeatable case and traceback let you check a hypothesis and preserve the fix in a test."
+explain: You can then inspect values, step through lines, and continue with c.
 ```

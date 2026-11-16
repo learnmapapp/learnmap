@@ -5,45 +5,72 @@ branch: "basics"
 requires: ["functions"]
 summary: "Represent a missing result explicitly, and test it with is."
 ---
-
-`None` is Python's single "no value" object. A function that only prints, or falls off its end, returns `None`:
-
-```python
-def announce(message):
-    print(message)
-
-result = announce("ready")
-print(result is None)  # True
-```
-
-Use `is None` or `is not None` to check specifically for absence. This is an identity check against a [[sentinel]], rather than a general truthiness test.
-
-## Missing is different from empty
-
-A lookup may return an empty string or zero as a valid answer. `if not value` groups those together with `None`, which can lose information:
+`None` is Python's way of saying "there's no value here". It's what a function returns when it has nothing to return, and what you use for "not set yet":
 
 ```python
-count = 0
-if count is None:
-    print("missing")
-else:
-    print(f"Count: {count}")  # Count: 0
+winner = None          # no winner yet
+
+def find_user(name):
+    if name == "ada":
+        return {"name": "ada", "admin": True}
+    return None        # not found
 ```
 
-Be consistent about whether a function returns `None` for a missing result or raises an exception. Document that choice so callers can handle it. [Type hints](node:type-hints) can express that a return value may be absent, using a type such as `str | None`.
+There's exactly one `None` in a running program, so you check for it with `is`:
+
+```python
+user = find_user("bob")
+if user is None:
+    print("No such user")
+```
+
+## Why not just `if not user`?
+
+Because **lots of real values are falsy too**. Here's a little lineup. All of these make `not value` true:
+
+```text
+None    0    0.0    ""    []    {}
+```
+
+Only the first one means "missing". The rest are perfectly good answers: zero items, an empty name, no tags. Consider a stock checker:
+
+```python
+stock = 0               # we checked: none left
+if not stock:
+    print("Unknown")    # wrong! we do know: it's zero
+if stock is None:
+    print("Unknown")    # right: only when truly missing
+```
+
+So the rule of thumb:
+
+- Asking "is it missing?" → `x is None` or `x is not None`.
+- Asking "is it empty?" → `if not items:` is fine.
+
+## The error you'll meet
+
+When something unexpectedly turns out to be `None`, you'll see a message like this:
+
+```repl
+> user = find_user("bob")
+> user["name"]
+error: TypeError: 'NoneType' object is not subscriptable
+```
+
+`NoneType` in an error almost always means "something returned `None` and I didn't check". Look at where the value came from.
 
 ```compare javascript
-const count = 0;
-if (count === null) console.log("missing");
+// JS has two "nothings": null and undefined.
+if (user == null) { /* catches both */ }
 ```
 
-```compare rust
-let count: Option<i32> = Some(0);
-if count.is_none() { println!("missing"); }
+```compare kotlin
+val user: User? = findUser("bob")   // the compiler forces a check
+println(user?.name ?: "no user")
 ```
 
 ```exercise
-goal: Keep zero as a real value; check specifically for `None`.
+goal: "A count of 0 is a real answer. Only print `missing` when `count` is `None`."
 lang: python
 code: |
   count = 0
@@ -52,17 +79,23 @@ code: |
   else:
       print(count)
 checks:
-  - match: "^if\\s+count\\s+is\\s+None\\s*:"
+  - match: '^if\s+count\s+is\s+None\s*:'
     message: Replace not count with count is None.
-hint: Replace not count with count is `None`.
+hint: not count is also true for 0.
+solution: |
+  count = 0
+  if count is None:
+      print("missing")
+  else:
+      print(count)
 ```
 
 ```quiz
-question: Which check distinguishes `None` from a valid zero?
+question: "Which value makes `not value` true, but is **not** `None`?"
 options:
-  - "`if not value`"
-  - "`if value is None`"
-  - "`if value == False`"
+  - "`\"None\"`"
+  - "`[]`"
+  - "`[None]`"
 answer: 1
-explain: is `None` checks only the absence sentinel; zero is `false` but is not `None`.
+explain: An empty list is falsy. The string "None" and the list [None] both have content, so they're truthy.
 ```

@@ -5,48 +5,74 @@ branch: "objects"
 requires: ["function-arguments", "scope"]
 summary: "Bundle state and behavior in instances with explicit self."
 ---
+A [[class]] is a blueprint for making objects that bundle data with the functions that work on it. Let's build one up in layers, using a bank account.
 
-A [[class]] defines a kind of object. Each [[instance]] can hold its own state, and methods describe operations on it:
+**Layer 1: an empty class.**
 
 ```python
-class Counter:
-    def __init__(self, start=0):
-        self.value = start
+class Account:
+    pass
 
-    def increment(self):
-        self.value += 1
-
-counter = Counter(10)
-counter.increment()
-print(counter.value)  # 11
+acct = Account()      # call the class to make an instance
 ```
 
-`__init__` initializes the newly created instance. A method's first parameter conventionally has the name `self`; Python supplies the instance when you call `counter.increment()`.
+`pass` means "nothing here yet". `acct` is an [[instance]] of `Account`. It doesn't do much so far.
 
-## Instance and class attributes
+**Layer 2: starting data, with `__init__`.** This special method runs when an instance is created. Its job is to set up the attributes:
 
-Store per-object state on `self` inside initialization. A mutable list assigned directly in the class body would be shared by instances unless replaced on each instance.
+```python
+class Account:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
 
-Class names conventionally use `PascalCase`; methods and attributes use `snake_case`. A leading underscore marks an implementation detail by convention, not an enforced access restriction.
+acct = Account("Ada", 100)
+print(acct.owner, acct.balance)   # Ada 100
+```
 
-Use a class when state and behavior belong together. Plain functions and dictionaries are often enough for a small transformation. If you mainly need named data fields, [dataclasses](node:dataclasses) remove repetitive initialization and comparison methods.
+**Layer 3: behaviour, with methods.** A method is a function defined inside the class:
 
-```compare javascript
-class Counter {
-  constructor() { this.value = 0; }
-  increment() { this.value += 1; }
+```python
+class Account:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        self.balance += amount
+        return self.balance
+```
+
+## So what is `self`?
+
+`self` is the instance the method was called on. When you write `acct.deposit(50)`, Python calls `Account.deposit(acct, 50)` behind the scenes. That's why every method lists `self` first, even though you never pass it yourself.
+
+Inside a method, you **must** say `self.balance`. A bare `balance` would be a plain local variable that disappears when the method returns. Forgetting `self.` is the most common class bug, and it usually shows up as an `UnboundLocalError` or `NameError`.
+
+**Layer 4: a nice printout.** By default, printing an instance shows something like `<__main__.Account object at 0x10c2...>`. Define `__repr__` to make it readable:
+
+```python
+    def __repr__(self):
+        return f"Account({self.owner!r}, {self.balance})"
+```
+
+Methods with double underscores on both sides, such as `__init__` and `__repr__`, are hooks that Python calls for you. They're nicknamed "dunder" methods.
+
+```compare java
+class Account {
+    private String owner; private int balance;
+    Account(String owner, int balance) { this.owner = owner; ... }
 }
 ```
 
-```compare java
-class Counter {
-    int value = 0;
-    void increment() { value += 1; }
+```compare kotlin
+class Account(val owner: String, var balance: Int = 0) {
+    fun deposit(amount: Int) { balance += amount }
 }
 ```
 
 ```exercise
-goal: "Increment this instance's value using self."
+goal: "`increment` changes a local `value` that doesn't exist. Update the instance's value instead."
 lang: python
 code: |
   class Counter:
@@ -60,17 +86,28 @@ code: |
   counter.increment()
   print(counter.value)
 checks:
-  - match: "^\\s+self\\.value\\s*\\+=\\s*1\\s*$"
+  - match: '^\s+self\.value\s*\+=\s*1\s*$'
     message: "Use self.value += 1 inside increment."
-hint: "Use self.value += 1 inside increment."
+hint: Attributes are always reached through self.
+solution: |
+  class Counter:
+      def __init__(self):
+          self.value = 0
+
+      def increment(self):
+          self.value += 1
+
+  counter = Counter()
+  counter.increment()
+  print(counter.value)
 ```
 
 ```quiz
-question: "What should hold state that is different for each instance?"
+question: "When you call `acct.deposit(50)`, what does `self` refer to inside `deposit`?"
 options:
-  - "An attribute on self, initialized per instance."
-  - "A shared list in the class body."
-  - "A global variable."
-answer: 0
-explain: "Instance attributes created during initialization keep each instance's state separate."
+  - The Account class.
+  - The acct instance.
+  - The number 50.
+answer: 1
+explain: Python passes the instance before the dot as the first argument, which is self.
 ```

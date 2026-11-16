@@ -5,8 +5,31 @@ branch: "objects"
 requires: ["type-hints", "inheritance"]
 summary: "Describe capabilities through structural typing rather than a shared base class."
 ---
+> "If it walks like a duck and quacks like a duck, it's a duck."
 
-A [[protocol]] describes the methods or attributes a value needs. A static checker accepts compatible objects based on their structure:
+That's [[duck typing]], and Python has always worked this way. A function doesn't care **what class** an object is, only whether it has the methods it needs:
+
+```python
+class Duck:
+    def speak(self):
+        return "Quack"
+
+class Robot:
+    def speak(self):
+        return "Beep boop"
+
+def announce(thing):
+    print(thing.speak())
+
+announce(Duck())    # Quack
+announce(Robot())   # Beep boop
+```
+
+`Duck` and `Robot` share no parent class, and they don't need one. That's very flexible, but it raises a question once you add [type hints](node:type-hints): what type is `thing`?
+
+## Protocols: duck typing, written down
+
+A [[protocol]] describes the shape you need: "anything with a `speak()` method that returns a string".
 
 ```python
 from typing import Protocol
@@ -14,34 +37,39 @@ from typing import Protocol
 class Speaker(Protocol):
     def speak(self) -> str: ...
 
-class Duck:
-    def speak(self) -> str:
-        return "quack"
-
-def announce(speaker: Speaker) -> str:
-    return speaker.speak()
-
-print(announce(Duck()))  # quack
+def announce(thing: Speaker) -> None:
+    print(thing.speak())
 ```
 
-`Duck` does not inherit from `Speaker`. Its compatible `speak` method satisfies the protocol. This expresses [[duck typing]] in a form that a checker can verify.
+The `...` is literally three dots: a body that does nothing. A protocol only describes the method; it doesn't implement it.
 
-## Static contracts
+Here's the key difference from inheritance: **`Duck` and `Robot` don't change at all.** They never mention `Speaker`. A type checker looks at their methods, sees that they match, and accepts them. If you pass something without `speak`, it reports an error before the code runs.
 
-A protocol is primarily a static interface, not an automatic runtime validator. `@runtime_checkable` permits limited runtime checks, but those inspect member presence rather than verifying complete method signatures or value types.
+## Protocols you already use
 
-Keep protocols focused on the capability a caller actually needs. A function that writes messages may need only a `write(text: str) -> int` method, rather than an entire concrete file class. That makes small in-memory implementations easy to substitute in tests.
+Python's built-ins are protocols in disguise. Implement the right dunder method, and your object joins in:
 
-Use the ordinary class when callers need that concrete implementation; use a protocol when multiple independent implementations should fulfill the same small contract.
+| Implement | And your object works with |
+| --- | --- |
+| `__len__` | `len(obj)` |
+| `__iter__` | `for x in obj` |
+| `__contains__` | `x in obj` |
+| `__enter__` / `__exit__` | `with obj:` |
+
+The `collections.abc` module has ready-made names for many of these, such as `Iterable`, `Sized` and `Mapping`. Prefer `Iterable[str]` over `list[str]` in a parameter type when you only loop over it; then callers can pass a list, a tuple, a set or a generator.
 
 ```compare go
-type Speaker interface {
-    Speak() string
-} // implementations satisfy the method set implicitly
+type Speaker interface { Speak() string }
+// Go interfaces are satisfied implicitly too: same idea.
+```
+
+```compare java
+interface Speaker { String speak(); }
+class Duck implements Speaker { ... }   // must be declared
 ```
 
 ```exercise
-goal: Call the speak method rather than returning the method object.
+goal: "`announce` returns the method itself instead of its result. Call `speak`."
 lang: python
 code: |
   from typing import Protocol
@@ -58,17 +86,31 @@ code: |
 
   print(announce(Duck()))
 checks:
-  - match: ^\s+return\s+speaker\.speak\(\s*\)\s*$
+  - match: '^\s+return\s+speaker\.speak\(\s*\)\s*$'
     message: Use return speaker.speak().
-hint: Use return `speaker.speak()`.
+hint: A method needs brackets to be called.
+solution: |
+  from typing import Protocol
+
+  class Speaker(Protocol):
+      def speak(self) -> str: ...
+
+  class Duck:
+      def speak(self) -> str:
+          return "quack"
+
+  def announce(speaker: Speaker) -> str:
+      return speaker.speak()
+
+  print(announce(Duck()))
 ```
 
 ```quiz
-question: "Must Duck inherit Speaker to satisfy a compatible Speaker protocol?"
+question: "To satisfy the `Speaker` protocol, what must the `Duck` class do?"
 options:
-  - "Yes, otherwise no checker can accept it."
-  - "No, a compatible structure is enough."
-  - "Only if it has an initializer."
+  - Inherit from Speaker.
+  - Have a matching speak method; nothing else.
+  - Be registered with typing.register.
 answer: 1
-explain: "Protocols support structural typing: compatible methods and attributes satisfy the contract."
+explain: Protocols are structural. Matching methods are enough; the class never has to mention the protocol.
 ```

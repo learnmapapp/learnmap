@@ -5,44 +5,77 @@ branch: "tooling"
 requires: ["modules"]
 summary: "Group related modules under a shared import namespace."
 ---
-
-A regular [[package]] groups modules in a directory containing `__init__.py`. For a small project, start with this layout:
+When one folder fills up with modules, group them into a [[package]]: a folder of modules you import together. Here's a small project, and a walk through it:
 
 ```text
 project/
   studytools/
     __init__.py
     __main__.py
+    cards.py
     helpers.py
+  README.md
 ```
 
-`__init__.py` may be empty. Inside `helpers.py`, define reusable functions. Inside `__main__.py`, use an explicit relative import:
+**`studytools/`** is the package. Its modules are imported with a dot: `import studytools.cards`, or `from studytools.cards import shuffle`.
 
-```python title=studytools/__main__.py
+**`__init__.py`** marks the folder as a regular package, and it runs when the package is first imported. It's often empty. Sometimes it re-exports the most useful names, so users can write the shorter `from studytools import shuffle`:
+
+```python title=studytools/__init__.py
+from .cards import shuffle
+```
+
+**`helpers.py` and `cards.py`** are ordinary modules. Inside the package, they import each other with a **leading dot**, which means "from this package":
+
+```python title=studytools/cards.py
 from .helpers import double
-
-print(double(21))
 ```
 
-From `project/`, run `python3 -m studytools`. The `-m` option runs the package's `__main__.py` with its package context intact. Running `python3 studytools/__main__.py` directly does not establish that same context for the relative import.
+**`__main__.py`** makes the package runnable. From the `project/` folder:
 
-## Keep imports predictable
+```shell
+$ python3 -m studytools
+```
 
-Outside the package, use `from studytools.helpers import double`. A leading dot in an import refers to the current package, not the current working directory.
+`-m` means "run this module or package", and for a package it runs `__main__.py`.
 
-Namespace packages can omit `__init__.py`, but a regular package is a simple starting point for your own application. An import package and a published distribution are related concepts, not identical names: a distribution installed with pip may supply a differently named import package.
+## The gotcha: running a file inside a package
+
+This looks like it should work, but doesn't:
+
+```shell
+$ python3 studytools/__main__.py
+Traceback (most recent call last):
+  ...
+ImportError: attempted relative import with no known parent package
+```
+
+Running a file by its path treats it as a loose script, so Python doesn't know it belongs to `studytools`, and `from .helpers import ...` has nothing to be relative to. Run packages with `python3 -m`, from the folder that **contains** the package.
+
+```compare javascript
+// A package is a folder with package.json; "main" or "exports"
+// says what gets imported.
+```
+
+```compare java
+package studytools;   // Java: packages match folder names too
+```
 
 ```exercise
-goal: Import helpers relative to the current package.
+goal: "This is `studytools/__main__.py`. Import `double` from the sibling module `helpers.py` in the same package."
 lang: python
 code: |
   from helpers import double
 
   print(double(21))
 checks:
-  - match: ^from\s+\.helpers\s+import\s+double\s*$
-    message: Use from .helpers import double inside studytools/__main__.py.
-hint: Use from .helpers import double inside `studytools/__main__.py`.
+  - match: '^from\s+\.helpers\s+import\s+double\s*$'
+    message: Use from .helpers import double.
+hint: A leading dot means "this package".
+solution: |
+  from .helpers import double
+
+  print(double(21))
 ```
 
 ```quiz
@@ -50,7 +83,7 @@ question: Which file is run by `python3 -m studytools`?
 options:
   - "`studytools/helpers.py`"
   - "`studytools/__main__.py`"
-  - Every file alphabetically.
+  - "`studytools/__init__.py`, and nothing else"
 answer: 1
-explain: A package entry point lives in `__main__.py`.
+explain: A package's entry point is __main__.py. (__init__.py runs too, first, because the package gets imported.)
 ```

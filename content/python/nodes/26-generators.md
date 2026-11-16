@@ -5,40 +5,93 @@ branch: "functions"
 requires: ["iterators", "comprehensions"]
 summary: "Yield values on demand without constructing a whole list."
 ---
+A [[generator]] is a function that can pause. Instead of `return`, it uses `yield` to hand out a value, then waits until someone asks for the next one.
 
-A function containing `yield` creates a [[generator]]. Calling it returns an iterator; its body starts running when values are requested:
-
-```python
-def countdown(start):
-    while start > 0:
-        yield start
-        start -= 1
-
-print(list(countdown(3)))  # [3, 2, 1]
-```
-
-Each `yield` pauses the function and preserves its local state. The next request resumes immediately afterward. Reaching the end, or a bare `return`, finishes the generator.
-
-## Expressions can be lazy too
+Watch it happen. The `print` calls show when the code actually runs:
 
 ```python
-numbers = [1, 2, 3, 4]
-squares = (n * n for n in numbers if n % 2 == 0)
-print(sum(squares))  # 20
+def countdown(n):
+    print("starting")
+    while n > 0:
+        yield n
+        n -= 1
+    print("done")
+
+c = countdown(3)    # nothing printed yet!
 ```
 
-Parentheses here create a generator expression. A list comprehension would compute and store all the results first. A generator is useful for a pipeline or a large input, but converting it to a list still materializes every result.
+```repl
+> next(c)
+starting
+3
+> next(c)
+2
+> next(c)
+1
+> next(c)
+done
+error: StopIteration
+```
 
-Generators are one-shot iterators. Create a new generator to repeat the work. Code inside the body, including errors and side effects, generally runs during iteration, which can be later than the call that created it.
+Calling `countdown(3)` runs **none** of the body. It returns a generator, which is an [iterator](node:iterators). Each `next` runs the code up to the next `yield` and pauses there, keeping all its local variables.
+
+Since it's an iterator, a `for` loop does all the `next` calls for you:
+
+```python
+for n in countdown(3):
+    print(n)
+```
+
+## Why it's useful: pipelines
+
+Generators let you chain processing steps without ever building a big list in memory. Here's a little log-processing pipeline:
+
+```python
+def read_lines(path):
+    with open(path) as f:
+        for line in f:
+            yield line.rstrip("\n")
+
+def errors(lines):
+    for line in lines:
+        if "ERROR" in line:
+            yield line
+
+for line in errors(read_lines("app.log")):
+    print(line)
+```
+
+Each line flows through both steps one at a time, so the file could be gigabytes.
+
+## Generator expressions
+
+For simple cases there's a shorthand: a [comprehension](node:comprehensions) with round brackets instead of square ones:
+
+```python
+total = sum(n * n for n in range(1_000_000))
+```
+
+The square-bracket version would build a million-item list first. The generator version just feeds `sum` one number at a time.
+
+```tip
+A generator can also be infinite. `while True: yield ...` is fine, as long as whoever consumes it stops at some point, for example with `break`.
+```
 
 ```compare javascript
-function* countdown(start) {
-  while (start > 0) yield start--;
+function* countdown(n) {
+  while (n > 0) yield n--;
+}
+```
+
+```compare kotlin
+val countdown = sequence {
+    var n = 3
+    while (n > 0) yield(n--)
 }
 ```
 
 ```exercise
-goal: "Yield each number so countdown can produce all three values."
+goal: "`return` ends the function after the first number. Make `countdown` produce all three values."
 lang: python
 code: |
   def countdown(start):
@@ -48,17 +101,24 @@ code: |
 
   print(list(countdown(3)))
 checks:
-  - match: "^\\s+yield\\s+start\\s*$"
+  - match: '^\s+yield\s+start\s*$'
     message: "Replace return start with yield start."
-hint: "Replace return start with yield start."
+hint: yield pauses the function instead of ending it.
+solution: |
+  def countdown(start):
+      while start > 0:
+          yield start
+          start -= 1
+
+  print(list(countdown(3)))
 ```
 
 ```quiz
-question: "When does the body of a generator function begin executing?"
+question: "A generator function contains `print(\"hi\")` before its first `yield`. When is `hi` printed?"
 options:
-  - "As soon as its module is imported."
-  - "When the function is called."
-  - "When the generator is advanced."
-answer: 2
-explain: "Calling the function creates a generator; advancing it starts or resumes the body."
+  - When the function is called.
+  - When the first value is requested, for example with next.
+  - Never; generators skip prints.
+answer: 1
+explain: Calling a generator function only creates the generator. The body starts running on the first next().
 ```

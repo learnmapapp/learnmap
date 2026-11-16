@@ -5,35 +5,93 @@ branch: "quality"
 requires: ["type-hints", "raising-errors", "modules"]
 summary: "Check observable behavior with the built-in unittest framework."
 ---
+Let's write a test **first**, watch it fail, then make it pass. The thing under test is a function that turns titles into URL slugs. It doesn't exist yet.
 
-A unit test checks a small piece of behavior using known inputs and expected results. The standard library includes `unittest`:
+**Red: write the test.**
 
-```python title=test_math.py
+```python title=test_slugs.py
 import unittest
+from slugs import slugify
 
+class SlugifyTests(unittest.TestCase):
+    def test_lowercases_and_joins_words(self):
+        self.assertEqual(slugify("Hello World"), "hello-world")
 
-def double(number):
-    return number * 2
+    def test_strips_surrounding_space(self):
+        self.assertEqual(slugify("  Hi  "), "hi")
 
-
-class DoubleTests(unittest.TestCase):
-    def test_positive(self):
-        self.assertEqual(double(3), 6)
-
-    def test_zero(self):
-        self.assertEqual(double(0), 0)
+if __name__ == "__main__":
+    unittest.main()
 ```
 
-Save this file and run `python3 -m unittest test_math -v`. Test methods begin with `test`; subclasses of `TestCase` supply helpful assertions and failure reports. In a real project, import the function from its application module instead of copying it into the test.
+The structure: a class that inherits from `unittest.TestCase`, with methods whose names **start with `test`**. Each one checks one behaviour.
 
-## Test the contract
+**Run it, and watch it fail.** Python can't even import `slugify` yet:
 
-Include an ordinary case, boundary cases, and intended failures. Use `with self.assertRaises(ValueError): ...` when rejection is part of the contract. Do not test incidental implementation details that would make an equivalent refactor fail.
+```shell
+$ python3 -m unittest test_slugs
+...
+ModuleNotFoundError: No module named 'slugs'
+```
 
-`setUp` runs before each test method and can prepare fresh state. Keep tests independent; one test should not depend on another having run first. Use a temporary directory rather than real personal files when testing file operations.
+**Green: the simplest code that passes.**
+
+```python title=slugs.py
+def slugify(title):
+    return "-".join(title.lower().split())
+```
+
+```shell
+$ python3 -m unittest test_slugs
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+```
+
+Each dot is a passing test. Add `-v` to see their names instead.
+
+**Refactor**, if needed, with the tests as your safety net.
+
+## The assertion toolbox
+
+| Assertion | Checks |
+| --- | --- |
+| `assertEqual(a, b)` | `a == b`, with a helpful diff when it fails |
+| `assertTrue(x)` / `assertFalse(x)` | truthiness |
+| `assertIn(item, collection)` | membership |
+| `assertIsNone(x)` | `x is None` |
+| `assertRaises(SomeError)` | that a block raises |
+
+`assertRaises` is used as a context manager:
+
+```python
+def test_rejects_empty_title(self):
+    with self.assertRaises(ValueError):
+        slugify("")
+```
+
+```tip
+Many projects use **pytest** instead (`python -m pip install pytest`). It runs these unittest tests as-is, and also lets you write tests as plain functions with plain `assert` statements.
+```
+
+```compare java
+@Test void lowercases() {
+    assertEquals("hello-world", slugify("Hello World"));
+}
+```
+
+```compare go
+func TestSlugify(t *testing.T) {
+    if got := Slugify("Hello World"); got != "hello-world" {
+        t.Errorf("got %q", got)
+    }
+}
+```
 
 ```exercise
-goal: Correct the expected result when doubling three.
+goal: "This test is wrong, not the code: three doubled is six. Fix the expected value."
 lang: python
 code: |
   import unittest
@@ -45,17 +103,26 @@ code: |
       def test_positive(self):
           self.assertEqual(double(3), 5)
 checks:
-  - match: self\.assertEqual\(\s*double\(\s*3\s*\)\s*,\s*6\s*\)
+  - match: 'self\.assertEqual\(\s*double\(\s*3\s*\)\s*,\s*6\s*\)'
     message: Three doubled is six; use self.assertEqual(double(3), 6).
-hint: Three doubled is six; use `self.assertEqual(double(3), 6)`.
+hint: Change only the expected value.
+solution: |
+  import unittest
+
+  def double(number):
+      return number * 2
+
+  class DoubleTests(unittest.TestCase):
+      def test_positive(self):
+          self.assertEqual(double(3), 6)
 ```
 
 ```quiz
-question: "Which method name will unittest recognize as a test by default?"
+question: "A `TestCase` has a method called `check_empty_input`. Does unittest run it?"
 options:
-  - "check_positive"
-  - "positive_case"
-  - "test_positive"
-answer: 2
-explain: "Test methods use the test prefix; a conventional descriptive name is test_positive."
+  - Yes, every method in a TestCase runs.
+  - No, only methods whose names start with test are run.
+  - Only if it has an assertion in it.
+answer: 1
+explain: The test runner looks for methods starting with test. Rename it to test_empty_input.
 ```

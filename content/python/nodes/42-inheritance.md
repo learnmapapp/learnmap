@@ -5,33 +5,70 @@ branch: "objects"
 requires: ["properties"]
 summary: "Override behavior, delegate with super, and prefer clear relationships."
 ---
+[[inheritance]] lets one class build on another: the new class gets everything the parent has, and changes or adds what's different. Let's design a family of notifications.
 
-[[Inheritance]] lets a class reuse or specialize another class's behavior:
+**The parent class** holds what every notification shares:
 
 ```python
-class Greeter:
-    def greet(self, name):
-        return f"Hello, {name}"
+class Notification:
+    def __init__(self, recipient):
+        self.recipient = recipient
 
-class ExcitedGreeter(Greeter):
-    def greet(self, name):
-        return super().greet(name) + "!"
+    def render(self, text):
+        return text
 
-print(ExcitedGreeter().greet("Ada"))  # Hello, Ada!
+    def send(self, text):
+        print(f"To {self.recipient}: {self.render(text)}")
 ```
 
-The subclass overrides `greet`. `super()` delegates to the next implementation in Python's method resolution order, which also supports cooperative multiple inheritance. In a simple single-parent hierarchy, that is the parent's implementation.
+**A child class** names its parent in brackets. Here it **overrides** `render`, replacing the parent's version:
 
-## Initialize the parent when needed
+```python
+class SmsNotification(Notification):
+    def render(self, text):
+        return text[:160]          # SMS is short
+```
 
-If you define a subclass's `__init__`, call `super().__init__(...)` when the base class needs initialization. Python does not automatically call both initializers.
+`send` is inherited unchanged, and when it calls `self.render(...)`, Python finds the child's version first.
 
-Use inheritance for an actual substitutable relationship: callers expecting the base class should still get sensible behavior from the subclass. To combine independent capabilities, composition is often simpler: store a helper object on `self` and delegate work to it.
+**Extending instead of replacing.** Often you want the parent's behaviour plus a bit more. `super()` calls the parent's version:
 
-Python also supports [[duck typing]]: callers can use an object's methods without requiring it to inherit a specific base class. [Protocols](node:protocols) can describe that interface to a type checker without forcing an inheritance hierarchy.
+```python
+class UrgentNotification(Notification):
+    def render(self, text):
+        return "🚨 " + super().render(text).upper()
+```
+
+The same goes for `__init__`. If the child needs extra data, call the parent's `__init__` first so its setup still happens:
+
+```python
+class EmailNotification(Notification):
+    def __init__(self, recipient, subject):
+        super().__init__(recipient)
+        self.subject = subject
+```
+
+Forgetting that `super().__init__(...)` call is a classic bug: `self.recipient` would never be set.
+
+## When to reach for it
+
+Inheritance shines when the child truly **is a** kind of the parent and the parent was designed for extension, like custom exceptions (`class PaymentDeclined(Exception)`) or framework base classes.
+
+For "this class needs some of that one's features", consider plain composition instead: store the other object as an attribute and call it. Deep inheritance trees are hard to follow, and Python's [duck typing](node:protocols) often makes a shared parent unnecessary.
+
+```compare java
+class SmsNotification extends Notification {
+    @Override String render(String text) { ... }
+}
+```
+
+```compare kotlin
+open class Notification(val recipient: String)   // open to extend
+class Sms(recipient: String) : Notification(recipient)
+```
 
 ```exercise
-goal: Reuse the parent greeting through super instead of recursively calling this method.
+goal: "`self.greet(name)` calls this very method again, forever. Call the parent's `greet` instead."
 lang: python
 code: |
   class Greeter:
@@ -44,17 +81,27 @@ code: |
 
   print(ExcitedGreeter().greet("Ada"))
 checks:
-  - match: super\(\s*\)\.greet\(\s*name\s*\)
+  - match: 'super\(\s*\)\.greet\(\s*name\s*\)'
     message: Replace self.greet(name) with super().greet(name).
-hint: Replace `self.greet(name)` with `super()`.`greet(name)`.
+hint: super() reaches the parent class's version.
+solution: |
+  class Greeter:
+      def greet(self, name):
+          return f"Hello, {name}"
+
+  class ExcitedGreeter(Greeter):
+      def greet(self, name):
+          return super().greet(name) + "!"
+
+  print(ExcitedGreeter().greet("Ada"))
 ```
 
 ```quiz
-question: If a subclass defines `__init__`, is its parent initializer called automatically?
+question: "A child class defines its own `__init__` but doesn't call `super().__init__(...)`. What happens?"
 options:
-  - Yes, with the same arguments.
-  - No; call `super()`.`__init__` when the parent needs initialization.
-  - Only for dataclasses.
+  - Python calls the parent's __init__ automatically afterwards.
+  - The parent's __init__ doesn't run, so its attributes are never set.
+  - A SyntaxError.
 answer: 1
-explain: An explicit subclass initializer must delegate to the base initializer when needed.
+explain: Defining __init__ replaces the parent's. Only super().__init__() runs the parent's setup.
 ```

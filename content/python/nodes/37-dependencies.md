@@ -5,46 +5,82 @@ branch: "tooling"
 requires: ["virtual-environments"]
 summary: "Install with the selected interpreter and record project requirements."
 ---
+You've built something in a [virtual environment](node:virtual-environments). Now a teammate clones the project. How do they get the same packages? This lesson is a checklist you can follow on any project.
 
-Inside an activated environment, pip installs third-party distributions from a package index:
-
-```shell
-python -m pip install requests
-python -m pip show requests
-```
-
-This is an installation example; the course's other runnable examples use the standard library. A dependency is code your program relies on. Read its documentation and choose it for a concrete need rather than installing a tool for every small task.
-
-## Record the environment
-
-For a small application, a requirements file can capture the installed versions:
+**☐ 1. Install with pip, through Python.** `pip` is Python's package installer, and it downloads from [PyPI](https://pypi.org), the public package index. With the environment active:
 
 ```shell
-python -m pip freeze > requirements.txt
-python -m pip install -r requirements.txt
+(.venv) $ python -m pip install requests
 ```
 
-`freeze` reports installed distributions, including transitive dependencies and unrelated packages if the environment is not clean. It is not a complete cross-platform lock strategy. Keep the environment focused on one project.
+`python -m pip` instead of plain `pip` guarantees you install into the Python you're actually using. It avoids a whole class of "but I installed it!" mysteries.
 
-For a distributable package, declare project metadata and direct dependencies in `pyproject.toml`; the build backend and your chosen environment tool determine the rest of the workflow. Version ranges describe compatibility; an application lockfile or pinned environment describes a particular resolution. Keep credentials and environment directories out of committed dependency files.
+**☐ 2. Write the list down.** The simplest format is `requirements.txt`, one package per line:
+
+```text title=requirements.txt
+requests>=2.32
+rich
+```
+
+`>=2.32` sets a minimum version. Leave it off to accept any version.
+
+**☐ 3. Install from the list.** On a fresh checkout, after creating and activating `.venv`:
+
+```shell
+(.venv) $ python -m pip install -r requirements.txt
+```
+
+The `-r` is important. Without it, pip looks on PyPI for a package literally called `requirements.txt`.
+
+**☐ 4. Check what's there.** These are useful when something seems off:
+
+```shell
+(.venv) $ python -m pip list           # everything installed
+(.venv) $ python -m pip show requests  # version, location, deps
+```
+
+## The modern alternative: pyproject.toml
+
+Bigger projects describe themselves in `pyproject.toml`, which holds the name, version and dependencies in one standard place:
+
+```toml title=pyproject.toml
+[project]
+name = "studytools"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["requests>=2.32", "rich"]
+```
+
+Then `python -m pip install -e .` installs your project, plus its dependencies, in "editable" mode. Tools such as `uv` and Poetry build on the same file and add lock files for exactly reproducible installs.
+
+```compare javascript
+// package.json is the list, npm install reads it, and
+// package-lock.json pins exact versions.
+```
+
+```compare rust
+// Cargo.toml lists dependencies; cargo build fetches them.
+```
 
 ```exercise
-goal: Install the dependencies listed in `requirements.txt`.
+goal: "This tries to install a package called `requirements.txt`. Make pip read the file instead."
 lang: shell
 code: |
   python -m pip install requirements.txt
 checks:
-  - match: ^python\s+-m\s+pip\s+install\s+-r\s+requirements\.txt\s*$
+  - match: '^python\s+-m\s+pip\s+install\s+-r\s+requirements\.txt\s*$'
     message: Add -r so pip reads the requirements file.
-hint: Add -r so pip reads the requirements file.
+hint: pip needs a flag that means "read from this file".
+solution: |
+  python -m pip install -r requirements.txt
 ```
 
 ```quiz
-question: Why prefer `python -m pip` to a bare pip command?
+question: "Why `python -m pip install ...` rather than just `pip install ...`?"
 options:
-  - It installs only standard-library modules.
-  - It uses pip belonging to the selected Python interpreter.
-  - It removes the need for an environment.
+  - It downloads packages faster.
+  - It installs into the exact Python that `python` runs.
+  - pip no longer works as a standalone command.
 answer: 1
-explain: The module invocation links package installation to the interpreter you selected.
+explain: With several Pythons around, a bare pip might belong to a different one. python -m pip always matches.
 ```

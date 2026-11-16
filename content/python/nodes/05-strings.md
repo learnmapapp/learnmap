@@ -5,46 +5,97 @@ branch: "basics"
 requires: ["variables"]
 summary: "Unicode text, escapes, indexing, and immutable values."
 ---
-
-A `str` holds Unicode text. Single and double quotes mean the same thing; choose whichever needs fewer escapes:
+A string is a piece of text. Single and double quotes mean exactly the same thing, so pick whichever saves you an escape:
 
 ```python
-name = "Python"
-message = 'It is readable'
-print(name[0])     # P
-print(name[-1])    # n
-print(len(name))   # 6
-print("hello\nworld")
+drink = "flat white"
+order = 'She said "make it a large".'
+note = "It's ready"
 ```
 
-Indexes start at zero. Negative indexes count from the end. Accessing an index that does not exist raises `IndexError`.
+## Every character has two addresses
 
-Strings are [[immutable]]: `name[0] = "J"` fails. Build a new string instead. `"Py" + "thon"` concatenates text, and `"ha" * 3` repeats it.
+Think of a string as a row of numbered cups. You can count from the front, starting at **0**, or from the back, starting at **-1**:
 
-## Text is not bytes
+```text
+  c    a    f    é
+  0    1    2    3     from the front
+ -4   -3   -2   -1     from the back
+```
 
-Python strings contain text, not raw file bytes. Accented characters work normally: `"café"` is a string. `len()` counts Unicode code points, which need not match the number of visible symbols for every language or emoji.
+```repl
+> word = "café"
+> word[0]
+'c'
+> word[-1]
+'é'
+> len(word)
+4
+> word[10]
+error: IndexError: string index out of range
+```
 
-Use `\n` for a newline and `\t` for a tab. Triple-quoted strings can span lines; raw strings such as `r"C:\tools"` preserve most backslashes, which is handy for patterns and Windows paths.
+Negative positions are handy: `word[-1]` is always the last character, whatever the length.
+
+## You can't change a string
+
+Strings are [[immutable]]. Trying to change one character fails:
+
+```repl
+> word[0] = "C"
+error: TypeError: 'str' object does not support item assignment
+```
+
+Instead, you build a new string: `"C" + word[1:]`. (That `[1:]` means "from position 1 to the end"; [Slicing](node:slicing) covers it.) Joining with `+` and repeating with `*` both create new strings:
+
+```repl
+> "Py" + "thon"
+'Python'
+> "ha" * 3
+'hahaha'
+```
+
+## Special characters
+
+A backslash starts an escape: `\n` is a newline and `\t` is a tab. For text over several lines, use triple quotes:
+
+```python
+menu = """Coffee  2.50
+Tea     2.00
+Cake    3.75"""
+```
+
+And Python strings are Unicode, so `"café"`, `"東京"` and emoji just work.
+
+```compare java
+"café".charAt(0)  // Java has no negative indexes
+```
+
+```compare javascript
+"café".at(-1)     // JS added negative positions via .at()
+```
 
 ```exercise
-goal: "Print the final character using a negative index."
+goal: "Print the last character of `name`, using a negative index."
 lang: python
 code: |
   name = "Python"
   print(name[0])
 checks:
-  - match: "name\\[\\s*-1\\s*\\]"
+  - match: 'name\[\s*-1\s*\]'
     message: "Use name[-1] for the last character."
-hint: "Use name[-1] for the last character."
+hint: Counting from the back starts at -1.
+solution: |
+  name = "Python"
+  print(name[-1])
 ```
 
 ```quiz
-question: What does `"Python"[-1]` return?
+question: "What does `\"Python\"[-2]` return?"
 options:
-  - P
-  - n
-  - An error because negative indexes are forbidden.
+  - "`'n'`"
+  - "`'o'`"
+  - "`'y'`"
 answer: 1
-explain: Negative indexes count backward from the end, so -1 selects the last character.
+explain: -1 is the last character (n), so -2 is the one before it (o).
 ```

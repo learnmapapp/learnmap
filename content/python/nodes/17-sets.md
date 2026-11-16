@@ -5,34 +5,68 @@ branch: "collections"
 requires: ["dictionaries"]
 summary: "Keep unique values and express membership, union, and intersection."
 ---
+A set is a bag of **unique** items, with no order. Two quick demos show why it's useful.
 
-A [[set]] stores unique, hashable elements. Sets are useful for removing duplicates and asking whether a value has already appeared:
+**Demo 1, removing duplicates:**
 
-```python
-seen = {"Ada", "Grace", "Ada"}
-print(len(seen))          # 2
-seen.add("Linus")
-print("Ada" in seen)     # True
+```repl
+> visitors = ["ada", "bob", "ada", "cy", "bob"]
+> set(visitors)
+{'ada', 'bob', 'cy'}
+> len(set(visitors))
+3
 ```
 
-`set()` creates an empty set. `{}` creates an empty dictionary, an easy mix-up. Sets have no positional indexing and no guaranteed iteration order; use `sorted(seen)` when you need predictable display order.
+(The order you see may differ. Sets don't keep one.)
 
-## Combine groups
+**Demo 2, fast lookups.** Checking `x in some_list` walks the list from the start. Checking `x in some_set` jumps straight to the answer, like a dictionary key. With a big list of banned words, that's a real difference:
 
 ```python
-readers = {"Ada", "Grace"}
-writers = {"Grace", "Linus"}
-print(sorted(readers & writers))  # ['Grace']: intersection
-print(sorted(readers | writers))  # ['Ada', 'Grace', 'Linus']: union
-print(sorted(readers - writers))  # ['Ada']: difference
+banned = {"spam", "scam", "free money"}
+if word in banned:
+    print("Blocked")
 ```
 
-`discard(value)` removes an element if present. `remove(value)` raises `KeyError` if it is absent. Choose the operation that matches whether absence is acceptable.
+## Venn diagrams in code
 
-Like dictionary keys, set elements must be hashable. A mutable list cannot be a set element; an immutable tuple of suitable elements can. `frozenset` provides an immutable set when you need one.
+Got two groups? Sets answer "who's in both?" and friends with a single operator:
+
+```python
+python_fans = {"ada", "bob", "cy"}
+rust_fans = {"bob", "cy", "dee"}
+
+python_fans & rust_fans   # in both:     {'bob', 'cy'}
+python_fans | rust_fans   # in either:   {'ada', 'bob', 'cy', 'dee'}
+python_fans - rust_fans   # only Python: {'ada'}
+python_fans ^ rust_fans   # just one:    {'ada', 'dee'}
+```
+
+Add and remove with `add` and `discard`:
+
+```python
+tags = {"python"}
+tags.add("beginner")
+tags.add("python")     # already there: nothing happens
+tags.discard("java")   # not there: also fine
+```
+
+## Two small gotchas
+
+- `{}` is an empty **dictionary**, not an empty set. Write `set()` instead.
+- Items must be [[hashable]]: numbers, strings and tuples are fine, lists aren't.
+
+```compare javascript
+const a = new Set(["ada", "bob"]);
+const both = a.intersection(b);   // newer JS added set methods
+```
+
+```compare kotlin
+val both = pythonFans intersect rustFans
+val either = pythonFans union rustFans
+```
 
 ```exercise
-goal: "Find the names that are in both groups."
+goal: "`both` should hold the names that appear in **both** groups. Right now it has everyone."
 lang: python
 code: |
   readers = {"Ada", "Grace"}
@@ -40,17 +74,22 @@ code: |
   both = readers | writers
   print(sorted(both))
 checks:
-  - match: "both\\s*=\\s*readers\\s*&\\s*writers"
+  - match: 'both\s*=\s*readers\s*&\s*writers'
     message: "Use & for intersection, rather than | for union."
-hint: "Use & for intersection, rather than | for union."
+hint: "| means either; & means both."
+solution: |
+  readers = {"Ada", "Grace"}
+  writers = {"Grace", "Linus"}
+  both = readers & writers
+  print(sorted(both))
 ```
 
 ```quiz
-question: How do you create an empty set?
+question: "What is `type({})`?"
 options:
-  - "{}"
-  - "[]"
-  - "`set()`"
-answer: 2
-explain: "{} creates a dictionary; `set()` creates an empty set."
+  - set
+  - dict
+  - tuple
+answer: 1
+explain: "Empty braces make an empty dictionary. For an empty set, call set()."
 ```

@@ -5,56 +5,104 @@ branch: "files"
 requires: ["exceptions"]
 summary: "Use with to make resource cleanup part of the structure."
 ---
-
-A [[context manager]] pairs setup with cleanup. The `with` statement enters the resource, runs a block, and exits it even if the block raises an exception:
+**The problem.** Some things need cleaning up: files must be closed, locks released, connections returned. Here's the naive way:
 
 ```python
-with open("notes.txt", "w", encoding="utf-8") as handle:
-    handle.write("Remember the milk\n")
-# The file is closed here.
+f = open("notes.txt", "w", encoding="utf-8")
+f.write("Remember the milk\n")
+f.close()
 ```
 
-Opening in `"w"` creates a file or replaces its existing contents. Use `"a"` to append instead. Keep the resource's work inside its block; reading or writing a file after it is closed raises an error.
+If `write` raises an exception, `close()` never runs. The by-the-book fix is `try`/`finally`, which works but is a lot of ceremony for "please close this":
 
-## More than files
+```python
+f = open("notes.txt", "w", encoding="utf-8")
+try:
+    f.write("Remember the milk\n")
+finally:
+    f.close()
+```
 
-Locks, temporary directories, and database transactions can also offer context managers. `contextlib.contextmanager` lets you define one with a generator:
+**The solution.** The `with` statement does exactly that, in one line:
+
+```python
+with open("notes.txt", "w", encoding="utf-8") as f:
+    f.write("Remember the milk\n")
+# f is closed here, whatever happened inside
+```
+
+Whatever is after `with` is a [[context manager]]: an object that knows how to set up and clean up. When the indented block ends, normally or because of an exception, the cleanup runs.
+
+## Not just files
+
+The same pattern shows up all over the standard library:
+
+```python
+import threading
+lock = threading.Lock()
+with lock:                       # acquire... and always release
+    shared_counter += 1
+```
+
+You can also open several things at once:
+
+```python
+with open("in.txt") as src, open("out.txt", "w") as dst:
+    dst.write(src.read().upper())
+```
+
+## Writing your own
+
+The easiest way is a generator with the `@contextmanager` decorator. Code before `yield` is setup; code after it is cleanup:
 
 ```python
 from contextlib import contextmanager
+import time
 
 @contextmanager
-def announce():
-    print("enter")
+def timer(label):
+    start = time.perf_counter()
     try:
         yield
     finally:
-        print("leave")
+        print(f"{label}: {time.perf_counter() - start:.3f}s")
 
-with announce():
-    print("work")
+with timer("download"):
+    download_everything()
 ```
 
-The code before `yield` enters; the `finally` block performs cleanup. This decorator is an advanced convenience; when an API already provides a context manager, use that directly. A `with` statement guarantees the exit protocol, but does not automatically suppress errors.
+```compare java
+try (var reader = Files.newBufferedReader(path)) {
+    // try-with-resources: same idea
+}
+```
+
+```compare go
+f, _ := os.Open("notes.txt")
+defer f.Close()   // runs when the function returns
+```
 
 ```exercise
-goal: Open the file with a context manager so it is closed automatically.
+goal: "This file is never closed. Open it with a `with` block and move the write inside it."
 lang: python
 code: |
   handle = open("notes.txt", "w", encoding="utf-8")
   handle.write("Hello\n")
 checks:
-  - match: ^with\s+open\([^\n]+\)\s+as\s+handle:\n[ \t]+handle\.write\(
+  - match: '^with\s+open\([^\n]+\)\s+as\s+handle:\n[ \t]+handle\.write\('
     message: "Use with open(...) as handle: and indent the write inside it."
-hint: "Use with `open(...)` as handle: and indent the write inside it."
+hint: "The with line ends in a colon, and the write is indented below it."
+solution: |
+  with open("notes.txt", "w", encoding="utf-8") as handle:
+      handle.write("Hello\n")
 ```
 
 ```quiz
-question: "When does a file opened with with get closed?"
+question: "An exception is raised inside a `with open(...) as f:` block. Is the file closed?"
 options:
-  - "Only if the block finishes without an error."
-  - "When leaving the block, including on an exception."
-  - "Only when the program ends."
-answer: 1
-explain: "The context manager closes the file as the block exits, even when an exception propagates."
+  - Yes, the cleanup runs even when the block fails.
+  - Only if you also add a finally.
+  - No, the exception skips the cleanup.
+answer: 0
+explain: That's the whole point of with. The context manager's exit code runs however the block ends.
 ```

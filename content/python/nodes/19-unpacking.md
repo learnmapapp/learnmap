@@ -5,59 +5,82 @@ branch: "collections"
 requires: ["tuples", "dictionaries"]
 summary: "Bind related values, collect a remainder, and expand call arguments."
 ---
+Unpacking means assigning a whole sequence to several names in one go. Here are five tricks, from everyday to fancy.
 
-Unpacking assigns the elements of an iterable to separate names:
-
-```python
-first, second = [10, 20]
-first, second = second, first
-print(first, second)  # 20 10
-```
-
-Python evaluates the right-hand side before assigning the left-hand names, which makes the swap work without a temporary variable. A length mismatch normally raises `ValueError`.
-
-Use one starred target to collect the remaining items into a list:
+**Trick 1: name the parts.**
 
 ```python
-head, *middle, tail = [1, 2, 3, 4]
-print(head, middle, tail)  # 1 [2, 3] 4
+point = (3, 7)
+x, y = point
 ```
 
-The starred target can collect zero items, but the unstarred targets still need values.
+The number of names must match the number of items. Otherwise you get `ValueError: too many values to unpack`.
 
-## Expand a call
-
-`*` in a call expands positional arguments; `**` expands keyword arguments from a mapping with string keys:
+**Trick 2: the swap.** No temporary variable needed:
 
 ```python
-def greet(name, punctuation="!"):
-    return f"Hello, {name}{punctuation}"
-
-args = ("Ada",)
-options = {"punctuation": "."}
-print(greet(*args, **options))  # Hello, Ada.
+a, b = 1, 2
+a, b = b, a      # now a is 2 and b is 1
 ```
 
-Do not supply the same parameter twice: combining a positional value with a keyword for that parameter raises `TypeError`. Unpacking reduces glue code, but explicit arguments are often clearer for a small fixed call.
+The right side is built into a tuple first, then unpacked into the left side.
+
+**Trick 3: catch the rest with a star.** One name can take a `*`, which collects everything the others didn't:
+
+```python
+first, *rest = [1, 2, 3, 4]       # first = 1, rest = [2, 3, 4]
+*init, last = [1, 2, 3, 4]        # init = [1, 2, 3], last = 4
+head, *_, tail = "a,b,c,d".split(",")
+```
+
+**Trick 4: ignore what you don't need.** By convention `_` means "I don't care about this one":
+
+```python
+name, _, city = ("Ada", 36, "London")
+```
+
+**Trick 5: spread into calls and literals.** A star in front of a list spreads it into separate arguments. Two stars spread a dictionary:
+
+```python
+numbers = [3, 1, 2]
+print(*numbers)                    # print(3, 1, 2) shows: 3 1 2
+
+defaults = {"theme": "dark", "size": 12}
+settings = {**defaults, "size": 14}  # merge, the last one wins
+```
+
+Unpacking also works in `for` loops, which is what makes `for key, value in d.items()` work.
+
+```compare javascript
+const [first, ...rest] = [1, 2, 3, 4];
+const settings = { ...defaults, size: 14 };
+```
+
+```compare kotlin
+val (x, y) = point    // destructuring via componentN()
+```
 
 ```exercise
-goal: "Collect every item after the first in rest."
+goal: "This crashes: two names, three values. Make `rest` collect every item after the first."
 lang: python
 code: |
   first, rest = [1, 2, 3]
   print(first, rest)
 checks:
-  - match: "^first\\s*,\\s*\\*rest\\s*="
+  - match: '^first\s*,\s*\*rest\s*='
     message: "Put a star before rest: first, *rest = ..."
-hint: "Put a star before rest: first, *rest = ..."
+hint: A starred name catches whatever is left over.
+solution: |
+  first, *rest = [1, 2, 3]
+  print(first, rest)
 ```
 
 ```quiz
-question: What type does a starred assignment target receive?
+question: "After `a, *b, c = [1, 2, 3, 4, 5]`, what is `b`?"
 options:
-  - A tuple.
-  - A list.
-  - A dictionary.
+  - "`2`"
+  - "`[2, 3, 4]`"
+  - "`(2, 3, 4)`"
 answer: 1
-explain: In `head, *rest = values`, rest is a list of the remaining items.
+explain: a takes the first item, c takes the last, and the starred b collects the middle as a list.
 ```

@@ -5,37 +5,72 @@ branch: "files"
 requires: ["context-managers", "string-methods"]
 summary: "Build portable paths and inspect files with Path objects."
 ---
+File paths are strings, right? You could glue them with `+`... until your code runs on Windows, or someone forgets a slash. The `pathlib` module gives you real path objects instead.
 
-`pathlib.Path` represents a filesystem path. Use `/` to combine parts instead of manually choosing slash characters:
+Here's a quick tour, at the prompt:
+
+```repl
+> from pathlib import Path
+> report = Path("reports") / "2025" / "summary.txt"
+> report
+PosixPath('reports/2025/summary.txt')
+> report.name
+'summary.txt'
+> report.stem
+'summary'
+> report.suffix
+'.txt'
+> report.parent
+PosixPath('reports/2025')
+```
+
+The `/` operator joins path pieces with the right separator for your operating system. (On Windows you'd see `WindowsPath('reports\\2025\\summary.txt')`.) No more worrying about slashes.
+
+## Asking the file system
 
 ```python
 from pathlib import Path
 
-report = Path("reports") / "daily.txt"
-print(report.name)    # daily.txt
-print(report.suffix)  # .txt
-print(report.parent)  # reports
+here = Path.cwd()                   # the folder you ran Python from
+home = Path.home()                  # your home folder
+
+downloads = home / "Downloads"
+print(downloads.exists(), downloads.is_dir())
+
+# create a folder; no fuss if it already exists
+(here / "output").mkdir(exist_ok=True)
 ```
 
-Constructing a path does not create a file or directory. `path.exists()`, `path.is_file()`, and `path.is_dir()` inspect what is actually on disk.
+## Finding files
 
-## Find and prepare files
+`glob` finds files by pattern. `*` matches anything in one folder, and `rglob` searches all subfolders too:
 
 ```python
-from pathlib import Path
-
-folder = Path("reports")
-folder.mkdir(parents=True, exist_ok=True)
-for path in sorted(folder.glob("*.txt")):
-    print(path.name)
+for photo in Path("holiday").rglob("*.jpg"):
+    print(photo.name, photo.stat().st_size, "bytes")
 ```
 
-`glob("*.txt")` selects matching entries in one directory; `rglob("*.txt")` searches recursively. Sorting makes the processing order explicit. `parents=True` creates missing parent directories, and `exist_ok=True` accepts an already existing directory.
+## Relative paths are relative to where you are
 
-Relative paths are resolved from the process's current working directory, which is not necessarily the script's directory. When you need files shipped beside a script, a starting point such as `Path(__file__).resolve().parent` is more explicit. Paths can also be passed directly to `open`.
+`Path("data.csv")` means "data.csv in the **current working directory**", which is the folder your terminal was in when you started Python. It isn't necessarily the folder the script lives in. If a script can't find a file that's "right next to it", that's usually why. To build a path relative to the script itself:
+
+```python
+DATA = Path(__file__).parent / "data.csv"
+```
+
+Path objects work everywhere a file name does: `open(path)`, `csv` readers, `json` loading. [Text files](node:text-files) shows the reading and writing helpers.
+
+```compare javascript
+const path = require("node:path");
+path.join("reports", "2025", "summary.txt");
+```
+
+```compare java
+Path report = Path.of("reports", "2025", "summary.txt");
+```
 
 ```exercise
-goal: Use Path and / to build the path to `daily.txt`.
+goal: "`report` is a plain string, so `.name` fails. Build it as a `Path` using `/`."
 lang: python
 code: |
   from pathlib import Path
@@ -43,18 +78,22 @@ code: |
   report = "reports/daily.txt"
   print(report.name)
 checks:
-  - match: Path\(\s*["']reports["']\s*\)\s*/\s*["']daily\.txt["']
+  - match: 'Path\(\s*["'']reports["'']\s*\)\s*/\s*["'']daily\.txt["'']'
     message: Build report with Path("reports") / "daily.txt".
-hint: Build report with `Path("reports")` / "`daily.txt`".
+hint: Start with Path("reports") and join the file name with /.
+solution: |
+  from pathlib import Path
+
+  report = Path("reports") / "daily.txt"
+  print(report.name)
 ```
 
 ```quiz
-question: Does `Path("reports")` / "`daily.txt`" create that file?
+question: "What is `Path(\"photos/cat.jpeg\").suffix`?"
 options:
-  - Yes, immediately.
-  - Only if the parent exists.
-  - No, it constructs a path object.
-answer: 2
-explain: Path construction describes a location. A write or explicit creation operation changes the
-  filesystem.
+  - "`'cat'`"
+  - "`'.jpeg'`"
+  - "`'jpeg'`"
+answer: 1
+explain: suffix includes the dot. stem is 'cat', and name is 'cat.jpeg'.
 ```

@@ -5,37 +5,74 @@ branch: "basics"
 requires: ["booleans"]
 summary: "Indentation groups code; if, elif, and else choose a branch."
 ---
-
-Python uses a colon and indentation to mark a block. Four spaces per indentation level is the usual convention:
+Let's build a tiny ticket machine. It starts with one rule:
 
 ```python
-score = 75
-if score >= 90:
-    grade = "excellent"
-elif score >= 60:
-    grade = "passed"
+age = 16
+if age < 18:
+    print("Youth ticket: 5 euros")
+```
+
+The line ending in a **colon** opens a block; the **indented** lines below it are the block. There are no braces. When the indentation stops, so does the block.
+
+Now the machine needs a price for everyone else. Add an `else`:
+
+```python
+age = 30
+if age < 18:
+    print("Youth ticket: 5 euros")
 else:
-    grade = "try again"
-print(grade)  # passed
+    print("Regular ticket: 9 euros")
+print("Enjoy the film!")   # not indented: always runs
 ```
 
-Only the first matching branch runs. `elif` means "otherwise, if"; `else` handles what remains. The unindented `print` runs after the whole conditional.
-
-## Keep blocks consistent
-
-Mixing tabs and spaces can produce an indentation error. Configure your editor to insert four spaces when editing Python. Unlike braces in many other languages, indentation is part of the syntax, not decoration.
-
-For a small choice between two values, use a conditional expression:
+Then seniors get a discount too. Python spells "else if" as `elif`:
 
 ```python
-age = 20
-label = "adult" if age >= 18 else "child"
+age = 70
+if age < 18:
+    price = 5
+elif age >= 65:
+    price = 6
+else:
+    price = 9
+print(f"That's {price} euros")
 ```
 
-Use the full `if` statement when each branch performs several steps. A readable block is easier to change than a deeply nested expression.
+Python checks the conditions top to bottom and runs **only the first one that matches**. So order matters: if you put a broader test like `age >= 18` first, the senior branch can never run.
+
+(The `f"..."` is an f-string; it fills `{price}` in. [Formatting](node:formatting) has the details.)
+
+## A one-liner for simple choices
+
+When you're just picking between two values, there's a compact form:
+
+```python
+label = "youth" if age < 18 else "adult"
+```
+
+Read it out loud: "label is youth if age is under 18, else adult". Use it for values; use a full `if` when each branch does real work.
+
+```warn
+Use four spaces per level and never mix in tabs. Most editors do this for you once they know it's a Python file. A block that's indented inconsistently gives an `IndentationError` before anything runs.
+```
+
+```compare javascript
+if (age < 18) { price = 5; }
+else if (age >= 65) { price = 6; }
+else { price = 9; }
+```
+
+```compare kotlin
+val price = when {          // Kotlin's when is an expression
+    age < 18 -> 5
+    age >= 65 -> 6
+    else -> 9
+}
+```
 
 ```exercise
-goal: "Make the discount apply when age is under 18."
+goal: "The youth discount is printed for the wrong people. Make it apply when age is **under** 18."
 lang: python
 code: |
   age = 16
@@ -44,17 +81,23 @@ code: |
   else:
       print("full price")
 checks:
-  - match: "^if\\s+age\\s*<\\s*18\\s*:"
+  - match: '^if\s+age\s*<\s*18\s*:'
     message: "Use age < 18 in the if condition."
-hint: "Use age < 18 in the if condition."
+hint: The comparison points the wrong way.
+solution: |
+  age = 16
+  if age < 18:
+      print("discount")
+  else:
+      print("full price")
 ```
 
 ```quiz
-question: How many branches run in a single if/elif/else statement?
+question: "With `x = 15`, a chain checks `if x > 10:` (prints big), then `elif x > 5:` (prints medium). What gets printed?"
 options:
-  - All branches whose conditions are `true`.
-  - At most one.
-  - Exactly two.
+  - Both, big and then medium.
+  - Only big.
+  - Only medium.
 answer: 1
-explain: Python executes the first matching branch, or else when no condition matches.
+explain: Both conditions are true, but only the first matching branch runs. The elif is skipped.
 ```

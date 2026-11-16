@@ -5,30 +5,75 @@ branch: "files"
 requires: ["modules", "formatting"]
 summary: "Distinguish dates, durations, and timezone-aware timestamps."
 ---
+**Puzzle:** a server in Amsterdam logs `2025-03-30 02:30`. What happened at that moment?
 
-The `datetime` module provides distinct types for calendar dates, timestamps, and durations:
+Nothing, because that time never existed. On that night the clocks in the Netherlands jumped from 02:00 straight to 03:00. Dates and times are full of traps like this, and the `datetime` module gives you the tools to handle them.
+
+## The cast
 
 ```python
 from datetime import date, datetime, timedelta, timezone
 
-day = date.fromisoformat("2026-01-15")
-print(day + timedelta(days=7))  # 2026-01-22
-now = datetime.now(timezone.utc)
-print(now.isoformat())
+date(2025, 3, 14)                 # a calendar day
+datetime(2025, 3, 14, 9, 30)      # a day plus a time
+timedelta(days=7, hours=2)        # a duration
 ```
 
-A `date` has no time of day. A `timedelta` represents a duration. A timezone-aware `datetime` includes an offset context; a naive one does not identify a unique instant on its own.
+Arithmetic works the way you'd hope:
 
-## Make timezone assumptions explicit
+```repl
+> date(2025, 3, 14) + timedelta(days=30)
+datetime.date(2025, 4, 13)
+> date(2025, 12, 25) - date(2025, 3, 14)
+datetime.timedelta(days=286)
+```
 
-Use aware UTC timestamps for recorded instants, then convert for display. `timestamp.astimezone(...)` converts an aware timestamp to another zone. `replace(tzinfo=...)` attaches or changes metadata without performing that conversion, so it is not an equivalent operation.
+## Naive or aware?
 
-The standard library's `zoneinfo.ZoneInfo` supports named zones such as `Australia/Sydney` when timezone data is available. Calendar operations around daylight-saving transitions need care: a local day does not always correspond to exactly 24 elapsed hours.
+This is the most important idea in the lesson. A `datetime` is either:
 
-Prefer ISO 8601 text for interchange when a human-readable format is needed. For elapsed-time measurement in a running process, use `time.perf_counter()` rather than a wall clock that can be adjusted.
+- **naive**: no time zone attached. `datetime.now()` gives one. It's "9:30", but 9:30 where?
+- **aware**: it carries a time zone, so it refers to one exact moment worldwide.
+
+```python
+from zoneinfo import ZoneInfo
+
+utc_now = datetime.now(timezone.utc)
+amsterdam = ZoneInfo("Europe/Amsterdam")
+meeting = datetime(2025, 3, 14, 9, 30, tzinfo=amsterdam)
+print(meeting.astimezone(ZoneInfo("America/New_York")))
+```
+
+The rule that keeps you out of trouble: **store and compute in UTC with aware datetimes, and convert to a local zone only to show it to a person.** Python refuses to compare naive and aware datetimes, which catches many mix-ups early.
+
+## Text in, text out
+
+For machines, use ISO 8601. It sorts correctly as text and includes the offset:
+
+```repl
+> datetime(2025, 3, 14, 9, 30, tzinfo=timezone.utc).isoformat()
+'2025-03-14T09:30:00+00:00'
+> datetime.fromisoformat("2025-03-14T09:30:00+00:00")
+datetime.datetime(2025, 3, 14, 9, 30, tzinfo=datetime.timezone.utc)
+```
+
+For humans, `strftime` formats and `strptime` parses, using codes like `%d` (day), `%m` (month), `%Y` (year) and `%H:%M` (hours and minutes):
+
+```python
+meeting.strftime("%d %B %Y, %H:%M")      # '14 March 2025, 09:30'
+```
+
+```compare javascript
+new Date().toISOString();   // always UTC
+// The newer Temporal API adds proper time zone support.
+```
+
+```compare java
+ZonedDateTime.now(ZoneOffset.UTC);   // java.time: same concepts
+```
 
 ```exercise
-goal: Create an aware UTC timestamp rather than a naive local one.
+goal: "Log timestamps should be unambiguous. Make `now` an aware UTC datetime."
 lang: python
 code: |
   from datetime import datetime, timezone
@@ -36,17 +81,22 @@ code: |
   now = datetime.now()
   print(now.isoformat())
 checks:
-  - match: datetime\.now\(\s*timezone\.utc\s*\)
+  - match: 'datetime\.now\(\s*timezone\.utc\s*\)'
     message: Pass timezone.utc to datetime.now.
-hint: Pass `timezone.utc` to `datetime.now`.
+hint: datetime.now accepts a time zone.
+solution: |
+  from datetime import datetime, timezone
+
+  now = datetime.now(timezone.utc)
+  print(now.isoformat())
 ```
 
 ```quiz
-question: Which call creates a timezone-aware UTC timestamp?
+question: "What's the problem with storing `datetime.now()` values from servers in different countries?"
 options:
-  - "`datetime.now()`"
-  - "`datetime.now(timezone.utc)`"
-  - "`date.today()`"
+  - They're too precise.
+  - They're naive local times, so the same reading can mean different moments.
+  - datetime.now() only works on one server at a time.
 answer: 1
-explain: Supplying `timezone.utc` gives the datetime an explicit UTC timezone.
+explain: Without a time zone, 09:30 in Tokyo and 09:30 in London look identical. Store aware UTC times instead.
 ```

@@ -5,63 +5,94 @@ branch: "collections"
 requires: ["strings"]
 summary: "Ordered, growable collections with zero-based indexing."
 ---
-
-A [[list]] stores an ordered sequence. It can grow, shrink, and contain different types, though consistent element types are usually easier to work with.
-
-```python
-languages = ["Python", "Rust"]
-languages.append("Nix")
-print(languages[0])       # Python
-print(len(languages))    # 3
-last = languages.pop()
-print(last)              # Nix
-```
-
-`append` changes the existing list and returns `None`. Do not write `languages = languages.append("Nix")`; that would replace your list binding with `None`.
-
-Use `in` to test membership: `"Rust" in languages` is `true`. Assigning an index replaces that element, and `del languages[0]` removes one. Out-of-range indexing raises `IndexError`.
-
-## One item or many?
-
-`append([3, 4])` adds one nested list. `extend([3, 4])` adds two individual items:
+**Scenario:** you're writing a shopping list app. Here's the list, in square brackets:
 
 ```python
-numbers = [1, 2]
-numbers.extend([3, 4])
-print(numbers)  # [1, 2, 3, 4]
+basket = ["apples", "bread", "coffee"]
 ```
 
-Lists are [[mutable]]. Two names can refer to the same list; explore the consequences in [mutability](node:mutability).
+Items can be anything (numbers, strings, even other lists), and they can be mixed, though in practice one kind per list keeps things sane.
+
+You read items by position, starting at 0, just like [strings](node:strings):
+
+```repl
+> basket = ["apples", "bread", "coffee"]
+> basket[0]
+'apples'
+> basket[-1]
+'coffee'
+> len(basket)
+3
+```
+
+## Changing the list
+
+Unlike strings, lists are [[mutable]]: you change them in place.
+
+```python
+basket.append("milk")        # add to the end
+basket.insert(0, "bananas")  # add at a position
+basket.remove("bread")       # remove the first match
+last = basket.pop()          # remove and return the last item
+basket[0] = "pears"          # replace an item
+```
+
+To check if something is in the list, use `in`:
+
+```python
+if "coffee" in basket:
+    print("Don't forget the filter papers")
+```
+
+## The trap everyone falls into once
+
+Methods that change a list in place return `None`, Python's "nothing" value. So this innocent-looking line destroys your list:
+
+```repl
+> basket = ["apples"]
+> basket = basket.append("milk")
+> print(basket)
+None
+```
+
+`append` added the milk, returned `None`, and then the assignment stuck the `basket` label on that `None`. Just call it on its own line: `basket.append("milk")`. The same goes for `sort()`, `reverse()` and `remove()`.
+
+```tip
+Want a sorted **copy** instead? `sorted(basket)` returns a new list and leaves the original alone. [Lambdas and sorting](node:lambdas-sorting) goes further.
+```
 
 ```compare javascript
-const languages = ["Python", "Rust"];
-languages.push("Nix");
+basket.push("milk");    // JS's push returns the new length
 ```
 
-```compare rust
-let mut languages = vec!["Python", "Rust"];
-languages.push("Nix");
+```compare java
+List<String> basket = new ArrayList<>(List.of("apples", "bread"));
+basket.add("milk");
 ```
 
 ```exercise
-goal: Append "Nix" without replacing the languages binding.
+goal: "The list ends up as `None`. Add \"Nix\" while keeping the list."
 lang: python
 code: |
   languages = ["Python", "Rust"]
   languages = languages.append("Nix")
   print(languages)
 checks:
-  - match: ^languages\.append\(\s*["']Nix["']\s*\)\s*$
-    message: Call languages.append("Nix") on its own line.
-hint: Call `languages.append("Nix")` on its own line.
+  - match: '^languages\.append\(\s*["'']Nix["'']\s*\)\s*$'
+    message: Call languages.append("Nix") on its own line, without assigning the result.
+hint: append changes the list itself and returns None.
+solution: |
+  languages = ["Python", "Rust"]
+  languages.append("Nix")
+  print(languages)
 ```
 
 ```quiz
-question: What does list.append return?
+question: "What does `[\"a\", \"b\"].append(\"c\")` return?"
 options:
-  - The updated list.
-  - The added element.
-  - "`None`."
-answer: 2
-explain: append changes the list in place and returns `None`.
+  - "`['a', 'b', 'c']`"
+  - "`None`"
+  - "`3`"
+answer: 1
+explain: In-place methods return None. The list itself changed, but the call doesn't hand it back.
 ```

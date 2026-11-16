@@ -5,43 +5,72 @@ branch: "concurrency"
 requires: ["generators", "context-managers", "modules"]
 summary: "Await cooperative operations and run independent waits concurrently."
 ---
+**The waiter analogy.** A restaurant waiter doesn't stand by the kitchen while your food cooks. They take an order, hand it to the kitchen, and serve other tables until a dish is ready. One waiter, many tables, because most of the time is spent **waiting**.
 
-An `async def` function creates a [[coroutine]] when called. Calling it alone does not run its body. Use `await` inside another coroutine, and `asyncio.run` at a normal script entry point:
+`asyncio` lets one Python program work like that waiter. It's for code that spends its time waiting on networks, disks or timers, and that needs to juggle many of those waits at once.
+
+## The vocabulary, mapped to the restaurant
+
+- `async def` defines a **[[coroutine]]**: a task that can pause while it waits. (A table's order.)
+- `await` marks a pause point: "I'm waiting; serve someone else meanwhile."
+- The **[[event loop]]** is the waiter, switching between coroutines whenever one is waiting.
+- `asyncio.run(main())` hires the waiter and starts the shift.
 
 ```python
 import asyncio
 
-async def greet(name):
-    await asyncio.sleep(0.01)
-    return f"Hello, {name}"
+async def cook(dish, seconds):
+    print(f"Started {dish}")
+    await asyncio.sleep(seconds)        # waiting, not blocking
+    print(f"{dish} is ready")
+    return dish
 
 async def main():
-    async with asyncio.TaskGroup() as group:
-        ada = group.create_task(greet("Ada"))
-        grace = group.create_task(greet("Grace"))
-    print(ada.result())
-    print(grace.result())
+    dishes = await asyncio.gather(
+        cook("pasta", 3),
+        cook("salad", 1),
+        cook("soup", 2),
+    )
+    print("Serving:", dishes)
 
 asyncio.run(main())
 ```
 
-`TaskGroup`, available in Python 3.11+, waits for its tasks before the block exits. If a task fails with an ordinary exception, the group cancels remaining tasks and reports failures together.
+`gather` runs all three at once. The salad finishes first, the whole thing takes about **3** seconds instead of 6, and `dishes` comes back in the order you asked: `['pasta', 'salad', 'soup']`.
 
-## Cooperative concurrency
+## Two classic mistakes
 
-The [[event loop]] switches work when a coroutine suspends at an operation that yields control. `asyncio.sleep` allows other tasks to proceed; blocking `time.sleep` inside a coroutine blocks the loop. CPU-heavy code does not become parallel just because its function is marked async.
+**Forgetting `await`.** Calling a coroutine function doesn't run it. It just creates a coroutine object:
 
-Awaiting two coroutines one after another is sequential. Scheduling both as tasks allows independent waits to overlap. Use async-aware APIs for I/O and keep synchronous blocking work out of the event loop. See the [official task documentation](https://docs.python.org/3.11/library/asyncio-task.html) for cancellation and timeout details.
+```python
+async def main():
+    asyncio.sleep(1)      # does nothing!
+    print("ready")
+```
+
+Python warns `RuntimeWarning: coroutine 'sleep' was never awaited`. Add the `await`.
+
+**Blocking the waiter.** `time.sleep(5)` or a slow regular function inside a coroutine freezes the **whole** event loop. Every other task waits too. Inside async code, use async libraries (such as `asyncio.sleep` or an async HTTP client), or hand blocking work off with `await asyncio.to_thread(slow_function)`.
+
+```tip
+Async helps when you're waiting on many things. It doesn't make number crunching faster: one waiter still only has two hands. For CPU-heavy work, look at `multiprocessing` instead.
+```
 
 ```compare javascript
-async function main() {
-  const results = await Promise.all([greet("Ada"), greet("Grace")]);
-  console.log(results);
-} // Promise.all has different failure/cancellation behavior from TaskGroup
+const dishes = await Promise.all([cook("pasta", 3), cook("salad", 1)]);
+```
+
+```compare kotlin
+val dishes = coroutineScope {
+    listOf(
+        async { cook("pasta", 3) },
+        async { cook("salad", 1) },
+    ).awaitAll()
+}
 ```
 
 ```exercise
-goal: Await the sleep so the coroutine actually waits cooperatively.
+goal: "The sleep is created but never awaited, so nothing waits. Fix it."
 lang: python
 code: |
   import asyncio
@@ -52,17 +81,25 @@ code: |
 
   asyncio.run(main())
 checks:
-  - match: ^\s+await\s+asyncio\.sleep\(\s*0\.01\s*\)
+  - match: '^\s+await\s+asyncio\.sleep\(\s*0\.01\s*\)'
     message: Add await before asyncio.sleep(0.01).
-hint: Add await before `asyncio.sleep(0.01)`.
+hint: Coroutines only run when awaited.
+solution: |
+  import asyncio
+
+  async def main():
+      await asyncio.sleep(0.01)
+      print("ready")
+
+  asyncio.run(main())
 ```
 
 ```quiz
-question: "Does calling an async def function alone run its body?"
+question: "Three coroutines each `await asyncio.sleep(2)`, run together with `gather`. Roughly how long does it take?"
 options:
-  - "Yes, immediately in another thread."
-  - "No, it creates a coroutine that must be awaited or scheduled."
-  - "Only if it returns a string."
-answer: 1
-explain: "A coroutine object must be driven by awaiting it or scheduling it on an event loop."
+  - About 2 seconds.
+  - About 6 seconds.
+  - About 0 seconds.
+answer: 0
+explain: The waits overlap. The event loop switches between them while they sleep, so the total is about the longest one.
 ```

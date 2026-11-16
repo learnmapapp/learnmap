@@ -5,38 +5,76 @@ branch: "files"
 requires: ["json", "comprehensions"]
 summary: "Read tabular data without hand-splitting commas."
 ---
+Someone exports a spreadsheet and sends you `sales.csv`:
 
-A CSV field can contain commas, quotes, or even a newline. Use `csv` rather than `line.split(",")` so quoting rules are handled correctly.
-
-```python
-import csv
-from io import StringIO
-
-source = StringIO('name,score\n"Ada, Jr.",42\nGrace,37\n')
-rows = list(csv.DictReader(source))
-print(rows[0]["name"])         # Ada, Jr.
-print(int(rows[0]["score"]))   # 42
+```text title=sales.csv
+region,product,units
+North,Widget,12
+South,"Gadget, deluxe",5
+North,Gadget,8
 ```
 
-`DictReader` takes column names from the header. Field values are strings; convert numbers explicitly and handle invalid values according to the application's needs.
+"Easy," you think, "split each line on commas." Look at line 3, though: that quoted comma would break your fields apart. CSV has rules for quoting, escaping and line endings, and the `csv` module knows all of them. Don't split by hand.
 
-## Write a report
+## Reading rows as dictionaries
+
+`csv.DictReader` uses the header line as keys, so each row becomes a dictionary:
 
 ```python
 import csv
 
-with open("scores.csv", "w", newline="", encoding="utf-8") as handle:
-    writer = csv.DictWriter(handle, fieldnames=["name", "score"])
+with open("sales.csv", newline="", encoding="utf-8") as f:
+    for row in csv.DictReader(f):
+        print(row["region"], row["product"], row["units"])
+```
+
+Two details worth knowing:
+
+- `newline=""` lets the `csv` module handle line endings itself. The Python docs recommend it for every CSV file you open.
+- **Every value is a string.** `row["units"]` is `"12"`, not `12`.
+
+## From rows to an answer
+
+Let's total the units per region, converting as we go:
+
+```python
+import csv
+from collections import defaultdict
+
+totals = defaultdict(int)   # a dict that starts missing keys at 0
+with open("sales.csv", newline="", encoding="utf-8") as f:
+    for row in csv.DictReader(f):
+        totals[row["region"]] += int(row["units"])
+
+print(dict(totals))   # {'North': 20, 'South': 5}
+```
+
+## Writing a report
+
+`DictWriter` does the reverse. Give it the column names, write the header, then the rows:
+
+```python
+with open("report.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=["region", "units"])
     writer.writeheader()
-    writer.writerow({"name": "Ada", "score": 42})
+    for region, units in totals.items():
+        writer.writerow({"region": region, "units": units})
 ```
 
-Use `newline=""` when opening files for CSV reading or writing so the module can handle newlines itself. `writeheader()` writes the column names; each subsequent `writerow` supplies one record.
+Any value containing a comma or quote is quoted for you, so the output opens cleanly in a spreadsheet.
 
-A useful automation pipeline is: discover files with `Path.glob`, read records, validate and convert fields, then write a summary. Keep that transformation in a function so the next branch can test it independently of real files.
+```compare javascript
+// No CSV parser built in; most projects add a package such as
+// csv-parse or papaparse.
+```
+
+```compare go
+r := csv.NewReader(f)   // encoding/csv in the standard library
+records, _ := r.ReadAll()
+```
 
 ```exercise
-goal: Convert CSV scores to integers before summing them.
+goal: "Summing fails because CSV values are strings. Convert each score to an integer first."
 lang: python
 code: |
   import csv
@@ -46,17 +84,24 @@ code: |
   total = sum(row["score"] for row in rows)
   print(total)
 checks:
-  - match: sum\(\s*int\(\s*row\[["']score["']\]\s*\)\s+for
+  - match: 'sum\(\s*int\(\s*row\[["'']score["'']\]\s*\)\s+for'
     message: Wrap row["score"] in int(...) before summing.
-hint: Wrap row["score"] in `int(...)` before summing.
+hint: int(...) turns "42" into 42.
+solution: |
+  import csv
+  from io import StringIO
+
+  rows = csv.DictReader(StringIO("name,score\nAda,42\nGrace,37\n"))
+  total = sum(int(row["score"]) for row in rows)
+  print(total)
 ```
 
 ```quiz
-question: "Why use csv.DictReader instead of splitting on commas?"
+question: "Why not parse CSV with `line.split(\",\")`?"
 options:
-  - "It automatically converts all numbers to integers."
-  - "It handles quoted fields and uses header names."
-  - "It only works with files that contain no commas."
+  - split is too slow for large files.
+  - Quoted fields can contain commas, and split would break them apart.
+  - split doesn't work on files.
 answer: 1
-explain: "CSV quoting allows separators inside fields. DictReader handles those rules, but field values remain strings."
+explain: '"Gadget, deluxe" is one field. The csv module understands the quoting rules; split doesn''t.'
 ```
