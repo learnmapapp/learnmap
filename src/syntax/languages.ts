@@ -163,6 +163,79 @@ SYNTAX.toml = {
   identExtra: '-',
 };
 
+SYNTAX.lua = {
+  keywords: words('and break do else elseif end for function goto if in local not or repeat return then until while'),
+  constants: words('true false nil'),
+  builtins: words('print assert error type tostring tonumber pairs ipairs next select require pcall xpcall setmetatable getmetatable rawget rawset table string math io os coroutine utf8 debug'),
+  strings: ['[[', '"', "'"],
+  extra: [
+    { pattern: /--\[(=*)\[[\s\S]*?\]\1\]/y, type: 'comment' },
+    { pattern: /--[^\n]*/y, type: 'comment' },
+    { pattern: /\[(=*)\[[\s\S]*?\]\1\]/y, type: 'string' },
+  ],
+};
+SYNTAX.nim = {
+  keywords: words('addr and as asm bind block break case cast concept const continue converter defer discard distinct div do elif else end enum except export finally for from func if import in include interface is isnot iterator let macro method mixin mod nil not notin object of or out proc ptr raise ref return shl shr static template try tuple type using var when while with without xor yield'),
+  constants: words('true false'),
+  builtins: words('echo result inc dec len assert doAssert defined isMainModule newSeq'),
+  blockComment: ['#[', ']#'],
+  strings: ['"""', '"', "'"],
+  extra: [
+    { pattern: /#[^\n]*/y, type: 'comment' },
+    { pattern: /\{\.[\s\S]*?\.\}/y, type: 'attr' },
+  ],
+};
+SYNTAX.swift = {
+  keywords: words('actor any as associatedtype async await borrowing break case catch class consuming continue convenience default defer deinit didSet do dynamic else enum extension fallthrough fileprivate final for func get guard if import in indirect infix init inout internal is isolated lazy let macro mutating nonisolated nonmutating open operator optional override package postfix precedencegroup prefix private protocol public repeat required rethrows return self Self set some static struct subscript super switch throw throws try typealias unowned var weak where while willSet'),
+  constants: words('true false nil'),
+  builtins: words('print Task MainActor Sendable Codable Equatable Hashable Result Optional Array Dictionary Set'),
+  lineComment: ['//'],
+  blockComment: ['/*', '*/'],
+  strings: ['"""', '"'],
+  extra: [{ pattern: /[@#][A-Za-z_]\w*/y, type: 'attr' }],
+};
+SYNTAX.zig = {
+  keywords: words('addrspace align allowzero and anyframe anytype asm async await break callconv catch comptime const continue defer else enum errdefer error export extern fn for if inline linksection noalias noinline nosuspend opaque or orelse packed pub resume return section struct suspend switch test threadlocal try union unreachable usingnamespace var volatile while'),
+  constants: words('true false null undefined unreachable'),
+  builtins: words('std bool void noreturn type anyerror usize isize u8 u16 u32 u64 i8 i16 i32 i64 f32 f64'),
+  lineComment: ['//'],
+  strings: ['"', "'"],
+  extra: [
+    { pattern: /@(?:"(?:\\.|[^"\\])*"|[A-Za-z_]\w*)/y, type: 'builtin' },
+    { pattern: /\\\\[^\n]*/y, type: 'string' },
+  ],
+};
+SYNTAX.mojo = {
+  keywords: words('and as associatedtype async await break comptime continue def del elif else except finally for from if import in is lambda mut not or out pass raise raises read ref return self Self struct trait try type var where while with yield'),
+  constants: words('True False None'),
+  builtins: words('print len range Int Float32 Float64 String Bool List Dict Set Optional SIMD DType Copyable Movable ImplicitlyCopyable Error'),
+  lineComment: ['#'],
+  strings: ['"""', "'''", '"', "'"],
+  extra: [{ pattern: /@\w+/y, type: 'attr' }],
+};
+
+// Template files mix markup with JavaScript/TypeScript expressions. These rules
+// intentionally preserve source rather than attempting a full template parser.
+const templateSyntax: SyntaxDef = {
+  ...SYNTAX.typescript,
+  extra: [
+    { pattern: /<!--[\s\S]*?-->/y, type: 'comment' },
+    ...jsxTags,
+    { pattern: /(?:client|server|class|set|v-bind|v-on):[\w.-]+|v-[\w.-]+|[@:][\w.-]+/y, type: 'attr' },
+  ],
+};
+SYNTAX.astro = templateSyntax;
+SYNTAX.vue = templateSyntax;
+SYNTAX.nuxt = templateSyntax;
+SYNTAX.html = templateSyntax;
+SYNTAX.css = {
+  keywords: words('important inherit initial unset auto none'),
+  blockComment: ['/*', '*/'],
+  strings: ['"', "'"],
+  extra: [{ pattern: /#[\da-fA-F]{3,8}\b/y, type: 'constant' }],
+  identExtra: '-',
+};
+
 export function syntaxFor(lang: string): SyntaxDef | undefined {
   return SYNTAX[lang.toLowerCase()];
 }

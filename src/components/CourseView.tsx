@@ -13,6 +13,7 @@ import { Settings } from './Settings';
 import { Icon } from './Icon';
 import { record } from '../stats';
 import { ScoreChip } from './Rewards';
+import { ThemeButton } from './ThemeSwitch';
 
 export function CourseView({ course, nodeId }: { course: Course; nodeId: string | null }) {
   const { progress, complete, uncomplete, setTarget, setIntroSeen, reset } = useCourseProgress(course.id);
@@ -36,7 +37,7 @@ export function CourseView({ course, nodeId }: { course: Course; nodeId: string 
 
   useEffect(() => {
     document.title = node ? `${node.title} · ${course.name} map` : `${course.name} map`;
-    document.documentElement.style.setProperty('--accent', course.color);
+    document.documentElement.style.setProperty('--course-color', course.color);
   }, [course, node]);
 
   useEffect(() => {
@@ -86,6 +87,7 @@ export function CourseView({ course, nodeId }: { course: Course; nodeId: string 
           </div>
           <div className="spacer" />
           <ScoreChip />
+          <ThemeButton compact />
           <button className="icon-btn" onClick={() => setShowSearch(true)} title="Search (⌘K or /)">
             <Icon name="search" />
           </button>

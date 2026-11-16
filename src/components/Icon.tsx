@@ -7,6 +7,9 @@
  */
 
 const PATHS = {
+  sun: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+  moon: 'M20.5 13.1A8.5 8.5 0 0 1 10.9 3.5 8.5 8.5 0 1 0 20.5 13.1z',
+  monitor: 'M4 3h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM12 16v5M8 21h8',
   home: 'M3 10.5 12 3l9 7.5M5 9v11h5v-6h4v6h5V9',
   search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
   settings:
@@ -62,7 +65,7 @@ export function Icon({ name, size = 20, className }: { name: IconName; size?: nu
 /** A compact language badge (e.g. "Py" on Python blue) instead of an emoji. */
 export function LangBadge({ short, color }: { short: string; color: string }) {
   return (
-    <span className="lang-badge" style={{ background: color }} aria-hidden="true">
+    <span className="lang-badge" style={{ ['--lang-badge-color' as string]: color }} aria-hidden="true">
       {short}
     </span>
   );

@@ -152,11 +152,10 @@ export function findCourse(id: string): CourseMeta | undefined {
   return courses.find((c) => c.id === id);
 }
 
-/** Languages listed in catalog.yaml that don't have a course yet. */
-export const comingSoon: CatalogEntry[] = (() => {
+/** Every language in catalog.yaml, in file order. */
+const catalog: CatalogEntry[] = (() => {
   const src = Object.values(catalogFile)[0];
   if (!src) return [];
-  const have = new Set(courses.map((c) => c.id));
   return arr(obj(parseYaml(src)).languages)
     .map((x) => {
       const o = obj(x);
@@ -166,11 +165,25 @@ export const comingSoon: CatalogEntry[] = (() => {
         logo: str(o.logo, '📘'),
         color: str(o.color, '#888'),
         blurb: str(o.blurb),
+        category: str(o.category, 'Other'),
         pluginUrl: optStr(o.pluginUrl),
       };
     })
-    .filter((c) => c.id !== '' && !have.has(c.id));
+    .filter((c) => c.id !== '');
 })();
+
+/** Languages listed in catalog.yaml that don't have a course yet. */
+export const comingSoon: CatalogEntry[] = catalog.filter((c) => !courses.some((m) => m.id === c.id));
+
+/** The home page group a course belongs to, from catalog.yaml. */
+export function categoryOf(courseId: string): string {
+  return catalog.find((c) => c.id === courseId)?.category ?? 'Other';
+}
+
+/** Categories that have at least one playable course, in catalog order. */
+export const categories: string[] = [...new Set(catalog.map((c) => c.category))]
+  .concat('Other')
+  .filter((cat, i, all) => all.indexOf(cat) === i && courses.some((c) => categoryOf(c.id) === cat));
 
 const loaded = new Map<string, Promise<Course>>();
 

@@ -1,0 +1,30 @@
+chunk:
+  definition: A sequence of Lua statements compiled and executed as a unit.
+  node: lua
+concatenation:
+  definition: Combining strings into a new string with the .. operator.
+  node: strings
+nil:
+  definition: The value representing absence; assigning it to a table key removes that entry.
+  node: truth
+closure:
+  definition: A function together with the surrounding local bindings it captures.
+  node: closures
+table:
+  definition: Lua’s associative data structure, used for sequences, records, maps, and objects.
+  node: lists
+pattern:
+  definition: Lua’s built-in string matching language, using classes and repetition operators.
+  node: patterns
+protected call:
+  definition: A function invocation that catches Lua errors and reports success as a return value.
+  node: errors
+module:
+  definition: A reusable chunk loaded by require, commonly returning a table of public operations.
+  node: modules
+metatable:
+  definition: A table that supplies metamethods to customize operations on another value.
+  node: metatables
+coroutine:
+  definition: A cooperatively scheduled execution context that can suspend and resume.
+  node: coroutines

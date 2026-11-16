@@ -1,0 +1,18 @@
+binding:
+  definition: A name associated with a value or mutable storage.
+  node: bindings
+sequence:
+  definition: A dynamically sized collection of elements of one type, written seq[T].
+  node: sequences
+enum:
+  definition: A type defining a finite collection of named values.
+  node: enums
+option:
+  definition: A container that explicitly represents either a present value or absence.
+  node: options
+generic:
+  definition: Code parameterized by types or compile-time values so it can work with multiple concrete types.
+  node: generics
+macro:
+  definition: A compile-time transformation that inspects or constructs Nim syntax trees.
+  node: macros

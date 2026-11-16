@@ -83,5 +83,6 @@ export interface CatalogEntry {
   logo: string;
   color: string;
   blurb: string;
+  category: string;
   pluginUrl?: string;
 }

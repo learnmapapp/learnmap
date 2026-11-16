@@ -469,7 +469,7 @@ export function resetEverything() {
     const keys: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k?.startsWith('learnmap:') && k !== 'learnmap:prefs') keys.push(k);
+      if (k?.startsWith('learnmap:') && k !== 'learnmap:prefs' && k !== 'learnmap:theme') keys.push(k);
     }
     for (const k of keys) localStorage.removeItem(k);
   } catch {

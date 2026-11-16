@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parseCourseMeta, parseGlossary, parseNode } from '../src/content/loader';
+import { comingSoon, courseInfos, courses, loadCourse, parseCourseMeta, parseGlossary, parseNode } from '../src/content/loader';
 import { expandGlossary, parseLesson, parseRepl, runChecks, type ExerciseSpec } from '../src/content/markdown';
 import { ancestors, depths, labelWidth, layout, route, routeLayout, type Placed } from '../src/graph';
 import { tokenize } from '../src/syntax/highlight';
@@ -45,6 +45,7 @@ function loadFromDisk(id: string): Course {
 }
 
 const courseIds = readdirSync(CONTENT).filter((f) => existsSync(join(CONTENT, f, 'course.yaml')));
+const completedCatalogCourses = ['mojo', 'zig', 'swift', 'lua', 'nim', 'astro', 'nuxt'];
 
 describe('markdown', () => {
   it('parses repl blocks with errors', () => {
@@ -106,6 +107,73 @@ describe('highlighter', () => {
     expect(tokens.some((token) => token.type === 'builtin' && token.text === 'useState')).toBe(true);
     expect(tokens.some((token) => token.type === 'type' && token.text === '<button')).toBe(true);
     expect(tokens.some((token) => token.type === 'type' && token.text === '</button')).toBe(true);
+  });
+
+  it.each([
+    ['lua', 'local values = {1, 2} -- note', 'local'],
+    ['nim', 'proc square(n: int): int = n * n # note', 'proc'],
+    ['swift', 'guard let value = input else { return } // note', 'guard'],
+    ['zig', 'const std = @import("std"); // note', 'const'],
+    ['mojo', 'def advance(mut value: Int):\n    value += 1 # note', 'mut'],
+  ])('highlights %s declarations without changing source', (lang, code, keyword) => {
+    const tokens = tokenize(code, lang);
+    expect(tokens.map((token) => token.text).join('')).toBe(code);
+    expect(tokens.some((token) => token.type === 'keyword' && token.text === keyword)).toBe(true);
+    expect(tokens.some((token) => token.type === 'comment')).toBe(true);
+  });
+
+  it.each(['astro', 'vue', 'nuxt'])('highlights markup and directives in %s', (lang) => {
+    const code = '<!-- note -->\n<Counter client:visible v-if="ready" @click="advance" />';
+    const tokens = tokenize(code, lang);
+    expect(tokens.map((token) => token.text).join('')).toBe(code);
+    expect(tokens.some((token) => token.type === 'comment' && token.text === '<!-- note -->')).toBe(true);
+    expect(tokens.some((token) => token.type === 'type' && token.text === '<Counter')).toBe(true);
+    for (const directive of ['client:visible', 'v-if', '@click']) {
+      expect(tokens.some((token) => token.type === 'attr' && token.text.includes(directive)), directive).toBe(true);
+    }
+  });
+
+  it.each([
+    ['lua', '--[=[first\nsecond]=]', 'comment'],
+    ['lua', '[=[first\nsecond]=]', 'string'],
+    ['nim', '#[first\nsecond]#', 'comment'],
+  ])('keeps multiline %s literals and comments together', (lang, code, type) => {
+    expect(tokenize(code, lang)).toEqual([{ type, text: code }]);
+  });
+});
+
+describe.each(completedCatalogCourses)('completed catalog course %s', (id) => {
+  const course = loadFromDisk(id);
+
+  it('is discovered as playable and loads its lessons', async () => {
+    expect(courseInfos.some((info) => info.id === id)).toBe(true);
+    expect(comingSoon.some((entry) => entry.id === id)).toBe(false);
+    const meta = courses.find((entry) => entry.id === id);
+    if (!meta) throw new Error(`Missing course ${id}`);
+    expect((await loadCourse(meta)).nodes).toHaveLength(50);
+  });
+
+  it('provides fifty complete lessons with solvable exercises', () => {
+    expect(course.nodes).toHaveLength(50);
+    for (const node of course.nodes) {
+      const segments = parseLesson(node.body, course.syntax);
+      const examples = segments.filter((segment) => segment.kind === 'code');
+      const exercises = segments.filter((segment) => segment.kind === 'exercise');
+      const quizzes = segments.filter((segment) => segment.kind === 'quiz');
+      expect(examples.length, node.id).toBeGreaterThan(0);
+      expect(exercises, node.id).toHaveLength(1);
+      expect(quizzes, node.id).toHaveLength(1);
+      expect(runChecks(exercises[0].spec, examples[0].code).ok, `${id}/${node.id}: worked example passes`).toBe(true);
+      expect(Number.isInteger(quizzes[0].spec.answer), node.id).toBe(true);
+      expect(quizzes[0].spec.answer, node.id).toBeGreaterThanOrEqual(0);
+      expect(new Set(quizzes[0].spec.options).size, node.id).toBe(quizzes[0].spec.options.length);
+      for (const example of examples) {
+        expect(tokenize(example.code, example.lang).map((token) => token.text).join(''), node.id).toBe(example.code);
+      }
+    }
+    for (const entry of course.glossary.values()) {
+      if (entry.node) expect(course.nodeById.has(entry.node), entry.node).toBe(true);
+    }
   });
 });
 

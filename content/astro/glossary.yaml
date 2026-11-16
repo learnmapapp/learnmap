@@ -1,0 +1,21 @@
+frontmatter:
+  definition: The fenced server-side script at the start of an Astro component.
+  node: frontmatter
+component:
+  definition: A reusable unit of markup and rendering logic imported into another page or component.
+  node: components
+prop:
+  definition: An input passed from a parent to a component.
+  node: props
+slot:
+  definition: A placeholder where a parent can supply child content.
+  node: slots
+content collection:
+  definition: A named set of loaded content entries with an optional validated schema.
+  node: collections
+hydration:
+  definition: Attaching browser behavior to framework component HTML rendered on the server.
+  node: hydration
+server island:
+  definition: A server-rendered fragment deferred independently from the surrounding page.
+  node: server-islands

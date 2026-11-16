@@ -9,6 +9,7 @@ import { CodeBlock } from './Code';
 import { Compare, Exercise, Quiz, Repl } from './Blocks';
 import { Icon } from './Icon';
 import { record, touchLesson } from '../stats';
+import { ThemeButton } from './ThemeSwitch';
 
 interface Props {
   course: Course;
@@ -130,6 +131,7 @@ export function LessonPanel({ course, node, done, routeIds, compare, onComplete,
           {branch && <span className="panel-branch">{branch.title}</span>}
         </div>
         <div className="panel-actions">
+          <ThemeButton compact />
           <button className="icon-btn" title="Copy link" onClick={copyLink}>
             <Icon name={copied ? 'check' : 'link'} />
           </button>

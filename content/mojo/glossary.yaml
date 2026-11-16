@@ -1,0 +1,21 @@
+mutable argument:
+  definition: A mut parameter through which a function can change the caller’s value.
+  node: mutable-args
+ownership:
+  definition: The responsibility for a value’s lifetime and eventual destruction.
+  node: transfers
+struct:
+  definition: A user-defined type grouping fields, methods, and compile-time members.
+  node: structs
+trait:
+  definition: An explicitly adopted contract of methods and compile-time requirements.
+  node: traits
+comptime:
+  definition: Information evaluated and available during compilation.
+  node: comptime
+SIMD:
+  definition: "Single instruction, multiple data: operating on several numeric lanes together."
+  node: simd
+list:
+  definition: A dynamically sized homogeneous collection parameterized by its element type.
+  node: lists

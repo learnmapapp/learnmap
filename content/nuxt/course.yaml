@@ -1,0 +1,63 @@
+name: Nuxt
+logo: 💚
+color: "#00dc82"
+extension: vue
+tagline: Vue applications from pages to server routes.
+comparisons:
+  - javascript
+  - typescript
+  - python
+syntax: nuxt
+guide:
+  name: Fern
+  avatar: 💚
+  intro:
+    - Welcome! I'm Fern. Let's build something with Nuxt.
+    - These fifty lessons use Nuxt 4 with Vue 3. Start with the foundations or pick a goal to follow
+      a shorter route.
+    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
+      here; use the local tools to run the examples.
+  askGoal: What would you like to build first?
+branches:
+  - id: core
+    title: Nuxt
+    color: "#00dc82"
+  - id: basics
+    title: Vue foundations
+    color: "#e0b84f"
+  - id: components
+    title: Reusable UI
+    color: "#6fc2a8"
+  - id: routing
+    title: Pages & navigation
+    color: "#7ebae4"
+  - id: data
+    title: Data & state
+    color: "#d784b8"
+  - id: server
+    title: Server features
+    color: "#9b8cf0"
+  - id: production
+    title: Production tools
+    color: "#a7c957"
+goals:
+  - id: composables
+    node: composables
+    title: Build reusable Vue UI
+    description: Learn components, events, and composables.
+    icon: 🏷️
+  - id: layouts
+    node: layouts
+    title: Create a routed application
+    description: Connect pages, parameters, and layouts.
+    icon: 🔢
+  - id: validation
+    node: validation
+    title: Build a server API
+    description: Handle methods, input, and configuration.
+    icon: 💬
+  - id: capstone
+    node: capstone
+    title: Build a task dashboard
+    description: Combine SSR-aware data, forms, and tests.
+    icon: 🚦

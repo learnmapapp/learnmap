@@ -1,0 +1,20 @@
+optional:
+  definition: A value that explicitly represents either a wrapped value or nil, written T?.
+  node: optionals
+enum:
+  definition: A type whose values are selected from a declared set of cases.
+  node: enums
+value semantics:
+  definition: A model where assigning or passing a value behaves as an independent value rather than
+    shared mutable identity.
+  node: structs
+protocol:
+  definition: A contract of requirements that a type can adopt and implement.
+  node: protocols
+suspension point:
+  definition: A location where an asynchronous task may pause and allow other work to proceed.
+  node: async
+actor:
+  definition: A reference type that isolates its mutable state and coordinates access through Swift
+    concurrency.
+  node: actors

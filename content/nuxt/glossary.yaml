@@ -1,0 +1,27 @@
+single-file component:
+  definition: A .vue file containing template, script, and optional style sections.
+  node: templates
+ref:
+  definition: A reactive value container accessed through .value in script.
+  node: refs
+prop:
+  definition: A read-only input supplied by a component’s parent.
+  node: props
+slot:
+  definition: A child component placeholder filled with markup supplied by its parent.
+  node: slots
+composable:
+  definition: A function encapsulating reusable reactive behavior, conventionally named useSomething.
+  node: composables
+payload:
+  definition: Data serialized by Nuxt from server rendering for the browser to reuse during hydration.
+  node: use-fetch
+useState:
+  definition: Nuxt’s keyed, serializable, SSR-aware shared state composable.
+  node: state
+hydration:
+  definition: Connecting Vue’s browser runtime to matching server-rendered markup.
+  node: hydration
+Nitro:
+  definition: The server engine used by Nuxt to build and run server routes.
+  node: server-routes

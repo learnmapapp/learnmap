@@ -1,0 +1,66 @@
+name: Swift
+logo: 🐦
+color: "#f05138"
+extension: swift
+tagline: Clear, safe code from scripts to apps.
+comparisons:
+  - python
+  - javascript
+  - rust
+syntax: swift
+guide:
+  name: Wren
+  avatar: 🐦
+  intro:
+    - Welcome! I'm Wren. Let's build something with Swift.
+    - These fifty lessons use Swift 6. Start with the foundations or pick a goal to follow a shorter
+      route.
+    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
+      here; use the local tools to run the examples.
+  askGoal: What would you like to build first?
+branches:
+  - id: core
+    title: Swift
+    color: "#f05138"
+  - id: basics
+    title: Foundations
+    color: "#e0b84f"
+  - id: flow
+    title: Control flow
+    color: "#6fc2a8"
+  - id: functions
+    title: Functions
+    color: "#7ebae4"
+  - id: data
+    title: Collections & optionals
+    color: "#d784b8"
+  - id: types
+    title: Types & protocols
+    color: "#9b8cf0"
+  - id: tools
+    title: Practical Swift
+    color: "#a7c957"
+  - id: concurrency
+    title: Concurrency
+    color: "#c9a27e"
+goals:
+  - id: guard
+    node: guard
+    title: Handle missing values
+    description: Use optionals and early exits safely.
+    icon: 🏷️
+  - id: protocols
+    node: protocols
+    title: Design reusable types
+    description: Combine structs, protocols, and generics.
+    icon: 🔢
+  - id: actors
+    node: actors
+    title: Use structured concurrency
+    description: Understand async work and isolated state.
+    icon: 💬
+  - id: capstone
+    node: capstone
+    title: Build a task model
+    description: Connect typed data, JSON, and tests.
+    icon: 🚦

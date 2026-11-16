@@ -1,0 +1,63 @@
+name: Nim
+logo: 👑
+color: "#ffe953"
+extension: nim
+tagline: Expressive syntax, native programs.
+comparisons:
+  - python
+  - javascript
+  - rust
+syntax: nim
+guide:
+  name: Nia
+  avatar: 👑
+  intro:
+    - Welcome! I'm Nia. Let's build something with Nim.
+    - These fifty lessons use Nim 2.2+. Start with the foundations or pick a goal to follow a
+      shorter route.
+    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
+      here; use the local tools to run the examples.
+  askGoal: What would you like to build first?
+branches:
+  - id: core
+    title: Nim
+    color: "#ffe953"
+  - id: basics
+    title: Foundations
+    color: "#e0b84f"
+  - id: flow
+    title: Control flow
+    color: "#6fc2a8"
+  - id: functions
+    title: Procedures
+    color: "#7ebae4"
+  - id: data
+    title: Data modeling
+    color: "#d784b8"
+  - id: design
+    title: Abstraction
+    color: "#9b8cf0"
+  - id: tools
+    title: Practical programs
+    color: "#a7c957"
+goals:
+  - id: procedures
+    node: procedures
+    title: Write clear procedures
+    description: Build typed functions and reusable interfaces.
+    icon: 🏷️
+  - id: variants
+    node: variants
+    title: Model domain data
+    description: Use objects, enums, options, and variants.
+    icon: 🔢
+  - id: generics
+    node: generics
+    title: Build reusable abstractions
+    description: Explore generic procedures and iterators.
+    icon: 💬
+  - id: capstone
+    node: capstone
+    title: Build a command-line tool
+    description: Combine arguments, JSON, validation, and tests.
+    icon: 🚦

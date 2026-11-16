@@ -1,0 +1,66 @@
+name: Mojo
+logo: 🔥
+color: "#ff6a3d"
+extension: mojo
+tagline: Python-inspired syntax with explicit systems concepts.
+comparisons:
+  - python
+  - javascript
+  - rust
+syntax: mojo
+guide:
+  name: Ember
+  avatar: 🔥
+  intro:
+    - Welcome! I'm Ember. Let's build something with Mojo.
+    - These fifty lessons use Mojo 1.2.0. Start with the foundations or pick a goal to follow a
+      shorter route.
+    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
+      here; use the local tools to run the examples.
+  askGoal: What would you like to build first?
+branches:
+  - id: core
+    title: Mojo
+    color: "#ff6a3d"
+  - id: basics
+    title: Foundations
+    color: "#e0b84f"
+  - id: flow
+    title: Control flow
+    color: "#6fc2a8"
+  - id: functions
+    title: Functions & ownership
+    color: "#7ebae4"
+  - id: types
+    title: Structs & traits
+    color: "#d784b8"
+  - id: data
+    title: Collections
+    color: "#9b8cf0"
+  - id: comptime
+    title: Specialization & SIMD
+    color: "#a7c957"
+  - id: tools
+    title: Practical Mojo
+    color: "#c9a27e"
+goals:
+  - id: mutable-args
+    node: mutable-args
+    title: Write typed functions
+    description: Understand inputs, results, and mutation.
+    icon: 🏷️
+  - id: traits
+    node: traits
+    title: Model reusable types
+    description: Combine structs, methods, and traits.
+    icon: 🔢
+  - id: simd-reduce
+    node: simd-reduce
+    title: Explore SIMD computation
+    description: Use compile-time parameters and lane-wise operations.
+    icon: 💬
+  - id: capstone
+    node: capstone
+    title: Build a numeric pipeline
+    description: Combine validation, collection processing, and tests.
+    icon: 🚦

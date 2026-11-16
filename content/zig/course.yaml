@@ -1,0 +1,66 @@
+name: Zig
+logo: ⚡
+color: "#f7a41d"
+extension: zig
+tagline: Explicit control over data and memory.
+comparisons:
+  - python
+  - javascript
+  - rust
+syntax: zig
+guide:
+  name: Zara
+  avatar: ⚡
+  intro:
+    - Welcome! I'm Zara. Let's build something with Zig.
+    - These fifty lessons use Zig 0.15.2. Start with the foundations or pick a goal to follow a
+      shorter route.
+    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
+      here; use the local tools to run the examples.
+  askGoal: What would you like to build first?
+branches:
+  - id: core
+    title: Zig
+    color: "#f7a41d"
+  - id: basics
+    title: Foundations
+    color: "#e0b84f"
+  - id: flow
+    title: Control flow
+    color: "#6fc2a8"
+  - id: data
+    title: Data & pointers
+    color: "#7ebae4"
+  - id: errors
+    title: Errors & cleanup
+    color: "#d784b8"
+  - id: memory
+    title: Memory management
+    color: "#9b8cf0"
+  - id: comptime
+    title: Compile-time programming
+    color: "#a7c957"
+  - id: tools
+    title: Build & test
+    color: "#c9a27e"
+goals:
+  - id: switch
+    node: switch
+    title: Write explicit control flow
+    description: Combine loops, optionals, and tagged states.
+    icon: 🏷️
+  - id: errdefer
+    node: errdefer
+    title: Handle fallible operations
+    description: Use error unions and scoped cleanup.
+    icon: 🔢
+  - id: arraylist
+    node: arraylist
+    title: Manage dynamic data
+    description: Choose allocators and release owned memory.
+    icon: 💬
+  - id: capstone
+    node: capstone
+    title: Build a task store
+    description: Combine allocation, domain types, and tests.
+    icon: 🚦

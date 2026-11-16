@@ -1,0 +1,66 @@
+name: Lua
+logo: 🌙
+color: "#4a6fd1"
+extension: lua
+tagline: Small language, powerful building blocks.
+comparisons:
+  - python
+  - javascript
+  - rust
+syntax: lua
+guide:
+  name: Luna
+  avatar: 🌙
+  intro:
+    - Welcome! I'm Luna. Let's build something with Lua.
+    - These fifty lessons use Lua 5.4. Start with the foundations or pick a goal to follow a shorter
+      route.
+    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
+      here; use the local tools to run the examples.
+  askGoal: What would you like to build first?
+branches:
+  - id: core
+    title: Lua
+    color: "#4a6fd1"
+  - id: basics
+    title: Foundations
+    color: "#e0b84f"
+  - id: flow
+    title: Control flow
+    color: "#6fc2a8"
+  - id: functions
+    title: Functions
+    color: "#7ebae4"
+  - id: tables
+    title: Tables
+    color: "#d784b8"
+  - id: text
+    title: Text
+    color: "#9b8cf0"
+  - id: design
+    title: Modules & metatables
+    color: "#a7c957"
+  - id: runtime
+    title: Runtime tools
+    color: "#c9a27e"
+goals:
+  - id: closures
+    node: closures
+    title: Write reusable functions
+    description: Understand scope, returns, and captured state.
+    icon: 🏷️
+  - id: records
+    node: records
+    title: Model application data
+    description: Build lists and records with tables.
+    icon: 🔢
+  - id: objects
+    node: objects
+    title: Design reusable objects
+    description: Combine modules, methods, and metatables.
+    icon: 💬
+  - id: capstone
+    node: capstone
+    title: Build a task tracker
+    description: Integrate validation, persistence, and tests.
+    icon: 🚦

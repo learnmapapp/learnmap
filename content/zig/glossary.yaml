@@ -1,0 +1,18 @@
+slice:
+  definition: A pointer-and-length view into contiguous storage, written []T.
+  node: slices
+optional:
+  definition: A type that explicitly holds a value or null, written ?T.
+  node: optionals
+pointer:
+  definition: A typed address referring to storage whose lifetime must remain valid.
+  node: pointers
+error set:
+  definition: A type containing a declared set of named errors.
+  node: error-sets
+allocator:
+  definition: An interface that supplies and releases memory using an explicit allocation policy.
+  node: allocators
+comptime:
+  definition: Evaluation or information required at compilation rather than at program runtime.
+  node: comptime

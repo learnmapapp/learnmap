@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { comingSoon, courseInfos, courses } from '../content/loader';
+import { categories, categoryOf, comingSoon, courseInfos, courses } from '../content/loader';
+import type { CourseMeta } from '../types';
 import { href } from '../router';
 import { AD_MODE, SITE } from '../site';
 import {
@@ -19,6 +20,7 @@ import {
   type Stats,
 } from '../stats';
 import { Icon, type IconName } from './Icon';
+import { ThemeButton } from './ThemeSwitch';
 
 export type DashPage = 'learn' | 'badges' | 'about';
 
@@ -37,7 +39,7 @@ export function Landing({ page }: { page: DashPage }) {
 
   useEffect(() => {
     document.title = page === 'learn' ? SITE.name : `${page === 'badges' ? 'Badges' : 'About'} · ${SITE.name}`;
-    document.documentElement.style.removeProperty('--accent');
+    document.documentElement.style.removeProperty('--course-color');
   }, [page]);
 
   return (
@@ -55,6 +57,7 @@ export function Landing({ page }: { page: DashPage }) {
             <span>{n.label}</span>
           </a>
         ))}
+        <ThemeButton />
       </nav>
 
       <div className="dash-stats">
@@ -251,17 +254,139 @@ function share(b: Badge, ctx: BadgeContext): number {
 
 /* ---------- learn ---------- */
 
+const lessonsIn = (id: string) => courseInfos.find((i) => i.id === id)?.total ?? 0;
+
+/** Big card for a map you've started. */
+function MapCard({ course, done }: { course: CourseMeta; done: number }) {
+  const total = lessonsIn(course.id);
+  const n = Math.min(done, total);
+  const mastered = total > 0 && n === total;
+  return (
+    <a className="map-card" href={href(course.id)} style={{ ['--card' as string]: course.color }}>
+      <span className="map-logo" aria-hidden>
+        {course.logo}
+      </span>
+      <span className="map-body">
+        <span className="map-title">
+          <strong>{course.name}</strong>
+          {mastered && <span className="map-done">Mastered</span>}
+        </span>
+        <span className="muted map-tagline">{course.tagline}</span>
+        <span className="map-progress">
+          <Bar value={n} max={total} color={course.color} />
+          <small>
+            {n}/{total} lessons
+          </small>
+        </span>
+      </span>
+      <span className="map-go">
+        {mastered ? 'Review' : 'Continue'} <Icon name="arrowRight" size={16} />
+      </span>
+    </a>
+  );
+}
+
+/** Compact tile for a map you haven't started yet. */
+function MapTile({ course }: { course: CourseMeta }) {
+  return (
+    <a className="map-tile" href={href(course.id)} style={{ ['--card' as string]: course.color }}>
+      <span className="map-tile-head">
+        <span className="map-tile-logo" aria-hidden>
+          {course.logo}
+        </span>
+        <span className="map-tile-name">
+          <strong>{course.name}</strong>
+          <small>{lessonsIn(course.id)} lessons</small>
+        </span>
+      </span>
+      <span className="muted map-tile-tagline">{course.tagline}</span>
+    </a>
+  );
+}
+
+/** The map browser: search and category chips over a grid of tiles. */
+function ExploreMaps({ list, started }: { list: CourseMeta[]; started: number }) {
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<string | null>(null);
+  const q = query.trim().toLowerCase();
+  const matches = list.filter(
+    (c) =>
+      (category === null || categoryOf(c.id) === category) &&
+      (q === '' || `${c.name} ${c.tagline} ${categoryOf(c.id)}`.toLowerCase().includes(q)),
+  );
+  const count = (cat: string | null) => list.filter((c) => cat === null || categoryOf(c.id) === cat).length;
+
+  return (
+    <section>
+      <div className="explore-head">
+        <h2 className="dash-h2">{started > 0 ? 'Explore more maps' : 'Pick a map'}</h2>
+        <label className="explore-search">
+          <Icon name="search" size={16} />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={`Search ${list.length} maps`}
+            aria-label="Search maps"
+          />
+        </label>
+      </div>
+      <div className="explore-chips" role="group" aria-label="Filter by category">
+        {[null, ...categories].map((cat) =>
+          count(cat) === 0 ? null : (
+            <button
+              key={cat ?? 'all'}
+              className={category === cat ? 'explore-chip active' : 'explore-chip'}
+              aria-pressed={category === cat}
+              onClick={() => setCategory(cat)}
+            >
+              {cat ?? 'All'} <small>{count(cat)}</small>
+            </button>
+          ),
+        )}
+      </div>
+      {matches.length > 0 ? (
+        <div className="map-grid">
+          {matches.map((c) => (
+            <MapTile key={c.id} course={c} />
+          ))}
+        </div>
+      ) : (
+        <p className="muted explore-empty">
+          No maps match “{query.trim()}”.{' '}
+          <button
+            className="link-btn"
+            onClick={() => {
+              setQuery('');
+              setCategory(null);
+            }}
+          >
+            Show all
+          </button>
+        </p>
+      )}
+    </section>
+  );
+}
+
 function LearnPage({ stats, progress }: { stats: Stats; progress: Record<string, string[]> }) {
   const last = stats.last;
   const lastCourse = last ? courses.find((c) => c.id === last.course) : undefined;
   const lastDone = last ? (progress[last.course] ?? []).includes(last.node) : false;
-  const sorted = [...courses].sort((a, b) => {
-    const pa = progress[a.id]?.length ?? 0;
-    const pb = progress[b.id]?.length ?? 0;
-    if (a.id === last?.course) return -1;
-    if (b.id === last?.course) return 1;
-    return pb - pa || a.name.localeCompare(b.name);
-  });
+  const doneIn = (id: string) => progress[id]?.length ?? 0;
+  // Maps you've touched, the most recent first, then by how far along you are.
+  const started = courses
+    .filter((c) => doneIn(c.id) > 0 || c.id === last?.course)
+    .sort((a, b) => {
+      if (a.id === last?.course) return -1;
+      if (b.id === last?.course) return 1;
+      return doneIn(b.id) / (lessonsIn(b.id) || 1) - doneIn(a.id) / (lessonsIn(a.id) || 1) || a.name.localeCompare(b.name);
+    });
+  const rest = courses.filter((c) => !started.includes(c));
+  // The map you were last in is the big "continue" card, so it isn't listed again below.
+  const others = lastCourse ? started.filter((c) => c !== lastCourse) : started;
+  const lastTotal = lastCourse ? lessonsIn(lastCourse.id) : 0;
+  const lastCount = lastCourse ? Math.min(doneIn(lastCourse.id), lastTotal) : 0;
 
   return (
     <>
@@ -277,6 +402,12 @@ function LearnPage({ stats, progress }: { stats: Stats; progress: Record<string,
           <span className="hero-text">
             <small>{lastDone ? `Back to the ${lastCourse.name} map` : `Continue ${lastCourse.name}`}</small>
             <strong>{lastDone ? 'Pick your next lesson' : last.title}</strong>
+            <span className="hero-progress">
+              <Bar value={lastCount} max={lastTotal} color={lastCourse.color} />
+              <small>
+                {lastCount}/{lastTotal} lessons
+              </small>
+            </span>
           </span>
           <span className="hero-go">
             {lastDone ? 'Open map' : 'Continue'} <Icon name="arrowRight" size={18} />
@@ -289,39 +420,18 @@ function LearnPage({ stats, progress }: { stats: Stats; progress: Record<string,
         </header>
       )}
 
-      <section>
-        <h2 className="dash-h2">Your maps</h2>
-        <div className="map-list">
-          {sorted.map((c) => {
-            const total = courseInfos.find((i) => i.id === c.id)?.total ?? 0;
-            const n = Math.min(progress[c.id]?.length ?? 0, total);
-            const pct = total ? Math.round((n / total) * 100) : 0;
-            return (
-              <a key={c.id} className="map-card" href={href(c.id)} style={{ ['--card' as string]: c.color }}>
-                <span className="map-logo" aria-hidden>
-                  {c.logo}
-                </span>
-                <span className="map-body">
-                  <span className="map-title">
-                    <strong>{c.name}</strong>
-                    {pct === 100 && <span className="map-done">Mastered</span>}
-                  </span>
-                  <span className="muted map-tagline">{c.tagline}</span>
-                  <span className="map-progress">
-                    <Bar value={n} max={total} color={c.color} />
-                    <small>
-                      {n}/{total} lessons
-                    </small>
-                  </span>
-                </span>
-                <span className="map-go">
-                  {n === 0 ? 'Start' : pct === 100 ? 'Review' : 'Continue'} <Icon name="arrowRight" size={16} />
-                </span>
-              </a>
-            );
-          })}
-        </div>
-      </section>
+      {others.length > 0 && (
+        <section>
+          <h2 className="dash-h2">{lastCourse ? 'Your other maps' : 'Your maps'}</h2>
+          <div className="map-list">
+            {others.map((c) => (
+              <MapCard key={c.id} course={c} done={doneIn(c.id)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {rest.length > 0 && <ExploreMaps list={rest} started={started.length} />}
 
       {comingSoon.length > 0 && (
         <section>

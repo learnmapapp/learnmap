@@ -1,0 +1,66 @@
+name: Astro
+logo: 🚀
+color: "#ff5d01"
+extension: astro
+tagline: Content-first sites with focused interactivity.
+comparisons:
+  - javascript
+  - typescript
+  - python
+syntax: astro
+guide:
+  name: Nova
+  avatar: 🚀
+  intro:
+    - Welcome! I'm Nova. Let's build something with Astro.
+    - These fifty lessons use Astro 7. Start with the foundations or pick a goal to follow a shorter
+      route.
+    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
+      here; use the local tools to run the examples.
+  askGoal: What would you like to build first?
+branches:
+  - id: core
+    title: Astro
+    color: "#ff5d01"
+  - id: basics
+    title: Pages & components
+    color: "#e0b84f"
+  - id: styles
+    title: Styles & assets
+    color: "#6fc2a8"
+  - id: content
+    title: Content collections
+    color: "#7ebae4"
+  - id: routing
+    title: Routing & discovery
+    color: "#d784b8"
+  - id: islands
+    title: Client & server islands
+    color: "#9b8cf0"
+  - id: server
+    title: Server features
+    color: "#a7c957"
+  - id: tools
+    title: Ship & test
+    color: "#c9a27e"
+goals:
+  - id: layouts
+    node: layouts
+    title: Build a content site
+    description: Compose typed components and shared layouts.
+    icon: 🏷️
+  - id: content-pages
+    node: content-pages
+    title: Publish a collection
+    description: Validate Markdown and generate article routes.
+    icon: 🔢
+  - id: visible
+    node: visible
+    title: Add an interactive island
+    description: Hydrate a focused React component on demand.
+    icon: 💬
+  - id: capstone
+    node: capstone
+    title: Ship a publication
+    description: Combine content, metadata, navigation, and validation.
+    icon: 🚦

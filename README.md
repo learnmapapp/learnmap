@@ -17,7 +17,7 @@ npm run build      # static site in dist/ (relative paths, works from file:// to
 
 ```
 content/
-  catalog.yaml            # every language on the landing page, incl. "coming soon"
+  catalog.yaml            # every language on the home page, its category, and "coming soon" ones
   nix/
     course.yaml           # name, colours, guide, branches, goals
     glossary.yaml         # terms used as [[term]] in lessons
@@ -32,6 +32,10 @@ src/
 ```
 
 Courses are discovered automatically: any `content/<id>/course.yaml` becomes a playable map. Lessons are loaded lazily, per course.
+
+All 13 catalog courses are playable: Nix (52 lessons), Rust (52), Elixir (53), and Python, TypeScript, React, Mojo, Zig, Swift, Lua, Nim, Astro, and Nuxt (50 each). Every new map includes prerequisite routes, suggested goals, exercises, quizzes, glossary links, and language comparisons.
+
+The systems and framework examples target Mojo 1.2.0, Zig 0.15.2, Swift 6, Lua 5.4, Nim 2.2+, Astro 7, and Nuxt 4 with Vue 3. Run examples in a separate practice project using the version and file paths stated in each course. In-page exercises check source text; they do not run a compiler or framework server.
 
 The map is laid out as a tree: the first branch in `course.yaml` runs down the middle and the other branches alternate to its right and left, so put the main path first.
 
@@ -96,6 +100,7 @@ Level *n* needs `25 · n · (n − 1)` XP in total. A streak counts the days in 
 4. **Add syntax highlighting** in `src/syntax/languages.ts` (keywords, constants, builtins, comment and string styles). Without it, code still renders, just in one colour.
 
 5. **Remove it from "coming soon"**: once the folder exists, the catalog entry automatically turns into a playable card.
+   Give the entry a `category` (Web, Systems, Scripting, …): on the home page, maps you've started are shown as large cards, and the rest go in an "Explore" grid you can filter by category or search.
 
 6. Run `npm test`. It checks every course for broken prerequisites, unknown branches, cycles, goals that point nowhere, glossary terms that don't exist, broken `node:` links, and exercises that are already solved by their starting code.
 
@@ -198,6 +203,10 @@ browser.loadURL("http://localhost:$port/index.html?embed=1&compare=kotlin#/nix")
 ## Renaming the site
 
 Branding lives in `src/site.ts` (name, tagline, footer link) and `index.html` (page title).
+
+## Appearance
+
+Use the sun/moon button on the dashboard, map, or lesson header to switch between light and dark mode. Course **Settings → Appearance** also offers **System**, which follows your device and is the default. The preference is saved in `localStorage` under `learnmap:theme`, applies to embedded views too, and survives resetting lesson progress. Light mode includes its own map surfaces and code-highlighting colors.
 
 ## Ad mode
 

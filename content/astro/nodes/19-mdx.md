@@ -1,0 +1,48 @@
+---
+title: MDX components
+icon: 📋
+branch: content
+requires:
+  - markdown
+summary: Install @astrojs/mdx before enabling it.
+---
+
+In your Astro project, save this as `astro.config.mjs`. Install @astrojs/mdx before enabling it. Configuration files are plain JavaScript; MDX allows component imports inside .mdx content.
+
+```javascript
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+export default defineConfig({ integrations: [mdx()] });
+```
+
+## Put it to work
+
+Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+
+```exercise
+goal: Repair the starting example using what you learned about mdx components.
+lang: javascript
+code: |-
+  import { defineConfig } from "astro/config";
+  import mdx from "@astrojs/mdx";
+  export default defineConfig({ integrations: [] });
+checks:
+  - match: integrations:\s+\[mdx\(\)\]
+    message: "Use integrations: [mdx()] for this step."
+  - notMatch: integrations:\s+\[\]
+    message: "Replace integrations: [] in the starting code."
+hint: Compare the worked example with the starting code below. Identify the changed operation,
+  predict its effect, and repair it. Then try a second input locally to check your understanding.
+```
+
+```quiz
+question: Which statement about mdx components is correct?
+options:
+  - astro.config.mjs uses Markdown frontmatter.
+  - Install @astrojs/mdx before enabling it. Configuration files are plain JavaScript; MDX allows
+    component imports inside .mdx content.
+  - MDX integration is installed automatically by every Astro template.
+answer: 1
+explain: Install @astrojs/mdx before enabling it. Configuration files are plain JavaScript; MDX
+  allows component imports inside .mdx content.
+```

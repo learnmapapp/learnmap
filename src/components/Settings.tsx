@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Course } from '../types';
 import { COMPARE_LANGS, NO_COMPARE } from '../compareLangs';
 import { Icon, LangBadge } from './Icon';
+import { ThemeChoices } from './ThemeSwitch';
 
 interface Props {
   course: Course;
@@ -30,6 +31,11 @@ export function Settings({ course, compare, onCompare, onReplayIntro, onReset, o
             <Icon name="close" />
           </button>
         </header>
+        <section>
+          <h3>Appearance</h3>
+          <p className="muted">Choose a theme, or follow your device.</p>
+          <ThemeChoices />
+        </section>
         <section>
           <h3>Compare with</h3>
           <p className="muted">Lessons show a side-by-side snippet in this language.</p>
