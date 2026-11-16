@@ -1,65 +1,88 @@
 ---
 title: Growable sequences
-icon: 🚦
+icon: "📚"
 branch: data
-requires:
-  - arrays
-summary: A seq is a growable ordered collection; @[...] constructs one.
+requires: [arrays]
+summary: seq[T] is Nim's growable list; @ turns an array literal into one.
 ---
+**The arrays lesson ended with "use a sequence when the count depends on the data". So what's different?** Here's a playlist, side by side:
 
-A seq is a growable ordered collection; @[...] constructs one. Its length is available through len.
+| | `array[3, string]` | `seq[string]` |
+| --- | --- | --- |
+| Literal | `["a", "b", "c"]` | `@["a", "b", "c"]` |
+| Empty | not possible, always 3 slots | `@[]` or `newSeq[string]()` |
+| Add an item | no | `songs.add("d")` |
+| Remove an item | no | `songs.delete(0)`, `songs.pop()` |
+| Size known | when compiling | at runtime |
 
-A useful term here is [[sequence]]: A dynamically sized collection of elements of one type, written seq[T].
+The `@` is the "make it a sequence" operator. Without it, `["a", "b"]` is an array.
 
-```nim
-var scores = @[2, 4]
-scores.add(6)
-echo scores.len
+```nim title=playlist.nim
+var songs = @["Intro", "Waves"]
+songs.add("Finale")
+songs.insert("Storm", 1)     # insert at index 1
+echo songs                   # @["Intro", "Storm", "Waves", "Finale"]
+echo songs.len               # 4
+echo songs[^1]               # Finale: ^1 means "first from the end"
+
+let last = songs.pop()       # removes and returns the last item
+songs.delete(0)              # removes the item at index 0
+echo songs                   # @["Storm", "Waves"]
+echo "Waves" in songs        # true
 ```
 
-## Put it to work
+A [[sequence]] holds items of one type. `@[1, "two"]` doesn't compile.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Starting empty.** An empty literal doesn't say what type it holds, so declare the type:
+
+```nim
+var names: seq[string]       # empty, ready to add to
+var scores = newSeq[int](5)  # five zeros: @[0, 0, 0, 0, 0]
+```
+
+**Sequences are values, too.** `let copy = songs` copies the items, so later changes to `songs` don't affect `copy`. (Nim avoids the actual copy when it can prove nobody will notice.)
+
+**Changing requires `var`.** `add`, `delete` and assignment by index only work on a `var` sequence. A `let` sequence is completely frozen, items included.
 
 ```compare python
-values = [2, 4, 6]
-print(values[0], len(values))
+songs = ["Intro", "Waves"]
+songs.append("Finale")
+songs[-1]
 ```
 
 ```compare javascript
-const values = [2, 4, 6];
-console.log(values[0], values.length);
+const songs = ["Intro", "Waves"];
+songs.push("Finale");
+songs.at(-1);
 ```
 
 ```compare rust
-fn main() {
-    let values = vec![2, 4, 6];
-    println!("{} {}", values[0], values.len());
-}
+let mut songs = vec!["Intro", "Waves"];
+songs.push("Finale");
+songs.last();
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about growable sequences.
-lang: nim
+goal: "`add` doesn't work on an array. Make `queue` a sequence by adding `@` in front of the literal."
 code: |-
-  var scores = @[2, 4]
-  scores.add(0)
-  echo scores.len
+  var queue = ["Ada", "Bo"]
+  queue.add("Cy")
+  echo queue
 checks:
-  - match: scores\.add\(6\)
-    message: Use scores.add(6) for this step.
-  - notMatch: scores\.add\(0\)
-    message: Replace scores.add(0) in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'var\s+queue\s*=\s*@\['
+    message: Write @["Ada", "Bo"]
+solution: |-
+  var queue = @["Ada", "Bo"]
+  queue.add("Cy")
+  echo queue
 ```
 
 ```quiz
-question: Which expression creates a growable sequence?
+question: "What does `@[1, 2, 3][^1]` evaluate to?"
 options:
-  - "`[2, 4, 6]`"
-  - "`{2, 4, 6}`"
-  - "`@[2, 4, 6]`"
-answer: 2
-explain: "`@[]` constructs a sequence; ordinary brackets construct an array."
+  - "1"
+  - "3"
+  - "A compile error: negative indexes aren't allowed."
+answer: 1
+explain: ^1 counts from the end, so it's the last item.
 ```

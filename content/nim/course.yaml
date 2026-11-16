@@ -2,7 +2,7 @@ name: Nim
 logo: 👑
 color: "#ffe953"
 extension: nim
-tagline: Expressive syntax, native programs.
+tagline: Python-like syntax, compiled to small, fast programs.
 comparisons:
   - python
   - javascript
@@ -12,11 +12,11 @@ guide:
   name: Nia
   avatar: 👑
   intro:
-    - Welcome! I'm Nia. Let's build something with Nim.
-    - These fifty lessons use Nim 2.2+. Start with the foundations or pick a goal to follow a
-      shorter route.
-    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
-      here; use the local tools to run the examples.
+    - Hi, I'm Nia! Nim reads a lot like Python, but it compiles to small, fast native programs,
+      and its type checker catches mistakes before anything runs.
+    - Every lesson has a short example, an exercise you solve right here in the browser, and a
+      quick question. The course uses Nim 2.2; if you install Nim, you can run every example on
+      your own machine too.
   askGoal: What would you like to build first?
 branches:
   - id: core
@@ -44,20 +44,20 @@ goals:
   - id: procedures
     node: procedures
     title: Write clear procedures
-    description: Build typed functions and reusable interfaces.
-    icon: 🏷️
+    description: Define typed procedures and call them the Nim way.
+    icon: ⚙️
   - id: variants
     node: variants
     title: Model domain data
-    description: Use objects, enums, options, and variants.
-    icon: 🔢
+    description: Describe your data with objects, enums, options and variant objects.
+    icon: 🔀
   - id: generics
     node: generics
     title: Build reusable abstractions
-    description: Explore generic procedures and iterators.
-    icon: 💬
+    description: Write procedures that work for many types.
+    icon: 🧩
   - id: capstone
     node: capstone
     title: Build a command-line tool
-    description: Combine arguments, JSON, validation, and tests.
-    icon: 🚦
+    description: Combine command-line arguments, JSON, validation and tests.
+    icon: 📝

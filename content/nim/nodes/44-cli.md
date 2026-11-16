@@ -1,53 +1,116 @@
 ---
 title: Command-line arguments
-icon: 🔧
+icon: "⌨️"
 branch: tools
-requires:
-  - paths
-  - sequences
-summary: commandLineParams returns user arguments without the executable name.
+requires: [paths, sequences]
+summary: Read arguments with commandLineParams, parse options with std/parseopt, and exit with a status code.
 ---
+**Let's build `greet`, a tiny command-line tool, in three versions.**
 
-commandLineParams returns user arguments without the executable name. Check length before indexing and document required arguments.
+**Version 1: positional arguments.** `commandLineParams()` from `std/os` returns everything after the program name, as a `seq[string]`:
 
-```nim
+```nim title=greet.nim
 import std/os
+
 let args = commandLineParams()
 if args.len == 0:
-  echo "Usage: tasks <title>"
-else:
-  echo "Task: ", args[0]
+  quit("usage: greet NAME...", 1)
+for name in args:
+  echo "Hello, ", name, "!"
 ```
 
-## Put it to work
+```repl shell
+> nim c greet.nim
+> ./greet Ada Linus
+Hello, Ada!
+Hello, Linus!
+> ./greet
+usage: greet NAME...
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+`quit(message, code)` prints the message and exits with that status code. By convention, `0` means success and anything else means failure, which scripts and CI check.
+
+**Version 2: options.** Real tools take flags like `--shout` and `-n:3`. Parsing those by hand gets messy, so use `std/parseopt`:
+
+```nim title=greet.nim
+import std/[parseopt, strutils]
+
+var names: seq[string]
+var shout = false
+var times = 1
+
+for kind, key, val in getopt():
+  case kind
+  of cmdArgument:
+    names.add(key)
+  of cmdLongOption, cmdShortOption:
+    case key
+    of "shout", "s": shout = true
+    of "times", "n": times = parseInt(val)
+    else: quit("unknown option: " & key, 1)
+  of cmdEnd: discard
+
+for name in names:
+  let line = "Hello, " & name & "!"
+  for _ in 1..times:
+    echo(if shout: line.toUpperAscii() else: line)
+```
+
+```repl shell
+> ./greet --shout -n:2 Ada
+HELLO, ADA!
+HELLO, ADA!
+```
+
+`getopt()` walks the arguments and tells you, for each one, what kind it is: a plain argument, a long option (`--shout`) or a short one (`-s`). Values follow a colon or equals sign: `-n:2`, `--times=2`.
+
+**Version 3: when it grows.** For subcommands and generated `--help` text, look at the `cligen` package, which builds a whole CLI from a proc's signature. See [packages](node:packages) for installing it.
+
+**Testing tip:** `nim r greet.nim -- Ada` passes `Ada` to the program, not to the compiler. Everything after the file name goes to the program; the `--` just makes that unambiguous.
+
+```compare python
+import sys
+names = sys.argv[1:]
+# or argparse for options
+```
+
+```compare javascript
+const names = process.argv.slice(2);
+// or util.parseArgs for options
+```
+
+```compare rust
+let names: Vec<String> = std::env::args().skip(1).collect();
+// or the clap crate for options
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about command-line arguments.
-lang: nim
+goal: "Exit with status 1 and a usage message when no arguments are given: replace `discard` with `quit(\"usage: hello NAME\", 1)`."
 code: |-
   import std/os
+
   let args = commandLineParams()
   if args.len == 0:
-    echo "Usage: tasks <title>"
-  else:
-    echo "Task: ", args[1]
+    discard
+  echo "Hello, ", args[0]
 checks:
-  - match: args\[0\]
-    message: Use args[0] for this step.
-  - notMatch: args\[1\]
-    message: Replace args[1] in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'if\s+args\.len\s*==\s*0\s*:\s*\n\s+quit\(\s*"usage: hello NAME"\s*,\s*1\s*\)'
+    message: 'Write quit("usage: hello NAME", 1) inside the if.'
+solution: |-
+  import std/os
+
+  let args = commandLineParams()
+  if args.len == 0:
+    quit("usage: hello NAME", 1)
+  echo "Hello, ", args[0]
 ```
 
 ```quiz
-question: What is `commandLineParams()[0]` when a user supplies one argument?
+question: "For `./tool a.txt -v`, what does `commandLineParams()` return?"
 options:
-  - The executable name.
-  - The second user-supplied argument.
-  - The first user-supplied argument.
-answer: 2
-explain: The returned sequence excludes the executable name; check its length before indexing.
+  - "@[\"./tool\", \"a.txt\", \"-v\"]"
+  - "@[\"a.txt\", \"-v\"]"
+  - "@[\"a.txt\"]"
+answer: 1
+explain: The program name isn't included, and options are returned as-is; parseopt interprets them.
 ```

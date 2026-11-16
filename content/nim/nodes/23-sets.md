@@ -1,48 +1,108 @@
 ---
 title: Sets of values
-icon: 🛠️
+icon: "🎒"
 branch: data
-requires:
-  - enums
-summary: Built-in sets efficiently represent membership over small ordinal types, including enums.
+requires: [enums]
+summary: Built-in bit sets for enums and small types, and HashSet for everything else.
 ---
+**Pack a backpack.** Each item is in or out; packing it twice changes nothing, and order doesn't matter. That's a set.
 
-Built-in sets efficiently represent membership over small ordinal types, including enums. Repeated elements do not add duplicates.
+```nim title=backpack.nim
+type
+  Gear = enum
+    tent, stove, map, rope, torch
 
-```nim
-type Permission = enum
-  read, write, execute
-let permissions = {read, write}
-echo write in permissions
+var packed: set[Gear] = {tent, map}
+packed.incl(torch)          # add one
+packed.excl(map)            # remove one
+echo packed                 # {tent, torch}
+echo stove in packed        # false
+
+let needed = {tent, stove, torch}
+echo needed - packed        # {stove}: still to pack
+echo needed * packed        # {tent, torch}: packed and needed
+echo packed + {rope}        # {tent, rope, torch}
+echo card(packed)           # 2
 ```
 
-## Put it to work
+**The operators**, which read like set math from school:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+| Code | Meaning |
+| --- | --- |
+| `a + b` | union: in either |
+| `a * b` | intersection: in both |
+| `a - b` | difference: in `a`, not in `b` |
+| `x in a` | membership |
+| `a <= b` | `a` is a subset of `b` |
+| `card(a)` | number of elements |
+
+**Why these are so fast.** A built-in `set[Gear]` is stored as bits: one bit per possible enum value. `{tent, map}` is just a small number, and `in` is a single bit test. That's also its limit: the element type must be small, like an enum, `char`, `bool` or a small int range such as `set[0..63]`. A `set[int]` or a `set[string]` doesn't compile.
+
+**A classic use: flags.** Instead of six `bool` fields, one set:
+
+```nim
+type Permission = enum read, write, execute
+let mode: set[Permission] = {read, write}
+if write in mode:
+  echo "can edit"
+```
+
+And `char` sets make character checks tidy: `if c in {'a'..'z', '_'}:`.
+
+**Bigger values? Use `HashSet`** from `std/sets`, which works for strings, ints and anything hashable:
+
+```nim
+import std/sets
+
+var visited = toHashSet(["home"])
+visited.incl("about")
+echo "home" in visited      # true
+echo visited.len            # 2
+```
+
+```compare python
+packed = {"tent", "map"}
+packed.add("torch")
+needed - packed
+```
+
+```compare javascript
+const packed = new Set(["tent", "map"]);
+packed.add("torch");
+// difference: [...needed].filter(x => !packed.has(x))
+```
+
+```compare rust
+use std::collections::HashSet;
+let mut packed: HashSet<&str> = ["tent", "map"].into();
+packed.insert("torch");
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about sets of values.
-lang: nim
+goal: "Use set difference to find what's still missing: set `missing` to `needed - have`."
 code: |-
-  type Permission = enum
-    read, write, execute
-  let permissions = {read, write}
-  echo execute in permissions
+  type Fruit = enum apple, banana, cherry
+  let needed = {apple, banana, cherry}
+  let have = {banana}
+  let missing = needed
+  echo missing
 checks:
-  - match: write\s+in\s+permissions
-    message: Use write in permissions for this step.
-  - notMatch: execute\s+in\s+permissions
-    message: Replace execute in permissions in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'let\s+missing\s*=\s*needed\s*-\s*have'
+    message: Write let missing = needed - have
+solution: |-
+  type Fruit = enum apple, banana, cherry
+  let needed = {apple, banana, cherry}
+  let have = {banana}
+  let missing = needed - have
+  echo missing
 ```
 
 ```quiz
-question: What does inserting an existing permission into a set change?
+question: "Why doesn't `var s: set[string]` compile?"
 options:
-  - It adds a second occurrence.
-  - It moves the permission to the end.
-  - It leaves membership unchanged.
-answer: 2
-explain: Sets represent membership, not duplicate counts or insertion order.
+  - Sets can only hold enums.
+  - A built-in set needs a small element type, because it's stored as one bit per possible value.
+  - Strings must be imported first.
+answer: 1
+explain: There are infinitely many strings. Use HashSet from std/sets instead.
 ```

@@ -1,45 +1,106 @@
 ---
 title: Nimble packages
-icon: 🧪
+icon: "📦"
 branch: tools
-requires:
-  - modules
-  - testing
-summary: Nimble manages package metadata and project tasks.
+requires: [modules, testing]
+summary: Start a project with nimble init, declare dependencies in the .nimble file, then build and test.
 ---
+**Walkthrough: from empty folder to tested project.** [[nimble]] is Nim's package manager and build tool. It's installed along with Nim.
 
-Nimble manages package metadata and project tasks. Configure a test task in the `.nimble` file so `nimble test` has a reproducible meaning.
+**1. Create the project.**
 
-```shell
-nimble init
-nimble test
+```repl shell
+> mkdir weather && cd weather
+> nimble init
 ```
 
-## Put it to work
+`nimble init` asks a few questions (package name, binary or library, license) and creates:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```text
+weather/
+  weather.nimble       the project description
+  src/weather.nim      your code
+  tests/test1.nim      a first test
+```
+
+**2. Read the `.nimble` file.** It's ordinary Nim syntax:
+
+```nim title=weather.nimble
+version       = "0.1.0"
+author        = "You"
+description   = "Weather in your terminal"
+license       = "MIT"
+srcDir        = "src"
+bin           = @["weather"]
+
+requires "nim >= 2.2.0"
+requires "cligen >= 1.7"
+```
+
+`bin` lists the programs to build. Each `requires` line declares a dependency, with a version range.
+
+**3. Add a dependency.** Add a `requires` line to the `.nimble` file, like the `cligen` line above. Nimble downloads dependencies the first time you build, so there's no separate install step for a project. To install a package globally, for quick experiments, use `nimble install cligen`.
+
+**4. Build and run.**
+
+```repl shell
+> nimble build
+> nimble run weather
+```
+
+`nimble build` compiles everything in `bin` and resolves dependencies first. Pass extra compiler flags as usual: `nimble build -d:release`.
+
+**5. Test.** `nimble test` compiles and runs every `tests/t*.nim` file, as you saw in [unit tests](node:testing):
+
+```repl shell
+> nimble test
+[OK] can parse a forecast
+   Success: Execution finished
+   Success: All tests passed
+```
+
+**6. Find packages.** `nimble search json` searches the package list, which is also browsable at nimble.directory. Packages are just Git repositories, so you can depend on one by URL too: `requires "https://github.com/user/repo"`.
+
+**Lock files.** `nimble lock` writes the exact versions in use into `nimble.lock`. Commit it, and everyone building the project gets identical dependencies.
+
+```compare python
+# pyproject.toml lists dependencies; pip or uv installs them.
+```
+
+```compare javascript
+// package.json lists dependencies; npm install fetches them.
+```
+
+```compare rust
+// Cargo.toml lists dependencies; cargo build fetches them.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about nimble packages.
-lang: shell
+goal: "The project needs the `jsony` package, version 1.1 or newer. Add a `requires` line for it."
 code: |-
-  nimble init
-  nimble build
+  version = "0.1.0"
+  srcDir = "src"
+  bin = @["app"]
+
+  requires "nim >= 2.2.0"
 checks:
-  - match: nimble\s+test
-    message: Use nimble test for this step.
-  - notMatch: nimble\s+build
-    message: Replace nimble build in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '^requires\s+"jsony\s*>=\s*1\.1(\.0)?"'
+    message: 'Add requires "jsony >= 1.1"'
+solution: |-
+  version = "0.1.0"
+  srcDir = "src"
+  bin = @["app"]
+
+  requires "nim >= 2.2.0"
+  requires "jsony >= 1.1"
 ```
 
 ```quiz
-question: What makes `nimble test` reproducible for this project?
+question: "Which command runs all the test files in a Nimble project's tests folder?"
 options:
-  - Running `nimble init` before every test.
-  - A defined test task in its `.nimble` file.
-  - Naming the source directory `test` alone.
+  - "nim test"
+  - "nimble test"
+  - "nimble run tests"
 answer: 1
-explain: The package's task definition records which test command to execute.
+explain: nimble test finds the tests/t*.nim files, compiles them and runs each one.
 ```

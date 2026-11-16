@@ -1,70 +1,84 @@
 ---
 title: var and let
-icon: 🏷️
+icon: "🏷️"
 branch: basics
-requires:
-  - nim
-summary: var creates mutable storage; let prevents reassignment of the binding.
+requires: [nim]
+summary: let for values that never change, var for values that do, and how to choose.
 ---
+Nim gives you two ways to name a value, and the difference is one question: **will it change?**
 
-var creates mutable storage; let prevents reassignment of the binding. Prefer let when the value does not need to change.
+```nim title=checkout.nim
+let price = 25        # fixed: this item costs 25
+let quantity = 3
+var total = 0         # changes as we go
 
-A useful term here is [[binding]]: A name associated with a value or mutable storage.
-
-```nim
-var score = 1
-let step = 2
-score += step
-echo score
+total = price * quantity
+total += 5            # shipping
+echo "Total: ", total   # Total: 80
 ```
 
-## Put it to work
+| | `let` | `var` |
+| --- | --- | --- |
+| Can be reassigned | no | yes |
+| Must be given a value right away | yes | no (it starts at zero, `""` or empty) |
+| Use it for | most values | counters, totals, things that build up |
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Try to change a `let`:**
+
+```nim
+let price = 25
+price = 30   # Error: 'price' cannot be assigned to
+```
+
+The compiler stops before the program runs. That's the point of `let`: when you read code later, every `let` is a promise that the value is the same everywhere.
+
+**Start with `let`.** Switch to `var` only when you need to change something. Most values in a well-written program are calculated once and never changed, and `let` makes that visible.
+
+**A `var` without a value** gets a default: `0` for numbers, `""` for strings, `false` for booleans. Unlike in some languages, you never read random leftover memory:
+
+```nim
+var count: int
+echo count   # 0
+```
+
+Each [[binding]] also has a fixed type, inferred from its first value. `var total = 0` makes `total` an `int` forever; `total = "lots"` doesn't compile. There's a third kind, `const`, for values known while compiling; that's the [next lesson](node:constants).
 
 ```compare python
-score = 1
-score += 2
-print(score)
+price = 25      # Python has no let: everything can be reassigned
+total = 0
 ```
 
 ```compare javascript
-let score = 1;
-score += 2;
-console.log(score);
+const price = 25;   // like Nim's let
+let total = 0;      // like Nim's var
 ```
 
 ```compare rust
-fn main() {
-    let mut score = 1;
-    score += 2;
-    println!("{score}");
-}
+let price = 25;       // like Nim's let
+let mut total = 0;    // like Nim's var
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about var and let.
-lang: nim
+goal: "`lives` goes down when the player is hit, so it can't be a `let`. Change it to `var`."
 code: |-
-  var score = 1
-  let step = 2
-  score -= step
-  echo score
+  let lives = 3
+  lives -= 1
+  echo lives
 checks:
-  - match: score\s+\+=\s+step
-    message: Use score += step for this step.
-  - notMatch: score\s+\-=\s+step
-    message: Replace score -= step in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '^var\s+lives\s*=\s*3'
+    message: Declare lives with var.
+solution: |-
+  var lives = 3
+  lives -= 1
+  echo lives
 ```
 
 ```quiz
-question: Which binding can be reassigned after initialization?
+question: "Watch out for JavaScript habits: which Nim keyword creates a binding that can't be reassigned?"
 options:
-  - A `let` binding.
-  - A `const` binding.
-  - A `var` binding.
-answer: 2
-explain: Use `var` for mutable storage and `let` for a runtime value that is not rebound.
+  - "`var`"
+  - "`let`"
+  - Both.
+answer: 1
+explain: In Nim, let can't be reassigned. JavaScript's let can, which is a common mix-up.
 ```

@@ -1,18 +1,54 @@
 binding:
-  definition: A name associated with a value or mutable storage.
+  definition: A name attached to a value. let bindings can't be reassigned; var bindings can.
   node: bindings
+procedure:
+  definition: Nim's word for a function, declared with proc. It has typed parameters and an optional return type.
+  node: procedures
+result:
+  definition: A variable every procedure with a return type gets for free. Whatever it holds at the end is returned.
+  node: result
+uniform function call syntax:
+  definition: The rule that lets you write f(x, y) as x.f(y), so any procedure can be called like a method.
+  node: procedures
 sequence:
-  definition: A dynamically sized collection of elements of one type, written seq[T].
+  definition: A list that can grow and shrink, written seq[T]. All its items have the type T.
   node: sequences
+openarray:
+  definition: A parameter type that accepts an array, a seq or a slice of either, so one procedure works for all of them.
+  node: openarrays
+object:
+  definition: A type with named, typed fields, similar to a struct in other languages.
+  node: objects
 enum:
-  definition: A type defining a finite collection of named values.
+  definition: A type with a fixed list of named values, such as the states of a traffic light.
   node: enums
 option:
-  definition: A container that explicitly represents either a present value or absence.
+  definition: A value that either holds something (some) or nothing (none), so absence is visible in the type.
   node: options
+ref:
+  definition: A reference to an object on the heap. Copying a ref shares the object instead of copying it.
+  node: references
+distinct type:
+  definition: A new type with the same representation as an existing one, which the compiler won't mix up with the original.
+  node: distinct
+variant object:
+  definition: An object whose fields depend on the value of an enum field, so each case has its own data.
+  node: variants
 generic:
-  definition: Code parameterized by types or compile-time values so it can work with multiple concrete types.
+  definition: A procedure or type with type parameters in square brackets, so it works for many types.
   node: generics
+iterator:
+  definition: A routine that yields values one at a time, for use in a for loop.
+  node: iterators
+exception:
+  definition: An error object that is raised with raise and caught with try/except.
+  node: exceptions
+template:
+  definition: A piece of code that the compiler pastes in at the call site, with the arguments filled in.
+  node: templates
 macro:
-  definition: A compile-time transformation that inspects or constructs Nim syntax trees.
+  definition: A procedure that runs at compile time and builds or rewrites Nim code as a syntax tree.
   node: macros
+nimble:
+  definition: Nim's package manager. It installs libraries and builds projects described by a .nimble file.
+  node: packages

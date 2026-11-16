@@ -1,55 +1,112 @@
 ---
 title: Captured functions
-icon: 📋
+icon: "🫙"
 branch: design
-requires:
-  - procedures
-  - bindings
-summary: A closure can retain local state after the creating procedure returns.
+requires: [procedures, bindings]
+summary: Procs are values; anonymous procs and closures capture variables from where they're made.
 ---
-
-A closure can retain local state after the creating procedure returns. Each makeCounter invocation creates separate state.
+**Procs are values.** You can store a proc in a variable or pass it to another proc, just like an int:
 
 ```nim
-proc makeCounter(): proc(): int =
-  var value = 0
-  result = proc(): int =
-    inc value
-    value
-let next = makeCounter()
-echo next(), " ", next()
+proc shout(s: string): string = s & "!"
+
+let fn = shout                      # no parentheses: the proc itself
+echo fn("hey")                      # hey!
 ```
 
-## Put it to work
+**Anonymous procs** have no name and are written inline, right where they're used. The most common use is handing a rule to a library proc:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```nim title=filter.nim
+import std/sequtils
+
+let prices = @[4, 18, 7, 25, 12]
+let cheap = prices.filter(proc (p: int): bool = p < 10)
+echo cheap                          # @[4, 7]
+```
+
+That's a mouthful, so `std/sugar` offers an arrow shorthand. These two lines are the same:
+
+```nim
+import std/sugar
+let cheap = prices.filter(proc (p: int): bool = p < 10)
+let cheap2 = prices.filter(p => p < 10)
+```
+
+The arrow form works when Nim can infer the types from where the proc is passed.
+
+**Closures: procs that remember.** An anonymous proc can use variables from the place where it was created, even after that place is gone:
+
+```nim
+proc makeCounter(): proc (): int =
+  var count = 0
+  result = proc (): int =
+    count += 1
+    count
+
+let next = makeCounter()
+echo next()     # 1
+echo next()     # 2
+echo next()     # 3
+```
+
+`makeCounter` has finished running before the first `next()`, yet `count` lives on. The inner proc *captured* it. Each call to `makeCounter` makes a fresh, separate `count`. That's a closure: a proc plus the variables it captured.
+
+**The type of a proc** is written like its signature, without the name: `proc (p: int): bool`. So `makeCounter` returns a `proc (): int`. You'll need this when a parameter or field holds a proc.
+
+```nim
+proc applyTwice(f: proc (x: int): int, x: int): int = f(f(x))
+echo applyTwice(x => x * 3, 2)      # 18
+```
+
+```compare python
+def make_counter():
+    count = 0
+    def nxt():
+        nonlocal count
+        count += 1
+        return count
+    return nxt
+```
+
+```compare javascript
+function makeCounter() {
+  let count = 0;
+  return () => ++count;
+}
+```
+
+```compare rust
+fn make_counter() -> impl FnMut() -> i32 {
+    let mut count = 0;
+    move || { count += 1; count }
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about captured functions.
-lang: nim
+goal: "Use `filter` with an arrow proc to keep only the words longer than 3 characters: `w => w.len > 3`."
 code: |-
-  proc makeCounter(): proc(): int =
-    var value = 0
-    result = proc(): int =
-      dec value
-      value
-  let next = makeCounter()
-  echo next(), " ", next()
+  import std/[sequtils, sugar]
+
+  let words = @["a", "tree", "is", "green"]
+  let long = words
+  echo long
 checks:
-  - match: inc\s+value
-    message: Use inc value for this step.
-  - notMatch: dec\s+value
-    message: Replace dec value in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'words\.filter\(\s*w\s*=>\s*w\.len\s*>\s*3\s*\)|filter\(\s*words\s*,\s*w\s*=>\s*w\.len\s*>\s*3\s*\)'
+    message: Write words.filter(w => w.len > 3)
+solution: |-
+  import std/[sequtils, sugar]
+
+  let words = @["a", "tree", "is", "green"]
+  let long = words.filter(w => w.len > 3)
+  echo long
 ```
 
 ```quiz
-question: What happens to the local counter captured by the returned closure?
+question: "Two counters are made with `let a = makeCounter()` and `let b = makeCounter()`. After `a()` and `a()`, what does `b()` return?"
 options:
-  - It becomes a shared global for every factory invocation.
-  - It persists for that closure's later calls.
-  - It is reset every time the closure is called.
-answer: 1
-explain: Each factory invocation creates its own captured state.
+  - "1"
+  - "3"
+  - "2"
+answer: 0
+explain: Each call to makeCounter creates its own count, so b starts from zero.
 ```

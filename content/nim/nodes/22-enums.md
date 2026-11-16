@@ -1,57 +1,108 @@
 ---
 title: Enumerated states
-icon: 📦
+icon: "🔢"
 branch: data
-requires:
-  - objects
-  - case
-summary: An enum names a finite set of states.
+requires: [objects, case]
+summary: An enum lists the possible values of a type, and case makes you handle each one.
 ---
+**A word you already know:** an order in a webshop is *pending*, *paid*, *shipped* or *delivered*. Never "shipd", never 7. An enum makes that list a type:
 
-An enum names a finite set of states. Exhaustive case branches let the compiler help when states are added.
+```nim title=orders.nim
+type
+  OrderStatus = enum
+    pending, paid, shipped, delivered
 
-A useful term here is [[enum]]: A type defining a finite collection of named values.
+proc label(s: OrderStatus): string =
+  case s
+  of pending: "Waiting for payment"
+  of paid: "Packing your order"
+  of shipped: "On its way"
+  of delivered: "Enjoy!"
 
-```nim
-type Status = enum
-  todo, doing, done
-let state = doing
-case state
-of todo: echo "start"
-of doing: echo "continue"
-of done: echo "finished"
+var status = pending
+echo label(status)        # Waiting for payment
+status = shipped
+echo status               # shipped
 ```
 
-## Put it to work
+**Why not use strings?** `status = "shiped"` would compile happily, and you'd find the typo in production. With an [[enum]], a misspelled value is a compile error.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Why not use ints?** `status = 2` tells a reader nothing. Enum values have names, and `echo` prints them.
+
+**The killer feature: `case` checks you covered everything.** Notice there's no `else` in `label`. Now imagine someone adds a `returned` status next year:
+
+```nim
+type
+  OrderStatus = enum
+    pending, paid, shipped, delivered, returned
+```
+
+Every `case` on `OrderStatus` without an `else` now fails to compile with *not all cases are covered*, pointing at each one that needs a decision. Leaving out `else` on purpose is how you get that safety net.
+
+**Handy extras:**
+
+| Code | Result |
+| --- | --- |
+| `ord(paid)` | `1`, the position |
+| `succ(paid)` | `shipped`, the next value |
+| `low(OrderStatus)` / `high(OrderStatus)` | `pending` / `delivered` |
+| `for s in OrderStatus: echo s` | every value, in order |
+| `parseEnum[OrderStatus]("paid")` | `paid` (from `std/strutils`) |
+
+**Custom text.** `shipped = "On its way"` in the declaration changes what `$` and `echo` show for that value.
+
+**Enums inside objects** describe state: `Order(id: 7, status: paid)`. When different states need *different fields*, look at [variant objects](node:variants).
+
+```compare python
+from enum import Enum
+class OrderStatus(Enum):
+    PENDING = 1
+    PAID = 2
+```
+
+```compare javascript
+// No built-in enum; a union of strings in TypeScript is the closest:
+// type OrderStatus = "pending" | "paid" | "shipped" | "delivered";
+```
+
+```compare rust
+enum OrderStatus { Pending, Paid, Shipped, Delivered }
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about enumerated states.
-lang: nim
+goal: "Add `orange` to the enum, between `red` and `green`, then give it an `of` branch that returns `\"slow down\"`."
 code: |-
-  type Status = enum
-    todo, doing, done
-  let state = todo
-  case state
-  of todo: echo "start"
-  of doing: echo "continue"
-  of done: echo "finished"
+  type
+    Light = enum
+      red, green
+
+  func advice(l: Light): string =
+    case l
+    of red: "stop"
+    of green: "go"
 checks:
-  - match: let\s+state\s+=\s+doing
-    message: Use let state = doing for this step.
-  - notMatch: let\s+state\s+=\s+todo
-    message: Replace let state = todo in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'red\s*,\s*orange\s*,\s*green'
+    message: 'The enum should read: red, orange, green'
+  - match: 'of\s+orange\s*:\s*"slow down"'
+    message: 'Add of orange: "slow down"'
+solution: |-
+  type
+    Light = enum
+      red, orange, green
+
+  func advice(l: Light): string =
+    case l
+    of red: "stop"
+    of orange: "slow down"
+    of green: "go"
 ```
 
 ```quiz
-question: Why use an enum for `todo`, `doing`, and `done`?
+question: "You add a value to an enum. Which case statements does the compiler flag?"
 options:
-  - To allocate a separate class for every status.
-  - To restrict status to a finite set of named values.
-  - To accept arbitrary status strings without validation.
+  - All of them.
+  - Those on that enum that have no else branch.
+  - None; new values are ignored until handled.
 answer: 1
-explain: An enum makes supported states explicit and enables exhaustive branching.
+explain: A case without else must cover every value, so the new one makes it incomplete.
 ```
