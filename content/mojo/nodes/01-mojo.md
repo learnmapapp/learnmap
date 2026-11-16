@@ -1,46 +1,74 @@
 ---
 title: Meet Mojo
-icon: 🔥
+icon: "🔥"
 branch: core
 requires: []
-summary: Save hello.mojo and run mojo run hello.mojo.
+summary: What Mojo is, how to run your first program, and how it differs from Python.
 kind: hub
 ---
+Mojo looks like Python wearing a hard hat. The syntax is familiar (indentation, `def`, `for x in ...`), but every program is **compiled** to native machine code before it runs. You get Python's readability with speed in the same league as C, Rust and Zig, plus direct access to things Python hides, like memory ownership and the CPU's vector instructions.
 
-Save `hello.mojo` and run `mojo run hello.mojo`. This course uses Mojo 1.2.0, including def functions and std-prefixed library imports.
+It was created by Modular, originally to write fast AI code, and it runs Python libraries too. This course uses **Mojo 1.2**. To follow along on your own machine, install it in a `pixi` or `uv` environment as described at [mojolang.org](https://mojolang.org/install/), and check that `mojo --version` works.
 
-```mojo
-def main() raises:
-    print("Hello, Mojo!")
+Now create a file called `hello.mojo` with this content:
+
+```mojo title=hello.mojo
+def main():
+    print("Hello, Mojo! 🔥")
 ```
 
-## Put it to work
+And run it from the same folder:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```repl shell
+> mojo run hello.mojo
+Hello, Mojo! 🔥
+```
 
-This course targets **Mojo 1.2.0**. Check your local tool version before following examples. See the [official reference](https://mojolang.org/docs/manual/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
+(`mojo hello.mojo` works too.) Behind the scenes, `mojo run` compiles the file and runs the result in one go.
+
+A first spot-the-difference with Python:
+
+| | Python | Mojo |
+| --- | --- | --- |
+| Where the program starts | the top of the file | the `main` function |
+| Code outside functions | runs immediately | only declarations (functions, structs, imports) |
+| Types | optional hints | checked by the compiler |
+| Mistakes like a wrong type | found when the line runs | found before the program starts |
+
+That last row is the one you'll notice most. If you write `var n: Int = "five"`, nothing runs at all; the compiler stops with an error pointing at that line. It's a bit stricter up front, and in exchange whole categories of bugs never reach the running program.
+
+**How this course works.** Every lesson has a short explanation, an exercise you solve right in the browser (it checks your code as you type), and a quick question. Pick a goal on the map, or work through the foundations first. Lessons build on each other, so the map shows you what to learn before what.
+
+```compare python
+# hello.py: no main needed
+print("Hello, Python!")
+```
+
+```compare rust
+fn main() {
+    println!("Hello, Rust!");
+}
+```
 
 ```exercise
-goal: Make the program print `Hello, Mojo!`.
-lang: mojo
+goal: "Make the program greet you. Mojo starts at `main`, so put the `print` inside it, indented."
 code: |-
-  def main() raises:
-      print("Hello, world!")
+  def main():
+  print("Hello, Mojo!")
 checks:
-  - match: Hello,\s+Mojo!
-    message: Use Hello, Mojo! for this step.
-  - notMatch: Hello,\s+world!
-    message: Replace Hello, world! in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '^def main\(\):\s*\n\s+print\('
+    message: Indent the print line so it's inside main.
+solution: |-
+  def main():
+      print("Hello, Mojo!")
 ```
 
 ```quiz
-question: Which terminal command compiles and executes `hello.mojo`?
+question: Where does a Mojo program start running?
 options:
-  - "`mojo build hello.mojo` alone."
-  - "`mojo run hello.mojo`"
-  - "`mojo format hello.mojo`"
+  - At the first line of the file.
+  - In the main function.
+  - In whichever function is defined first.
 answer: 1
-explain: "`run` executes the program; `build` creates an executable without running it."
+explain: Mojo is compiled, and execution begins in main. Top-level code can only declare things.
 ```

@@ -1,48 +1,94 @@
 ---
 title: Append elements
-icon: 🛠️
+icon: "➕"
 branch: data
-requires:
-  - lists
-summary: append adds an element to a list and may grow its backing allocation.
+requires: [lists]
+summary: Grow a list with append, insert, extend and +=.
 ---
+**Building a shopping list, one step at a time.** Watch the list change after each line:
 
-append adds an element to a list and may grow its backing allocation. Avoid assuming references remain valid across growth.
-
-```mojo
-def main() raises:
-    var values: List[Int] = [2, 4]
-    values.append(6)
-    print(len(values))
+```mojo title=shopping.mojo
+def main():
+    var cart: List[String] = []
+    cart.append("bread")            # [bread]
+    cart.append("milk")             # [bread, milk]
+    cart.insert(0, "coffee")        # [coffee, bread, milk]
+    cart.extend(["eggs", "jam"])    # [coffee, bread, milk, eggs, jam]
+    cart += ["apples"]              # [coffee, bread, milk, eggs, jam, apples]
+    print(len(cart), "items")
 ```
 
-## Put it to work
+```repl shell
+> mojo run shopping.mojo
+6 items
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**The four ways to grow a list:**
+
+| Method | Adds | Where |
+| --- | --- | --- |
+| `append(x)` | one item | at the end |
+| `insert(i, x)` | one item | before position `i` |
+| `extend(other)` | every item of another list | at the end |
+| `+=` | same as extend | at the end |
+
+**Use `append` by default.** Adding at the end is fast, no matter how long the list is. `insert(0, x)` has to shift every existing item one place to the right, which gets slow for long lists. If you're always adding at the front, consider building the list in reverse and flipping it at the end.
+
+**The list has to be a `var`.** Appending changes the list. Inside a function, that means a read-only parameter can't be appended to; take `mut items: List[String]` instead:
+
+```mojo
+def add_defaults(mut cart: List[String]):
+    cart.append("bags")
+
+def main():
+    var cart: List[String] = ["tea"]
+    add_defaults(cart)
+    print(len(cart))   # 2
+```
+
+**A new list instead?** `a + b` creates a new list with the items of both, leaving `a` and `b` unchanged.
+
+**Tip:** if you know roughly how many items are coming, `List[Int](capacity=1000)` reserves room up front, so the list doesn't have to grow step by step.
+
+```compare python
+cart.append("bread")
+cart.insert(0, "coffee")
+cart.extend(["eggs", "jam"])
+```
+
+```compare javascript
+cart.push("bread");
+cart.unshift("coffee");
+cart.push(...["eggs", "jam"]);
+```
+
+```compare rust
+cart.push("bread".to_string());
+cart.insert(0, "coffee".to_string());
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about append elements.
-lang: mojo
+goal: "Add 42 to the end of `numbers` with the `append` method."
 code: |-
-  def main() raises:
-      var values: List[Int] = [2, 4]
-      values.append(0)
-      print(len(values))
+  def main():
+      var numbers: List[Int] = [7, 13]
+      print(len(numbers))
 checks:
-  - match: values\.append\(6\)
-    message: Use values.append(6) for this step.
-  - notMatch: values\.append\(0\)
-    message: Replace values.append(0) in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'numbers\.append\(\s*42\s*\)'
+    message: Write numbers.append(42) before the print.
+solution: |-
+  def main():
+      var numbers: List[Int] = [7, 13]
+      numbers.append(42)
+      print(len(numbers))
 ```
 
 ```quiz
-question: After appending `6` to `[2, 4]`, what is the list's length?
+question: "`var x: List[Int] = [1, 2]`, then `x.insert(1, 9)`. What is x?"
 options:
-  - "`2`"
-  - "`6`"
-  - "`3`"
-answer: 2
-explain: Append adds one element to the end of the list.
+  - "[9, 1, 2]"
+  - "[1, 9, 2]"
+  - "[1, 2, 9]"
+answer: 1
+explain: insert(1, 9) puts 9 at index 1, shifting the rest to the right.
 ```

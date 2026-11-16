@@ -1,48 +1,85 @@
 ---
 title: Boolean expressions
-icon: 🔁
+icon: "⚖️"
 branch: basics
-requires:
-  - variables
-summary: Mojo spells Boolean constants True and False and combines conditions with and, or, and not.
+requires: [variables]
+summary: True, False, and, or, not, and chained comparisons, written the Python way.
 ---
+If you know Python, booleans in Mojo will feel familiar. The type is `Bool`, the values are `True` and `False` (with capitals), and the operators are words:
 
-Mojo spells Boolean constants `True` and `False` and combines conditions with and, or, and not.
+```mojo title=ride.mojo
+def main():
+    var age = 12
+    var height_cm = 142
+    var with_adult = False
 
-```mojo
-def main() raises:
-    var ready = True
-    var blocked = False
-    print(ready and not blocked)
+    var tall_enough = height_cm >= 140
+    var can_ride = tall_enough and (age >= 12 or with_adult)
+
+    print("Can ride:", can_ride)   # Can ride: True
+    print("Needs company:", not can_ride or age < 10)
 ```
 
-## Put it to work
+**The operators:**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+| Mojo | Meaning | Other languages |
+| --- | --- | --- |
+| `and` | both are true | `&&` |
+| `or` | at least one is true | `\|\|` |
+| `not` | flips it | `!` |
+| `==`, `!=` | equal, not equal | |
+| `<`, `<=`, `>`, `>=` | comparisons | |
+
+`and` and `or` **short-circuit**: if the left side already decides the answer, the right side isn't evaluated at all. `count > 0 and total / count > 5` never divides by zero.
+
+**Chained comparisons work**, just like in Python:
+
+```mojo
+var temp = 21
+print(18 <= temp < 25)   # True: same as 18 <= temp and temp < 25
+```
+
+**Where Mojo differs from Python:** conditions in `if` and `while` must be something that can be turned into a `Bool`. Numbers and strings can (zero and empty are false), but the clearest style is to write the comparison out: `if len(name) > 0:` says exactly what you mean, where `if name:` makes the reader stop and think.
+
+Booleans convert to numbers if you ask: `Int(True)` is 1, which is handy for counting how many conditions hold.
+
+```compare python
+can_ride = tall_enough and (age >= 12 or with_adult)
+```
+
+```compare javascript
+const canRide = tallEnough && (age >= 12 || withAdult);
+```
+
+```compare rust
+let can_ride = tall_enough && (age >= 12 || with_adult);
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about boolean expressions.
-lang: mojo
+goal: "This was translated from JavaScript and doesn't compile. Use Mojo's word operators, `and` and `not`."
 code: |-
-  def main() raises:
-      var ready = True
-      var blocked = False
-      print(ready and blocked)
+  def main():
+      var logged_in = True
+      var banned = False
+      var can_post = logged_in && !banned
 checks:
-  - match: ready\s+and\s+not\s+blocked
-    message: Use ready and not blocked for this step.
-  - notMatch: ready\s+and\s+blocked
-    message: Replace ready and blocked in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'var\s+can_post\s*=\s*logged_in\s+and\s+not\s+banned'
+    message: Write logged_in and not banned
+  - notMatch: '&&|!banned'
+    message: Remove the && and ! operators.
+solution: |-
+  def main():
+      var logged_in = True
+      var banned = False
+      var can_post = logged_in and not banned
 ```
 
 ```quiz
-question: Which expression means “ready and not blocked” in Mojo?
+question: "With `x = 0`, is `x != 0 and 10 / x > 1` safe to evaluate?"
 options:
-  - "`ready and not blocked`"
-  - "`ready && !blocked`"
-  - "`ready or blocked`"
-answer: 0
-explain: Mojo uses the word operators `and`, `or`, and `not`.
+  - No, it divides by zero.
+  - Yes, and stops after the left side, because it's False.
+  - It's a compile error.
+answer: 1
+explain: and short-circuits. With a False left side, the right side never runs.
 ```

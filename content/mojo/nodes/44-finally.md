@@ -1,50 +1,107 @@
 ---
 title: Always-run cleanup
-icon: 🔧
+icon: "🧹"
 branch: tools
-requires:
-  - handling
-summary: finally runs when control leaves the protected block.
+requires: [handling]
+summary: finally runs whether the try block succeeded, failed or returned early.
 ---
+**Order of events, a puzzle.** What does this print?
 
-finally runs when control leaves the protected block. Use it for cleanup that must happen on both success and failure.
-
-```mojo
-def main() raises:
+```mojo title=lamp.mojo
+def risky(fail: Bool) raises:
+    print("1. lamp on")
     try:
-        print("work")
+        if fail:
+            raise Error("bulb blew")
+        print("2. reading")
     finally:
-        print("cleanup")
+        print("3. lamp off")
+
+def main():
+    try:
+        risky(False)
+        risky(True)
+    except e:
+        print("4. caught:", e)
 ```
 
-## Put it to work
+```repl shell
+> mojo run lamp.mojo
+1. lamp on
+2. reading
+3. lamp off
+1. lamp on
+3. lamp off
+4. caught: bulb blew
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+The second call raises, so "2. reading" is skipped. But "3. lamp off" still runs, *before* the error continues on its way up to `main`. That's what `finally` is for: code that must run no matter how the block ends.
+
+**`finally` runs when the `try` block:**
+
+- finishes normally,
+- raises an error (handled or not),
+- or leaves early with `return`, `break` or `continue`.
+
+Notice that `risky` has no `except` at all. `try`/`finally` without `except` is perfectly fine: "I'm not handling the error, but I am cleaning up".
+
+**Typical cleanups:** close a file or connection, release a lock, restore a setting you changed temporarily, stop a timer and log how long something took.
+
+**For files, prefer `with`.** Opening files is so common that it has a shortcut, which closes the file for you, even on errors:
+
+```mojo
+with open("notes.txt", "r") as f:
+    var text = f.read()
+# the file is closed here, whatever happened inside
+```
+
+The full form puts all four together: `try`, `except`, `else`, `finally`. The `finally` block always comes last, and always runs.
+
+```compare python
+try:
+    ...
+finally:
+    print("lamp off")   # same semantics
+```
+
+```compare javascript
+try { risky(); } finally { console.log("lamp off"); }
+```
+
+```compare rust
+// Rust has no finally; cleanup runs when a value is dropped (RAII).
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about always-run cleanup.
-lang: mojo
+goal: "Make sure the lock is always released: move `print(\"unlock\")` into a `finally` block."
 code: |-
-  def main() raises:
+  def update() raises:
+      print("lock")
       try:
-          print("work")
-      finally:
-          print("later")
+          raise Error("disk full")
+      except e:
+          print("failed:", e)
+      print("unlock")
 checks:
-  - match: print\("cleanup"\)
-    message: Use print("cleanup") for this step.
-  - notMatch: print\("later"\)
-    message: Replace print("later") in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'finally\s*:\s*\n\s+print\("unlock"\)'
+    message: 'Add finally: with print("unlock") inside it.'
+solution: |-
+  def update() raises:
+      print("lock")
+      try:
+          raise Error("disk full")
+      except e:
+          print("failed:", e)
+      finally:
+          print("unlock")
 ```
 
 ```quiz
-question: Which exits trigger the `finally` block?
+question: "A try block runs `return 5`. Does its finally block run?"
 options:
-  - Only successful exits.
-  - Only exits caused by errors.
-  - Both successful and error exits from the protected work.
-answer: 2
-explain: Finally keeps cleanup independent of the operation's outcome.
+  - No, return leaves the function immediately.
+  - Yes, before the function actually returns.
+  - Only if there's also an except block.
+answer: 1
+explain: finally runs on every way out of the try block, including return.
 ```

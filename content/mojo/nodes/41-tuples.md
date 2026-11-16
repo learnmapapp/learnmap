@@ -1,46 +1,99 @@
 ---
 title: Group fixed results
-icon: 🚦
+icon: "🎁"
 branch: data
-requires:
-  - functions
-summary: A tuple groups a fixed number of values and supports index access.
+requires: [functions]
+summary: A tuple packs a fixed number of values, each with its own type, into one.
 ---
-
-A tuple groups a fixed number of values and supports index access. Prefer a named struct when field meaning is part of a public API.
+**Before:** a function that needs to return two things, and a workaround.
 
 ```mojo
-def main() raises:
-    var point = (3, 4)
-    print(point[0], point[1])
+def min_value(values: List[Int]) -> Int: ...
+def max_value(values: List[Int]) -> Int: ...
+# two functions, two loops over the same data
 ```
 
-## Put it to work
+**After:** one function returns both, as a **tuple**.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```mojo title=range.mojo
+def min_max(values: List[Int]) -> Tuple[Int, Int]:
+    var low = values[0]
+    var high = values[0]
+    for v in values:
+        if v < low:
+            low = v
+        if v > high:
+            high = v
+    return (low, high)
+
+def main():
+    var temps: List[Int] = [14, 9, 21, 17]
+    var low, high = min_max(temps)
+    print(t"Between {low} and {high} degrees")   # Between 9 and 21 degrees
+```
+
+**Three things happened there:**
+
+1. **`Tuple[Int, Int]`** is the return type: exactly two values, both `Int`.
+2. **`(low, high)`** builds the tuple, with parentheses and commas.
+3. **`var low, high = ...`** unpacks it into two variables in one line.
+
+**Mixed types are fine.** Unlike a [list](node:lists), each position in a tuple has its own type:
+
+```mojo
+var entry = Tuple[String, Int, Bool]("Ada", 36, True)
+print(entry[0])   # Ada
+print(entry[1])   # 36
+```
+
+Index with a literal number, like `entry[0]`. The compiler needs to know the position to know the type you get back.
+
+**Tuple, list or struct?**
+
+| Use | When |
+| --- | --- |
+| tuple | a few values that belong together briefly, like a function result |
+| [list](node:lists) | any number of values of the same type |
+| [struct](node:structs) | values that deserve names, or that travel through your program |
+
+If you find yourself writing `entry[2]` and having to remember what position 2 meant, it's time for a struct with a field called `is_admin`.
+
+```compare python
+def min_max(values): return min(values), max(values)
+low, high = min_max(temps)
+```
+
+```compare javascript
+// JS returns an array and destructures it:
+const [low, high] = minMax(temps);
+```
+
+```compare rust
+fn min_max(values: &[i32]) -> (i32, i32) { (low, high) }
+let (low, high) = min_max(&temps);
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about group fixed results.
-lang: mojo
+goal: "Return both the quotient and the remainder: give `divide` the return type `Tuple[Int, Int]` and return `(a // b, a % b)`."
 code: |-
-  def main() raises:
-      var point = (3, 4)
-      print(point[1], point[0])
+  def divide(a: Int, b: Int):
+      return
 checks:
-  - match: point\[0\],\s+point\[1\]
-    message: Use point[0], point[1] for this step.
-  - notMatch: point\[1\],\s+point\[0\]
-    message: Replace point[1], point[0] in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'def\s+divide\(\s*a\s*:\s*Int\s*,\s*b\s*:\s*Int\s*\)\s*->\s*Tuple\[\s*Int\s*,\s*Int\s*\]\s*:'
+    message: 'The signature should end in -> Tuple[Int, Int]:'
+  - match: 'return\s+\(\s*a\s*//\s*b\s*,\s*a\s*%\s*b\s*\)'
+    message: Return (a // b, a % b).
+solution: |-
+  def divide(a: Int, b: Int) -> Tuple[Int, Int]:
+      return (a // b, a % b)
 ```
 
 ```quiz
-question: For `var point = (3, 4)`, what is `point[0]`?
+question: "When should you choose a struct over a tuple?"
 options:
-  - "`4`"
-  - The whole tuple.
-  - "`3`"
-answer: 2
-explain: Tuple index zero refers to its first element.
+  - When the values are all the same type.
+  - When the values deserve names or get passed around a lot.
+  - Never, tuples are always faster.
+answer: 1
+explain: Named fields make code easier to read than remembering what entry[2] meant.
 ```

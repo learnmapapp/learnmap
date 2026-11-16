@@ -1,67 +1,80 @@
 ---
 title: Typed function signatures
-icon: 🏷️
+icon: "🧩"
 branch: functions
-requires:
-  - integers
-summary: Ordinary function parameters need types, and -> declares a result.
+requires: [integers]
+summary: def with typed parameters, and -> for the type of the result.
 ---
+A Mojo function looks like a Python function where all the type hints are mandatory:
 
-Ordinary function parameters need types, and -> declares a result. Keep numeric work in small functions that can be tested separately.
+```mojo title=area.mojo
+def rectangle_area(width: Float64, height: Float64) -> Float64:
+    return width * height
 
-```mojo
-def square(value: Int) -> Int:
-    return value * value
-
-def main() raises:
-    print(square(6))
+def main():
+    var area = rectangle_area(3.0, 4.5)
+    print(t"Area: {area} m²")
 ```
 
-## Put it to work
+```repl shell
+> mojo run area.mojo
+Area: 13.5 m²
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Let's take the signature apart:
+
+```text
+def rectangle_area(width: Float64, height: Float64) -> Float64:
+    ^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^     ^^^^^^^
+    name           parameter 1     parameter 2         result type
+```
+
+- **Every parameter needs a type.** `def area(width, height)` won't compile.
+- **`-> Type`** says what the function returns. Leave it out when the function returns nothing, like `main`.
+- **Functions can be defined in any order.** `main` can call a function defined below it.
+
+**Why bother with all these types?** Because the compiler checks every call against them. `rectangle_area("3", 4.5)` fails to build, with an error pointing at the call. In Python, the same mistake would only show up when that line runs, maybe in production. The signature also works as documentation: you can see what goes in and what comes out without reading the body.
+
+**Mojo checks the result too.** If a function says `-> Float64`, every path through it must return a `Float64`. Forget the `return` in one branch, and the compiler tells you.
+
+A detail you'll meet later: a function that can fail says so in its signature with [`raises`](node:errors), like `def load(path: String) raises -> String`. And functions can take compile-time parameters in square brackets, which is what [parameters](node:parameters) is about.
 
 ```compare python
-def square(value: int) -> int:
-    return value * value
-
-print(square(6))
+def rectangle_area(width: float, height: float) -> float:
+    return width * height   # hints are optional and not enforced
 ```
 
 ```compare javascript
-function square(value) { return value * value; }
-console.log(square(6));
+function rectangleArea(width, height) {
+  return width * height;
+}
 ```
 
 ```compare rust
-fn square(value: i32) -> i32 { value * value }
-fn main() { println!("{}", square(6)); }
+fn rectangle_area(width: f64, height: f64) -> f64 {
+    width * height
+}
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about typed function signatures.
-lang: mojo
+goal: "Add the missing types: `celsius` is a `Float64`, and the function returns a `Float64`."
 code: |-
-  def square(value: Int) -> Int:
-      return value + value
-
-  def main() raises:
-      print(square(6))
+  def to_fahrenheit(celsius):
+      return celsius * 9.0 / 5.0 + 32.0
 checks:
-  - match: return\s+value\s+\*\s+value
-    message: Use return value * value for this step.
-  - notMatch: return\s+value\s+\+\s+value
-    message: Replace return value + value in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'def\s+to_fahrenheit\(\s*celsius\s*:\s*Float64\s*\)\s*->\s*Float64\s*:'
+    message: 'Write def to_fahrenheit(celsius: Float64) -> Float64:'
+solution: |-
+  def to_fahrenheit(celsius: Float64) -> Float64:
+      return celsius * 9.0 / 5.0 + 32.0
 ```
 
 ```quiz
-question: "In `def square(value: Int) -> Int`, what does `-> Int` specify?"
+question: "`def log(message: String):` has no arrow. What does it return?"
 options:
-  - A mutable input parameter.
-  - An ownership transfer at the call site.
-  - The result type.
-answer: 2
-explain: The arrow introduces the function's declared return type.
+  - A String.
+  - Nothing.
+  - It doesn't compile.
+answer: 1
+explain: Without -> the function returns no value, like main.
 ```

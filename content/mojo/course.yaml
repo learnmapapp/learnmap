@@ -2,7 +2,7 @@ name: Mojo
 logo: 🔥
 color: "#ff6a3d"
 extension: mojo
-tagline: Python-inspired syntax with explicit systems concepts.
+tagline: Python-style syntax, compiled to fast native code.
 comparisons:
   - python
   - javascript
@@ -12,11 +12,11 @@ guide:
   name: Ember
   avatar: 🔥
   intro:
-    - Welcome! I'm Ember. Let's build something with Mojo.
-    - These fifty lessons use Mojo 1.2.0. Start with the foundations or pick a goal to follow a
-      shorter route.
-    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
-      here; use the local tools to run the examples.
+    - Hi, I'm Ember! Mojo looks a lot like Python, but it compiles to fast native code, and it gives
+      you the tools to control types, memory and even individual CPU vector lanes.
+    - If you know some Python, you'll feel at home on day one, and each lesson points out where Mojo
+      differs. Every lesson has a short example, a small exercise you solve in the browser, and a
+      quick check. The examples use Mojo 1.2.
   askGoal: What would you like to build first?
 branches:
   - id: core
@@ -47,20 +47,20 @@ goals:
   - id: mutable-args
     node: mutable-args
     title: Write typed functions
-    description: Understand inputs, results, and mutation.
+    description: Declare types, return values, and decide who may change what.
     icon: 🏷️
   - id: traits
     node: traits
-    title: Model reusable types
-    description: Combine structs, methods, and traits.
-    icon: 🔢
+    title: Model your own types
+    description: Build structs with methods, and describe shared behavior with traits.
+    icon: 🧱
   - id: simd-reduce
     node: simd-reduce
     title: Explore SIMD computation
-    description: Use compile-time parameters and lane-wise operations.
-    icon: 💬
+    description: Use compile-time parameters to work on many numbers at once.
+    icon: ⚡
   - id: capstone
     node: capstone
     title: Build a numeric pipeline
-    description: Combine validation, collection processing, and tests.
-    icon: 🚦
+    description: Combine validation, lists, errors and tests in one small program.
+    icon: 🏁

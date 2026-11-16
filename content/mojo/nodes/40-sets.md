@@ -1,54 +1,97 @@
 ---
 title: Unique values
-icon: 💬
+icon: "🫧"
 branch: data
-requires:
-  - lists
-summary: Set stores unique hashable values.
+requires: [lists]
+summary: A Set keeps each value at most once, and answers "is it in there?" fast.
 ---
+**Puzzle.** A festival scans wristbands at the gate. Some people leave and come back, so the same code is scanned more than once. How many *different* visitors were there?
 
-Set stores unique hashable values. Adding an existing value does not increase its length.
-
-```mojo
+```mojo title=gate.mojo
 from std.collections import Set
 
-def main() raises:
-    var topics = Set[String]()
-    topics.add("Mojo")
-    topics.add("Mojo")
-    print(len(topics))
+def main():
+    var scans: List[String] = ["A17", "B02", "A17", "C33", "B02", "A17"]
+    var visitors = Set[String]()
+    for code in scans:
+        visitors.add(code)
+    print(len(scans), "scans,", len(visitors), "visitors")
 ```
 
-## Put it to work
+```repl shell
+> mojo run gate.mojo
+6 scans, 3 visitors
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Adding a value that's already in a set does nothing. That's the whole idea: a set holds each value **at most once**.
+
+**Sets are fast at one question:** "is this in there?" `"C33" in visitors` takes about the same time whether the set has ten codes or ten million. Asking the same of a list means checking each item, one by one. If your program often asks "have I seen this before?", use a set.
+
+**Combining sets** with operators, as in maths:
+
+```mojo
+var friday = Set[String]("A17", "B02", "C33")
+var saturday = Set[String]("B02", "D48")
+
+var either = friday | saturday   # A17, B02, C33, D48: came on any day
+var both = friday & saturday     # B02: came on both days
+var only_friday = friday - saturday   # A17, C33
+```
+
+| Operator | Name | Keeps values in... |
+| --- | --- | --- |
+| `a \| b` | union | either set |
+| `a & b` | intersection | both sets |
+| `a - b` | difference | `a` but not `b` |
+
+**What sets don't do:** keep an order, or allow indexing. There's no `visitors[0]`, since there is no "first" visitor in a set. Loop with `for code in visitors` to see them all, in no particular order.
+
+**Removing:** `visitors.remove("A17")` raises an error if the value isn't there; `visitors.discard("A17")` quietly does nothing in that case.
+
+```compare python
+visitors = set(scans)
+either = friday | saturday
+```
+
+```compare javascript
+const visitors = new Set(scans);
+```
+
+```compare rust
+let visitors: HashSet<&str> = scans.iter().copied().collect();
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about unique values.
-lang: mojo
+goal: "Only count each tag once: use a `Set[String]` for `seen` instead of a list."
 code: |-
   from std.collections import Set
 
-  def main() raises:
-      var topics = Set[String]()
-      topics.add("Rust")
-      topics.add("Mojo")
-      print(len(topics))
+  def main():
+      var seen: List[String] = []
+      for tag in ["mojo", "fast", "mojo"]:
+          seen.append(tag)
+      print(len(seen))
 checks:
-  - match: topics\.add\("Mojo"\)
-    message: Use topics.add("Mojo") for this step.
-  - notMatch: topics\.add\("Rust"\)
-    message: Replace topics.add("Rust") in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'var\s+seen\s*=\s*Set\[\s*String\s*\]\(\s*\)'
+    message: Write var seen = Set[String]()
+  - match: 'seen\.add\(\s*tag\s*\)'
+    message: Sets use add, not append.
+solution: |-
+  from std.collections import Set
+
+  def main():
+      var seen = Set[String]()
+      for tag in ["mojo", "fast", "mojo"]:
+          seen.add(tag)
+      print(len(seen))
 ```
 
 ```quiz
-question: How many values remain after adding `"Mojo"` twice to an empty set?
+question: "A set has \"x\" in it. What happens with `s.add(\"x\")`?"
 options:
-  - "`0`"
-  - "`1`"
-  - "`2`"
+  - The set now holds \"x\" twice.
+  - Nothing; the set is unchanged.
+  - It raises an error.
 answer: 1
-explain: Sets retain unique values rather than duplicate occurrences.
+explain: Each value appears in a set at most once, so adding a duplicate has no effect.
 ```

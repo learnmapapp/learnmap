@@ -1,51 +1,79 @@
 ---
 title: Independent value copies
-icon: 🧩
+icon: "📑"
 branch: functions
-requires:
-  - strings
-  - variables
-summary: String assignment produces independent value behavior.
+requires: [strings]
+summary: Copying a value gives you a second, independent value, and big values ask you to copy explicitly.
 ---
+A common Python surprise:
 
-String assignment produces independent value behavior. Updating the second string leaves the first string’s visible contents unchanged.
-
-```mojo
-def main() raises:
-    var first = String("Mojo")
-    var second = first
-    second += "!"
-    print(first, second)
+```python
+original = [1, 2, 3]
+backup = original
+original.append(4)
+print(backup)   # [1, 2, 3, 4]  -- wait, what?
 ```
 
-## Put it to work
+In Python, `backup = original` doesn't copy anything. Both names point at the same list. Mojo works differently: **values have value semantics**. A copy is a completely separate value, and changing one never affects the other.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+But which values copy themselves? That depends on the type, and there are two kinds:
+
+| Kind | Examples | `b = a` |
+| --- | --- | --- |
+| cheap to copy | `Int`, `Float64`, `Bool`, `String` | copies automatically |
+| potentially expensive | `List`, `Dict`, most of your own structs | compile error: ask with `a.copy()` |
+
+So in Mojo, the Python example becomes:
+
+```mojo title=backup.mojo
+def main():
+    var original: List[Int] = [1, 2, 3]
+    var backup = original.copy()   # say it explicitly
+    original.append(4)
+    print(len(original), len(backup))   # 4 3
+```
+
+**Why not copy lists automatically?** Because copying a list of a million items takes real time. Writing `.copy()` makes that cost visible in the code. Without it, a single innocent-looking `=` could be the reason a loop is slow.
+
+**The alternatives to copying:**
+
+- Only need to **read** it somewhere else? Pass it to a function as a [read argument](node:read-args). No copy needed.
+- Don't need the original anymore? **Transfer** it: `var b = a^`. No copy, and `a` becomes unusable. See [transfers](node:transfers).
+- Need two separate values that will each change? Then `.copy()` is exactly right.
+
+In type terms, `Int` and `String` are *implicitly copyable*, while `List` is only *copyable*. You'll write those words yourself when you define [your own types](node:structs).
+
+```compare python
+backup = original.copy()   # Python also needs .copy(), but = doesn't warn you
+```
+
+```compare rust
+let backup = original.clone();   // Rust also makes copies explicit
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about independent value copies.
-lang: mojo
+goal: "This won't compile because lists aren't copied implicitly. Make `draft` an explicit copy of `final`."
 code: |-
-  def main() raises:
-      var first = String("Mojo")
-      var second = first
-      second += "?"
-      print(first, second)
+  def main():
+      var final: List[String] = ["intro", "body"]
+      var draft = final
+      draft.append("notes")
 checks:
-  - match: second\s+\+=\s+"!"
-    message: Use second += "!" for this step.
-  - notMatch: second\s+\+=\s+"\?"
-    message: Replace second += "?" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'var\s+draft\s*=\s*final\.copy\(\)'
+    message: Write var draft = final.copy()
+solution: |-
+  def main():
+      var final: List[String] = ["intro", "body"]
+      var draft = final.copy()
+      draft.append("notes")
 ```
 
 ```quiz
-question: After `var second = first` for a `String`, what does appending to `second` visibly change?
+question: "`var a = \"x\"`, `var b = a`, then `b += \"y\"`. What's a?"
 options:
-  - Only `second`'s contents.
-  - Both strings' contents.
-  - Only `first`'s contents.
+  - "\"x\""
+  - "\"xy\""
+  - It's a compile error, because strings need .copy().
 answer: 0
-explain: String assignment preserves independent value behavior.
+explain: String is implicitly copyable, so b is a separate copy. a is unchanged.
 ```

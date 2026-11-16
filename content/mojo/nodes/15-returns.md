@@ -1,63 +1,95 @@
 ---
 title: Return paths
-icon: 🔢
+icon: "↩️"
 branch: functions
-requires:
-  - functions
-  - if
-summary: Every normal path through a value-returning function must produce a compatible result.
+requires: [functions]
+summary: return hands back a value and ends the function, on every path.
 ---
-
-Every normal path through a value-returning function must produce a compatible result. An early return can handle one branch cleanly.
+**Bug hunt.** This function compiles in Python but not in Mojo. Can you see why?
 
 ```mojo
-def absolute(value: Int) -> Int:
-    if value < 0:
-        return -value
-    return value
-
-def main() raises:
-    print(absolute(-4))
+def grade(score: Int) -> String:
+    if score >= 90:
+        return "A"
+    elif score >= 75:
+        return "B"
+    elif score >= 50:
+        return "C"
 ```
 
-## Put it to work
+A score of 30 matches none of the branches, so the function would reach the end without returning anything. Python would quietly return `None`. Mojo promised a `String` in the signature, so the compiler stops with an error: a return is expected at the end of the function.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+The fix is to cover the remaining case:
+
+```mojo
+    else:
+        return "F"
+```
+
+**`return` ends the function immediately.** Nothing after it runs. You can use that to handle special cases first, an approach called *early return*:
+
+```mojo title=shipping.mojo
+def shipping_cost(weight_kg: Float64, country: String) -> Float64:
+    if weight_kg <= 0.0:
+        return 0.0
+    if country == "NL":
+        return 4.95
+    return 4.95 + weight_kg * 2.0
+
+def main():
+    print(shipping_cost(2.0, "NL"))   # 4.95
+    print(shipping_cost(2.0, "DE"))   # 8.95
+```
+
+Each special case gets its own `return`, and the general case is the last line, at the normal indentation.
+
+**Functions without a result** can still use a bare `return` to stop early:
+
+```mojo
+def warn(level: Int):
+    if level < 3:
+        return
+    print("Warning level", level)
+```
+
+**Returning several values?** Return a [tuple](node:tuples), or a [struct](node:structs) when the values deserve names.
+
+```compare python
+def grade(score):
+    if score >= 90:
+        return "A"
+    # falls off the end: returns None
+```
+
+```compare rust
+fn grade(score: i32) -> &'static str {
+    if score >= 90 { "A" } else { "F" }  // must cover every path too
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about return paths.
-lang: mojo
+goal: "The compiler says this function is missing a return. Add an `else` branch that returns `\"odd\"`."
 code: |-
-  def absolute(value: Int) -> Int:
-      if value < 0:
-          return value
-      return value
-
-  def main() raises:
-      print(absolute(-4))
+  def parity(n: Int) -> String:
+      if n % 2 == 0:
+          return "even"
 checks:
-  - match: |-
-      return\s+\-value\
-      \s+\s+\s+\s+return\s+value
-    message: |-
-      Use return -value
-          return value for this step.
-  - notMatch: |-
-      return\s+value\
-      \s+\s+\s+\s+return\s+value
-    message: |-
-      Replace return value
-          return value in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'else\s*:\s*\n\s+return\s+"odd"'
+    message: 'Add: else: return "odd"'
+solution: |-
+  def parity(n: Int) -> String:
+      if n % 2 == 0:
+          return "even"
+      else:
+          return "odd"
 ```
 
 ```quiz
-question: Why does the absolute-value function return from both its negative and nonnegative paths?
+question: "What happens to code written after a `return` statement in the same block?"
 options:
-  - Each normal path must supply an integer result.
-  - A missing return automatically supplies zero.
-  - Returning from one branch also returns from every other branch.
-answer: 0
-explain: All successful paths must uphold the declared result contract.
+  - It runs after the value is returned.
+  - It never runs.
+  - It runs only if the return value is unused.
+answer: 1
+explain: return ends the function on the spot.
 ```

@@ -1,48 +1,87 @@
 ---
 title: Floating-point computation
-icon: 💬
+icon: "🌊"
 branch: basics
-requires:
-  - integers
-summary: Float32 and Float64 trade storage and precision.
+requires: [integers]
+summary: Float64 and friends, and why 0.1 + 0.2 still isn't 0.3.
 ---
+For numbers with a fractional part, Mojo's default is `Float64`, a 64-bit floating-point number. It's the same kind of number as Python's `float` and JavaScript's `number`:
 
-`Float32` and `Float64` trade storage and precision. Binary floating-point approximates many decimal values; compare computed results with a suitable tolerance.
-
-```mojo
-def main() raises:
-    var distance: Float64 = 12.5
-    var time: Float64 = 2.0
-    print(distance / time)
+```mojo title=pace.mojo
+def main():
+    var distance: Float64 = 10.0   # kilometers
+    var minutes: Float64 = 52.5
+    var pace = minutes / distance
+    print("Pace:", pace, "min/km")
 ```
 
-## Put it to work
+```repl shell
+> mojo run pace.mojo
+Pace: 5.25 min/km
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+A literal with a dot, like `2.5`, is a float, and a variable initialized with one becomes `Float64`.
+
+**The usual floating-point caveat applies.** Floats store numbers in binary, so most decimal fractions are approximations:
+
+```mojo
+var a: Float64 = 0.1
+var b: Float64 = 0.2
+print(a + b == 0.3)   # False
+```
+
+That's not a Mojo quirk. Every language that uses standard floats behaves this way. Compare floats with a small tolerance instead: `abs(a - b) < 1e-9`. And never use floats for money; count cents in an `Int` instead.
+
+**Smaller floats.** Like integers, floats come in sizes:
+
+| Type | Bits | Typical use |
+| --- | --- | --- |
+| `Float64` | 64 | the default: about 15–16 significant digits |
+| `Float32` | 32 | graphics, games, large arrays, about 7 digits |
+| `Float16`, `BFloat16` | 16 | machine-learning models |
+
+Smaller floats lose precision, but they use less memory, and a CPU can process twice as many `Float32`s as `Float64`s in one [SIMD](node:simd) instruction. That's why ML code uses them so much.
+
+**Division.** `/` divides floats normally. For integers, `//` divides and rounds down, and `%` gives the remainder: `17 // 5` is 3, `17 % 5` is 2.
+
+Floats also have the special values `inf` and `nan`, which you get from things like dividing by zero. They behave the same as in Python and JavaScript.
+
+```compare python
+pace = 52.5 / 10.0   # 5.25
+0.1 + 0.2 == 0.3     # False here too
+```
+
+```compare javascript
+0.1 + 0.2 === 0.3;   // false
+```
+
+```compare rust
+let pace: f64 = 52.5 / 10.0;
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about floating-point computation.
-lang: mojo
+goal: "The vertex positions are for a graphics card, which wants 32-bit floats. Change both types to `Float32`."
 code: |-
-  def main() raises:
-      var distance: Float64 = 12.5
-      var time: Float64 = 2.0
-      print(distance * time)
+  def main():
+      var x: Float64 = 0.5
+      var y: Float64 = -0.25
 checks:
-  - match: distance\s+/\s+time
-    message: Use distance / time for this step.
-  - notMatch: distance\s+\*\s+time
-    message: Replace distance * time in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'var\s+x\s*:\s*Float32\s*='
+    message: 'Make x a Float32.'
+  - match: 'var\s+y\s*:\s*Float32\s*='
+    message: 'Make y a Float32.'
+solution: |-
+  def main():
+      var x: Float32 = 0.5
+      var y: Float32 = -0.25
 ```
 
 ```quiz
-question: Why use a tolerance when checking a floating-point calculation?
+question: "`a` and `b` are `Float64` variables holding 0.1 and 0.2. What does `print(a + b == 0.3)` print?"
 options:
-  - "`Float64` can represent only whole numbers."
-  - Binary floating-point approximates many decimal values.
-  - Every floating-point operation returns a random value.
+  - "True"
+  - "False"
+  - It's a compile error.
 answer: 1
-explain: Exact equality can be inappropriate for results affected by rounding.
+explain: Neither 0.1 nor 0.2 can be stored exactly in binary, so the sum is very slightly off.
 ```

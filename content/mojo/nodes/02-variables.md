@@ -1,68 +1,89 @@
 ---
 title: Typed variables
-icon: 🏷️
+icon: "📮"
 branch: basics
-requires:
-  - mojo
-summary: var declares mutable typed storage.
+requires: [mojo]
+summary: var declares a variable, and its type is fixed once it's chosen.
 ---
+In Mojo, you declare variables with `var`. Add a type after a colon, or let the compiler work it out from the value:
 
-var declares mutable typed storage. The compiler can infer a type from an initializer, but reassignment does not change that type.
+```mojo title=score.mojo
+def main():
+    var lives: Int = 3       # explicit type
+    var player = "Robin"     # inferred: String
+    var speed = 2.5          # inferred: Float64
 
-```mojo
-def main() raises:
-    var score: Int = 1
-    score += 2
-    print(score)
+    lives -= 1
+    print(player, "has", lives, "lives left")
 ```
 
-## Put it to work
+```repl shell
+> mojo run score.mojo
+Robin has 2 lives left
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+`print` takes any number of values and puts a space between them, just like Python's.
+
+**A variable keeps its type for life.** Coming from Python, this is the big adjustment. Once `lives` is an `Int`, it stays an `Int`:
+
+```mojo
+var lives = 3
+lives = "three"   # compile error: a String can't become an Int
+```
+
+The compiler reports this before anything runs, with an error saying it *cannot implicitly convert* the value to `Int`. Think of a variable as a labeled box with a fixed shape: you can put a new `Int` in it whenever you like, but never a `String`.
+
+**Why `var`?** Python creates a variable the first time you assign to it. Mojo wants you to say "this is new" explicitly. That way, a typo like `livse = 2` is an error ("use of unknown declaration") rather than a brand new variable that silently hides a bug.
+
+**Declare now, assign later.** You can declare a variable with only a type, as long as you assign it before reading it:
+
+```mojo
+var message: String
+if lives > 0:
+    message = "Keep going!"
+else:
+    message = "Game over"
+print(message)
+```
+
+If one path forgot to assign `message`, the compiler would tell you it's *uninitialized* when used. No surprise `None` at runtime.
 
 ```compare python
-score = 1
-score += 2
-print(score)
+lives = 3
+lives = "three"   # fine in Python, the type can change
 ```
 
 ```compare javascript
-let score = 1;
-score += 2;
-console.log(score);
+let lives = 3;
+lives = "three";  // also fine in JS
 ```
 
 ```compare rust
-fn main() {
-    let mut score = 1;
-    score += 2;
-    println!("{score}");
-}
+let mut lives: i32 = 3;
+lives = "three";  // error, like Mojo
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about typed variables.
-lang: mojo
+goal: "Declare a variable `temperature` with the explicit type `Float64` and the value 21.5."
 code: |-
-  def main() raises:
-      var score: Int = 1
-      score -= 2
-      print(score)
+  def main():
+      temperature = 21.5
+      print(temperature)
 checks:
-  - match: score\s+\+=\s+2
-    message: Use score += 2 for this step.
-  - notMatch: score\s+\-=\s+2
-    message: Replace score -= 2 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'var\s+temperature\s*:\s*Float64\s*=\s*21\.5'
+    message: 'Write var temperature: Float64 = 21.5'
+solution: |-
+  def main():
+      var temperature: Float64 = 21.5
+      print(temperature)
 ```
 
 ```quiz
-question: "After `var score: Int = 1`, what can be assigned to `score`?"
+question: "`var count = 10`, then `count = 2.5`. What happens?"
 options:
-  - A string that changes its type to `String`.
-  - Any value because `var` disables typing.
-  - Another compatible integer value.
-answer: 2
-explain: The binding is mutable, but its declared type remains fixed.
+  - count becomes 2.5.
+  - A compile error, because count is an Int.
+  - count becomes 2, rounded down.
+answer: 1
+explain: The type is fixed when the variable is declared, and a Float64 can't implicitly become an Int.
 ```

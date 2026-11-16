@@ -1,21 +1,39 @@
+raises:
+  definition: A marker on a function signature saying the function may raise an error. Callers must handle the error or be marked raises themselves.
+  node: errors
+argument convention:
+  definition: The keyword before a parameter (read, mut or var) that says whether the function borrows, changes or owns the value.
+  node: read-args
 mutable argument:
-  definition: A mut parameter through which a function can change the caller’s value.
+  definition: A mut parameter. The function works on the caller's own variable and can change it.
   node: mutable-args
 ownership:
-  definition: The responsibility for a value’s lifetime and eventual destruction.
+  definition: Being responsible for a value. The owner decides when the value is destroyed, and ownership can be handed over.
+  node: transfers
+transfer sigil:
+  definition: The ^ after a variable, which hands its value over instead of copying it. The variable can't be used afterwards.
   node: transfers
 struct:
-  definition: A user-defined type grouping fields, methods, and compile-time members.
+  definition: A user-defined type with typed fields and methods, laid out in memory at compile time.
   node: structs
 trait:
-  definition: An explicitly adopted contract of methods and compile-time requirements.
+  definition: A named set of methods a type promises to provide, so generic code can rely on them.
   node: traits
 comptime:
-  definition: Information evaluated and available during compilation.
+  definition: Evaluated while the program is compiled, rather than while it runs.
   node: comptime
+parameter:
+  definition: A compile-time input, written in square brackets, like the 4 in SIMD[DType.float32, 4].
+  node: parameters
 SIMD:
-  definition: "Single instruction, multiple data: operating on several numeric lanes together."
+  definition: "Single instruction, multiple data: one CPU instruction working on several numbers (lanes) at once."
+  node: simd
+dtype:
+  definition: The element type of a SIMD vector, like DType.float32 or DType.int8.
   node: simd
 list:
-  definition: A dynamically sized homogeneous collection parameterized by its element type.
+  definition: A growable sequence whose elements all have the same type, like List[Int].
   node: lists
+PythonObject:
+  definition: A Mojo wrapper around any Python value. Convert it to a native type to use it with Mojo APIs.
+  node: python-values

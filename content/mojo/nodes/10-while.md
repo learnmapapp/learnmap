@@ -1,51 +1,97 @@
 ---
 title: While loops
-icon: 📦
+icon: "🔁"
 branch: flow
-requires:
-  - if
-  - variables
-summary: while checks its condition before each iteration.
+requires: [if]
+summary: Repeat a block for as long as a condition stays true.
 ---
+A `while` loop is for when you don't know in advance how many rounds you'll need. Here's a classic: how many years until savings double at 7% interest?
 
-while checks its condition before each iteration. Update the controlling state so the loop can finish.
+```mojo title=double.mojo
+def main():
+    var balance: Float64 = 1000.0
+    var years = 0
 
-```mojo
-def main() raises:
-    var remaining = 3
-    while remaining > 0:
-        print(remaining)
-        remaining -= 1
+    while balance < 2000.0:
+        balance *= 1.07
+        years += 1
+
+    print(t"Doubled after {years} years")
 ```
 
-## Put it to work
+```repl shell
+> mojo run double.mojo
+Doubled after 11 years
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**How Mojo runs it, step by step:**
+
+1. Check the condition. `1000.0 < 2000.0` is true, so run the body.
+2. Run the body: the balance grows and `years` goes up by one.
+3. Go back to step 1. When the condition is false, skip past the loop.
+
+After 10 years the balance is about 1967, still under 2000. After 11 it's about 2105, the condition fails, and the program continues with the `print`.
+
+**Three things that commonly go wrong:**
+
+| Symptom | Cause |
+| --- | --- |
+| The loop never ends | nothing in the body moves the condition toward false |
+| The loop never runs | the condition was false from the start |
+| Off by one | `<` where you meant `<=`, or the other way around |
+
+The first one is the sneaky one. If you forget `balance *= 1.07`, the program runs forever. Press Ctrl+C in the terminal to stop it.
+
+**Counting?** If you know how many times to repeat, a [`for` loop over a range](node:for) is shorter and can't get stuck. Use `while` when the stopping point depends on what happens inside the loop.
+
+Mojo has no `do ... while`. When the body must run at least once, use `while True:` with a [`break`](node:break) inside.
+
+```compare python
+while balance < 2000.0:
+    balance *= 1.07
+    years += 1
+```
+
+```compare javascript
+while (balance < 2000) {
+  balance *= 1.07;
+  years++;
+}
+```
+
+```compare rust
+while balance < 2000.0 {
+    balance *= 1.07;
+    years += 1;
+}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about while loops.
-lang: mojo
+goal: "This countdown never ends. Make `n` go down by one each time through the loop."
 code: |-
-  def main() raises:
-      var remaining = 3
-      while remaining > 1:
-          print(remaining)
-          remaining -= 1
+  def main():
+      var n = 3
+      while n > 0:
+          print(n)
+      print("Liftoff!")
 checks:
-  - match: remaining\s+>\s+0
-    message: Use remaining > 0 for this step.
-  - notMatch: remaining\s+>\s+1
-    message: Replace remaining > 1 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'while\s+n\s*>\s*0\s*:\s*\n(\s+.*\n)*?\s+n\s*-=\s*1'
+    message: Add n -= 1 inside the loop body.
+solution: |-
+  def main():
+      var n = 3
+      while n > 0:
+          print(n)
+          n -= 1
+      print("Liftoff!")
 ```
 
 ```quiz
-question: What happens when a `while` condition is initially `false`?
+question: "`var i = 10` then `while i < 5: i += 1`. How many times does the body run?"
 options:
-  - The body runs until a separate `break`.
-  - The body is not executed.
-  - The body executes once before checking.
-answer: 1
-explain: "`while` checks its condition before entering the body."
+  - Zero.
+  - Once.
+  - Five times.
+answer: 0
+explain: The condition is checked before the first run. 10 < 5 is false, so the body never runs.
 ```

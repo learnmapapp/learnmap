@@ -1,57 +1,99 @@
 ---
 title: Mutable arguments
-icon: 🔁
+icon: "✏️"
 branch: functions
-requires:
-  - functions
-  - variables
-summary: mut grants a function mutable access to the caller’s storage.
+requires: [functions]
+summary: Mark a parameter mut to let a function change the caller's variable.
 ---
-
-mut grants a function mutable access to the caller’s storage. This makes intentional changes part of the interface.
-
-A useful term here is [[mutable argument]]: A mut parameter through which a function can change the caller’s value.
+**Predict the output:**
 
 ```mojo
-def advance(mut value: Int):
-    value += 1
+def level_up(level: Int):
+    level += 1
 
-def main() raises:
-    var value = 3
-    advance(value)
-    print(value)
+def main():
+    var level = 1
+    level_up(level)
+    print(level)
 ```
 
-## Put it to work
+Trick question: this one doesn't even compile. By default, a parameter is **read-only**: the function can look at `level`, but not change it. The compiler reports that `level` is immutable, pointing at `+= 1`.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+That's a deliberate default. When you call a function, you can be sure it won't change your variables behind your back, unless the signature says so.
+
+**Saying so is one word: `mut`.**
+
+```mojo title=game.mojo
+def level_up(mut level: Int):
+    level += 1
+
+def main():
+    var level = 1
+    level_up(level)
+    level_up(level)
+    print(level)   # 3
+```
+
+Now the function works on the caller's own variable, not on a copy. When `level_up` adds one, `main`'s `level` goes up. This kind of parameter is a [[mutable argument]].
+
+**How does this compare to what you know?**
+
+| Language | Changing a caller's number inside a function |
+| --- | --- |
+| Python | impossible: return the new value instead |
+| JavaScript | impossible for numbers |
+| C++ | `int& level` |
+| Rust | `level: &mut i32`, called as `level_up(&mut level)` |
+| Mojo | `mut level: Int`, called as `level_up(level)` |
+
+Note that the call site looks completely normal in Mojo. The `mut` is only in the signature.
+
+**Some rules:**
+
+- You can only pass something that *can* change: a `var` variable, not a literal. `level_up(5)` is an error, since there's no variable to update.
+- `mut` works for any type. A function that adds items to a [list](node:lists) takes `mut items: List[String]`.
+
+**Should you use it?** Returning a new value (`level = next_level(level)`) is often clearer for small values. `mut` shines for large values that would be wasteful to copy, like lists and big structs, and for functions that need to update several things at once.
+
+```compare python
+def level_up(level: int) -> int:
+    return level + 1   # ints can't be changed in place
+```
+
+```compare rust
+fn level_up(level: &mut i32) { *level += 1; }
+level_up(&mut level);
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about mutable arguments.
-lang: mojo
+goal: "`add_bonus` should increase the caller's `score`. Mark the parameter as `mut`."
 code: |-
-  def advance(mut value: Int):
-      value -= 1
+  def add_bonus(score: Int):
+      score += 50
 
-  def main() raises:
-      var value = 3
-      advance(value)
-      print(value)
+  def main():
+      var score = 100
+      add_bonus(score)
+      print(score)
 checks:
-  - match: value\s+\+=\s+1
-    message: Use value += 1 for this step.
-  - notMatch: value\s+\-=\s+1
-    message: Replace value -= 1 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'def\s+add_bonus\(\s*mut\s+score\s*:\s*Int\s*\)'
+    message: 'Write def add_bonus(mut score: Int):'
+solution: |-
+  def add_bonus(mut score: Int):
+      score += 50
+
+  def main():
+      var score = 100
+      add_bonus(score)
+      print(score)
 ```
 
 ```quiz
-question: Which parameter convention explicitly allows updating the caller's value?
+question: "How do you call `def reset(mut count: Int)` with a variable `n`?"
 options:
-  - "`mut value: Int`"
-  - "`value: Int` alone."
-  - A compile-time parameter named `value`.
-answer: 0
-explain: A `mut` parameter grants mutable access to caller-owned storage.
+  - "`reset(mut n)`"
+  - "`reset(&n)`"
+  - "`reset(n)`"
+answer: 2
+explain: The mut is only written in the signature. The call looks like any other.
 ```
