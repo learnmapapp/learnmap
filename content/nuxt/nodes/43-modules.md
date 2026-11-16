@@ -1,41 +1,85 @@
 ---
 title: Install a Nuxt module
-icon: 📋
+icon: "🧩"
 branch: production
-requires:
-  - setup
-summary: The module CLI installs a package and updates configuration.
+requires: [setup]
+summary: Modules extend Nuxt itself; add them with npx nuxt module add, which installs and registers them.
 ---
+**A shopping trip.** You need icons, fonts and a content system. Before writing them yourself, check the shelf: [nuxt.com/modules](https://nuxt.com/modules) lists hundreds of [[module|modules]], packages that plug into Nuxt itself.
 
-In your Nuxt 4 project, save this as `terminal command`. The module CLI installs a package and updates configuration. Review module options, compatibility, and resulting changes before adopting additional integrations.
+**How is a module different from an ordinary npm package?** A package like `date-fns` gives you functions to import. A module changes *how Nuxt builds your app*. It can register components, add auto-imports, create server routes, or edit the config. That's why `@nuxt/image` could give you `<NuxtImg>` with no import.
 
-```shell
-npx nuxt module add @nuxt/image
+**Buying one:**
+
+```repl shell
+> npx nuxt module add icon
 ```
 
-## Put it to work
+One command did two things. It installed the npm package, and it registered it:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```typescript title=nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/icon'],
+});
+```
+
+That `modules` array is the important bit. Install a package with plain `npm install` and forget this line, and nothing happens: Nuxt never loads it.
+
+**Using it:** each module documents what it adds. For `@nuxt/icon`, it's a component:
+
+```vue
+<template>
+  <Icon name="lucide:check-circle" />
+</template>
+```
+
+**Configuring it:** modules usually read options from a key named after them:
+
+```typescript title=nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxt/icon', '@nuxt/fonts'],
+  icon: { size: '20px' },
+});
+```
+
+**Popular official ones** to know about: `@nuxt/image` (image optimization), `@nuxt/fonts` (self-hosted web fonts), `@nuxt/icon` (icons), `@nuxt/content` (Markdown-driven pages), `@nuxt/test-utils` (testing), and `@nuxt/eslint`.
+
+```tip
+Check a module's compatibility badge before installing it. Older ones were written for Nuxt 2 or 3 and may not support Nuxt 4.
+```
+
+```compare typescript
+// Next.js has no module system; libraries are wired
+// up by hand in next.config and layout files.
+```
+
+```compare python
+# Django: pip install, then add the app to
+# INSTALLED_APPS. The same two steps.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about install a nuxt module.
-lang: shell
-code: npx nuxt module remove @nuxt/image
+goal: "`@nuxt/fonts` is installed but does nothing. Register it in the config."
+lang: typescript
+code: |-
+  export default defineNuxtConfig({
+    modules: ['@nuxt/image'],
+  });
 checks:
-  - match: npx\s+nuxt\s+module\s+add\s+@nuxt/image
-    message: Use npx nuxt module add @nuxt/image for this step.
-  - notMatch: npx\s+nuxt\s+module\s+remove\s+@nuxt/image
-    message: Replace npx nuxt module remove @nuxt/image in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: "modules:\\s*\\[\\s*'@nuxt/image',\\s*'@nuxt/fonts'\\s*,?\\s*\\]"
+    message: "Add '@nuxt/fonts' to the modules array, after '@nuxt/image'."
+solution: |-
+  export default defineNuxtConfig({
+    modules: ['@nuxt/image', '@nuxt/fonts'],
+  });
 ```
 
 ```quiz
-question: What does `npx nuxt module add @nuxt/image` normally do?
+question: "What does `npx nuxt module add image` do that `npm install @nuxt/image` doesn't?"
 options:
-  - Creates an API endpoint for every image automatically.
-  - Installs the module and updates project configuration.
-  - Removes all existing image files.
+  - It downloads a faster build of the package.
+  - It also adds the module to the modules array in nuxt.config.ts.
+  - Nothing; they're identical.
 answer: 1
-explain: Review the package's compatibility and options after adding it.
+explain: A module only loads when it's registered in nuxt.config.ts, and module add does both steps.
 ```

@@ -1,53 +1,91 @@
 ---
 title: Reactive request keys
-icon: 🔢
+icon: "🔑"
 branch: data
-requires:
-  - dynamic
-  - use-fetch
-summary: A reactive request URL lets useFetch follow a changing route parameter.
+requires: [dynamic, use-fetch]
+summary: Pass refs or getters to useFetch, and it fetches again whenever they change.
 ---
+**Predict the request.** Each snippet runs on a page at `/products/kettle`. Then the user clicks a link to `/products/toaster`, and the **same page component stays mounted**. Does the data follow?
 
-In your Nuxt 4 project, save this as `app/pages/courses/[id].vue`. A reactive request URL lets `useFetch` follow a changing route parameter. Keep request identity aligned with the actual resource and validate IDs on the server.
+**Puzzle 1.**
 
-```vue
-<script setup lang="ts">
+```typescript
 const route = useRoute();
-const id = computed(() => String(route.params.id));
-const { data } = await useFetch(() => `/api/courses/${id.value}`);
-</script>
-<template><pre>{{ data }}</pre></template>
+const { data } = await useFetch(`/api/products/${route.params.slug}`);
 ```
 
-## Put it to work
+*Answer: no.* The template string is built **once**, during setup, as `'/api/products/kettle'`. `useFetch` receives a plain string, so it has nothing to watch. You keep seeing the kettle.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Puzzle 2.**
+
+```typescript
+const route = useRoute();
+const { data } = await useFetch(
+  () => `/api/products/${route.params.slug}`,
+);
+```
+
+*Answer: yes.* A **getter function** lets `useFetch` re-read the URL. It notices `route.params.slug` change, builds the new URL, and fetches the toaster.
+
+**Puzzle 3.**
+
+```typescript
+const page = ref(1);
+const { data } = await useFetch('/api/products', {
+  query: { page },
+});
+```
+
+The user clicks *Next*, which runs `page.value++`. *Answer: yes.* Options such as `query` accept refs, and `useFetch` watches them. The request becomes `/api/products?page=2`.
+
+**Puzzle 4.**
+
+```typescript
+const page = ref(1);
+const { data } = await useFetch('/api/products', {
+  query: { page: page.value },
+});
+```
+
+*Answer: no.* `page.value` is read once, and the number `1` is passed. That's the same trap as puzzle 1.
+
+**The pattern:** give `useFetch` the **ref or a getter**, never a value you've already read out of it. When an input changes, `useFetch` fetches again under a new cache key automatically.
+
+**Need to watch something that isn't part of the request?** Use the `watch` option: `useFetch('/api/stats', { watch: [range] })`.
+
+```compare typescript
+// TanStack Query: put the inputs in queryKey,
+// e.g. ['product', slug], to refetch on change.
+```
+
+```compare javascript
+// Manually: watch(slug, load) and call fetch yourself.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about reactive request keys.
-lang: vue
+goal: "Make the search reactive: pass the `search` ref itself as the `q` query, not its current value."
+lang: typescript
 code: |-
-  <script setup lang="ts">
-  const route = useRoute();
-  const id = computed(() => String(route.params.id));
-  const { data } = await useFetch(() => `/api/courses/static`);
-  </script>
-  <template><pre>{{ data }}</pre></template>
+  const search = ref('');
+  const { data: results } = await useFetch('/api/search', {
+    query: { q: search.value },
+  });
 checks:
-  - match: "`/api/courses/\\$\\{id\\.value\\}`"
-    message: Use `/api/courses/${id.value}` for this step.
-  - notMatch: "`/api/courses/static`"
-    message: Replace `/api/courses/static` in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'query:\s*\{\s*q:\s*search\s*\}'
+    message: "Use query: { q: search }, without .value."
+solution: |-
+  const search = ref('');
+  const { data: results } = await useFetch('/api/search', {
+    query: { q: search },
+  });
 ```
 
 ```quiz
-question: Why pass a function returning a reactive course URL to `useFetch`?
+question: "`useFetch(() => '/api/users/' + id.value)`. What happens when `id.value` changes from 3 to 4?"
 options:
-  - So the request follows changes to the route's course ID.
-  - So all courses always use one fixed response.
-  - So route IDs no longer need server validation.
-answer: 0
-explain: A reactive request identity keeps loaded data aligned with the selected resource.
+  - Nothing until you call refresh().
+  - It fetches /api/users/4 automatically.
+  - It fetches both 3 and 4.
+answer: 1
+explain: A getter URL is reactive, so useFetch re-evaluates it and fetches again.
 ```

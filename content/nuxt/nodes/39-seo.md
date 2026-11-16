@@ -1,52 +1,80 @@
 ---
 title: Typed SEO metadata
-icon: 🔢
+icon: "📰"
 branch: production
-requires:
-  - head
-summary: useSeoMeta offers typed fields for common metadata.
+requires: [head]
+summary: useSeoMeta sets description, Open Graph and Twitter tags with typed, flat keys.
 ---
+**A link preview post-mortem.** You share your new app in a team chat. The preview shows: no image, the title *Tasks*, and the description *"Loading…"*, scraped from the first text on the page. Not the launch you hoped for.
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. `useSeoMeta` offers typed fields for common metadata. Keep descriptions accurate and include publicly reachable images when adding social previews.
+**What went wrong?** Chat apps and social sites build previews from `<meta>` tags in your HTML. You had none, so they guessed. The tags they look for:
 
-```vue
+| Tag | Used for |
+| --- | --- |
+| `description` | Search result snippets |
+| `og:title`, `og:description` | Preview title and text (Open Graph) |
+| `og:image` | Preview image, ideally 1200×630 |
+| `twitter:card` | Preview size on X/Twitter |
+
+**The fix:** `useSeoMeta` sets them all, with one flat, typed key each:
+
+```vue title=app/pages/index.vue
 <script setup lang="ts">
-useSeoMeta({ title: "Nuxt notes", description: "Practical notes for learning Nuxt.", ogTitle: "Nuxt notes" });
+useSeoMeta({
+  title: 'Tasks: a tiny to-do app',
+  description: 'Plan your day in under a minute.',
+  ogTitle: 'Tasks: a tiny to-do app',
+  ogDescription: 'Plan your day in under a minute.',
+  ogImage: 'https://tasks.example.com/og.png',
+  twitterCard: 'summary_large_image',
+});
 </script>
-<template><h1>Nuxt notes</h1></template>
 ```
 
-## Put it to work
+Why not `useHead` with a `meta` array? You could, but it's easy to mix up `name=` and `property=` (Open Graph uses `property`). `useSeoMeta` knows which is which, and TypeScript catches typos like `ogImg`.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Post-mortem lessons:**
+
+1. **Use absolute URLs for `ogImage`.** A chat app fetching `/og.png` has no idea which site that's relative to.
+2. **Make data-driven tags reactive**, like titles: `ogTitle: () => post.value?.title`.
+3. **Server rendering matters here.** Preview bots don't run JavaScript. Nuxt renders these tags on the server, so the bots see them.
+4. **Previews are cached.** After fixing tags, most platforms have a debugger page that refreshes their copy.
+
+```compare typescript
+// Next.js: metadata.openGraph = { title, images: [...] }
+```
+
+```compare python
+# Django: <meta property="og:title"> written by hand
+# in each template.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about typed seo metadata.
-lang: vue
-code: >-
-  <script setup lang="ts">
-
-  useSeoMeta({ title: "Nuxt notes", description: "Practical notes for learning Nuxt.", ogTitle:
-  "Untitled" });
-
-  </script>
-
-  <template><h1>Nuxt notes</h1></template>
+goal: "Add a description and an Open Graph image (`https://example.com/og.png`) with `useSeoMeta`."
+lang: typescript
+code: |-
+  useSeoMeta({
+    title: 'Pricing',
+  });
 checks:
-  - match: ogTitle:\s+"Nuxt\s+notes"
-    message: 'Use ogTitle: "Nuxt notes" for this step.'
-  - notMatch: ogTitle:\s+"Untitled"
-    message: 'Replace ogTitle: "Untitled" in the starting code.'
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: "description:\\s*'[^']+'"
+    message: "Add description: '...' with some text."
+  - match: "ogImage:\\s*'https://example\\.com/og\\.png'"
+    message: "Add ogImage: 'https://example.com/og.png'."
+solution: |-
+  useSeoMeta({
+    title: 'Pricing',
+    description: 'Simple plans for every team.',
+    ogImage: 'https://example.com/og.png',
+  });
 ```
 
 ```quiz
-question: What should `useSeoMeta` descriptions reflect?
+question: "Why should `ogImage` be an absolute URL?"
 options:
-  - The actual content of the current page.
-  - Unrelated popular keywords shared by every page.
-  - A guaranteed first-place search ranking.
-answer: 0
-explain: Metadata describes the page; it does not guarantee search placement.
+  - Relative URLs are slower.
+  - The site fetching the preview doesn't know which domain a relative path belongs to.
+  - Nuxt rejects relative paths.
+answer: 1
+explain: Preview bots read the tag out of context, so the URL must include the domain.
 ```

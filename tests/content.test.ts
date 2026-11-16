@@ -155,7 +155,7 @@ describe('highlighter', () => {
 });
 
 // Courses rewritten for newcomers: every exercise ships a solution that passes its checks.
-const rewrittenCourses = new Set(['zig', 'swift', 'lua', 'mojo', 'nim', 'astro']);
+const rewrittenCourses = new Set(['zig', 'swift', 'lua', 'mojo', 'nim', 'astro', 'nuxt']);
 
 describe.each(completedCatalogCourses)('completed catalog course %s', (id) => {
   const course = loadFromDisk(id);

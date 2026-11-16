@@ -1,79 +1,90 @@
 ---
 title: Keyed lists
-icon: 🔧
+icon: "📋"
 branch: basics
-requires:
-  - templates
-summary: Use v-for to render a collection and a stable unique key to preserve item identity as the
-  list changes.
+requires: [templates]
+summary: v-for renders one element per item, and :key tells Vue which element belongs to which item.
 ---
+**A bug report.** *"I typed a note into the second task's input, then deleted the first task. My note jumped to the wrong task!"*
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. Use v-for to render a collection and a stable unique key to preserve item identity as the list changes. Prefer a domain ID over an editable label.
+Here's the component:
 
 ```vue
 <script setup lang="ts">
-const topics = [{ id: "vue", title: "Vue" }, { id: "nuxt", title: "Nuxt" }];
+const tasks = ref([
+  { id: 1, title: 'Buy milk' },
+  { id: 2, title: 'Call Sam' },
+  { id: 3, title: 'Book train' },
+]);
 </script>
-<template><ul><li v-for="topic in topics" :key="topic.id">{{ topic.title }}</li></ul></template>
+
+<template>
+  <ul>
+    <li v-for="task in tasks">
+      {{ task.title }} <input placeholder="Note" />
+    </li>
+  </ul>
+</template>
 ```
 
-## Put it to work
+`v-for="task in tasks"` repeats the `<li>` once per task. That part is fine. The bug is what Vue does when the list **changes**.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**The diagnosis.** Without a key, Vue matches elements by **position**. Delete task 1, and Vue sees three items become two. The cheapest update is to change the *text* of the first two `<li>` elements and remove the last one. The inputs, with whatever you typed into them, stay where they were. Your note for *Call Sam* now sits next to *Book train*.
 
-```compare javascript
-const topics = ["Astro", "Nuxt"];
-const list = document.createElement("ul");
-for (const topic of topics) {
-  const item = document.createElement("li");
-  item.textContent = topic;
-  list.append(item);
-}
-document.body.append(list);
+**The fix.** Give each element a stable identity:
+
+```vue
+<li v-for="task in tasks" :key="task.id">
+  {{ task.title }} <input placeholder="Note" />
+</li>
 ```
+
+Now Vue removes the element whose key is 1, and the others keep their inputs.
+
+**What makes a good key:**
+
+- **Unique** within the list, and **stable**: the same item always has the same key. A database id is perfect.
+- **Not the index.** `:key="index"` is position matching again, so it has the same bug.
+- **Not `Math.random()`.** A new key on every render makes Vue rebuild every element each time.
+
+You also get the index when you need it: `v-for="(task, index) in tasks"`.
 
 ```compare typescript
-const topics: { id: string; title: string }[] = [
-  { id: "astro", title: "Astro" },
-  { id: "nuxt", title: "Nuxt" },
-];
-const titles = topics.map(topic => topic.title);
+// React has the same rule:
+// tasks.map(t => <li key={t.id}>...</li>)
 ```
 
 ```compare python
-topics = ["Astro", "Nuxt"]
-for topic in topics:
-    print(topic)
-# This prints text; it does not create browser DOM elements.
+# Jinja: {% for task in tasks %} has no keys,
+# because the server re-renders the whole page.
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about keyed lists.
+goal: "Fix the bug: give each `<li>` a stable `:key` using `task.id`."
 lang: vue
-code: >-
-  <script setup lang="ts">
-
-  const topics = [{ id: "vue", title: "Vue" }, { id: "nuxt", title: "Nuxt" }];
-
-  </script>
-
-  <template><ul><li v-for="topic in topics" :key="topic.title">{{ topic.title
-  }}</li></ul></template>
+code: |-
+  <template>
+    <ul>
+      <li v-for="task in tasks">{{ task.title }}</li>
+    </ul>
+  </template>
 checks:
-  - match: :key="topic\.id"
-    message: Use :key="topic.id" for this step.
-  - notMatch: :key="topic\.title"
-    message: Replace :key="topic.title" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: ':key="task\.id"'
+    message: Add :key="task.id" to the <li>.
+solution: |-
+  <template>
+    <ul>
+      <li v-for="task in tasks" :key="task.id">{{ task.title }}</li>
+    </ul>
+  </template>
 ```
 
 ```quiz
-question: Which key is most suitable for reorderable records with stable IDs?
+question: "Why is `:key=\"index\"` a poor choice for a list where items can be deleted?"
 options:
-  - A new random value on each render.
-  - Its current array index regardless of reordering.
-  - The record's ID.
-answer: 2
-explain: Stable keys preserve identity when items move.
+  - Indexes aren't allowed as keys.
+  - After a delete, the indexes shift, so elements get matched to the wrong items.
+  - It makes the list render in reverse.
+answer: 1
+explain: An index describes a position, not an item, so it doesn't survive a reorder or a delete.
 ```

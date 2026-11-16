@@ -1,52 +1,106 @@
 ---
 title: Lazy component imports
-icon: 🛠️
+icon: "💤"
 branch: components
-requires:
-  - auto-components
-summary: The Lazy prefix requests a lazy-loaded component.
+requires: [auto-components]
+summary: Prefix a component with Lazy to load its code later, and add hydrate-on-* to delay its hydration.
 ---
+**A loading timeline.** A blog post page has an article, a comments section near the bottom, and a big emoji picker that only opens when you click *React*. Here's what loading it looks like, first as written, then with two small changes.
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. The Lazy prefix requests a lazy-loaded component. Conditional rendering controls when it is needed; test loading behavior in a production build.
+**Version 1: everything up front.**
 
 ```vue
-<script setup lang="ts">
-const open = ref(false);
-</script>
-<template><button @click="open = true">Show task</button><LazyTaskCard v-if="open" title="Practice" /></template>
+<template>
+  <article>...</article>
+  <CommentSection :post-id="post.id" />
+  <EmojiPicker v-if="pickerOpen" />
+</template>
 ```
 
-## Put it to work
+```text
+0 ms     HTML arrives, article visible
+0-900    download JS: page + comments + picker
+900 ms   hydrate everything, page interactive
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+The visitor came to read. They downloaded and ran the code for a picker they may never open and for comments far below the fold, before the page could respond to clicks.
+
+**Version 2: add `Lazy`.**
+
+```vue
+<template>
+  <article>...</article>
+  <CommentSection :post-id="post.id" />
+  <LazyEmojiPicker v-if="pickerOpen" />
+</template>
+```
+
+Prefix any auto-imported component name with `Lazy`, and Nuxt puts its code in a separate file that's only downloaded when the component first renders. Since the picker is behind `v-if`, that's when the user opens it.
+
+```text
+0 ms     HTML arrives
+0-500    download JS: page + comments
+500 ms   interactive
+later    click "React": picker code downloads
+```
+
+**Version 3: delay hydration too.** The comments *are* server-rendered and visible, so their HTML is already there. They just don't need to be interactive until someone scrolls to them:
+
+```vue
+<template>
+  <article>...</article>
+  <LazyCommentSection :post-id="post.id" hydrate-on-visible />
+  <LazyEmojiPicker v-if="pickerOpen" />
+</template>
+```
+
+```text
+0 ms     HTML arrives (comments included)
+0-300    download JS: page only
+300 ms   interactive
+scroll   comments visible: their JS downloads and hydrates
+```
+
+**Other hydration triggers:** `hydrate-on-idle` (when the browser has nothing else to do), `hydrate-on-interaction` (on the first click or focus), `hydrate-on-media-query="(max-width: 768px)"`, `:hydrate-after="2000"` (milliseconds), and `hydrate-never` (static HTML forever).
+
+```tip
+Don't make everything lazy. Each lazy component is an extra request. Use it for heavy components that are hidden at first, below the fold, or rarely used.
+```
+
+```compare typescript
+// React: const Picker = lazy(() => import('./Picker'))
+// plus <Suspense>. Nuxt's Lazy prefix does both.
+```
+
+```compare javascript
+// By hand: const { Picker } = await import('./picker.js')
+// when the button is first clicked.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about lazy component imports.
+goal: "Load the help drawer's code only when it opens: use the `Lazy` version of `HelpDrawer`."
 lang: vue
-code: >-
-  <script setup lang="ts">
-
-  const open = ref(false);
-
-  </script>
-
-  <template><button @click="open = true">Show task</button><LazyTaskCard v-if="!open"
-  title="Practice" /></template>
+code: |-
+  <template>
+    <button @click="open = true">Help</button>
+    <HelpDrawer v-if="open" />
+  </template>
 checks:
-  - match: v\-if="open"
-    message: Use v-if="open" for this step.
-  - notMatch: v\-if="!open"
-    message: Replace v-if="!open" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<LazyHelpDrawer v-if="open" />'
+    message: Rename the tag to <LazyHelpDrawer v-if="open" />.
+solution: |-
+  <template>
+    <button @click="open = true">Help</button>
+    <LazyHelpDrawer v-if="open" />
+  </template>
 ```
 
 ```quiz
-question: What does the `Lazy` prefix request for `LazyTaskCard`?
+question: "A server-rendered footer never needs JavaScript. Which attribute fits?"
 options:
-  - Automatic persistence of the component's props.
-  - A component that never needs browser code.
-  - A lazy-loaded component import.
-answer: 2
-explain: Conditional use can postpone loading; verify the behavior in a production build.
+  - hydrate-on-visible
+  - hydrate-never
+  - hydrate-on-idle
+answer: 1
+explain: hydrate-never keeps the server-rendered HTML and never loads the component's code.
 ```

@@ -1,55 +1,108 @@
 ---
 title: Reusable composables
-icon: 🔢
+icon: "🧰"
 branch: components
-requires:
-  - refs
-  - computed
-summary: A composable packages reusable reactive logic.
+requires: [refs, computed]
+summary: Move reactive logic out of components into useSomething functions you can share.
 ---
+**Refactor time.** Two components each track whether the browser is online. Spot the duplication:
 
-In your Nuxt 4 project, save this as `app/composables/useCounter.ts`. A composable packages reusable reactive logic. Each `useCounter` invocation here creates independent state; shared request-safe state is a separate design choice.
+```vue title=app/components/SaveButton.vue
+<script setup lang="ts">
+const online = ref(true);
+const update = () => (online.value = navigator.onLine);
+onMounted(() => {
+  update();
+  window.addEventListener('online', update);
+  window.addEventListener('offline', update);
+});
+onUnmounted(() => {
+  window.removeEventListener('online', update);
+  window.removeEventListener('offline', update);
+});
+</script>
+```
 
-A useful term here is [[composable]]: A function encapsulating reusable reactive behavior, conventionally named `useSomething`.
+`StatusBar.vue` contains the exact same ten lines. In a regular function you can't share them, because they use `ref` and lifecycle hooks. Vue has a pattern for exactly this: the [[composable]].
 
-```typescript
-export function useCounter() {
-  const count = ref(0);
-  const doubled = computed(() => count.value * 2);
-  const increment = () => { count.value += 1; };
-  return { count, doubled, increment };
+**Step 1. Move the logic into a function in `app/composables/`.**
+
+```typescript title=app/composables/useOnline.ts
+export function useOnline() {
+  const online = ref(true);
+  const update = () => (online.value = navigator.onLine);
+
+  onMounted(() => {
+    update();
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+  });
+  onUnmounted(() => {
+    window.removeEventListener('online', update);
+    window.removeEventListener('offline', update);
+  });
+
+  return { online };
 }
 ```
 
-## Put it to work
+**Step 2. Replace the duplicates with a call.**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```vue title=app/components/SaveButton.vue
+<script setup lang="ts">
+const { online } = useOnline();
+</script>
+
+<template>
+  <button :disabled="!online">Save</button>
+</template>
+```
+
+No import needed: files in `app/composables/` are auto-imported.
+
+**What makes this work?** Calling `useOnline()` inside a component's setup runs those `onMounted` and `onUnmounted` calls *for that component*. Each component gets its own `online` ref and its own listeners, cleaned up when it goes away.
+
+**The conventions:**
+
+- Name it `useSomething`. Readers then know it may use reactivity or lifecycle hooks.
+- Call it at the **top level of `<script setup>`**, not inside a click handler or a `setTimeout`. Lifecycle hooks only attach during setup.
+- Return refs inside an object, so callers can destructure without losing reactivity.
+
+```compare typescript
+// React custom hooks are the same idea:
+// function useOnline() { useState + useEffect }
+```
+
+```compare python
+# The closest cousin is a mixin or a context manager:
+# reusable behavior with setup and teardown.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about reusable composables.
+goal: "Finish `useCounter`: return `count` and `increment` in an object."
 lang: typescript
 code: |-
-  export function useCounter() {
-    const count = ref(0);
-    const doubled = computed(() => count.value * 2);
-    const increment = () => { count.value -= 1; };
-    return { count, doubled, increment };
+  export function useCounter(start = 0) {
+    const count = ref(start);
+    const increment = () => count.value++;
   }
 checks:
-  - match: count\.value\s+\+=\s+1
-    message: Use count.value += 1 for this step.
-  - notMatch: count\.value\s+\-=\s+1
-    message: Replace count.value -= 1 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'return\s*\{\s*count,\s*increment\s*,?\s*\}'
+    message: "End with return { count, increment };"
+solution: |-
+  export function useCounter(start = 0) {
+    const count = ref(start);
+    const increment = () => count.value++;
+    return { count, increment };
+  }
 ```
 
 ```quiz
-question: Two calls to the example `useCounter()` each create `ref(0)`. What do they share?
+question: "Two components call `useCounter()`. One increments. What does the other one show?"
 options:
-  - Logic, while keeping independent counter state.
-  - One global counter by default.
-  - Every future state assignment automatically.
-answer: 0
-explain: A composable reuses behavior; sharing state needs an explicit design.
+  - The new value, because the count is shared.
+  - Its own unchanged count. Each call creates a new ref.
+  - An error, because composables can only be used once.
+answer: 1
+explain: Every call runs the function again and creates fresh refs. For shared state, see the useState lesson.
 ```

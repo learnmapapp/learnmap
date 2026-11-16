@@ -1,68 +1,99 @@
 ---
 title: Event-driven mutations
-icon: 🧪
+icon: "✉️"
 branch: data
-requires:
-  - models
-summary: Use $fetch for a mutation triggered by an event.
+requires: [models]
+summary: Send changes with $fetch inside event handlers; useFetch is for loading, not for saving.
 ---
+**Follow one click from start to finish.** A form adds a task:
 
-In your Nuxt 4 project, save this as `app/pages/index.vue`. Use $fetch for a mutation triggered by an event. Implement the server endpoint separately and show a useful failure state instead of assuming the request succeeds.
-
-```vue
+```vue title=app/components/NewTask.vue
 <script setup lang="ts">
-const title = ref("");
-const message = ref("");
-async function save() {
+const title = ref('');
+const saving = ref(false);
+const emit = defineEmits<{ added: [] }>();
+
+async function add() {
+  saving.value = true;
   try {
-    await $fetch("/api/tasks", { method: "POST", body: { title: title.value } });
-    message.value = "Saved";
-  } catch { message.value = "Could not save"; }
+    await $fetch('/api/tasks', {
+      method: 'POST',
+      body: { title: title.value },
+    });
+    title.value = '';
+    emit('added');
+  } finally {
+    saving.value = false;
+  }
 }
 </script>
-<template><form @submit.prevent="save"><label>Title <input v-model="title" /></label><button>Save</button><p role="status">{{ message }}</p></form></template>
+
+<template>
+  <form @submit.prevent="add">
+    <input v-model="title" required />
+    <button :disabled="saving">Add</button>
+  </form>
+</template>
 ```
 
-## Put it to work
+**0 ms.** The user presses Enter. `@submit.prevent` stops the page reload and calls `add`.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**1 ms.** `saving` turns true, so the button is disabled. No accidental double submits.
+
+**2 ms.** `$fetch` sends `POST /api/tasks`. The `body` object is turned into JSON for you, along with the right `Content-Type` header.
+
+**80 ms.** The server answers. `$fetch` parses the JSON reply. If the status were 4xx or 5xx, it would **throw**, and we'd skip straight to `finally`.
+
+**81 ms.** The input is cleared, and the component emits `added`, so the parent knows to [refresh its list](node:refresh).
+
+**82 ms.** `finally` re-enables the button, whether the request worked or not.
+
+**Why `$fetch` and not `useFetch`?** `useFetch` is built for reading: it runs during setup, caches under a key, and avoids repeat requests. A save should happen *exactly when the user clicks*, every time, and never during server rendering. That's a plain function call, so `$fetch` is the right tool.
+
+**`$fetch` vs `fetch`:** `$fetch` throws on error status codes (plain `fetch` doesn't), handles JSON in both directions, and, during server rendering, calls your own API routes directly instead of over the network.
+
+```compare javascript
+// fetch('/api/tasks', { method: 'POST', headers: {...},
+//   body: JSON.stringify(...) }) + res.ok checks.
+```
+
+```compare python
+# requests.post('/api/tasks', json={'title': title})
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about event-driven mutations.
-lang: vue
-code: >-
-  <script setup lang="ts">
+goal: "Send the comment: call `$fetch('/api/comments')` with method `'POST'` and the comment as `body`."
+lang: typescript
+code: |-
+  const text = ref('');
 
-  const title = ref("");
-
-  const message = ref("");
-
-  async function save() {
-    try {
-      await $fetch("/api/tasks", { method: "GET", body: { title: title.value } });
-      message.value = "Saved";
-    } catch { message.value = "Could not save"; }
+  async function send() {
+    await $fetch('/api/comments');
+    text.value = '';
   }
-
-  </script>
-
-  <template><form @submit.prevent="save"><label>Title <input v-model="title"
-  /></label><button>Save</button><p role="status">{{ message }}</p></form></template>
 checks:
-  - match: method:\s+"POST"
-    message: 'Use method: "POST" for this step.'
-  - notMatch: method:\s+"GET"
-    message: 'Replace method: "GET" in the starting code.'
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: "method:\\s*'POST'"
+    message: "Add method: 'POST' to the options."
+  - match: 'body:\s*\{\s*text:\s*text\.value\s*\}'
+    message: "Add body: { text: text.value }."
+solution: |-
+  const text = ref('');
+
+  async function send() {
+    await $fetch('/api/comments', {
+      method: 'POST',
+      body: { text: text.value },
+    });
+    text.value = '';
+  }
 ```
 
 ```quiz
-question: Which request belongs in a user-triggered task creation handler?
+question: "The server answers a `$fetch` POST with status 422. What happens in your code?"
 options:
-  - A call that mutates imported module state for all users.
-  - "`$fetch` with a POST body."
-  - A GET request that creates data during every setup pass.
+  - $fetch returns the error body as a normal result.
+  - $fetch throws, so code after the await doesn't run (unless you catch it).
+  - The request is retried automatically.
 answer: 1
-explain: An explicit event handler avoids repeating a mutation as part of rendering.
+explain: Unlike plain fetch, $fetch throws for error status codes.
 ```

@@ -1,46 +1,88 @@
 ---
 title: Per-route rendering rules
-icon: 🔧
+icon: "📐"
 branch: production
-requires:
-  - server-routes
-summary: Route rules express rendering or caching behavior by path.
+requires: [server-routes]
+summary: routeRules pick a rendering strategy per URL pattern, such as prerendered, cached, or client-only.
 ---
+**A menu of rendering modes.** So far, every page has been rendered on the server for each request. That's a good default, but not the best choice for every page. Here's the menu:
 
-In your Nuxt 4 project, save this as `nuxt.config.ts`. Route rules express rendering or caching behavior by path. SSR does not authenticate dashboard users; authorization remains a server responsibility.
+| Mode | When HTML is made | Good for |
+| --- | --- | --- |
+| Server rendering (default) | On every request | Personal, always-fresh pages |
+| `prerender: true` | Once, at build time | Pages that rarely change, like the homepage or docs |
+| `swr: 600` | On request, then cached for 10 minutes | Busy pages that can be a little stale |
+| `isr: 3600` | Like swr, cached by your host's CDN | The same, on Vercel or Netlify |
+| `ssr: false` | Never; the browser renders | Logged-in dashboards nobody needs to index |
 
-```typescript
+**Ordering from the menu** happens in one place, by URL pattern:
+
+```typescript title=nuxt.config.ts
 export default defineNuxtConfig({
-  routeRules: { "/about": { prerender: true }, "/dashboard/**": { ssr: true } },
+  routeRules: {
+    '/': { prerender: true },
+    '/docs/**': { prerender: true },
+    '/blog/**': { swr: 600 },
+    '/app/**': { ssr: false },
+    '/api/**': { cors: true },
+    '/old-pricing': { redirect: '/pricing' },
+  },
 });
 ```
 
-## Put it to work
+`**` matches everything below a path, so `/docs/**` covers `/docs/install` and `/docs/guides/deploy`.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Reading the order back:**
+
+- The homepage and docs are built into HTML files once, then served instantly.
+- A blog post is rendered on the first request. For the next 10 minutes, visitors get the cached copy; after that, the next visit triggers a fresh render in the background.
+- Everything under `/app` is sent as an empty shell that the browser fills in, like a classic single-page app.
+- API routes get CORS headers, and the old pricing URL redirects.
+
+**The nice part:** your pages don't change at all. The same `.vue` files work in every mode. You can move a page from server rendering to prerendered with one line of config.
+
+```warn
+A cached or prerendered page is the same for every visitor. Don't put per-user content (like "Hi Ada") into pages with `prerender` or `swr`, or one user's page gets served to everyone.
+```
+
+```compare typescript
+// Next.js sets this per page instead:
+// export const revalidate = 600, or dynamic = 'force-static'.
+```
+
+```compare python
+# Django: @cache_page(600) on a view for the swr-like
+# behavior; static generation needs a separate tool.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about per-route rendering rules.
+goal: "Prerender the `/about` page, and cache `/products/**` for 300 seconds with `swr`."
 lang: typescript
 code: |-
   export default defineNuxtConfig({
-    routeRules: { "/about": { prerender: false }, "/dashboard/**": { ssr: true } },
+    routeRules: {
+    },
   });
 checks:
-  - match: '"/about":\s+\{\s+prerender:\s+true\s+\}'
-    message: 'Use "/about": { prerender: true } for this step.'
-  - notMatch: '"/about":\s+\{\s+prerender:\s+false\s+\}'
-    message: 'Replace "/about": { prerender: false } in the starting code.'
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: "'/about':\\s*\\{\\s*prerender:\\s*true\\s*\\}"
+    message: "Add '/about': { prerender: true }."
+  - match: "'/products/\\*\\*':\\s*\\{\\s*swr:\\s*300\\s*\\}"
+    message: "Add '/products/**': { swr: 300 }."
+solution: |-
+  export default defineNuxtConfig({
+    routeRules: {
+      '/about': { prerender: true },
+      '/products/**': { swr: 300 },
+    },
+  });
 ```
 
 ```quiz
-question: "Does setting `ssr: true` make a dashboard private?"
+question: "Which rule fits an account settings area that shows the logged-in user's data?"
 options:
-  - Yes; rendered pages cannot be requested anonymously.
-  - Only when the path contains `dashboard`.
-  - No; server authorization is still required.
+  - "prerender: true"
+  - "swr: 600"
+  - "ssr: false (or the default server rendering)"
 answer: 2
-explain: Rendering strategy does not establish who is allowed to access data.
+explain: Per-user pages must never be shared from a cache. Render them per request, or in the browser.
 ```

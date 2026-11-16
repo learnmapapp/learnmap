@@ -1,42 +1,95 @@
 ---
 title: Nuxt navigation
-icon: 🚦
+icon: "🔗"
 branch: routing
-requires:
-  - pages
-summary: NuxtLink handles application navigation and can prefetch linked pages.
+requires: [pages]
+summary: NuxtLink moves between pages without a full reload, and prefetches the next page's code.
 ---
-
-In your Nuxt 4 project, save this as `app/pages/index.vue`. NuxtLink handles application navigation and can prefetch linked pages. Use ordinary links when the destination requires ordinary external navigation semantics.
+**Try this in your project.** Open the browser's DevTools on the Network tab, then click two kinds of links:
 
 ```vue
-<template><nav><NuxtLink to="/">Home</NuxtLink><NuxtLink to="/about">About</NuxtLink></nav></template>
+<template>
+  <nav>
+    <a href="/about">About (plain link)</a>
+    <NuxtLink to="/about">About (NuxtLink)</NuxtLink>
+  </nav>
+</template>
 ```
 
-## Put it to work
+**What you'll see:**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+| | `<a href>` | `<NuxtLink to>` |
+| --- | --- | --- |
+| Network | Full HTML document, all JS again | Only the new page's code, often already cached |
+| Screen | White flash while reloading | Instant swap |
+| App state | Gone; refs start over | Kept; a playing video keeps playing |
+
+A plain link makes the browser throw the app away and load it again. `<NuxtLink>` asks the client-side router to switch pages *inside* the running app.
+
+**It's still a real `<a>`.** NuxtLink renders a normal anchor with an `href`, so ctrl-click, "open in new tab" and search engines all work.
+
+**It prefetches.** When a link scrolls into view, Nuxt quietly downloads the code for that page. By the time you click, it's ready.
+
+**It handles external links too.** `<NuxtLink to="https://vuejs.org">` notices the link leaves your site and renders a plain anchor. So you can use NuxtLink for every link and not think about it.
+
+**Styling the current page.** The link to the page you're on gets the `router-link-active` class, so a nav bar can highlight it:
+
+```vue
+<style scoped>
+.router-link-active { font-weight: bold; }
+</style>
+```
+
+**Navigating from code,** after saving a form for example, use `navigateTo`:
+
+```typescript
+async function save() {
+  await $fetch('/api/tasks', { method: 'POST', body: form });
+  await navigateTo('/tasks');
+}
+```
+
+```compare typescript
+// Next.js: <Link href="/about"> and router.push('/about').
+```
+
+```compare javascript
+// vue-router: <RouterLink to="/about"> and router.push().
+// NuxtLink wraps RouterLink.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about nuxt navigation.
+goal: "Turn both nav links into `NuxtLink`s, so navigation doesn't reload the page."
 lang: vue
-code: <template><nav><NuxtLink to="/">Home</NuxtLink><NuxtLink
-  to="/missing">About</NuxtLink></nav></template>
+code: |-
+  <template>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/tasks">Tasks</a>
+    </nav>
+  </template>
 checks:
-  - match: to="/about"
-    message: Use to="/about" for this step.
-  - notMatch: to="/missing"
-    message: Replace to="/missing" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<NuxtLink to="/">Home</NuxtLink>'
+    message: 'Use <NuxtLink to="/">Home</NuxtLink>.'
+  - match: '<NuxtLink to="/tasks">Tasks</NuxtLink>'
+    message: 'Use <NuxtLink to="/tasks">Tasks</NuxtLink>.'
+  - notMatch: '<a href'
+    message: Replace both <a> tags.
+solution: |-
+  <template>
+    <nav>
+      <NuxtLink to="/">Home</NuxtLink>
+      <NuxtLink to="/tasks">Tasks</NuxtLink>
+    </nav>
+  </template>
 ```
 
 ```quiz
-question: What does `<NuxtLink to="/about">` provide?
+question: "A user is halfway through a form and clicks a plain `<a href=\"/help\">`. What happens to the typed text?"
 options:
-  - Automatic creation of the `/about` page file.
-  - A server-side authorization check.
-  - Application navigation to an existing route.
-answer: 2
-explain: NuxtLink supports navigation and prefetching; destinations still need routes.
+  - It's kept, because Vue saves all refs.
+  - It's lost. The whole page reloads and the app starts over.
+  - It's sent to /help as a query string.
+answer: 1
+explain: A plain link triggers a full document load. NuxtLink would keep the app, and app-level state, alive.
 ```

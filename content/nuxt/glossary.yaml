@@ -1,27 +1,54 @@
 single-file component:
-  definition: A .vue file containing template, script, and optional style sections.
+  definition: A .vue file that holds a component's template, script and styles together.
   node: templates
 ref:
-  definition: A reactive value container accessed through .value in script.
+  definition: A reactive box for a value, created with ref(). Read and write it through .value in script; templates unwrap it for you.
   node: refs
+computed:
+  definition: A value derived from other reactive values, recalculated automatically when they change.
+  node: computed
+directive:
+  definition: A special template attribute starting with v-, such as v-if, v-for or v-model.
+  node: conditionals
 prop:
-  definition: A read-only input supplied by a component’s parent.
+  definition: A read-only value a parent passes to a child component.
   node: props
+emit:
+  definition: An event a child component sends up to its parent, declared with defineEmits.
+  node: emits
 slot:
-  definition: A child component placeholder filled with markup supplied by its parent.
+  definition: A placeholder in a component that the parent fills with its own markup.
   node: slots
 composable:
-  definition: A function encapsulating reusable reactive behavior, conventionally named useSomething.
+  definition: A function that packages reusable reactive logic, named useSomething by convention.
   node: composables
+auto-import:
+  definition: Nuxt makes components, composables and Vue APIs available in every file without an import statement.
+  node: auto-components
+layout:
+  definition: A component in app/layouts that wraps pages with shared parts, such as a header.
+  node: layouts
+route middleware:
+  definition: A function that runs before navigating to a page, and can redirect or block the navigation.
+  node: route-middleware
+server-side rendering:
+  definition: Rendering a page's HTML on the server, so the browser gets content before any JavaScript runs.
+  node: nuxt
 payload:
-  definition: Data serialized by Nuxt from server rendering for the browser to reuse during hydration.
+  definition: Data fetched during server rendering, sent along with the HTML so the browser doesn't fetch it again.
   node: use-fetch
-useState:
-  definition: Nuxt’s keyed, serializable, SSR-aware shared state composable.
-  node: state
 hydration:
-  definition: Connecting Vue’s browser runtime to matching server-rendered markup.
+  definition: Vue taking over server-rendered HTML in the browser, attaching events and state to make it interactive.
   node: hydration
-Nitro:
-  definition: The server engine used by Nuxt to build and run server routes.
+plugin:
+  definition: A file in app/plugins that runs once when the app starts, to set things up or provide helpers.
+  node: plugins
+nitro:
+  definition: The server engine inside Nuxt that runs your server/api routes and builds the production server.
   node: server-routes
+event handler:
+  definition: The function exported from a server route file with defineEventHandler; it receives the request and returns the response.
+  node: server-routes
+module:
+  definition: A package that extends Nuxt itself, installed with npx nuxi module add and listed in nuxt.config.
+  node: modules

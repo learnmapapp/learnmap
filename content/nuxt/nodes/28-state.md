@@ -1,48 +1,79 @@
 ---
 title: SSR-safe shared state
-icon: 💬
+icon: "🤝"
 branch: data
-requires:
-  - refs
-summary: useState provides keyed shared state scoped correctly for server requests and hydration.
+requires: [refs]
+summary: useState shares a value across components and survives the trip from server to browser.
 ---
+**A cautionary tale.** Sam needs the logged-in user in many components, so they make a shared ref in a module:
 
-In your Nuxt 4 project, save this as `app/composables/useLessonCount.ts`. `useState` provides keyed shared state scoped correctly for server requests and hydration. Store serializable values; avoid module-level mutable refs for per-user SSR data.
-
-A useful term here is [[useState]]: Nuxt’s keyed, serializable, SSR-aware shared state composable.
-
-```typescript
-export function useLessonCount() {
-  return useState<number>("lesson-count", () => 0);
-}
+```typescript title=app/composables/user.ts
+export const currentUser = ref<User | null>(null);
 ```
 
-## Put it to work
+In a single-page app, that's fine. In Nuxt, it's a **data leak**. On the server, a module is loaded once and shared by *every request from every visitor*. Alice logs in, her request sets `currentUser`, and while it's rendering, Bob's request reads it. Bob's page says "Hi Alice".
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**The fix: `useState`.**
+
+```typescript title=app/composables/useCurrentUser.ts
+export const useCurrentUser = () =>
+  useState<User | null>('current-user', () => null);
+```
+
+```vue
+<script setup lang="ts">
+const user = useCurrentUser();
+</script>
+
+<template>
+  <p v-if="user">Hi {{ user.name }}</p>
+</template>
+```
+
+`useState` returns a ref, used like any other. The differences are in where it lives:
+
+- **One per request on the server.** Alice and Bob each get their own.
+- **Shared by key in the browser.** Every component calling `useState('current-user')` gets the *same* ref. Change it in the header, and the sidebar updates.
+- **Carried over in the payload.** A value set during server rendering arrives in the browser, so the server and the browser agree.
+
+The function `() => null` is the **initial value**. It only runs if the key doesn't exist yet.
+
+**Wrap it in a composable**, as above. Then the key and type are written once, and a typo in a key string can't create a second, separate state.
+
+```warn
+`useState` values travel inside the HTML, so they must be serializable: plain objects, arrays, strings, numbers, dates. Class instances and functions won't survive the trip.
+```
+
+```compare typescript
+// React: a Context provider per request on the server.
+// Pinia is the bigger Vue option, with SSR support.
+```
+
+```compare python
+# Like storing data on Flask's g or request object,
+# not in a module-level global.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about ssr-safe shared state.
+goal: "Turn the leaky module-level ref into keyed state: `useState('theme', () => 'light')`."
 lang: typescript
 code: |-
-  export function useLessonCount() {
-    return useState<number>("lesson-count", () => 1);
-  }
+  export const useTheme = () => ref('light');
 checks:
-  - match: \(\)\s+=>\s+0
-    message: Use () => 0 for this step.
-  - notMatch: \(\)\s+=>\s+1
-    message: Replace () => 1 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'useState\(\s*''theme'',\s*\(\)\s*=>\s*''light''\s*\)'
+    message: "Return useState('theme', () => 'light')."
+  - notMatch: '\bref\('
+    message: Replace ref() with useState.
+solution: |-
+  export const useTheme = () => useState('theme', () => 'light');
 ```
 
 ```quiz
-question: Why prefer `useState` over a module-level mutable ref for per-user shared SSR data?
+question: "Why is `export const count = ref(0)` in a module risky in a server-rendered Nuxt app?"
 options:
-  - It automatically serializes arbitrary functions and classes.
-  - It provides request-aware state with hydration serialization.
-  - It intentionally shares one mutable value among all visitors.
+  - It makes the bundle bigger.
+  - The server shares one module across all requests, so different users can see each other's state.
+  - Refs can't be exported.
 answer: 1
-explain: Avoid leaking user-specific state through process-wide mutable globals.
+explain: Module state lives for the whole server process. useState is created per request instead.
 ```

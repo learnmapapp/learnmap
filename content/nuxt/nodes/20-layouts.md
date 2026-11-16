@@ -1,47 +1,100 @@
 ---
 title: Shared page layouts
-icon: 🔧
+icon: "🖼️"
 branch: routing
-requires:
-  - app
-  - slots
-summary: The default layout wraps pages through its slot.
+requires: [app, slots]
+summary: Layouts in app/layouts wrap pages with shared chrome; pages pick one with definePageMeta.
 ---
+**A theatre analogy.** The page is the actor; the [[layout]] is the stage set. Most scenes use the same set, a few need a different one, and the actor shouldn't have to build the set every time.
 
-In your Nuxt 4 project, save this as `app/layouts/default.vue`. The default layout wraps pages through its slot. Add named layout files and select one using `definePageMeta` when a section needs a different shell.
+Here's how to design it, one decision at a time.
 
-```vue
+**Decision 1: what's on every page?** A header and a footer. That's the default layout, and the page goes into its `<slot />`:
+
+```vue title=app/layouts/default.vue
 <template>
-  <div><header><NuxtLink to="/">Study club</NuxtLink></header><main><slot /></main></div>
+  <div class="shell">
+    <header><NuxtLink to="/">Tasks</NuxtLink></header>
+    <main><slot /></main>
+    <footer>Made with Nuxt</footer>
+  </div>
 </template>
 ```
 
-## Put it to work
+**Decision 2: tell the app to use layouts.** `app.vue` wraps the page in `<NuxtLayout>`:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```vue title=app/app.vue
+<template>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+```
+
+Every page now gets the header and footer, with no changes to the pages themselves.
+
+**Decision 3: which pages are different?** The login page should be bare: no header, just a centred form. Give it its own layout:
+
+```vue title=app/layouts/blank.vue
+<template>
+  <div class="centered"><slot /></div>
+</template>
+```
+
+And let the page choose it:
+
+```vue title=app/pages/login.vue
+<script setup lang="ts">
+definePageMeta({ layout: 'blank' });
+</script>
+
+<template>
+  <LoginForm />
+</template>
+```
+
+The layout name is the file name: `blank.vue` becomes `'blank'`, and `default.vue` is used when a page doesn't say.
+
+**Why not put the header in `app.vue`?** You could, until the first page that needs a different frame. Layouts give you a named choice per page. And because the layout stays mounted while you move between pages that share it, the header doesn't flicker or reset.
+
+```compare typescript
+// Next.js: nested layout.tsx files, chosen by folder.
+// Nuxt: named layouts, chosen by each page.
+```
+
+```compare python
+# Django: {% extends "base.html" %} in each template.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about shared page layouts.
+goal: "Make the admin dashboard use the `admin` layout from `app/layouts/admin.vue`."
 lang: vue
 code: |-
+  <script setup lang="ts">
+  </script>
+
   <template>
-    <div><header><NuxtLink to="/">Study group</NuxtLink></header><main><slot /></main></div>
+    <h1>Dashboard</h1>
   </template>
 checks:
-  - match: Study\s+club
-    message: Use Study club for this step.
-  - notMatch: Study\s+group
-    message: Replace Study group in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'definePageMeta\(\{\s*layout:\s*''admin''\s*,?\s*\}\)'
+    message: "Call definePageMeta({ layout: 'admin' }) in the script."
+solution: |-
+  <script setup lang="ts">
+  definePageMeta({ layout: 'admin' });
+  </script>
+
+  <template>
+    <h1>Dashboard</h1>
+  </template>
 ```
 
 ```quiz
-question: Where should a Nuxt layout render its page content?
+question: "A layout file is missing `<slot />`. What do pages using it show?"
 options:
-  - Through a second root `createApp` call.
-  - By importing every page manually.
-  - Through a `<slot />`.
-answer: 2
-explain: NuxtLayout supplies the selected page as layout content.
+  - The page, but with no header.
+  - The layout's own markup only. The page has nowhere to render.
+  - A build error.
+answer: 1
+explain: The slot is where the page goes. Without one, the page content is dropped.
 ```

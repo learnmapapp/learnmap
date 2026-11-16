@@ -1,48 +1,101 @@
 ---
 title: Form bindings
-icon: 📦
+icon: "✍️"
 branch: basics
-requires:
-  - refs
-summary: v-model connects an input with reactive state.
+requires: [refs]
+summary: v-model keeps an input and a ref in sync in both directions.
 ---
-
-In your Nuxt 4 project, save this as `app/pages/index.vue`. v-model connects an input with reactive state. The trim modifier normalizes surrounding whitespace, while server validation remains necessary for submitted data.
+**What does `v-model` actually do?** Let's translate it. These two inputs behave the same:
 
 ```vue
 <script setup lang="ts">
-const title = ref("");
+const title = ref('');
 </script>
-<template><label>Task title <input v-model.trim="title" /></label><p>{{ title }}</p></template>
+
+<template>
+  <input
+    :value="title"
+    @input="title = ($event.target as HTMLInputElement).value"
+  />
+  <input v-model="title" />
+</template>
 ```
 
-## Put it to work
+The long version shows the two halves:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+1. `:value="title"`: the ref flows **into** the input. (A `:` before an attribute binds it to an expression; `:value` is short for `v-bind:value`.)
+2. `@input="..."`: whatever you type flows **back** into the ref.
+
+`v-model` writes both halves for you. That's what *two-way binding* means.
+
+**It adapts to the input type:**
+
+```vue
+<template>
+  <input v-model="title" />
+  <textarea v-model="notes"></textarea>
+  <input v-model="done" type="checkbox" />
+  <select v-model="priority">
+    <option value="low">Low</option>
+    <option value="high">High</option>
+  </select>
+</template>
+```
+
+For a checkbox it binds `checked` to a boolean; for a select it binds the chosen option's `value`.
+
+**Three useful modifiers:**
+
+- `v-model.number`: inputs always give you strings. This converts to a number, so `age` is `30`, not `"30"`.
+- `v-model.trim`: strips spaces from both ends.
+- `v-model.lazy`: updates on `change` (when you leave the field) instead of on every keystroke.
+
+```warn
+Without `.number`, `<input type="number" v-model="qty">` still gives you a string. Then `qty.value + 1` is `"21"` instead of `3`.
+```
+
+```compare typescript
+// React: value={title} plus onChange={e => setTitle(...)}.
+// It's the same two halves, written by hand.
+```
+
+```compare python
+# Django forms: the form reads request.POST after
+# submission. There is no live two-way binding.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about form bindings.
+goal: "Bind the quantity field with `v-model.number` so `quantity` stays a number."
 lang: vue
 code: |-
   <script setup lang="ts">
-  const title = ref("");
+  const quantity = ref(1);
   </script>
-  <template><label>Task title <input v-model="title" /></label><p>{{ title }}</p></template>
+
+  <template>
+    <input type="number" />
+    <p>Twice that is {{ quantity * 2 }}</p>
+  </template>
 checks:
-  - match: v\-model\.trim="title"
-    message: Use v-model.trim="title" for this step.
-  - notMatch: v\-model="title"
-    message: Replace v-model="title" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<input[^>]*v-model\.number="quantity"'
+    message: Add v-model.number="quantity" to the input.
+solution: |-
+  <script setup lang="ts">
+  const quantity = ref(1);
+  </script>
+
+  <template>
+    <input v-model.number="quantity" type="number" />
+    <p>Twice that is {{ quantity * 2 }}</p>
+  </template>
 ```
 
 ```quiz
-question: What does the `.trim` modifier in `v-model.trim` do?
+question: "`<input v-model.trim=\"name\">`. The user types `  Ada  `. What's in `name.value`?"
 options:
-  - Performs all server-side validation automatically.
-  - Removes surrounding whitespace from the bound input text.
-  - Converts every input to an integer.
+  - "'  Ada  '"
+  - "'Ada'"
+  - "'ADA'"
 answer: 1
-explain: The modifier normalizes input but does not replace validation at the server boundary.
+explain: .trim removes whitespace from both ends before updating the ref.
 ```

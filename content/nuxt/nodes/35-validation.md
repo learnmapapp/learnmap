@@ -1,56 +1,103 @@
 ---
 title: Validate request input
-icon: 🛠️
+icon: "🛡️"
 branch: server
-requires:
-  - http-methods
-summary: Treat request bodies as unknown and validate before using them.
+requires: [http-methods]
+summary: Check request bodies against a Zod schema with readValidatedBody, and reject bad input with a 400.
 ---
+**Find the holes.** Here's the create endpoint from the last lesson, slightly extended. Read it with an attacker's eyes:
 
-In your Nuxt 4 project, save this as `server/api/tasks.post.ts`. Treat request bodies as `unknown` and validate before using them. This example returns a validated task but does not persist it.
-
-```typescript
+```typescript title=server/api/tasks/index.post.ts
 export default defineEventHandler(async (event) => {
-  const body: unknown = await readBody(event);
-  if (typeof body !== "object" || body === null || !("title" in body) ||
-      typeof body.title !== "string" || body.title.trim().length === 0) {
-    throw createError({ statusCode: 400, statusMessage: "Title required" });
-  }
-  return { title: body.title.trim(), done: false };
+  const body = await readBody(event);
+  return db.tasks.insert({
+    title: body.title.trim(),
+    priority: body.priority,
+  });
 });
 ```
 
-## Put it to work
+How many ways can a client break it? Here are four requests:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+| Body sent | What happens |
+| --- | --- |
+| `{}` | `body.title.trim()` crashes: *500 Internal Server Error* |
+| `{ "title": 42 }` | `42.trim` isn't a function: another 500 |
+| `{ "title": "x", "priority": "urgent!!!" }` | Saved, with a priority your UI can't handle |
+| `{ "title": "aaaa…" }` (5 MB) | Saved, filling up your database |
+
+The client did something wrong in each case, but the server either crashed or accepted it. The right answer is **400 Bad Request**, with a reason.
+
+**The fix: describe valid input once, with a schema.** Zod is a popular library for this (`npm install zod`):
+
+```typescript title=server/api/tasks/index.post.ts
+import { z } from 'zod';
+
+const NewTask = z.object({
+  title: z.string().trim().min(1).max(200),
+  priority: z.enum(['low', 'high']).default('low'),
+});
+
+export default defineEventHandler(async (event) => {
+  const body = await readValidatedBody(event, NewTask.parse);
+  return db.tasks.insert(body);
+});
+```
+
+`readValidatedBody` reads the body and passes it to `NewTask.parse`. If parsing throws, Nuxt answers **400** with the validation errors, and your handler stops there. If it succeeds, `body` is clean **and typed**: `title` is a trimmed string, and `priority` is `'low' | 'high'`.
+
+Run the four requests again: all four now get a 400 explaining what's wrong. The handler code never sees bad data.
+
+**The same works for the query string:** `getValidatedQuery(event, schema.parse)`.
+
+```tip
+Validate in the API even if the form validates too. The form helps honest users; the API protects you from everyone else, including `curl`.
+```
+
+```compare python
+# FastAPI: declare a Pydantic model as the parameter
+# type, and bad input gets a 422 automatically.
+```
+
+```compare typescript
+// Express: app.post(..., (req) => schema.parse(req.body)),
+// plus your own error handler to turn it into a 400.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about validate request input.
+goal: "Validate the signup body: read it with `readValidatedBody(event, Signup.parse)`."
 lang: typescript
 code: |-
+  import { z } from 'zod';
+
+  const Signup = z.object({ email: z.string().email() });
+
   export default defineEventHandler(async (event) => {
-    const body: unknown = await readBody(event);
-    if (typeof body !== "object" || body === null || !("title" in body) ||
-        typeof body.title !== "string" || body.title.trim().length === 0) {
-      throw createError({ statusCode: 500, statusMessage: "Title required" });
-    }
-    return { title: body.title.trim(), done: false };
+    const body = await readBody(event);
+    return { ok: true, email: body.email };
   });
 checks:
-  - match: statusCode:\s+400
-    message: "Use statusCode: 400 for this step."
-  - notMatch: statusCode:\s+500
-    message: "Replace statusCode: 500 in the starting code."
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'await readValidatedBody\(event,\s*Signup\.parse\)'
+    message: Replace readBody with readValidatedBody(event, Signup.parse).
+  - notMatch: 'readBody\('
+    message: Don't read the body without validation.
+solution: |-
+  import { z } from 'zod';
+
+  const Signup = z.object({ email: z.string().email() });
+
+  export default defineEventHandler(async (event) => {
+    const body = await readValidatedBody(event, Signup.parse);
+    return { ok: true, email: body.email };
+  });
 ```
 
 ```quiz
-question: "Does `readBody<{ title: string }>(event)` validate an incoming title at runtime?"
+question: "A request fails the schema passed to `readValidatedBody`. What does the client get?"
 options:
-  - Yes; every malformed field is automatically rejected.
-  - Only when the body is JSON.
-  - No; the type argument alone performs no runtime checks.
-answer: 2
-explain: Read untrusted input as `unknown` and check its required runtime shape.
+  - A 500 error with a stack trace.
+  - A 400 error, and the handler code after it doesn't run.
+  - A 200 with the invalid fields removed.
+answer: 1
+explain: A failed parse becomes a 400 Bad Request before your handler continues.
 ```

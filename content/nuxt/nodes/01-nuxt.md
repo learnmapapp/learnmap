@@ -1,48 +1,88 @@
 ---
 title: Meet Nuxt
-icon: 💚
+icon: "💚"
 branch: core
 requires: []
-summary: Nuxt combines Vue components, routing, server rendering, and server endpoints.
+summary: What Nuxt adds on top of Vue, and what a first Nuxt page looks like.
 kind: hub
 ---
+**Vue gives you components. Nuxt gives you the rest of the app.** If you've used Vue on its own, you've probably spent time wiring things together: a router, a build setup, a way to fetch data, an API server somewhere else. Nuxt makes those decisions for you, using folders and naming conventions:
 
-In your Nuxt 4 project, save this as `app/app.vue`. Nuxt combines Vue components, routing, server rendering, and server endpoints. This first example uses the root app component before enabling pages.
+- **Pages from files.** `app/pages/about.vue` becomes `/about`. No router config.
+- **[[server-side rendering|Server rendering]].** Pages arrive in the browser as finished HTML, then Vue takes over. Fast first loads, and search engines see your content.
+- **Data fetching that knows about the server.** `useFetch` loads data once on the server and hands it to the browser.
+- **A backend in the same project.** A file in `server/api/` is an API endpoint.
+- **No import lists.** Components and composables are [[auto-import|auto-imported]].
 
-```vue
+**Here's the smallest Nuxt app.** In a new project (the [next lesson](node:setup) creates one), the whole app starts at one file:
+
+```vue title=app/app.vue
+<script setup lang="ts">
+const name = 'Nuxt';
+</script>
+
 <template>
-  <main><h1>Hello, Nuxt!</h1></main>
+  <main>
+    <h1>Hello, {{ name }}!</h1>
+  </main>
 </template>
 ```
 
-## Put it to work
+If you know Vue, nothing here is new: a `<script setup>` block and a template with `{{ }}` interpolation. That's on purpose. **Everything you know about Vue still applies**; Nuxt adds conventions around it. If you're new to Vue too, the *Vue foundations* branch covers what you need.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**How this course works.** Each lesson has a small example, an exercise you solve in the browser, and a quick question. The exercises check your code with simple pattern matching, so they won't run it. To see it really work, keep a Nuxt project open next to this map.
 
-This course targets **Nuxt 4 with Vue 3**. Check your local tool version before following examples. See the [official reference](https://nuxt.com/docs/4.x/getting-started/introduction) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
+```compare javascript
+// Plain Vue + Vite: you add vue-router, a fetch layer,
+// SSR setup and a separate API server yourself.
+```
+
+```compare typescript
+// Next.js is the closest relative: the same idea,
+// built on React instead of Vue.
+```
+
+```compare python
+# Django also bundles routing, templates and a server.
+# Nuxt does it with Vue components on both sides.
+```
 
 ```exercise
-goal: Make the page heading say `Hello, Nuxt!`.
+goal: "Make the page greet Nuxt: set `name` to `'Nuxt'`."
 lang: vue
 code: |-
+  <script setup lang="ts">
+  const name = 'world';
+  </script>
+
   <template>
-    <main><h1>Hello, world!</h1></main>
+    <main>
+      <h1>Hello, {{ name }}!</h1>
+    </main>
   </template>
 checks:
-  - match: Hello,\s+Nuxt!
-    message: Use Hello, Nuxt! for this step.
-  - notMatch: Hello,\s+world!
-    message: Replace Hello, world! in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: "const name = ['\"]Nuxt['\"]"
+    message: "Change the value of name to 'Nuxt'."
+  - match: '\{\{\s*name\s*\}\}'
+    message: Keep {{ name }} in the template.
+solution: |-
+  <script setup lang="ts">
+  const name = 'Nuxt';
+  </script>
+
+  <template>
+    <main>
+      <h1>Hello, {{ name }}!</h1>
+    </main>
+  </template>
 ```
 
 ```quiz
-question: Which UI framework supplies Nuxt's components and reactivity?
+question: "Where does a Nuxt project put a page that should appear at `/about`?"
 options:
-  - Svelte.
-  - Vue.
-  - React.
+  - In a router config file, as a route object.
+  - "In `app/pages/about.vue`. The file name is the route."
+  - "In `server/api/about.ts`."
 answer: 1
-explain: Nuxt builds application features around Vue, including routing and server rendering.
+explain: Nuxt builds the router from the files in app/pages. server/api is for API endpoints.
 ```
