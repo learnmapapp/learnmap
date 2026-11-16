@@ -5,32 +5,79 @@ branch: "architecture"
 requires: ["derived-state", "array-state"]
 summary: "Store identifiers and intentional states instead of redundant copies."
 ---
+You've learned how to use state. Now, how to **shape** it. Here are four state designs from real code, each with a smell, and a better version. These ideas matter more as apps grow.
 
-Prefer a small representation that cannot easily contradict itself:
+## Smell 1: booleans that can contradict each other
 
 ```jsx
-import { useState } from "react";
+const [isLoading, setIsLoading] = useState(false);
+const [isError, setIsError] = useState(false);
+const [isSuccess, setIsSuccess] = useState(false);
+```
 
-export default function Selection() {
-  const lessons = [{ id: "jsx", title: "JSX" }, { id: "state", title: "State" }];
-  const [selectedId, setSelectedId] = useState("jsx");
-  const selected = lessons.find(lesson => lesson.id === selectedId);
-  return <><select aria-label="Lesson" value={selectedId} onChange={event => setSelectedId(event.target.value)}>
-    {lessons.map(lesson => <option key={lesson.id} value={lesson.id}>{lesson.title}</option>)}
-  </select><p>{selected?.title ?? "No selection"}</p></>;
+Can it be loading **and** failed? The types say yes. One status value makes impossible combinations impossible:
+
+```jsx
+const [status, setStatus] = useState("idle");
+// "idle" | "loading" | "error" | "success"
+```
+
+## Smell 2: a copy of a selected object
+
+```jsx
+const [items, setItems] = useState(initialItems);
+const [selectedItem, setSelectedItem] = useState(null);
+```
+
+Rename the selected item in `items`, and `selectedItem` still has the old name: it's a stale copy. Store the **id**, and look it up:
+
+```jsx
+const [selectedId, setSelectedId] = useState(null);
+const selectedItem = items.find(item => item.id === selectedId);
+```
+
+Look up by `id`, never by something that can change, like the title.
+
+## Smell 3: state that mirrors a prop
+
+```jsx
+function Message({ color }) {
+  const [textColor, setTextColor] = useState(color);
 }
 ```
 
-Store the selected id, then find the current record. Copying the entire selected record into separate state can leave it stale after the collection updates.
+`useState(color)` only reads the prop on the **first** render. When the parent passes a new `color`, `textColor` ignores it. Use the prop directly. (If you really do want "initial value only", name it `initialColor` so it's obvious.)
 
-## Remove impossible combinations
+## Smell 4: deep nesting
 
-Instead of independent `isLoading`, `isSuccess`, and `isError` booleans, consider one status such as `"idle"`, `"loading"`, `"success"`, or `"error"`. That makes conflicting combinations harder to represent.
+```jsx
+const [plan, setPlan] = useState({
+  days: [{ id: 1, stops: [{ id: 7, places: [/* ... */] }] }],
+});
+```
 
-Group fields that always change together, and separate values with different lifecycles. State design is about ownership and valid transitions, not minimizing the raw number of `useState` calls.
+Updating one place means copying every level above it. Consider a flat shape, keyed by id, like a little database:
+
+```jsx
+const [stops, setStops] = useState({
+  7: { id: 7, dayId: 1, name: "Museum" },
+});
+```
+
+## The short version
+
+- Don't store what you can [calculate](node:derived-state).
+- Don't store the same thing twice.
+- Group values that always change together into one state.
+- Prefer one status over several booleans.
+
+```compare typescript
+// TypeScript makes smell 1 a compile error to get wrong:
+type Status = "idle" | "loading" | "error" | "success";
+```
 
 ```exercise
-goal: "Find the selected record by its stable identifier."
+goal: "The selected lesson is looked up by title, which can change. Compare the stable `id` instead."
 lang: jsx
 code: |
   export default function Selection() {
@@ -40,17 +87,24 @@ code: |
     return <p>{selected?.title}</p>;
   }
 checks:
-  - match: "lesson\\.id\\s+===\\s+selectedId"
+  - match: 'lesson\.id\s+===\s+selectedId'
     message: "Compare the id field with selectedId."
-hint: "Compare the id field with selectedId."
+hint: Swap title for id in the comparison.
+solution: |
+  export default function Selection() {
+    const lessons = [{ id: "jsx", title: "JSX" }];
+    const selectedId = "jsx";
+    const selected = lessons.find(lesson => lesson.id === selectedId);
+    return <p>{selected?.title}</p>;
+  }
 ```
 
 ```quiz
-question: "Why store selectedId rather than a copied selected record?"
+question: "Why store `selectedId` rather than a copy of the selected item?"
 options:
-  - "It lets the selected record be derived from current data."
-  - "It prevents the collection from changing."
-  - "It makes all ids globally unique automatically."
-answer: 0
-explain: "An identifier avoids an independently stale copy of the same record."
+  - Ids use less memory.
+  - A copy can go stale when the original item changes; an id is always looked up fresh.
+  - React can only store strings in state.
+answer: 1
+explain: With an id, there's one copy of the item, so it can't disagree with itself.
 ```

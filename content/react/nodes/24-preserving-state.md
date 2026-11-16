@@ -5,50 +5,91 @@ branch: "architecture"
 requires: ["state-structure", "keys"]
 summary: "Identity in the rendered tree determines whether state survives."
 ---
-
-React associates state with a component's type and position, including its key. Changing a key intentionally starts a new identity:
+**A mystery.** A chat app. You type "Hey Ada, about tomorr..." to Ada, then click on Grace in the contact list. The message box still says "Hey Ada, about tomorr...". Now Grace is about to get Ada's message.
 
 ```jsx
-import { useState } from "react";
-
-function Draft() {
-  const [text, setText] = useState("");
-  return <label>Draft <input value={text} onChange={event => setText(event.target.value)} /></label>;
+export default function Messenger() {
+  const [to, setTo] = useState("Ada");
+  return (
+    <>
+      <ContactList selected={to} onSelect={setTo} />
+      <Chat contact={to} />
+    </>
+  );
 }
-export default function Editor() {
-  const [recipient, setRecipient] = useState("Ada");
-  return <><button onClick={() => setRecipient(recipient === "Ada" ? "Grace" : "Ada")}>Switch recipient</button>
-    <p>To {recipient}</p><Draft key={recipient} /></>;
+
+function Chat({ contact }) {
+  const [draft, setDraft] = useState("");
+  return (
+    <textarea
+      placeholder={`Message ${contact}`}
+      value={draft}
+      onChange={e => setDraft(e.target.value)}
+    />
+  );
 }
 ```
 
-Switching recipients resets the draft because a different key creates a fresh Draft. Without that identity change, the component at that location would normally keep its state.
+## The clue: state belongs to a position
 
-## Reset on purpose
+React doesn't store state inside your component function. It stores it with the component's **position in the tree**: "the `Chat` inside `Messenger`, after `ContactList`". When you switch contacts, it's still a `Chat` in the same position, so React keeps its state. Only the `contact` prop changed.
 
-Use a meaningful key when a form belongs to a different record. Avoid random keys and nested component definitions, which can cause accidental resets on unrelated renders.
+Usually that's exactly what you want. Here, it isn't.
 
-Removing a component from the tree also removes its local state. If a draft must survive being hidden or navigation, move its ownership to a component or storage layer with the appropriate lifetime.
+## The solution: a key
+
+```jsx
+<Chat key={to} contact={to} />
+```
+
+You've seen [keys](node:keys) in lists. They work anywhere: a key is part of a component's identity. Changing the key tells React "this is a **different** `Chat`". React throws away the old one, with its state, and creates a fresh one with an empty draft.
+
+Mystery solved, with one attribute.
+
+## Related rules
+
+- **Same type in the same position: state is kept**, even if props change.
+- **A different type in that position: state is reset.** Switching between `<Chat />` and `<Profile />` destroys the old one.
+- **Removing a component destroys its state.** `{showChat && <Chat />}` loses the draft when hidden. If you need it to survive, [lift it up](node:lifting-state) to a parent that stays.
+
+```tip
+Want every contact to keep their own unfinished draft? Lift the drafts up into the parent as an object keyed by contact: `{ Ada: "Hey...", Grace: "" }`.
+```
+
+```compare javascript
+// Without React, you'd clear it by hand when switching:
+draftBox.value = "";
+```
 
 ```exercise
-goal: "Reset the draft when the recipient changes by keying its identity."
+goal: "Switching recipients keeps the old draft. Give `Draft` a key based on the recipient, so each one starts fresh."
 lang: jsx
 code: |
   import { useState } from "react";
-  function Draft() { const [text, setText] = useState(""); return <input aria-label="Draft" value={text} onChange={event => setText(event.target.value)} />; }
+  function Draft() {
+    const [text, setText] = useState("");
+    return <input aria-label="Draft" value={text} onChange={event => setText(event.target.value)} />;
+  }
   export default function Editor({ recipient = "Ada" }) { return <Draft />; }
 checks:
-  - match: "<Draft\\s+key=\\{recipient\\}\\s+/>"
-    message: "Give Draft the recipient key."
-hint: "Give Draft the recipient key."
+  - match: '<Draft\s+key=\{recipient\}\s+/>'
+    message: "Give Draft the key recipient."
+hint: "Write key={recipient} on the Draft element."
+solution: |
+  import { useState } from "react";
+  function Draft() {
+    const [text, setText] = useState("");
+    return <input aria-label="Draft" value={text} onChange={event => setText(event.target.value)} />;
+  }
+  export default function Editor({ recipient = "Ada" }) { return <Draft key={recipient} />; }
 ```
 
 ```quiz
-question: "What does changing a component's key signal?"
+question: "A `<Timer />` stays at the same position, but its `label` prop changes. What happens to its state?"
 options:
-  - "Keep all local state no matter what."
-  - "Treat it as a different identity and reset its local state."
-  - "Only change its CSS class."
+  - It resets to the initial value.
+  - It's kept; only the props changed.
+  - React throws an error.
 answer: 1
-explain: "A changed key creates a new component identity at that position."
+explain: Same component type, same position, same state. Change the key to reset it.
 ```

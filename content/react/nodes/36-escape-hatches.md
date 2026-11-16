@@ -5,50 +5,95 @@ branch: "effects"
 requires: ["effects", "derived-state", "refs"]
 summary: "Use a handler for an action, rendering for derived data, and effects for synchronization."
 ---
+You've met handlers, derived values, refs and effects. When something needs to happen, which one is it? This lesson is a decision guide you can come back to.
 
-Before adding an effect, name the cause of the work. If it happens because a user clicked, an event handler often expresses that relationship directly:
+## The three questions
+
+**1. Did the user just do something?** (clicked, typed, submitted)
+→ Put it in the **event handler**. You know exactly what happened and why.
+
+**2. Can it be calculated from props or state?**
+→ **Calculate it during rendering.** No state, no effect.
+
+**3. Does something outside React need to stay in sync with what's on screen?**
+→ That's an **effect**.
+
+And if you need to remember a value that isn't displayed, that's a **ref**.
+
+## Practice cases
+
+| Situation | Answer |
+| --- | --- |
+| Send an analytics event when "Buy" is clicked | Handler: the click caused it. |
+| Show the number of selected items | Render: `selected.length`. |
+| Connect to a chat room while it's on screen | Effect, with cleanup. |
+| Reset a form after a successful save | Handler: set state after the save. |
+| Filter a list by the search text | Render: `items.filter(...)`. |
+| Remember the previous scroll position | Ref. |
+| Keep a map widget's zoom in sync with state | Effect. |
+| Show a "Saved!" toast after clicking Save | Handler. |
+| Reset all state when `userId` changes | Neither: give the component a [key](node:preserving-state). |
+
+## The most common wrong answer
+
+Effects look like a universal "do this when that changes", so they get used for case 1:
 
 ```jsx
-import { useState } from "react";
+const [submitted, setSubmitted] = useState(false);
 
-export default function SaveButton() {
-  const [message, setMessage] = useState("");
-  function handleSave() {
-    localStorage.setItem("lesson:draft", "React");
-    setMessage("Draft saved on this browser");
-  }
-  return <><button onClick={handleSave}>Save draft</button><p>{message}</p></>;
-}
+useEffect(() => {
+  if (submitted) sendOrder(cart);
+}, [submitted]);
+
+<button onClick={() => setSubmitted(true)}>Order</button>
 ```
 
-This deliberately saves on demand. An effect tied to a `clicked` boolean would obscure the user's direct action and introduce a reset problem.
+It works, but in a roundabout way: click, set a flag, render, run the effect, check the flag, and then send. And it can misfire; if the component remounts with `submitted` true, the order goes out twice. Just do it in the handler:
 
-## Choose by responsibility
+```jsx
+<button onClick={() => sendOrder(cart)}>Order</button>
+```
 
-Compute a filtered list during rendering. Store visible changing data in state. Keep a DOM node or timer handle in a ref. Synchronize a live connection through an effect with cleanup.
+A good test from the React docs: **"why does this code run?"** If the answer is "because the user clicked", it belongs in the handler. If it's "because the component is visible", it's an effect.
 
-An external browser API can fail, such as storage being unavailable; production handlers should provide useful recovery. An escape hatch gives access to an external system, not a guarantee that system will work. Keep the integration small and the surrounding data flow declarative.
+```compare javascript
+// Without React, the same split exists: listeners for actions,
+// functions for calculations, setup/teardown for subscriptions.
+```
 
 ```exercise
-goal: "Attach the save operation to the click handler without running it during render."
+goal: "Saving is triggered by a click, but this sends it through state and an effect. Remove the effect and save directly in a `save` handler: `onClick={save}`."
 lang: jsx
 code: |
+  import { useEffect, useState } from "react";
   export default function SaveButton() {
-    function save() { localStorage.setItem("lesson:draft", "React"); }
-    return <button onClick={save()}>Save</button>;
+    const [clicked, setClicked] = useState(false);
+    useEffect(() => {
+      if (clicked) localStorage.setItem("lesson:draft", "React");
+    }, [clicked]);
+    return <button onClick={() => setClicked(true)}>Save</button>;
   }
 checks:
-  - match: "onClick=\\{save\\}"
-    message: "Pass save as the event handler."
-hint: "Pass save as the event handler."
+  - match: 'onClick=\{save\}'
+    message: "Pass a save function as the click handler."
+  - match: 'function\s+save\(\)'
+    message: "Define function save() inside the component."
+  - notMatch: 'useEffect\('
+    message: "Remove the effect; the handler does the work now."
+hint: "function save() { localStorage.setItem(...); }"
+solution: |
+  export default function SaveButton() {
+    function save() { localStorage.setItem("lesson:draft", "React"); }
+    return <button onClick={save}>Save</button>;
+  }
 ```
 
 ```quiz
-question: "Where should an explicit Save button's one-time save usually begin?"
+question: "Where should code that shows a confirmation toast after the user clicks Delete go?"
 options:
-  - "In its event handler."
-  - "In every render."
-  - "In an effect that watches an unrelated flag."
-answer: 0
-explain: "The handler directly expresses work caused by that user action."
+  - In an effect that watches a deleted flag.
+  - In the Delete button's event handler.
+  - In the component body, during rendering.
+answer: 1
+explain: The user's click caused it, so the click handler is the place.
 ```

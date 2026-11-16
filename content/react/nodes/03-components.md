@@ -5,53 +5,93 @@ branch: "rendering"
 requires: ["setup"]
 summary: "Name components with capitals and let React call them."
 ---
-
-A function component returns renderable content. Its name begins with a capital letter so JSX distinguishes it from a built-in tag:
+A component is a JavaScript function that returns markup. That's genuinely all:
 
 ```jsx
-function LessonBadge() {
-  return <span>One step closer</span>;
-}
-export default function Dashboard() {
-  return <section><h1>Your lessons</h1><LessonBadge /></section>;
+function Avatar() {
+  return <img src="/ada.png" alt="Ada Lovelace" />;
 }
 ```
 
-Lowercase tags such as `<section>` describe browser elements. `<LessonBadge />` refers to your component function.
+You use it like an HTML tag. Components contain other components, and that's how you build a whole page:
 
-## Compose instead of calling
+```jsx
+function ProfileCard() {
+  return (
+    <div className="card">
+      <Avatar />
+      <h2>Ada Lovelace</h2>
+      <FollowButton />
+    </div>
+  );
+}
+```
 
-Render a component as `<LessonBadge />`, rather than manually calling `LessonBadge()`. React owns the timing and identity of component calls, which becomes especially important when state and Hooks appear.
+Split the screen into boxes, give each box a name, and you have your components. A page is a tree of them: `App` contains `ProfileCard`, which contains `Avatar`.
 
-Define component functions at module level. Defining a component inside another component creates a new function identity on each render and can unexpectedly reset its subtree's state.
+## The capital letter rule
 
-Split a component when a section has a useful name, repeated structure, or independent behavior. Do not split every single tag into a separate file merely to increase the component count. A clear composition should make the screen's structure easier to understand.
+This is the one rule that trips up everyone at first. **Component names must start with a capital letter.**
+
+```jsx
+<Avatar />     // your component
+<avatar />     // an HTML tag called "avatar", which doesn't exist
+```
+
+That's how JSX tells them apart: lowercase means a built-in HTML element like `<div>`, and capitalised means a component. Write `<avatar />` and React silently creates an empty, unknown HTML element. No error, just nothing on screen.
+
+## You don't call components
+
+You write `<Avatar />`, never `Avatar()`. React calls your function, when it decides to, which is what lets it manage [state](node:state) and updates for you.
+
+## One file or many?
+
+Small components can share a file. When a component is used in several places, give it its own file and export it:
+
+```jsx title=src/Avatar.jsx
+export default function Avatar() {
+  return <img src="/ada.png" alt="Ada Lovelace" />;
+}
+```
+
+```jsx
+import Avatar from "./Avatar.jsx";
+```
+
+```warn
+Define components at the top level of a file, never inside another component. A component defined inside another is a brand new function on every render, so React throws away its state each time.
+```
 
 ```compare javascript
-import { createElement } from "react";
-export default function Badge() {
-  return createElement("span", null, "Ready");
-} // React without JSX
+// Without React: a function that builds and returns DOM nodes.
+function avatar() {
+  const img = document.createElement("img");
+  img.src = "/ada.png";
+  return img;
+}
 ```
 
 ```exercise
-goal: "Use the defined component rather than a lowercase custom element."
+goal: "`<lessonBadge />` starts with a lowercase letter, so React treats it as an unknown HTML tag. Use the component."
 lang: jsx
 code: |
   function LessonBadge() { return <span>Ready</span>; }
   export default function App() { return <lessonBadge />; }
 checks:
-  - match: "<LessonBadge\\s+/>"
-    message: "Capitalize the component name in JSX."
-hint: "Capitalize the component name in JSX."
+  - match: '<LessonBadge\s+/>'
+    message: "Capitalise the component name in JSX."
+hint: The name in JSX must match the function name exactly.
+solution: |
+  function LessonBadge() { return <span>Ready</span>; }
+  export default function App() { return <LessonBadge />; }
 ```
 
 ```quiz
-question: Why does `<LessonBadge />` start with a capital letter?
+question: "Why must component names start with a capital letter?"
 options:
-  - It marks a user-defined component rather than a built-in tag.
-  - All JSX tags must use capitals.
-  - It makes the result a class instance.
-answer: 0
-explain: Capitalized JSX names refer to component values; lowercase names describe built-in elements.
+  - "It's only a style convention."
+  - "JSX treats lowercase names as built-in HTML elements."
+  - "Lowercase names are reserved for class components."
+answer: 1
+explain: "`<div>` is an HTML tag; `<Div>` would be a component. The first letter decides."
 ```

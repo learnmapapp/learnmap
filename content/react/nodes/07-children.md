@@ -5,46 +5,89 @@ branch: "rendering"
 requires: ["props"]
 summary: "Build wrappers that accept nested content instead of knowing every use case."
 ---
-
-Nested JSX arrives through the `children` prop:
+**Version 1** of a reusable card component. It takes the content as props:
 
 ```jsx
-function Card({ title, children }) {
-  return <section><h2>{title}</h2><div>{children}</div></section>;
-}
-export default function App() {
-  return <Card title="Next lesson"><p>Learn state.</p></Card>;
+function Card({ title, text }) {
+  return (
+    <section className="card">
+      <h2>{title}</h2>
+      <p>{text}</p>
+    </section>
+  );
 }
 ```
 
-The wrapper controls its frame, while its caller chooses the inner content. This is [[composition]]: combining small pieces without forcing a wrapper to know every screen it might contain.
+Then the requests arrive. "Can the card contain a list?" "An image and a button?" "Two paragraphs?" You add `image`, `buttonLabel`, `items`... and the component turns into a monster of special cases.
 
-## Keep the API clear
+**Version 2** gets out of the way. Whatever you put **between** the tags arrives as a prop called `children`:
 
-Children can be a single node, several nodes, text, or nothing. Do not assume they are always an array. Most wrappers should render them directly rather than inspecting or rewriting them.
+```jsx
+function Card({ title, children }) {
+  return (
+    <section className="card">
+      <h2>{title}</h2>
+      {children}
+    </section>
+  );
+}
+```
 
-Named JSX props can provide additional slots, such as `footer={<button>Continue</button>}`, when a component has distinct regions. Use children for the main content and meaningful named props for other roles.
+```jsx
+<Card title="Today">
+  <p>Three lessons to go.</p>
+  <button>Continue</button>
+</Card>
 
-Composition often avoids inheritance and large sets of mode booleans. If a wrapper accumulates many unrelated special cases, let callers supply the varying content instead.
+<Card title="Photo of the day">
+  <img src="/cat.jpg" alt="A cat on a keyboard" />
+</Card>
+```
+
+The card handles the frame (the border, padding and heading) and doesn't care what's inside. That's [[composition]]: building bigger things by nesting pieces, instead of configuring one piece with endless options.
+
+## Where you'll use this
+
+Layouts, modals, panels, tooltips, page sections: anything that's "a box around something". If you're about to add a fifth prop that's really just "more content", reach for `children`.
+
+## Several slots
+
+`children` is one slot. When you need more, pass elements through ordinary props:
+
+```jsx
+<Layout sidebar={<Nav />} header={<Logo />}>
+  <Article />
+</Layout>
+```
+
+JSX elements are just values, so any prop can hold them.
+
+```compare javascript
+// Without React, you'd pass a DOM node and append it:
+card.append(contentNode);
+```
 
 ```exercise
-goal: "Show the content passed into the Panel wrapper."
+goal: "`Panel` receives `children`, but renders an empty section. Render them inside it."
 lang: jsx
 code: |
   function Panel({ children }) { return <section />; }
   export default function App() { return <Panel><p>Ready</p></Panel>; }
 checks:
-  - match: "<section>\\{children\\}</section>"
+  - match: '<section>\{children\}</section>'
     message: "Render children inside the section."
-hint: "Render children inside the section."
+hint: The section needs an opening and a closing tag, with children in braces between them.
+solution: |
+  function Panel({ children }) { return <section>{children}</section>; }
+  export default function App() { return <Panel><p>Ready</p></Panel>; }
 ```
 
 ```quiz
-question: Where does JSX nested inside `<Card>...</Card>` arrive?
+question: "In `<Card><p>Hi</p></Card>`, how does Card get the paragraph?"
 options:
-  - In the children prop.
-  - As a global variable.
-  - In the DOM before React renders.
+  - "As props.children"
+  - "As props.content"
+  - "It can't; only text can go between the tags."
 answer: 0
-explain: Nested content is supplied through children.
+explain: Content between the tags is passed as the children prop.
 ```

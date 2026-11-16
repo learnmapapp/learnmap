@@ -5,53 +5,93 @@ branch: "rendering"
 requires: ["expressions"]
 summary: "Pass data from parents and treat it as a read-only input."
 ---
-
-[[Props]] are the inputs a parent passes to a component. Destructure them in the function parameter:
+A component that always shows "Ada" isn't very useful. **Props** make components reusable: the parent passes values in, like arguments to a function.
 
 ```jsx
-function Greeting({ name, punctuation = "!" }) {
-  return <h2>Hello, {name}{punctuation}</h2>;
+function Greeting({ name, emoji }) {
+  return <h1>Hello, {name} {emoji}</h1>;
 }
+
 export default function App() {
-  return <Greeting name="Ada" punctuation="." />;
+  return (
+    <>
+      <Greeting name="Ada" emoji="👋" />
+      <Greeting name="Grace" emoji="🚀" />
+    </>
+  );
 }
 ```
 
-Numbers, booleans, objects, and functions use expression braces at the call site. A prop default applies when the value is missing or `undefined`, not when it is explicitly `null`.
+One component, two different greetings. The props are written like HTML attributes, and React collects them into **one object** that it passes as the function's first parameter. `{ name, emoji }` destructures that object.
 
-## Inputs are read-only snapshots
+## Passing different kinds of values
 
-Do not mutate props, including nested objects received through them. Request a change through an event callback or create an independent local value. The parent owns the data it supplies.
+```jsx
+<Product
+  title="Teapot"            // a string: quotes are fine
+  price={24.5}              // anything else: use braces
+  tags={["kitchen", "tea"]}
+  inStock                   // shorthand for inStock={true}
+  onBuy={() => addToCart()} // functions too
+/>
+```
 
-Prop names are part of your component's API. Prefer specific names that say what a value means. A small component does not need to know every field of its parent's application state.
+## Defaults
 
-When a component needs changeable memory of its own, use [state](node:state). Props and state both influence rendering, but their ownership differs.
+Destructuring defaults work for props that might not be passed:
+
+```jsx
+function Greeting({ name, emoji = "👋" }) {
+  return <h1>Hello, {name} {emoji}</h1>;
+}
+```
+
+## The golden rule: props are read-only
+
+A component **never changes its own props**:
+
+```jsx
+function Greeting({ name }) {
+  name = name.toUpperCase();   // don't: you're changing an input
+  return <h1>Hello, {name}</h1>;
+}
+```
+
+Think of props like the arguments of a pure function: the same inputs should always give the same output. If you need a different version, compute a new variable: `const shout = name.toUpperCase()`. If a value must change over time, that's [state](node:state), and it lives somewhere else.
+
+Data flows **down**: parents pass props to children, never the other way round. (Children talk back to parents through functions passed as props, as you'll see in [events](node:events).)
+
+```compare javascript
+// The same idea as calling a function with an options object:
+greeting({ name: "Ada", emoji: "👋" });
+```
 
 ```compare typescript
-type Props = { name: string; punctuation?: string };
-function greeting({ name, punctuation = "!" }: Props): string {
-  return `Hello, ${name}${punctuation}`;
-} // The same data contract before adding JSX
+// TypeScript can describe exactly which props are allowed:
+function Greeting({ name }: { name: string }) { /* ... */ }
 ```
 
 ```exercise
-goal: "Pass the name as a prop to Greeting."
+goal: "`Greeting` expects a `name`, but `App` doesn't pass one. Pass `name=\"Ada\"`."
 lang: jsx
 code: |
   function Greeting({ name }) { return <h1>Hello, {name}</h1>; }
   export default function App() { return <Greeting />; }
 checks:
-  - match: "<Greeting\\s+name=\"Ada\"\\s+/>"
+  - match: '<Greeting\s+name="Ada"\s+/>'
     message: "Add name=\"Ada\" to the component."
-hint: "Add name=\"Ada\" to the component."
+hint: Props are written like HTML attributes.
+solution: |
+  function Greeting({ name }) { return <h1>Hello, {name}</h1>; }
+  export default function App() { return <Greeting name="Ada" />; }
 ```
 
 ```quiz
-question: "Who owns the prop value supplied to a child?"
+question: "How does a component receive its props?"
 options:
-  - "The parent that supplies it."
-  - "The child may freely mutate it."
-  - "React copies every nested object deeply."
-answer: 0
-explain: "Props are read-only inputs; the parent controls the supplied data."
+  - As separate function parameters, one per prop.
+  - As one object, the function's first parameter.
+  - Through a global props variable.
+answer: 1
+explain: "That's why components usually destructure it: function Card({ title, body })."
 ```

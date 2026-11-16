@@ -5,57 +5,116 @@ branch: "forms"
 requires: ["controlled-inputs"]
 summary: "Use a form event so keyboard and pointer submission share one path."
 ---
-
-A form's `onSubmit` handles its submission, including pressing Enter in an appropriate field:
+A search box. The first attempt uses a click handler on the button:
 
 ```jsx
-import { useState } from "react";
+<div>
+  <input value={query} onChange={e => setQuery(e.target.value)} />
+  <button onClick={search}>Search</button>
+</div>
+```
 
-export default function SearchForm() {
+It works, until someone presses Enter in the box. Nothing happens. People expect Enter to work, so you add an `onKeyDown` handler... and you're re-inventing what HTML already does.
+
+## Use a real form
+
+```jsx
+export default function SearchBox({ onSearch }) {
   const [query, setQuery] = useState("");
-  const [submitted, setSubmitted] = useState("");
+
   function handleSubmit(event) {
     event.preventDefault();
-    setSubmitted(query.trim());
+    onSearch(query);
   }
-  return <form onSubmit={handleSubmit}>
-    <label>Search <input name="query" value={query} onChange={event => setQuery(event.target.value)} /></label>
-    <button type="submit">Search</button>
-    <p>{submitted}</p>
-  </form>;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="q">Search</label>
+      <input
+        id="q"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+      />
+      <button type="submit">Search</button>
+    </form>
+  );
 }
 ```
 
-`preventDefault` stops the ordinary browser navigation for this client-handled form. A button inside a form defaults to submit; give auxiliary buttons `type="button"`.
+`onSubmit` fires for **every** way of submitting: clicking the button, pressing Enter in a field, and assistive technology. One path, one handler.
 
-## Read values deliberately
+## Why `preventDefault`?
 
-`new FormData(event.currentTarget)` reads named successful controls, which can avoid controlling every field. FormData entries may be strings or files, so validate before using them as application data.
+A browser's default reaction to a form submission is to **navigate**: it sends the data to the URL in `action` and loads a new page. Your React app would be reloaded and lose its state. `event.preventDefault()` says "I'll handle this myself".
 
-Keep submission behavior in one place instead of attaching unrelated logic only to a button's click. [Form Actions](node:form-actions) later introduces React 19's action-oriented alternative.
+Don't confuse it with `event.stopPropagation()`, which stops the event from reaching parent elements' handlers. It doesn't prevent the navigation.
+
+## Reading values without state
+
+If you don't need the values while typing, skip the state and read the form when it's submitted:
+
+```jsx
+function handleSubmit(event) {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+  onSearch(data.get("q"));
+}
+
+<input id="q" name="q" />
+```
+
+`FormData` collects every field with a `name` attribute. Less code, and fewer renders.
+
+```tip
+Buttons inside a form default to `type="submit"`. Give other buttons in the form, such as "Cancel", `type="button"`, or they'll submit it too.
+```
+
+```compare javascript
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  search(new FormData(form).get("q"));
+});
+```
 
 ```exercise
-goal: "Prevent navigation when handling this form on the client."
+goal: "`stopPropagation` doesn't stop the browser from navigating away. Use the method that does."
 lang: jsx
 code: |
   import { useState } from "react";
   export default function Form() {
     const [saved, setSaved] = useState(false);
     function submit(event) { event.stopPropagation(); setSaved(true); }
-    return <form onSubmit={submit}><button type="submit">Save</button><p>{saved ? "Saved" : "Ready"}</p></form>;
+    return (
+      <form onSubmit={submit}>
+        <button type="submit">Save</button>
+        <p>{saved ? "Saved" : "Ready"}</p>
+      </form>
+    );
   }
 checks:
-  - match: "event\\.preventDefault\\(\\);"
-    message: "Use preventDefault to stop default form navigation."
-hint: "Use preventDefault to stop default form navigation."
+  - match: 'event\.preventDefault\(\);'
+    message: "Use preventDefault to stop the form navigating."
+hint: It prevents the browser's default behaviour.
+solution: |
+  import { useState } from "react";
+  export default function Form() {
+    const [saved, setSaved] = useState(false);
+    function submit(event) { event.preventDefault(); setSaved(true); }
+    return (
+      <form onSubmit={submit}>
+        <button type="submit">Save</button>
+        <p>{saved ? "Saved" : "Ready"}</p>
+      </form>
+    );
+  }
 ```
 
 ```quiz
-question: "Why attach submission logic to the form rather than only to a button click?"
+question: "Why use `onSubmit` on the form instead of `onClick` on the button?"
 options:
-  - "It handles keyboard submission through the same path."
-  - "It makes every field required."
-  - "It prevents all network calls."
-answer: 0
-explain: "Forms provide semantic submission behavior for keyboard and pointer users."
+  - onClick doesn't work on buttons inside forms.
+  - onSubmit also handles pressing Enter and other ways of submitting.
+  - onSubmit is faster.
+answer: 1
+explain: Every submission method goes through the form's submit event.
 ```

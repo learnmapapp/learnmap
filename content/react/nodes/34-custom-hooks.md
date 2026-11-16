@@ -5,17 +5,13 @@ branch: "effects"
 requires: ["fetching-data", "refs"]
 summary: "Share reusable stateful logic while each call keeps its own state."
 ---
-
-A [[custom hook]] extracts reusable Hook-based logic. Its name starts with `use`:
+**Copy-paste spotted.** Two components both need to know whether the browser is online:
 
 ```jsx
-import { useEffect, useState } from "react";
-
-function useOnlineStatus() {
-  const [online, setOnline] = useState(true);
+function StatusBar() {
+  const [online, setOnline] = useState(navigator.onLine);
   useEffect(() => {
     const update = () => setOnline(navigator.onLine);
-    update();
     window.addEventListener("online", update);
     window.addEventListener("offline", update);
     return () => {
@@ -23,23 +19,72 @@ function useOnlineStatus() {
       window.removeEventListener("offline", update);
     };
   }, []);
-  return online;
+  return <p>{online ? "✅ Online" : "❌ Offline"}</p>;
 }
-export default function ConnectionBadge() {
-  return <p>{useOnlineStatus() ? "Network appears online" : "Offline"}</p>;
+
+function SaveButton() {
+  const [online, setOnline] = useState(navigator.onLine);
+  useEffect(() => {
+    // ...the same eleven lines again...
+  }, []);
+  return <button disabled={!online}>Save</button>;
 }
 ```
 
-This reports the browser's network indication, not proof that a specific service is reachable. A real service request still needs error handling.
+A regular helper function can't hold it, because it uses Hooks. But a **custom Hook** can.
 
-## Share behavior, not a hidden singleton
+## Extract it
 
-Two calls to this Hook have independent state and subscriptions. Extracting a Hook does not automatically create shared application state.
+```jsx title=src/useOnlineStatus.js
+import { useEffect, useState } from "react";
 
-Name Hooks after their purpose, such as `useOnlineStatus`, rather than generic lifecycle wrappers that hide dependencies. Preserve setup and cleanup inside the reusable logic, and expose a small interface that matches what the caller needs.
+export function useOnlineStatus() {
+  const [online, setOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const update = () => setOnline(navigator.onLine);
+    window.addEventListener("online", update);
+    window.addEventListener("offline", update);
+    return () => {
+      window.removeEventListener("online", update);
+      window.removeEventListener("offline", update);
+    };
+  }, []);
+
+  return online;
+}
+```
+
+## Use it
+
+```jsx
+function StatusBar() {
+  const online = useOnlineStatus();
+  return <p>{online ? "✅ Online" : "❌ Offline"}</p>;
+}
+
+function SaveButton() {
+  const online = useOnlineStatus();
+  return <button disabled={!online}>Save</button>;
+}
+```
+
+Each component now says **what** it needs, not how to get it.
+
+## The fine print
+
+- **The name must start with `use`.** That's how you, your teammates and the linter know it's a Hook, and that the [Rules of Hooks](node:hook-rules) apply to it.
+- **It shares logic, not state.** `StatusBar` and `SaveButton` each get their own `online` state. Calling a custom Hook is like pasting its body into your component. (To share the same state, see [lifting state](node:lifting-state) or [context](node:context).)
+- **Return whatever is convenient**: a value, an array like `[value, toggle]`, or an object like `{ data, error, loading }`.
+- **Only extract when it uses Hooks.** A function that just formats a date is a plain function; don't call it `useFormattedDate`.
+
+```compare javascript
+// Like any helper function extraction, but it's allowed to use
+// state and effects, because it runs as part of a component.
+```
 
 ```exercise
-goal: Name the reusable Hook with the use prefix.
+goal: "The component calls `useToggle`, but the function is named `toggleState`. Rename it, which also tells everyone it's a Hook."
 lang: jsx
 code: |
   import { useState } from "react";
@@ -52,17 +97,27 @@ code: |
     return <button onClick={toggle}>{enabled ? "On" : "Off"}</button>;
   }
 checks:
-  - match: function\s+useToggle\(\)
-    message: Name the Hook useToggle so its role and call rules are explicit.
-hint: Name the Hook `useToggle` so its role and call rules are explicit.
+  - match: 'function\s+useToggle\(\)'
+    message: Name the Hook useToggle.
+hint: Hook names start with use.
+solution: |
+  import { useState } from "react";
+  function useToggle() {
+    const [enabled, setEnabled] = useState(false);
+    return [enabled, () => setEnabled(previous => !previous)];
+  }
+  export default function Toggle() {
+    const [enabled, toggle] = useToggle();
+    return <button onClick={toggle}>{enabled ? "On" : "Off"}</button>;
+  }
 ```
 
 ```quiz
-question: "Do two calls to an ordinary custom Hook automatically share one state value?"
+question: "Two components call `useOnlineStatus()`. How many `online` states exist?"
 options:
-  - "Yes."
-  - "No, each call has its own Hook state."
-  - "Only if the names match."
+  - One, shared between them.
+  - Two, one per component.
+  - None; custom Hooks can't have state.
 answer: 1
-explain: "Custom Hooks reuse logic; shared state requires an explicit owner or external store."
+explain: Each call runs the Hook's code inside that component, with its own state.
 ```

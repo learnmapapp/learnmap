@@ -6,29 +6,46 @@ requires: []
 summary: "Describe an interface as components whose output follows data."
 kind: "hub"
 ---
+If you've built a web page with plain JavaScript, you know this dance: find an element, change its text, add a class, remember to remove it later, keep the counter in the header in sync with the list...
 
-React builds interfaces from [[component|components]]: functions describing a piece of the screen. A component can be a small button or a whole page.
+```javascript
+const badge = document.querySelector("#unread");
+badge.textContent = String(unread);
+badge.classList.toggle("hidden", unread === 0);
+```
+
+Every piece of data needs code that updates every place it appears. Miss one, and the screen is out of sync.
+
+React flips this around. You write **what the screen should look like for the current data**, and React works out what to change in the page:
 
 ```jsx
-export default function Welcome() {
-  return <h1>Ready to learn?</h1>;
+function UnreadBadge({ unread }) {
+  if (unread === 0) return null;
+  return <span className="badge">{unread}</span>;
 }
 ```
 
-This is [[JSX]], a syntax extension transformed by the build tool. React uses the resulting descriptions to update the browser DOM as data changes. It does not require every screen element to be managed by hand.
+That function is a [[component]]: a piece of interface, written as a function that returns markup. The HTML-like syntax is [[JSX]]. When `unread` changes, React calls the function again and updates the page to match. You never write the "update" code yourself.
 
-## Choose a route
+## The big ideas on this map
 
-Learn JavaScript functions, arrays, objects, and modules before tackling advanced examples. This map uses JavaScript with JSX first; its later TypeScript branch adds typed contracts. Examples use modern function components and React 19 APIs where explicitly introduced.
+- **Components** are functions that describe part of the screen. You build pages by nesting them, like LEGO.
+- **Props** are a component's inputs, passed in by its parent.
+- **State** is data a component remembers, like what's typed in a box. Changing it re-renders the screen.
+- **Effects** connect React to the world outside, such as timers, network requests and browser APIs.
 
-Start with [setup](node:setup), or choose a goal for forms, shared state, or external data. Exercises check code text rather than executing a browser. Run examples in a local React project to see behavior. The [official learning guide](https://react.dev/learn) provides a companion reference.
+## Before you start
+
+You'll want to be comfortable with modern JavaScript: arrow functions, destructuring (`const { name } = user`), `map` and `filter`, spread (`...`), and `import`/`export`. React leans on all of them.
+
+Head to [Local setup](node:setup) to get a project running, or pick a goal. The exercises here are checked by pattern, without running a browser, so try the examples in your own project too. The [official React docs](https://react.dev/learn) make a great companion.
 
 ```quiz
-question: "What is a React component in the examples on this map?"
+question: "In React, what do you write to keep the screen in sync with your data?"
 options:
-  - "A function describing part of the interface."
-  - "A separate browser window."
-  - "A CSS selector."
-answer: 0
-explain: "Function components describe UI that React renders and updates."
+  - "Code that finds elements and updates them whenever data changes."
+  - "Components that describe what the screen looks like for the current data."
+  - "CSS rules that react to data attributes."
+answer: 1
+explain: "You describe the result; React works out which page updates are needed."
 ```

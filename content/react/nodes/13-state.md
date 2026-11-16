@@ -5,38 +5,69 @@ branch: "interaction"
 requires: ["events"]
 summary: "Remember a value between renders and request updates with a setter."
 ---
+Here's a counter that doesn't work. Can you see why?
 
-[[State]] gives a component memory. `useState` returns the current value and a function that requests a new render:
+```jsx
+export default function Counter() {
+  let count = 0;
+
+  function handleClick() {
+    count = count + 1;
+    console.log(count);       // 1, 2, 3... the variable does change!
+  }
+
+  return <button onClick={handleClick}>Clicked {count} times</button>;
+}
+```
+
+The console counts up, but the button still says 0. Two reasons:
+
+1. **Changing a variable doesn't tell React anything.** React only re-runs your component when it's asked to.
+2. **Even if it did re-run**, `let count = 0` would start from zero again. Local variables don't survive between calls of a function.
+
+## `useState` fixes both
 
 ```jsx
 import { useState } from "react";
 
 export default function Counter() {
   const [count, setCount] = useState(0);
-  return <button onClick={() => setCount(count + 1)}>Count: {count}</button>;
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicked {count} times
+    </button>
+  );
 }
 ```
 
-A plain local variable would reset whenever the component function runs again. The setter asks React to keep a new value and render from it.
+`useState(0)` gives you a pair:
 
-## Ownership is per instance
+- **`count`**, the current value. React remembers it between renders. `0` is only used the very first time.
+- **`setCount`**, a function that stores a new value and asks React to render again.
 
-Two rendered counters have separate state. React associates each state slot with a component's identity in the tree, not with the variable name itself.
+So a click calls `setCount(1)`, React calls `Counter` again, `useState` returns `1` this time, and the button shows the new text. That loop of "set state, re-render, show the new UI" is the heart of React.
 
-Call Hooks such as `useState` at the top level of a component or custom Hook. Do not call them inside branches, loops, or event handlers. That preserves the relationship between successive calls and their state slots.
+[[state|State]] is a component's memory. Each `<Counter />` on the page has its own count.
 
-Initialize state with the smallest useful representation. Values that can be computed from props or existing state usually do not need their own state variable.
+## Conventions
 
-```compare typescript
-import { useState } from "react";
-function useCounter() {
-  const [count, setCount] = useState<number>(0);
-  return { count, increment: () => setCount(previous => previous + 1) };
-} // The explicit number is optional here because 0 already infers it
+- Name the pair `[thing, setThing]`, using array destructuring.
+- Call `useState` at the top of the component, not in loops or conditions ([why](node:hook-rules)).
+- Functions starting with `use` are called **Hooks**. `useState` is the first of several.
+
+## What should be state?
+
+Anything that changes over time **and** affects what's on screen: an input's text, whether a menu is open, the selected tab. If you can compute it from other values, it [shouldn't be state](node:derived-state).
+
+```compare javascript
+// Without React, you update the screen yourself:
+count++;
+button.textContent = `Clicked ${count} times`;
 ```
 
 ```exercise
-goal: Use the setter to request a counter update.
+goal: "The click handler computes `count + 1` but throws it away. Pass it to the setter."
 lang: jsx
 code: |
   import { useState } from "react";
@@ -45,17 +76,23 @@ code: |
     return <button onClick={() => count + 1}>{count}</button>;
   }
 checks:
-  - match: onClick=\{\(\)\s+=>\s+setCount\(count\s+\+\s+1\)\}
+  - match: 'onClick=\{\(\)\s+=>\s+setCount\(count\s+\+\s+1\)\}'
     message: Call setCount(count + 1) in the handler.
-hint: Call `setCount(count + 1)` in the handler.
+hint: Wrap the calculation in setCount(...).
+solution: |
+  import { useState } from "react";
+  export default function Counter() {
+    const [count, setCount] = useState(0);
+    return <button onClick={() => setCount(count + 1)}>{count}</button>;
+  }
 ```
 
 ```quiz
-question: Why does a plain local `let count = 0` not replace `useState`?
+question: "When is the `0` in `useState(0)` used?"
 options:
-  - Local variables automatically update the DOM.
-  - It resets during rendering and assignment does not request a render.
-  - React forbids local variables.
+  - On every render.
+  - Only on the first render; after that React returns the stored value.
+  - Whenever the setter is called.
 answer: 1
-explain: State persists across renders and its setter notifies React to render again.
+explain: The argument is the initial value. Later renders get the current state.
 ```

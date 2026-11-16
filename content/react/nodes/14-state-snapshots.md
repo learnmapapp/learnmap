@@ -5,33 +5,76 @@ branch: "interaction"
 requires: ["state"]
 summary: "A setter schedules a future render; it does not rewrite the current local value."
 ---
-
-Each render sees a [[snapshot]] of state. Calling a setter does not change the variables in that render's running handler:
+**Predict the output.** You click this button once. What does the console show, and what does the button show?
 
 ```jsx
-import { useState } from "react";
-
 export default function Counter() {
   const [count, setCount] = useState(0);
+
   function handleClick() {
-    const next = count + 1;
-    setCount(next);
-    console.log("Requested", next, "from", count);
+    setCount(count + 1);
+    console.log(count);
   }
+
   return <button onClick={handleClick}>{count}</button>;
 }
 ```
 
-The first click requests `1` but still reads `count` as `0` inside that handler. React later calls the component with the updated state.
+Take a guess before reading on.
 
-## Closures retain their render's values
+**Answer:** the console shows **0**, and the button shows **1**.
 
-A timeout or asynchronous callback can retain the values from when it was created. That is normal JavaScript closure behavior, not evidence that the setter failed.
+## Why: each render is a snapshot
 
-If you need to calculate the next state from queued previous state, use an [updater function](node:updater-functions). If you need a mutable value whose changes should not render, consider a ref. Choose based on the value's role rather than using a ref to bypass ordinary state flow.
+Calling `setCount` doesn't change the `count` variable. It can't: `count` is a `const`. What it does is **ask for a new render**, in which `useState` will return 1.
+
+Picture each render as a photograph. During the render where `count` is 0, everything in it (the JSX, the click handler, the `console.log`) sees 0, permanently. The new value only exists in the **next** photo.
+
+## Round two
+
+Same idea, harder. One click on this:
+
+```jsx
+function handleClick() {
+  setCount(count + 1);
+  setCount(count + 1);
+  setCount(count + 1);
+}
+```
+
+Is it 3? No: **1**. All three lines read `count` from the same snapshot, where it's 0, so they all ask for `0 + 1`. ([Updater functions](node:updater-functions) shows how to make it 3.)
+
+## Round three
+
+```jsx
+function handleClick() {
+  setCount(count + 5);
+  setTimeout(() => alert(count), 3000);
+}
+```
+
+Three seconds later, the alert says **0**, even though the screen has shown 5 for a while. The timeout was created in the snapshot where `count` was 0, and it remembers that one.
+
+## The practical takeaway
+
+If you need the new value in the same handler, calculate it first and use your own variable:
+
+```jsx
+function handleClick() {
+  const next = count + 1;
+  setCount(next);
+  saveToServer(next);       // not count, which is still the old one
+}
+```
+
+```compare javascript
+// The same thing happens with any const captured by a closure:
+const count = 0;
+setTimeout(() => console.log(count), 1000);   // always 0
+```
 
 ```exercise
-goal: "Log the requested next value explicitly instead of assuming count has changed."
+goal: "`console.log(count)` prints the old value. Log `next`, the value you just passed to the setter."
 lang: jsx
 code: |
   import { useState } from "react";
@@ -45,17 +88,28 @@ code: |
     return <button onClick={handleClick}>{count}</button>;
   }
 checks:
-  - match: "console\\.log\\(next\\);"
+  - match: 'console\.log\(next\);'
     message: "Log next, the value calculated before calling the setter."
-hint: "Log next, the value calculated before calling the setter."
+hint: The new value is already in a local variable.
+solution: |
+  import { useState } from "react";
+  export default function Counter() {
+    const [count, setCount] = useState(0);
+    function handleClick() {
+      const next = count + 1;
+      setCount(next);
+      console.log(next);
+    }
+    return <button onClick={handleClick}>{count}</button>;
+  }
 ```
 
 ```quiz
-question: Does `setCount(1)` immediately change count in the already running handler?
+question: "`count` is 2. A handler runs `setCount(count * 10)` and then `console.log(count)`. What's logged?"
 options:
-  - Yes.
-  - No, that handler retains its render snapshot.
-  - Only in production.
-answer: 1
-explain: The setter requests a future render; local snapshot variables stay unchanged.
+  - "2"
+  - "20"
+  - "undefined"
+answer: 0
+explain: The handler belongs to the render where count is 2. The new value arrives in the next render.
 ```

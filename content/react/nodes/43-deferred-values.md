@@ -5,33 +5,75 @@ branch: "performance"
 requires: ["transitions", "derived-state"]
 summary: "Let expensive results lag behind an immediately updated input."
 ---
+Imagine a search box over 5,000 products, where rendering the result list is slow. Type "keyboard" and the input stutters: each letter waits for the whole list to re-render before it appears.
 
-`useDeferredValue` lets a dependent view render from an older value while React works on a newer render:
+[Transitions](node:transitions) fix that when you own the state update. But often the slow part is a component that just receives a value as a prop. That's where `useDeferredValue` comes in.
+
+## Two versions of the same value
 
 ```jsx
 import { useDeferredValue, useState } from "react";
 
-const names = ["Ada", "Grace", "Linus"];
-export default function Search() {
+export default function ProductSearch() {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
-  const stale = deferredQuery !== query;
-  const visible = names.filter(name => name.toLowerCase().includes(deferredQuery.toLowerCase()));
-  return <><label>Search <input value={query} onChange={event => setQuery(event.target.value)} /></label>
-    <ul style={{ opacity: stale ? 0.6 : 1 }}>{visible.map(name => <li key={name}>{name}</li>)}</ul></>;
+
+  return (
+    <>
+      <input value={query} onChange={e => setQuery(e.target.value)} />
+      <SlowResults query={deferredQuery} />
+    </>
+  );
 }
 ```
 
-The input remains controlled by `query`. Results use the deferred value, and the comparison can indicate stale content.
+`useDeferredValue(query)` gives you a copy of `query` that's **allowed to lag behind**. Here's what happens as you type "key":
 
-## Not a debounce timer
+| You type | `query` (input) | `deferredQuery` (results) |
+| --- | --- | --- |
+| k | "k" | "" → then "k" when there's time |
+| e | "ke" | still working on "k"... |
+| y | "key" | skips "ke", goes to "key" |
 
-Deferral does not impose a fixed delay or automatically reduce network requests. Fetch caching, cancellation, and request-rate control are separate concerns.
+The input always shows exactly what you typed. The results catch up when React has time, and skip the in-between values if you type faster than they render.
 
-A three-item list does not need this optimization; the example shows data flow. For a slow child, an appropriate memoization boundary can let React skip its urgent render until the deferred value changes. Measure the real workload and preserve clear feedback when the displayed result is stale.
+## Show that results are stale
+
+When the two values differ, the list on screen is out of date. Say so, gently:
+
+```jsx
+const isStale = query !== deferredQuery;
+
+<div style={{ opacity: isStale ? 0.5 : 1 }}>
+  <SlowResults query={deferredQuery} />
+</div>
+```
+
+## Making it actually skip work
+
+For the background render to be cheap to throw away, `SlowResults` should skip re-rendering when its `query` prop hasn't changed. Wrap it in `memo` ([next lesson](node:memoization)):
+
+```jsx
+const SlowResults = memo(function SlowResults({ query }) {
+  // ...
+});
+```
+
+## Deferred value or transition?
+
+- You call the setter yourself and can wrap it: **transition**.
+- You receive the value (a prop, or state you don't want to split): **deferred value**.
+
+Both do the same thing underneath: mark some rendering as interruptible.
+
+```compare javascript
+// The classic non-React approach is debouncing: wait until the user
+// pauses typing. Deferred values adapt to the device instead of using
+// a fixed delay.
+```
 
 ```exercise
-goal: "Filter using the deferred query while the input keeps its immediate query."
+goal: "The filter uses `query`, so it still runs on every keystroke. Filter with `deferredQuery` instead."
 lang: jsx
 code: |
   import { useDeferredValue, useState } from "react";
@@ -42,17 +84,27 @@ code: |
     return <><input aria-label="Search" value={query} onChange={event => setQuery(event.target.value)} /><p>{visible.join(", ")}</p></>;
   }
 checks:
-  - match: "name\\.includes\\(deferredQuery\\)"
-    message: "Use deferredQuery in the dependent filter."
-hint: "Use deferredQuery in the dependent filter."
+  - match: 'name\.includes\(deferredQuery\)'
+    message: "Use deferredQuery in the filter."
+  - match: 'value=\{query\}'
+    message: "Keep the input showing query, so typing stays instant."
+hint: Only the slow part should use the lagging value.
+solution: |
+  import { useDeferredValue, useState } from "react";
+  export default function Search() {
+    const [query, setQuery] = useState("");
+    const deferredQuery = useDeferredValue(query);
+    const visible = ["Ada", "Grace"].filter(name => name.includes(deferredQuery));
+    return <><input aria-label="Search" value={query} onChange={event => setQuery(event.target.value)} /><p>{visible.join(", ")}</p></>;
+  }
 ```
 
 ```quiz
-question: Does `useDeferredValue` automatically debounce network requests?
+question: "Which value should the input's `value` use?"
 options:
-  - Yes, with a fixed half-second delay.
-  - No, it controls rendering priority rather than request rate.
-  - Only for text inputs.
+  - deferredQuery, so it matches the results.
+  - query, so typing appears instantly.
+  - Either; they're always equal.
 answer: 1
-explain: Deferral schedules rendering; request debouncing and caching require separate mechanisms.
+explain: The input must stay urgent. Only the slow results use the deferred copy.
 ```

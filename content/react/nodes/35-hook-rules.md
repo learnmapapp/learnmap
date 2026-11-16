@@ -5,31 +5,85 @@ branch: "effects"
 requires: ["custom-hooks", "state"]
 summary: "Keep ordinary Hook calls at the top level and keep rendering pure."
 ---
+Two rules, then the reason behind them, which makes them easy to remember.
 
-Call Hooks such as `useState`, `useEffect`, and your custom Hooks at the top level of a component or another custom Hook:
+## The rules
+
+1. **Only call Hooks at the top level** of a component or custom Hook. Not inside `if`, loops, nested functions, or after an early `return`.
+2. **Only call Hooks from React functions**: components and custom Hooks. Not from regular helpers or event handlers.
+
+## Why: Hooks are numbered lockers
+
+When you write:
 
 ```jsx
-import { useState } from "react";
-
-export default function Details({ visible = true }) {
-  const [expanded, setExpanded] = useState(false);
-  if (!visible) return null;
-  return <button onClick={() => setExpanded(previous => !previous)}>
-    {expanded ? "Expanded" : "Collapsed"}
-  </button>;
+function Profile() {
+  const [name, setName] = useState("Ada");
+  const [age, setAge] = useState(36);
+  const [editing, setEditing] = useState(false);
 }
 ```
 
-The Hook runs before the conditional early return, so its position stays consistent across renders. Calling it only when visible would change the call sequence.
+you never told React which state is called "name". It doesn't know names. It only knows **order**: the first `useState` call gets locker 1, the second gets locker 2, the third gets locker 3. On the next render, it hands out the lockers in the same order.
 
-## Let tools help
+Now add a condition:
 
-The Hooks ESLint rules catch many invalid calls and missing dependencies. Do not put Hooks inside event handlers, loops, or nested callback functions. Name ordinary pure helpers without the `use` prefix unless they actually need Hook semantics.
+```jsx
+function Profile({ showAge }) {
+  const [name, setName] = useState("Ada");
+  if (showAge) {
+    const [age, setAge] = useState(36);   // ❌
+  }
+  const [editing, setEditing] = useState(false);
+}
+```
 
-React's newer `use` API has specific exceptions to some call-order rules; those exceptions do not apply to `useState` or `useEffect`. Learn the ordinary rules first and consult the API contract when using a different primitive.
+| Call | Render 1 (`showAge` true) | Render 2 (`showAge` false) |
+| --- | --- | --- |
+| 1st `useState` | name → locker 1 | name → locker 1 |
+| 2nd `useState` | age → locker 2 | **editing → locker 2, so it's 36** |
+| 3rd `useState` | editing → locker 3 | — |
+
+On render 2, `editing` opens age's locker. That's why React insists on the same calls, in the same order, every time. (In practice, React notices and throws an error.)
+
+## The early return is a hidden condition
+
+```jsx
+function Details({ visible }) {
+  if (!visible) return null;
+  const [open, setOpen] = useState(false);   // ❌ skipped when hidden
+}
+```
+
+Put the Hooks first, then return:
+
+```jsx
+function Details({ visible }) {
+  const [open, setOpen] = useState(false);   // ✅ always called
+  if (!visible) return null;
+}
+```
+
+## Conditions go inside
+
+Need an effect only sometimes? Call it always, and put the condition **inside**:
+
+```jsx
+useEffect(() => {
+  if (!enabled) return;
+  // ...
+}, [enabled]);
+```
+
+The `react-hooks` lint rule catches all of these. (The new `use` API from React 19 is the one exception: it may be called conditionally.)
+
+```compare javascript
+// Like reading function arguments by position: swap two, and
+// each one gets the other's value.
+```
 
 ```exercise
-goal: Call `useState` unconditionally before the early return.
+goal: "`useState` runs only sometimes, and its result is thrown away. Declare `[expanded, setExpanded]` at the top, before the early return."
 lang: jsx
 code: |
   import { useState } from "react";
@@ -39,17 +93,26 @@ code: |
     return <button onClick={() => setExpanded(previous => !previous)}>{String(expanded)}</button>;
   }
 checks:
-  - match: const\s+\[expanded,\s+setExpanded\]\s+=\s+useState\(false\);
+  - match: 'const\s+\[expanded,\s+setExpanded\]\s+=\s+useState\(false\);'
     message: Declare the Hook at the top level before the early return.
-hint: Declare the Hook at the top level before the early return.
+  - notMatch: 'if\s+\(visible\)\s+useState'
+    message: Remove the conditional useState call.
+hint: Replace the first if line with a normal useState declaration.
+solution: |
+  import { useState } from "react";
+  export default function Details({ visible = true }) {
+    const [expanded, setExpanded] = useState(false);
+    if (!visible) return null;
+    return <button onClick={() => setExpanded(previous => !previous)}>{String(expanded)}</button>;
+  }
 ```
 
 ```quiz
-question: Where should `useState` appear relative to a conditional early return?
+question: "How does React know which state belongs to which `useState` call?"
 options:
-  - After it, only when the branch renders.
-  - Before it at the component's top level.
-  - Inside the click handler.
+  - By the variable name you destructure into.
+  - By the order of the calls during rendering.
+  - By a hidden id the compiler adds.
 answer: 1
-explain: Ordinary Hooks must preserve a consistent top-level call sequence.
+explain: That's why the order must be the same on every render.
 ```

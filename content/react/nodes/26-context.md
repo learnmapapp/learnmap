@@ -5,34 +5,80 @@ branch: "architecture"
 requires: ["lifting-state", "children"]
 summary: "Provide shared values through the tree without threading every intermediate prop."
 ---
+## The problem, in one picture
 
-[[Context]] distributes a value to descendants. Create the context once at module level:
+Your app has a dark mode. The setting lives in `App`, and the button that needs it is five levels down:
+
+```text
+App            theme = "dark"
+└─ Layout          (passes theme)
+   └─ Sidebar      (passes theme)
+      └─ Menu      (passes theme)
+         └─ Item   (passes theme)
+            └─ Button    uses theme
+```
+
+Four components accept a `theme` prop only to hand it on. That's called *prop drilling*: it's tedious, and every refactor of the middle components risks breaking the chain.
+
+[[context|Context]] lets a component **broadcast** a value to everything below it, and lets any descendant **tune in**, skipping the middle.
+
+## 1. Create the context
+
+```jsx title=src/ThemeContext.js
+import { createContext } from "react";
+
+export const ThemeContext = createContext("light");
+```
+
+`"light"` is the default, used when there's no provider above.
+
+## 2. Provide a value
+
+Wrap part of the tree in the context, with a `value`:
 
 ```jsx
-import { createContext, useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
 
-const ThemeContext = createContext("light");
-function ThemeLabel() {
-  const theme = useContext(ThemeContext);
-  return <p>Theme: {theme}</p>;
-}
 export default function App() {
-  return <ThemeContext value="dark"><ThemeLabel /></ThemeContext>;
+  const [theme, setTheme] = useState("dark");
+  return (
+    <ThemeContext value={theme}>
+      <Layout />
+    </ThemeContext>
+  );
 }
 ```
 
-This provider shorthand is available in React 19. Older React versions use `<ThemeContext.Provider value="dark">`.
+(Before React 19 you wrote `<ThemeContext.Provider value={theme}>`. You'll see both in the wild.)
 
-## Nearest provider wins
+## 3. Read it, anywhere below
 
-A reader receives the nearest matching provider above it. The default supplied to `createContext` is a fallback when there is no provider; it is not a state variable that updates itself.
+```jsx
+import { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
 
-Context distributes data but does not choose its owner. A parent can put state in a provider and update it normally. Split unrelated concerns when one broad context causes many consumers to update unnecessarily.
+function Button({ children }) {
+  const theme = useContext(ThemeContext);
+  return <button className={`button-${theme}`}>{children}</button>;
+}
+```
 
-Use props for direct, local relationships. Context is useful for genuinely cross-cutting data such as theme or a coordinated feature's shared state, not a requirement for every value.
+`Layout`, `Sidebar`, `Menu` and `Item` no longer mention `theme` at all. When `theme` changes in `App`, every component reading it re-renders with the new value.
+
+## Good uses, and a warning
+
+Context fits values that **many** components need: the theme, the signed-in user, the language, a router.
+
+It's not a replacement for props. Props make data flow visible: you can see where a value comes from. Context hides it. Before reaching for it, try [passing children](node:children) instead: often the middle components don't need to render the deep ones themselves.
+
+```compare javascript
+// Without React, you might reach for a module-level variable,
+// but nothing would re-render when it changes.
+export let theme = "light";
+```
 
 ```exercise
-goal: Read the supplied theme using `useContext`.
+goal: "`Label` stores the context object itself, not the value. Read the value with `useContext`."
 lang: jsx
 code: |
   import { createContext, useContext } from "react";
@@ -40,17 +86,22 @@ code: |
   function Label() { const theme = ThemeContext; return <p>{theme}</p>; }
   export default function App() { return <ThemeContext value="dark"><Label /></ThemeContext>; }
 checks:
-  - match: const\s+theme\s+=\s+useContext\(ThemeContext\);
+  - match: 'const\s+theme\s+=\s+useContext\(ThemeContext\);'
     message: Call useContext with ThemeContext.
-hint: Call `useContext` with ThemeContext.
+hint: "useContext(ThemeContext) returns the nearest provided value."
+solution: |
+  import { createContext, useContext } from "react";
+  const ThemeContext = createContext("light");
+  function Label() { const theme = useContext(ThemeContext); return <p>{theme}</p>; }
+  export default function App() { return <ThemeContext value="dark"><Label /></ThemeContext>; }
 ```
 
 ```quiz
-question: "Which context provider value does a consumer read?"
+question: "A component calls `useContext(ThemeContext)`, but there's no provider above it. What does it get?"
 options:
-  - "The nearest matching provider above it."
-  - "The first provider ever created."
-  - "Always the createContext default."
-answer: 0
-explain: "Context lookup follows the component tree to the nearest provider."
+  - "undefined"
+  - The default value passed to createContext.
+  - An error.
+answer: 1
+explain: The default is exactly for that case.
 ```

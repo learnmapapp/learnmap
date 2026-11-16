@@ -5,47 +5,84 @@ branch: "effects"
 requires: ["effect-cleanup", "derived-state"]
 summary: "Handle loading, failure, and outdated requests explicitly."
 ---
+Fetching data in an effect looks simple. It has three traps, though. Let's build a user profile loader in three versions, each fixing one more.
 
-An effect can synchronize a displayed record with a changing identifier. This example assumes an API returning a JSON object with a `name` field:
+## Version 1: the obvious one
 
 ```jsx
-import { useEffect, useState } from "react";
+function Profile({ userId }) {
+  const [user, setUser] = useState(null);
 
-export default function Learner({ id = "ada" }) {
-  const [result, setResult] = useState({ status: "loading" });
   useEffect(() => {
-    let ignore = false;
-    setResult({ status: "loading" });
-    async function load() {
-      try {
-        const response = await fetch(`/api/learners/${encodeURIComponent(id)}`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        if (!data || typeof data.name !== "string") throw new Error("Invalid response");
-        if (!ignore) setResult({ status: "ready", name: data.name });
-      } catch (error) {
-        if (!ignore) setResult({ status: "failed", message: String(error) });
-      }
-    }
-    load();
-    return () => { ignore = true; };
-  }, [id]);
-  if (result.status === "loading") return <p>Loading</p>;
-  if (result.status === "failed") return <p role="alert">{result.message}</p>;
-  return <h1>{result.name}</h1>;
+    fetch(`/api/users/${userId}`)
+      .then(response => response.json())
+      .then(data => setUser(data));
+  }, [userId]);
+
+  return <h1>{user?.name}</h1>;
 }
 ```
 
-Cleanup prevents an old request from overwriting a newer selection. It does not cancel the network operation; an `AbortController` can additionally cancel supported fetch work.
+**Trap 1:** if the server answers with a 404 or 500, `fetch` doesn't fail. It only rejects when the network is down. `response.json()` then tries to parse an error page, or you show `undefined`.
 
-## Know what fetch promises
+**Trap 2:** there's no loading or error state. The user sees a blank heading and has no idea why.
 
-An HTTP error status does not automatically reject fetch, so check `response.ok`. Parsing JSON does not validate the application's schema.
+## Version 2: checks the status, and shows progress
 
-For larger applications, framework loaders or a data cache can handle request deduplication, caching, and server rendering more effectively than independent component effects. This local example teaches lifecycle management, not a complete data layer.
+```jsx
+const [status, setStatus] = useState("loading");
+
+useEffect(() => {
+  setStatus("loading");
+  fetch(`/api/users/${userId}`)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(data => { setUser(data); setStatus("done"); })
+    .catch(() => setStatus("error"));
+}, [userId]);
+```
+
+**Trap 3, the race:** the user clicks Ada, then quickly Grace. Two requests are in flight. If Ada's answer arrives **last**, the screen shows Ada's profile under Grace's name.
+
+## Version 3: ignores stale answers
+
+```jsx
+useEffect(() => {
+  let ignore = false;
+  setStatus("loading");
+
+  fetch(`/api/users/${userId}`)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      if (!ignore) { setUser(data); setStatus("done"); }
+    })
+    .catch(() => {
+      if (!ignore) setStatus("error");
+    });
+
+  return () => { ignore = true; };
+}, [userId]);
+```
+
+When `userId` changes, the [cleanup](node:effect-cleanup) marks the old request as outdated. Its answer still arrives, but it's ignored.
+
+## So... is this how everyone fetches?
+
+Not in larger apps. Version 3 still has no caching, no retry, and it refetches every time the component appears. Libraries such as TanStack Query and SWR, and frameworks such as Next.js and React Router, handle all of that. But they all solve exactly these three traps, and now you know what they are.
+
+```compare javascript
+// The status check applies to fetch anywhere, React or not:
+const response = await fetch(url);
+if (!response.ok) throw new Error(`HTTP ${response.status}`);
+```
 
 ```exercise
-goal: Treat an unsuccessful HTTP status as a failure.
+goal: "This throws on **successful** responses. Flip the condition, so it throws when the status isn't OK."
 lang: javascript
 code: |
   export async function loadName(url) {
@@ -55,17 +92,24 @@ code: |
     return data;
   }
 checks:
-  - match: if\s+\(!response\.ok\)
-    message: Reject when response.ok is false.
-hint: Reject when response.ok is `false`.
+  - match: 'if\s+\(!response\.ok\)'
+    message: Throw when response.ok is false.
+hint: Add a ! before response.ok.
+solution: |
+  export async function loadName(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    return data;
+  }
 ```
 
 ```quiz
-question: "Why guard writes from an older request after the id changes?"
+question: "A request for user 1 is still pending when `userId` changes to 2. What does the `ignore` flag do?"
 options:
-  - "Its response might arrive later and overwrite current data."
-  - "Fetch responses are always sorted."
-  - "React automatically cancels every request."
-answer: 0
-explain: "Network responses can arrive out of order; cleanup must prevent outdated work from winning."
+  - It cancels the network request.
+  - It makes the old response skip its setState calls when it arrives.
+  - It makes React wait for both requests.
+answer: 1
+explain: The request finishes, but its result is thrown away. AbortController can cancel the request itself.
 ```
