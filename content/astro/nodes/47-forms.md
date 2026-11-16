@@ -1,69 +1,99 @@
 ---
-title: Handle an HTML form
-icon: 🛠️
+title: Handle a form
+icon: "📮"
 branch: server
-requires:
-  - server-rendering
-summary: Validate submitted data on the server even when HTML has required fields.
+requires: [server-rendering]
+summary: Receive a form post in the same page that shows the form, validate it, and redirect after success.
 ---
+**Follow one form submission** from click to confirmation. The page:
 
-In your Astro project, save this as `src/pages/index.astro`. Validate submitted data on the server even when HTML has required fields. This demonstration acknowledges input without persisting it; real mutations need appropriate authorization and storage.
-
-```astro
+```astro title=src/pages/subscribe.astro
 ---
 export const prerender = false;
-let message = "";
+
+let error = "";
 if (Astro.request.method === "POST") {
   const data = await Astro.request.formData();
-  const title = data.get("title");
-  message = typeof title === "string" && title.trim() ? "Accepted" : "Title required";
+  const email = data.get("email");
+
+  if (typeof email !== "string" || !email.includes("@")) {
+    error = "Please enter a valid email address.";
+  } else {
+    await addSubscriber(email);
+    return Astro.redirect("/subscribe/thanks");
+  }
 }
 ---
-<form method="post"><label>Title <input name="title" required /></label><button>Submit</button></form>
-<p role="status">{message}</p>
+<form method="post">
+  <label>Email <input type="email" name="email" required /></label>
+  <button>Subscribe</button>
+</form>
+{error && <p role="alert">{error}</p>}
 ```
 
-## Put it to work
+**Stop 1: the first visit.** A `GET` request. The `if` is skipped, and the visitor sees the empty form.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Stop 2: the submission.** The browser sends a `POST` to the *same* URL, because the form has no `action` attribute. The body holds `email=sam@example.com`, keyed by the input's `name`.
+
+**Stop 3: reading the data.** `Astro.request` is a standard `Request`, so `await Astro.request.formData()` parses the body. `data.get("email")` returns the value, or `null` if the field was missing.
+
+**Stop 4a: invalid input.** The page renders again, now with the error message. The `required` and `type="email"` attributes catch most mistakes in the browser, but **always validate on the server too**: anyone can send a request without your form.
+
+**Stop 4b: success.** Save the subscriber, then `return Astro.redirect(...)`. Redirecting after a successful post, called *Post/Redirect/Get*, means refreshing the thanks page doesn't submit the form a second time.
+
+**Why this needs server rendering:** a prerendered page can't receive a POST. Hence `prerender = false` at the top.
+
+**Accessibility touches:** each `<input>` has a `<label>`, and the error uses `role="alert"`, so screen readers announce it.
+
+**Next level:** for many forms or more complex validation, [actions](node:actions) give you typed, validated handlers with less code.
+
+```compare javascript
+// Express: app.post("/subscribe", express.urlencoded(), handler),
+// where the handler validates req.body.email and calls res.redirect().
+```
+
+```compare typescript
+// Remix: an action function in the same route module, with a very
+// similar flow.
+```
+
+```compare python
+# Flask: if request.method == "POST": email = request.form["email"]
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about handle an html form.
-lang: astro
-code: >-
+goal: "Only handle submissions: wrap the form-reading code in `if (Astro.request.method === \"POST\") { ... }`."
+code: |-
   ---
-
   export const prerender = false;
-
-  let message = "";
-
+  let name = "";
+  const data = await Astro.request.formData();
+  name = String(data.get("name") ?? "");
+  ---
+  <form method="post"><input name="name" /><button>Send</button></form>
+  <p>{name}</p>
+checks:
+  - match: 'if\s*\(\s*Astro\.request\.method\s*===\s*"POST"\s*\)\s*\{\s*\n?\s*const\s+data\s*=\s*await\s+Astro\.request\.formData\(\)'
+    message: 'Put the formData code inside if (Astro.request.method === "POST") { ... }'
+solution: |-
+  ---
+  export const prerender = false;
+  let name = "";
   if (Astro.request.method === "POST") {
     const data = await Astro.request.formData();
-    const title = data.get("title");
-    message = typeof title === "string" && title.trim() ? "Accepted" : "Title required";
+    name = String(data.get("name") ?? "");
   }
-
   ---
-
-  <form method="get"><label>Title <input name="title" required
-  /></label><button>Submit</button></form>
-
-  <p role="status">{message}</p>
-checks:
-  - match: method="post"
-    message: Use method="post" for this step.
-  - notMatch: method="get"
-    message: Replace method="get" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  <form method="post"><input name="name" /><button>Send</button></form>
+  <p>{name}</p>
 ```
 
 ```quiz
-question: Why validate a form title on the server even with `required` on the input?
+question: "Why redirect after a successful form post instead of rendering a thank-you message directly?"
 options:
-  - "`required` automatically validates the server's database."
-  - Server validation is needed only for GET requests.
-  - Requests can bypass browser field validation.
-answer: 2
-explain: Browser constraints improve feedback but do not enforce the receiving boundary's contract.
+  - Astro requires it.
+  - So that refreshing the page doesn't resubmit the form.
+  - Redirects are faster.
+answer: 1
+explain: After a redirect, the browser's current page is a GET, which is safe to reload.
 ```

@@ -1,52 +1,96 @@
 ---
 title: Markdown pages
-icon: 🔁
+icon: "📝"
 branch: content
-requires:
-  - layouts
-summary: A .md file under src/pages becomes a page.
+requires: [layouts]
+summary: A Markdown file in src/pages becomes a page, with frontmatter for its data and a layout for its frame.
 ---
+**A story in three files.** Mia wants to write a blog post. She doesn't want to write HTML for every paragraph, so she writes Markdown.
 
-In your Astro project, save this as `src/pages/note.md`. A .md file under `src/pages` becomes a page. Frontmatter stores metadata; the Markdown heading supplies visible content. A Markdown layout receives metadata through `Astro.props.frontmatter`.
+**Chapter 1: the post.** She saves it in `src/pages/`, where every file becomes a page, `.md` files included:
 
-```markdown
+```markdown title=src/pages/posts/first-light.md
 ---
-title: My first note
+title: First light
+date: 2026-03-02
+layout: ../../layouts/PostLayout.astro
 ---
-# Practice journal
+Last night I pointed the new telescope at **Jupiter**.
 
-Keep a short record of what you learn.
+## What I saw
+
+- Four moons in a row
+- A faint stripe across the planet
 ```
 
-## Put it to work
+It's served at `/posts/first-light`. The YAML block at the top is the post's frontmatter: data about the post, rather than the post itself. (Same name as the code fence in .astro files, different language.)
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Chapter 2: the frame.** On its own, Markdown becomes bare HTML: no `<head>`, no styles, no header. The `layout` line in the frontmatter fixes that by pointing at an Astro component, relative to the Markdown file:
+
+```astro title=src/layouts/PostLayout.astro
+---
+const { frontmatter } = Astro.props;
+---
+<html lang="en">
+  <head><title>{frontmatter.title}</title></head>
+  <body>
+    <article>
+      <h1>{frontmatter.title}</h1>
+      <p>Posted on {frontmatter.date}</p>
+      <slot />
+    </article>
+  </body>
+</html>
+```
+
+The layout receives the frontmatter as a prop called `frontmatter`, and the rendered Markdown arrives through the default [slot](node:slots).
+
+**Chapter 3: the result.** A full page, with the title in the browser tab, a date line, and Mia's post as proper HTML: `<strong>Jupiter</strong>`, an `<h2>` and a list. Headings even get an `id` automatically (`<h2 id="what-i-saw">`), so links like `#what-i-saw` just work.
+
+**The sequel.** A handful of posts in `src/pages/` is fine. Once you have dozens and want to sort, filter and validate them, [content collections](node:collections) are the better home. And if a post needs a component in the middle, look at [MDX](node:mdx).
+
+```compare javascript
+// Without Astro: run marked or remark over the file and paste the HTML
+// into a template.
+```
+
+```compare typescript
+// Next.js needs a plugin such as @next/mdx; Astro renders .md out of
+// the box.
+```
+
+```compare python
+# Like Pelican or MkDocs: Markdown files with metadata, rendered
+# through a theme.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about markdown pages.
+goal: "This post renders without the site's frame. Add a `layout` line to its frontmatter pointing at `../layouts/PostLayout.astro`."
 lang: markdown
 code: |-
   ---
-  title: Untitled
+  title: Hello Markdown
   ---
-  # Practice journal
-
-  Keep a short record of what you learn.
+  This is my first post.
 checks:
-  - match: title:\s+My\s+first\s+note
-    message: "Use title: My first note for this step."
-  - notMatch: title:\s+Untitled
-    message: "Replace title: Untitled in the starting code."
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '^layout:\s*["'']?\.\./layouts/PostLayout\.astro["'']?\s*$'
+    message: 'Add layout: ../layouts/PostLayout.astro to the frontmatter.'
+  - match: '^---\s*\n[\s\S]*layout:[\s\S]*\n---'
+    message: The layout line belongs between the --- lines.
+solution: |-
+  ---
+  title: Hello Markdown
+  layout: ../layouts/PostLayout.astro
+  ---
+  This is my first post.
 ```
 
 ```quiz
-question: Which file creates the `/note` Markdown page?
+question: "How does a Markdown page's layout read the post title?"
 options:
-  - "`src/pages/note.md`"
-  - "`src/components/note.md`"
-  - "`src/data/note.md` alone."
-answer: 0
-explain: A Markdown file in pages defines a route; a data file needs a rendering route.
+  - "Astro.props.title"
+  - "Astro.props.frontmatter.title"
+  - "It can't; layouts only get the HTML."
+answer: 1
+explain: Markdown layouts receive the file's YAML frontmatter as the frontmatter prop.
 ```

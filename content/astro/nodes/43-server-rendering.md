@@ -1,47 +1,97 @@
 ---
-title: Configure a server adapter
-icon: 📋
+title: Server rendering
+icon: "🖧"
 branch: server
-requires:
-  - setup
-  - endpoints
-summary: Install @astrojs/node for this Node example.
+requires: [setup, endpoints]
+summary: Add an adapter to render pages on demand, and choose per page between prerendered and live.
 ---
+**A decision guide.** Every Astro page is rendered in one of two ways:
 
-In your Astro project, save this as `astro.config.mjs`. Install `@astrojs/node` for this Node example. Choose an adapter matching the host and run the built server according to that adapter’s instructions.
+- **Prerendered:** rendered once at build time into an HTML file. This is the default, and what every lesson so far has used.
+- **On demand:** rendered by a server for every request, so it can read cookies, form posts, query strings and live data.
 
-```javascript
-import { defineConfig } from "astro/config";
-import node from "@astrojs/node";
-export default defineConfig({ output: "server", adapter: node({ mode: "standalone" }) });
+**Ask these questions about each page:**
+
+1. *Is it the same for every visitor until you next deploy?* Prerender it. (Blog posts, docs, landing pages.)
+2. *Does it depend on who's asking or what they sent?* Render on demand. (Account pages, search results, form handlers.)
+3. *Is it mostly static with one personalized corner?* Prerender it and use a [server island](node:server-islands) for the corner.
+
+**Step 1: install an adapter.** On-demand rendering needs a server, and an [[adapter]] connects Astro to one. Pick the one for your host:
+
+```repl shell
+> npx astro add node
 ```
 
-## Put it to work
+Others include `netlify`, `vercel` and `cloudflare`. The command updates the config:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```javascript title=astro.config.mjs
+import { defineConfig } from "astro/config";
+import node from "@astrojs/node";
+
+export default defineConfig({
+  adapter: node({ mode: "standalone" }),
+});
+```
+
+**Step 2: opt pages in.** With an adapter installed, pages are still prerendered by default. Mark the dynamic ones:
+
+```astro title=src/pages/search.astro
+---
+export const prerender = false;
+
+const query = Astro.url.searchParams.get("q") ?? "";
+const results = query ? await searchNotes(query) : [];
+---
+<h1>Results for "{query}"</h1>
+<ul>{results.map((r) => <li>{r.title}</li>)}</ul>
+```
+
+`/search?q=jupiter` now runs this code on the server for each request.
+
+**The other way round.** If most of your site is dynamic, set `output: "server"` in the config. Then every page renders on demand, and you mark the static ones with `export const prerender = true`.
+
+**What you can use only on demand:** request headers, `Astro.cookies` (reading *and* setting), form posts via `Astro.request`, `Astro.redirect()` for dynamic decisions, and [middleware](node:middleware) that sees each request.
+
+**Running it.** `npm run build` now produces a server as well as static files. With the Node adapter, `node ./dist/server/entry.mjs` starts it.
+
+```compare javascript
+// Express renders every request; Astro lets you pick per page.
+```
+
+```compare typescript
+// Next.js: static by default too, dynamic when a page uses cookies()
+// or headers().
+```
+
+```compare python
+# Django and Flask render on every request; static generation needs an
+# add-on.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about configure a server adapter.
-lang: javascript
+goal: "This page reads the query string, so it must render on demand. Add `export const prerender = false;` to the frontmatter."
 code: |-
-  import { defineConfig } from "astro/config";
-  import node from "@astrojs/node";
-  export default defineConfig({ output: "static", adapter: node({ mode: "standalone" }) });
+  ---
+  const name = Astro.url.searchParams.get("name") ?? "stranger";
+  ---
+  <h1>Hello, {name}!</h1>
 checks:
-  - match: output:\s+"server"
-    message: 'Use output: "server" for this step.'
-  - notMatch: output:\s+"static"
-    message: 'Replace output: "static" in the starting code.'
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'export\s+const\s+prerender\s*=\s*false'
+    message: Add export const prerender = false;
+solution: |-
+  ---
+  export const prerender = false;
+  const name = Astro.url.searchParams.get("name") ?? "stranger";
+  ---
+  <h1>Hello, {name}!</h1>
 ```
 
 ```quiz
-question: Which deployment matches the example Node standalone adapter?
+question: "You install the Node adapter but change nothing else. How are your existing pages rendered?"
 options:
-  - A browser tab opened directly on the source configuration.
-  - A host that can run the built Node server.
-  - A host that accepts only static files and has no server runtime.
+  - All on demand now.
+  - Still prerendered at build time; only pages with prerender = false render on demand.
+  - The build fails until every page chooses.
 answer: 1
-explain: Choose an adapter compatible with the actual deployment runtime.
+explain: The default output is static. The adapter makes on-demand pages possible; you opt each one in.
 ```

@@ -1,50 +1,83 @@
 ---
 title: Meet Astro
-icon: 🚀
+icon: "🚀"
 branch: core
 requires: []
-summary: Astro renders components to HTML by default.
+summary: What Astro is, what an .astro file looks like, and why it ships so little JavaScript.
 kind: hub
 ---
+Astro is a framework for building websites, especially content-heavy ones: blogs, docs, marketing sites, portfolios. You write components, much like in React or Vue. The difference is what reaches the browser: Astro renders your components to **plain HTML** on the server or at build time, and by default sends **no JavaScript at all**. The pages load fast because there's nothing to download and run first.
 
-In your Astro project, save this as `src/pages/index.astro`. Astro renders components to HTML by default. Browser JavaScript is added when you request it rather than for every component.
+When a part of the page does need to be interactive, like a search box or an image carousel, you opt in for just that part. Astro calls those parts *islands*; you'll meet them later in the course.
 
-```astro
+**Here's a complete page.** In an Astro project (the [next lesson](node:setup) shows how to create one), every file in `src/pages/` becomes a page of the site:
+
+```astro title=src/pages/index.astro
+---
+const name = "Astro";
+const today = new Date().toDateString();
+---
 <html lang="en">
-  <head><title>My learning site</title></head>
-  <body><h1>Hello, Astro!</h1></body>
+  <head>
+    <title>My first page</title>
+  </head>
+  <body>
+    <h1>Hello, {name}!</h1>
+    <p>Built on {today}.</p>
+  </body>
 </html>
 ```
 
-## Put it to work
+Visit the site's home page and you see "Hello, Astro!" and a date. Two parts to notice:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+1. **Between the `---` lines** is JavaScript (or TypeScript) that runs while the page is being built. It never reaches the browser.
+2. **Below it** is HTML, with `{curly braces}` to insert values from the code above.
 
-This course targets **Astro 7**. Check your local tool version before following examples. See the [official reference](https://docs.astro.build/en/getting-started/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
+That's the whole format. Open the browser's dev tools on that page, and you'll find just the HTML: no framework, no bundle.
+
+**Three things that make Astro different:**
+
+- **HTML first.** Components produce HTML. JavaScript in the browser is the exception, added per component.
+- **Bring your own UI framework.** React, Vue, Svelte, Solid and others work inside Astro, for the parts that need them.
+- **Content built in.** Markdown pages, validated collections of blog posts, image optimization and RSS are all part of the toolkit.
+
+**How this course works.** Each lesson has a short explanation, an exercise you solve in the browser (the page checks your code as you type), and a quick question. The map shows how lessons build on each other; start with the foundations, or pick a goal and follow its route.
+
+```compare javascript
+// A plain HTML page with a script that builds the text in the browser:
+document.querySelector("h1").textContent = `Hello, ${name}!`;
+// Astro does this work before the page is sent, so the browser gets
+// finished HTML.
+```
+
+```compare python
+# Like a Jinja or Django template rendered on the server:
+# <h1>Hello, {{ name }}!</h1>
+```
 
 ```exercise
-goal: Make the page heading say `Hello, Astro!`.
-lang: astro
+goal: "The page should greet `Astro`. Use the `name` variable in the heading instead of the hard-coded `world`."
 code: |-
-  <html lang="en">
-    <head><title>My learning site</title></head>
-    <body><h1>Hello, world!</h1></body>
-  </html>
+  ---
+  const name = "Astro";
+  ---
+  <h1>Hello, world!</h1>
 checks:
-  - match: Hello,\s+Astro!
-    message: Use Hello, Astro! for this step.
-  - notMatch: Hello,\s+world!
-    message: Replace Hello, world! in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<h1>Hello, \{\s*name\s*\}!</h1>'
+    message: 'Write <h1>Hello, {name}!</h1>'
+solution: |-
+  ---
+  const name = "Astro";
+  ---
+  <h1>Hello, {name}!</h1>
 ```
 
 ```quiz
-question: What does an ordinary Astro component ship by default?
+question: "Where does the code between the `---` lines of an .astro file run?"
 options:
-  - A browser-side function that must create all initial HTML.
-  - Rendered HTML without automatically adding a client framework runtime.
-  - A hydrated React tree for every component.
+  - In the visitor's browser, after the page loads.
+  - On the server or at build time, before the HTML is sent.
+  - In both places.
 answer: 1
-explain: Client JavaScript is added explicitly where the page needs it.
+explain: Frontmatter code produces the HTML; none of it is sent to the browser.
 ```

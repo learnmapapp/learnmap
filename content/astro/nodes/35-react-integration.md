@@ -1,54 +1,98 @@
 ---
-title: Add React support
-icon: 🛠️
+title: Add React
+icon: "⚛️"
 branch: islands
-requires:
-  - setup
-summary: Run this inside your practice Astro project to install and configure React support.
+requires: [setup]
+summary: Install the React integration and use React components inside Astro pages.
 ---
+**A field guide to bringing a UI framework along.** Astro supports React, Preact, Vue, Svelte, Solid and more through *integrations*. This course uses React, but the steps are the same for the others.
 
-In your Astro project, save this as `terminal command`. Run this inside your practice Astro project to install and configure React support. Create a `Counter.jsx` component before using the next island examples.
+**1. Install it.**
 
-```shell
-npx astro add react
+```repl shell
+> npx astro add react
 ```
 
-## Put it to work
+That one command installs `@astrojs/react`, `react` and `react-dom`, adds the integration to `astro.config.mjs`, and sets up TypeScript for JSX. Answer yes to its questions.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**2. Write a React component**, as a `.jsx` or `.tsx` file. Put it next to your Astro components:
 
-Create `src/components/Counter.jsx` before the hydration lessons:
+```jsx title=src/components/Counter.jsx
+import { useState } from "react";
 
-```jsx
-import { useState } from 'react';
-
-export default function Counter() {
-  const [count, setCount] = useState(0);
-  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+export default function Counter({ start = 0 }) {
+  const [count, setCount] = useState(start);
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicked {count} times
+    </button>
+  );
 }
 ```
 
-This component owns the browser state. The Astro parent decides when its JavaScript loads.
+Nothing Astro-specific: it's a regular React component, and existing ones work unchanged.
+
+**3. Use it from an Astro file**, like any other component:
+
+```astro title=src/pages/index.astro
+---
+import Counter from "../components/Counter.jsx";
+---
+<h1>Welcome</h1>
+<Counter start={5} />
+```
+
+**4. Look at the page. Click the button. Nothing happens!**
+
+That's not a bug; it's Astro's default. React rendered the button to HTML at build time ("Clicked 5 times") and then Astro shipped **no React to the browser**. You get static HTML from a React component, which is perfect for things like a formatted table or a card.
+
+**5. Make it interactive** by adding a client directive: `<Counter start={5} client:load />`. That's the subject of the [next lesson](node:hydration).
+
+**Things to know when mixing:**
+
+- **Props must be serializable** once the component is interactive: strings, numbers, arrays, plain objects, dates. Not functions.
+- **Astro components can contain React components**, but not the other way round. A `.jsx` file can't import a `.astro` file. You can pass Astro content into React as children, though.
+- **Several frameworks can coexist** on one page, if you really need it.
+
+```compare javascript
+// Without Astro, you'd render React on the server yourself with
+// renderToString().
+```
+
+```compare typescript
+// Next.js components are interactive by default; Astro components are
+// static by default.
+```
+
+```compare python
+# Like server-rendering a React component from Django, but built in.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about add react support.
-lang: shell
-code: npx astro add vue
+goal: "Use the React component in this Astro page: import `Clock` from `../components/Clock.jsx` and render `<Clock />` below the heading."
+code: |-
+  ---
+  ---
+  <h1>World time</h1>
 checks:
-  - match: npx\s+astro\s+add\s+react
-    message: Use npx astro add react for this step.
-  - notMatch: npx\s+astro\s+add\s+vue
-    message: Replace npx astro add vue in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'import\s+Clock\s+from\s+"\.\./components/Clock\.jsx"'
+    message: Import Clock from "../components/Clock.jsx".
+  - match: '</h1>\s*\n\s*<Clock\s*/>'
+    message: 'Add <Clock /> after the heading.'
+solution: |-
+  ---
+  import Clock from "../components/Clock.jsx";
+  ---
+  <h1>World time</h1>
+  <Clock />
 ```
 
 ```quiz
-question: What does adding React integration enable?
+question: "You render a React counter with `<Counter />` and no directive. What happens when you click it?"
 options:
-  - Automatic hydration of every Astro component.
-  - Replacement of Astro's file-based router.
-  - Rendering React components and hydrating selected ones.
-answer: 2
-explain: The integration supplies a renderer; client directives still choose hydration behavior.
+  - It counts, as in any React app.
+  - Nothing; it was rendered to static HTML and no React was sent to the browser.
+  - The build fails.
+answer: 1
+explain: Without a client directive, framework components render to HTML only.
 ```

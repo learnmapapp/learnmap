@@ -1,52 +1,96 @@
 ---
-title: Typed component props
-icon: 🔧
+title: Pass props
+icon: "🎁"
 branch: basics
-requires:
-  - components
-summary: Props receive data supplied by a parent.
+requires: [components]
+summary: Give components inputs with attributes, read them with Astro.props, and type them with an interface.
 ---
+**An analogy: components are function calls.** Attributes are the arguments, and `Astro.props` is the parameter list.
 
-In your Astro project, save this as `src/components/Card.astro`. Props receive data supplied by a parent. Render this version with `<Card title="Astro" />` and let TypeScript describe required inputs.
-
-A useful term here is [[prop]]: An input passed from a parent to a component.
-
-```astro
+```astro title=src/components/Card.astro
 ---
-interface Props { title: string; description?: string }
-const { title, description = "Keep practicing" } = Astro.props;
+interface Props {
+  title: string;
+  minutes?: number;
+}
+
+const { title, minutes = 5 } = Astro.props;
 ---
-<article><h2>{title}</h2><p>{description}</p></article>
+<article class="card">
+  <h2>{title}</h2>
+  <p>{minutes} minute read</p>
+</article>
 ```
 
-## Put it to work
+```astro title=src/pages/index.astro
+---
+import Card from "../components/Card.astro";
+---
+<Card title="Getting started" minutes={3} />
+<Card title="Deploying" />
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+The first card says "3 minute read"; the second falls back to the default, 5.
+
+**Reading the analogy line by line:**
+
+| Function | Astro component |
+| --- | --- |
+| `function card(title, minutes = 5)` | `const { title, minutes = 5 } = Astro.props;` |
+| parameter types | `interface Props { ... }` |
+| `card("Deploying")` | `<Card title="Deploying" />` |
+| return value | the HTML below the frontmatter |
+
+**Strings vs other values.** `title="Deploying"` passes a string. Anything else (numbers, booleans, arrays, objects, variables) goes in braces: `minutes={3}`, `tags={["astro"]}`, `post={post}`. Writing `minutes="3"` would give you the string `"3"`.
+
+**Why bother with `interface Props`?** Astro reads it for type checking. Forget a required prop or misspell one, and your editor underlines it, and `npx astro check` reports it. The `?` marks a prop as optional.
+
+**Props flow one way:** from parent to child. A component can't change its parent's variables, and it shouldn't reassign its own props either. If it needs a modified value, it computes a new variable from the prop.
+
+**Boolean shorthand:** an attribute with no value is `true`. `<Card title="New" featured />` is the same as `featured={true}`.
+
+```compare javascript
+function card({ title, minutes = 5 }) {
+  return `<article><h2>${title}</h2><p>${minutes} minute read</p></article>`;
+}
+```
+
+```compare typescript
+// React: function Card({ title, minutes = 5 }: Props) { ... }
+```
+
+```compare python
+# Jinja macro: {% macro card(title, minutes=5) %}...{% endmacro %}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about typed component props.
-lang: astro
+goal: "Read the `name` prop: destructure it from `Astro.props`, so the greeting works."
 code: |-
   ---
-  interface Props { title: string; description?: string }
-  const { title, description = "" } = Astro.props;
+  interface Props {
+    name: string;
+  }
   ---
-  <article><h2>{title}</h2><p>{description}</p></article>
+  <p>Hello, {name}!</p>
 checks:
-  - match: description\s+=\s+"Keep\s+practicing"
-    message: Use description = "Keep practicing" for this step.
-  - notMatch: description\s+=\s+""
-    message: Replace description = "" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'const\s*\{\s*name\s*\}\s*=\s*Astro\.props'
+    message: 'Write const { name } = Astro.props;'
+solution: |-
+  ---
+  interface Props {
+    name: string;
+  }
+  const { name } = Astro.props;
+  ---
+  <p>Hello, {name}!</p>
 ```
 
 ```quiz
-question: How does an Astro child read props supplied by its parent?
+question: "`<Rating stars=\"4\" />`. What is the type of `stars` inside the component?"
 options:
-  - Through `Astro.params` for every prop.
-  - Through `window.props` in frontmatter.
-  - Through `Astro.props`.
-answer: 2
-explain: Props are component inputs, while params describe route parameters.
+  - number
+  - string
+  - It depends on the Props interface.
+answer: 1
+explain: Quoted attributes are always strings. Write stars={4} to pass a number; the interface only checks, it doesn't convert.
 ```

@@ -1,48 +1,99 @@
 ---
-title: Default slots
-icon: 📦
+title: Slots
+icon: "🕳️"
 branch: basics
-requires:
-  - components
-summary: A slot receives child markup from a parent.
+requires: [components]
+summary: Let a component wrap content you pass between its tags, with a fallback for when nothing is passed.
 ---
+**Props pass values. Slots pass markup.**
 
-In your Astro project, save this as `src/components/Panel.astro`. A slot receives child markup from a parent. Render `<Panel><p>Hello</p></Panel>`; the fallback appears only when suitable content is absent.
+A picture frame doesn't care what painting goes in it. A `Box` component is the same: it draws the border, and whoever uses it supplies the contents.
 
-A useful term here is [[slot]]: A placeholder where a parent can supply child content.
-
-```astro
-<section class="panel">
-  <slot><p>No content yet.</p></slot>
-</section>
+```astro title=src/components/Box.astro
+<div class="box">
+  <slot />
+</div>
 ```
 
-## Put it to work
+```astro title=src/pages/index.astro
+---
+import Box from "../components/Box.astro";
+---
+<Box>
+  <h2>Opening hours</h2>
+  <p>Monday to Friday, 9 to 5.</p>
+</Box>
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Result:
+
+```html
+<div class="box">
+  <h2>Opening hours</h2>
+  <p>Monday to Friday, 9 to 5.</p>
+</div>
+```
+
+Whatever sits between `<Box>` and `</Box>` (text, HTML, other components) is called the *children*, and it's inserted where the component wrote `<slot />`. That's the [[slot]].
+
+**Why not a prop?** You could pass `body="<p>…</p>"` as a string, but then it would be escaped, you'd lose editor highlighting, and you couldn't nest components. Slots are made for markup.
+
+**An empty frame.** Put fallback content inside the slot tag. It shows only when the parent passes no children:
+
+```astro
+<div class="box">
+  <slot>
+    <p>Nothing here yet.</p>
+  </slot>
+</div>
+```
+
+`<Box />` now shows "Nothing here yet."; `<Box><p>Hi</p></Box>` shows "Hi".
+
+**Checking whether children exist.** `Astro.slots.has("default")` returns `true` when content was passed. Handy for skipping a wrapper element entirely:
+
+```astro
+{Astro.slots.has("default") && <footer><slot /></footer>}
+```
+
+**Combine with props freely:** `<Box title="Hours">...</Box>` passes a prop *and* children.
+
+```compare javascript
+// Web components: <slot></slot> inside a shadow root works the same
+// way.
+```
+
+```compare typescript
+// React: function Box({ children }) { return <div
+// className="box">{children}</div>; }
+```
+
+```compare python
+# Jinja: {% block content %}{% endblock %}, or a {% call %} block for
+# macros.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about default slots.
-lang: astro
+goal: "The callout always shows the same text. Replace the hard-coded paragraph with a `<slot />` so it shows whatever the parent passes."
 code: |-
-  <section class="panel">
-    <slot><p>Missing</p></slot>
-  </section>
+  <aside class="callout">
+    <p>Callout text</p>
+  </aside>
 checks:
-  - match: <p>No\s+content\s+yet\.</p>
-    message: Use <p>No content yet.</p> for this step.
-  - notMatch: <p>Missing</p>
-    message: Replace <p>Missing</p> in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<aside class="callout">\s*<slot\s*/>\s*</aside>'
+    message: 'Replace the paragraph with <slot />.'
+solution: |-
+  <aside class="callout">
+    <slot />
+  </aside>
 ```
 
 ```quiz
-question: When does a default slot's fallback content appear?
+question: "When is the content inside `<slot>…</slot>` shown?"
 options:
-  - Only after React hydrates the parent.
-  - When no suitable child content is supplied.
-  - Whenever children are supplied.
+  - Always, before the children.
+  - Only when the parent passes no children.
+  - Only in the dev server.
 answer: 1
-explain: A slot uses provided content when available and its fallback otherwise.
+explain: It's fallback content; any children passed by the parent replace it.
 ```

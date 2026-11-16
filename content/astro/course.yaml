@@ -2,7 +2,7 @@ name: Astro
 logo: 🚀
 color: "#ff5d01"
 extension: astro
-tagline: Content-first sites with focused interactivity.
+tagline: Fast websites from components, with JavaScript only where you need it.
 comparisons:
   - javascript
   - typescript
@@ -12,11 +12,11 @@ guide:
   name: Nova
   avatar: 🚀
   intro:
-    - Welcome! I'm Nova. Let's build something with Astro.
-    - These fifty lessons use Astro 7. Start with the foundations or pick a goal to follow a shorter
-      route.
-    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
-      here; use the local tools to run the examples.
+    - Hi, I'm Nova! Astro builds websites out of components, like React or Vue, but it turns them
+      into plain HTML before they reach the browser. JavaScript only ships where you ask for it.
+    - Every lesson has a short example, an exercise you solve right here in the browser, and a
+      quick question. The course uses Astro 7; create a project on your machine to try the
+      examples for real.
   askGoal: What would you like to build first?
 branches:
   - id: core
@@ -47,20 +47,20 @@ goals:
   - id: layouts
     node: layouts
     title: Build a content site
-    description: Compose typed components and shared layouts.
-    icon: 🏷️
+    description: Build pages from components, props, slots and a shared layout.
+    icon: 🧱
   - id: content-pages
     node: content-pages
     title: Publish a collection
-    description: Validate Markdown and generate article routes.
-    icon: 🔢
+    description: Turn a folder of Markdown files into validated, routed articles.
+    icon: 📚
   - id: visible
     node: visible
     title: Add an interactive island
-    description: Hydrate a focused React component on demand.
-    icon: 💬
+    description: Add a React component that loads only when it scrolls into view.
+    icon: 🏝️
   - id: capstone
     node: capstone
     title: Ship a publication
-    description: Combine content, metadata, navigation, and validation.
-    icon: 🚦
+    description: Combine content, layouts, metadata, a sitemap and tests.
+    icon: 🚀

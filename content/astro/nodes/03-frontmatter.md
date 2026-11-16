@@ -1,50 +1,93 @@
 ---
 title: Component frontmatter
-icon: 🔢
+icon: "📜"
 branch: basics
-requires:
-  - setup
-summary: Code between the opening fences executes during rendering, not as a browser event handler.
+requires: [setup]
+summary: The code fence at the top of an .astro file, what it can do, and when it runs.
 ---
+**Q: What's that block between the `---` lines?**
 
-In your Astro project, save this as `src/pages/index.astro`. Code between the opening fences executes during rendering, not as a browser event handler. Keep browser interaction in a script or an island.
+It's called the component's [[frontmatter]]: a piece of JavaScript or TypeScript that runs before the HTML below it is produced. Anything you declare there can be used in the template:
 
-A useful term here is [[frontmatter]]: The fenced server-side script at the start of an Astro component.
-
-```astro
+```astro title=src/pages/about.astro
 ---
-const title = "Learning journal";
+import { readFile } from "node:fs/promises";
+
+const title = "About this site";
+const started = new Date(2024, 0, 15);
+const years = new Date().getFullYear() - started.getFullYear();
+const motto = (await readFile("motto.txt", "utf8")).trim();
 ---
 <h1>{title}</h1>
+<p>Running for {years} years. Motto: {motto}</p>
 ```
 
-## Put it to work
+**Q: When does it run?**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+For a normal static site: once, during `npm run build`. The result is frozen into the HTML file. (In the dev server it runs on every page load, so you see changes immediately.) With [server rendering](node:server-rendering) turned on, it can also run on every request.
+
+**Q: Can it use `await`?**
+
+Yes, at the top level, as above. That's how you read files, query a CMS or [fetch an API](node:fetch) before rendering.
+
+**Q: Can it use Node APIs and secrets?**
+
+Yes. It runs on your machine or server, never in the browser. You can read files, use environment variables and API keys, and none of it leaks to visitors. Only the resulting HTML is sent.
+
+**Q: Then how do I respond to a click?**
+
+Not here. Frontmatter is finished before the page reaches the browser, so `const count = 0` can't change when someone clicks. For browser behavior you add a [script](node:scripts) or an interactive [island](node:hydration).
+
+**Q: What else goes in the frontmatter?**
+
+- `import` statements, for components, data files and libraries.
+- Reading the component's inputs, `Astro.props` ([props](node:props)).
+- Typing those inputs with a TypeScript `interface Props`.
+
+**Q: Is the fence required?**
+
+No. A file with only HTML is a valid Astro component. Add the fence when you need code.
+
+```compare javascript
+// Like a Node script that builds an HTML string, run once at build
+// time:
+const html = `<h1>${title}</h1>`;
+```
+
+```compare typescript
+// Frontmatter is TypeScript-ready: type annotations just work.
+const years: number = new Date().getFullYear() - 2024;
+```
+
+```compare python
+# Like the view function that prepares a template's context:
+def about(): return render("about.html", title="About this site")
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about component frontmatter.
-lang: astro
+goal: "Move the hard-coded price into the frontmatter: declare `const price = 12;` between the fences, and use `{price}` in the paragraph."
 code: |-
   ---
-  const title = "Untitled";
   ---
-  <h1>{title}</h1>
+  <p>Tickets cost 12 euros.</p>
 checks:
-  - match: '"Learning\s+journal"'
-    message: Use "Learning journal" for this step.
-  - notMatch: '"Untitled"'
-    message: Replace "Untitled" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '---\s*\n\s*const\s+price\s*=\s*12\s*;?\s*\n\s*---'
+    message: Declare const price = 12; between the --- lines.
+  - match: '<p>Tickets cost \{\s*price\s*\} euros\.</p>'
+    message: 'Use {price} in the paragraph.'
+solution: |-
+  ---
+  const price = 12;
+  ---
+  <p>Tickets cost {price} euros.</p>
 ```
 
 ```quiz
-question: Where does an Astro component's frontmatter code execute?
+question: "You put an API key in a frontmatter variable and use it to fetch data. Can visitors see the key?"
 options:
-  - During rendering on the server or at build time.
-  - As a browser click handler.
-  - As a global script in every visitor's window.
-answer: 0
-explain: Frontmatter supplies rendering data rather than live browser event listeners.
+  - Yes, all page code is sent to the browser.
+  - No; frontmatter runs on the server or at build time, and only the HTML output is sent.
+  - Only in the dev server.
+answer: 1
+explain: Only what you put in the HTML reaches the browser. Just don't print the key in the template!
 ```

@@ -1,21 +1,42 @@
 frontmatter:
-  definition: The fenced server-side script at the start of an Astro component.
+  definition: The code between the two --- lines at the top of an .astro file. It runs on the server (or at build time), never in the browser.
   node: frontmatter
 component:
-  definition: A reusable unit of markup and rendering logic imported into another page or component.
+  definition: A reusable piece of a page, usually an .astro file, that you import and use like an HTML tag.
   node: components
 prop:
-  definition: An input passed from a parent to a component.
+  definition: A value passed from a parent to a component as an attribute, read inside the component with Astro.props.
   node: props
 slot:
-  definition: A placeholder where a parent can supply child content.
+  definition: A placeholder in a component where the parent's child content is inserted.
   node: slots
+layout:
+  definition: A component that wraps whole pages with the shared parts, like the head, header and footer.
+  node: layouts
 content collection:
-  definition: A named set of loaded content entries with an optional validated schema.
+  definition: A group of content entries, like blog posts, defined in src/content.config.ts and optionally checked against a schema.
   node: collections
+schema:
+  definition: A description of the fields an entry must have, written with Zod, which Astro checks every entry against.
+  node: schemas
+dynamic route:
+  definition: A page file with a [parameter] in its name, which produces many pages from one template.
+  node: static-paths
+island:
+  definition: An interactive component on an otherwise static page, which loads its own JavaScript.
+  node: hydration
 hydration:
-  definition: Attaching browser behavior to framework component HTML rendered on the server.
+  definition: Loading a component's JavaScript in the browser so its server-rendered HTML becomes interactive.
+  node: hydration
+client directive:
+  definition: An attribute such as client:load or client:visible that tells Astro whether and when to hydrate a component.
   node: hydration
 server island:
-  definition: A server-rendered fragment deferred independently from the surrounding page.
+  definition: A component marked server:defer, rendered on the server separately and filled in after the rest of the page has loaded.
   node: server-islands
+adapter:
+  definition: A plugin that lets Astro run on a particular server or host, such as Node or Netlify, so pages can be rendered on demand.
+  node: server-rendering
+middleware:
+  definition: Code that runs on every request before (and after) the page renders, defined in src/middleware.ts.
+  node: middleware

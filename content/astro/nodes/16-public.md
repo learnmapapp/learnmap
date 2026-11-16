@@ -1,41 +1,74 @@
 ---
-title: Public assets
-icon: 💬
+title: The public folder
+icon: "📂"
 branch: styles
-requires:
-  - setup
-summary: Place a logo.svg file in public and reference it from the site root.
+requires: [setup]
+summary: Files in public/ are copied to the site untouched, at the same path. When that's what you want, and when it isn't.
 ---
+**A tour of what goes where.** Picture a finished site and the files behind it:
 
-In your Astro project, save this as `src/pages/index.astro`. Place a `logo.svg` file in public and reference it from the site root. Public files are copied directly; meaningful images need useful alternative text.
+- `public/favicon.svg` is served at `/favicon.svg`
+- `public/robots.txt` is served at `/robots.txt`
+- `public/fonts/Inter.woff2` is served at `/fonts/Inter.woff2`
+- `public/downloads/menu.pdf` is served at `/downloads/menu.pdf`
 
-```astro
-<img src="/logo.svg" width="80" height="80" alt="Study club" />
+The pattern: **drop `public/` from the path, and that's the URL.** During `npm run build`, everything in `public/` is copied into `dist/` byte for byte. Astro doesn't look inside, rename, compress or bundle it.
+
+You refer to these files with an absolute path starting at the site root:
+
+```astro title=src/layouts/BaseLayout.astro
+<head>
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/Inter.woff2" as="font" crossorigin />
+</head>
+<a href="/downloads/menu.pdf">Download the menu</a>
 ```
 
-## Put it to work
+**Good tenants for `public/`:**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+- files that must live at an exact, well-known URL: `favicon.ico`, `robots.txt`, `.well-known/...`;
+- downloads you link to: PDFs, zip files;
+- fonts and third-party scripts you don't want processed.
+
+**Better off in `src/`:**
+
+- **Images shown on pages.** Put them in `src/assets/` and use the [Image component](node:images): Astro resizes them, converts them to modern formats and prevents layout shift. From `public/` they're served at full size.
+- **CSS and JavaScript you write.** Import them from components so they're bundled, minified and given cache-friendly file names.
+
+**A small gotcha.** Files in `public/` keep their names, so browsers may cache an old `logo.png` after you replace it. Files processed from `src/` get a content hash in their name (`logo.3f9a1c.webp`), so a new version is a new URL.
+
+**Not a page folder.** `public/about.html` would be served as a static file, but it gets no layout, components or anything else from Astro. Pages belong in `src/pages/`.
+
+```compare javascript
+// Vite and Create React App use the same public/ convention.
+```
+
+```compare typescript
+// Next.js: public/ works identically, files served from the root.
+```
+
+```compare python
+# Django/Flask: a static/ folder, but served under /static/ instead of
+# the root.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about public assets.
-lang: astro
-code: <img src="/logo.svg" width="80" height="80" alt="" />
+goal: "The logo lives at `public/images/logo.svg`. Fix the `src` so it uses the URL the file is served at."
+code: |-
+  <img src="public/images/logo.svg" alt="Star Notes" />
 checks:
-  - match: alt="Study\s+club"
-    message: Use alt="Study club" for this step.
-  - notMatch: alt=""
-    message: Replace alt="" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'src="/images/logo\.svg"'
+    message: 'Drop public/ and start at the root: src="/images/logo.svg"'
+solution: |-
+  <img src="/images/logo.svg" alt="Star Notes" />
 ```
 
 ```quiz
-question: Where should `/logo.svg` live for a direct public asset reference?
+question: "You put `photo.jpg` (4 MB) in `public/` and show it with `<img src=\"/photo.jpg\">`. What reaches the visitor?"
 options:
-  - "`src/components/public/logo.svg`"
-  - "`public/logo.svg`"
-  - "`src/pages/logo.svg`"
+  - A resized, compressed WebP.
+  - The original 4 MB file.
+  - Nothing; images must be in src/.
 answer: 1
-explain: Public assets are served from the site root and copied directly.
+explain: public/ is copied untouched. Use src/assets/ and the Image component for optimization.
 ```

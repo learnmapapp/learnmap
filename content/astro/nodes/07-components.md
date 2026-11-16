@@ -1,50 +1,97 @@
 ---
-title: Reusable components
-icon: 📋
+title: Your first component
+icon: "🧱"
 branch: basics
-requires:
-  - frontmatter
-summary: Move reusable markup into src/components.
+requires: [frontmatter]
+summary: Split a page into .astro components, import them, and use them like HTML tags.
 ---
+**Before:** one long page that will only get longer.
 
-In your Astro project, save this as `src/components/Card.astro`. Move reusable markup into `src/components`. Import it from a page with `import Card from "../components/Card.astro"` and render `<Card />`.
-
-A useful term here is [[component]]: A reusable unit of markup and rendering logic imported into another page or component.
-
-```astro
-<article class="card">
-  <h2>Practice daily</h2>
-  <p>Small steps add up.</p>
-</article>
+```astro title=src/pages/index.astro
+<header>
+  <a href="/">🚀 Star Notes</a>
+  <nav><a href="/blog">Blog</a> <a href="/about">About</a></nav>
+</header>
+<main>
+  <h1>Welcome</h1>
+</main>
 ```
 
-## Put it to work
+Every other page needs that header too. Copy and paste works until you want to change a link.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**After:** the header moves into its own file.
+
+```astro title=src/components/Header.astro
+<header>
+  <a href="/">🚀 Star Notes</a>
+  <nav><a href="/blog">Blog</a> <a href="/about">About</a></nav>
+</header>
+```
+
+```astro title=src/pages/index.astro
+---
+import Header from "../components/Header.astro";
+---
+<Header />
+<main>
+  <h1>Welcome</h1>
+</main>
+```
+
+The page renders exactly the same HTML as before. The difference is that `<Header />` now lives in one place, and every page that imports it gets updates for free.
+
+**What changed, step by step:**
+
+1. Any `.astro` file is a [[component]]. `Header.astro` has no frontmatter because it doesn't need any.
+2. The page imports it in its frontmatter, with a path relative to the page. The file extension is required.
+3. It's used like an HTML tag. Component names start with a **capital letter**; that's how Astro tells `<Header>` (yours) from `<header>` (the HTML element).
+4. Self-closing `<Header />` is fine when you have nothing to put inside.
+
+**Where do components live?** By convention in `src/components/`. Unlike `src/pages/`, that folder has no special meaning: a component in it never becomes a page on its own.
+
+**A page is a component too.** It's simply one Astro places at a URL. Components can import other components, as deep as you like.
+
+**Nothing extra is shipped.** After the build, `<Header />` is gone and only its HTML remains. Splitting a page into fifty components costs the visitor nothing.
+
+```compare javascript
+// Like a function that returns an HTML string, called from every page:
+import { header } from "./header.js";
+```
+
+```compare typescript
+// React: import Header from "./Header"; then <Header />. Same idea, no
+// runtime.
+```
+
+```compare python
+# Jinja: {% include "header.html" %}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about reusable components.
-lang: astro
+goal: "Import the `Footer` component from `../components/Footer.astro` and use it at the end of the page."
 code: |-
-  <article class="card">
-    <h2>Practice weekly</h2>
-    <p>Small steps add up.</p>
-  </article>
+  ---
+  ---
+  <main>Hello</main>
 checks:
-  - match: Practice\s+daily
-    message: Use Practice daily for this step.
-  - notMatch: Practice\s+weekly
-    message: Replace Practice weekly in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'import\s+Footer\s+from\s+["'']\.\./components/Footer\.astro["'']'
+    message: Import Footer from "../components/Footer.astro".
+  - match: '</main>\s*\n?\s*<Footer\s*/>'
+    message: 'Add <Footer /> after </main>.'
+solution: |-
+  ---
+  import Footer from "../components/Footer.astro";
+  ---
+  <main>Hello</main>
+  <Footer />
 ```
 
 ```quiz
-question: Where should a reusable card component live without creating its own route?
+question: "Why does `<footer />` (lowercase) not render your Footer component?"
 options:
-  - "`public/Card.astro`"
-  - "`src/components/Card.astro`"
-  - "`src/pages/Card.astro`"
+  - Astro components are case-insensitive, so it should work.
+  - Lowercase tags are treated as plain HTML elements; components must start with a capital letter.
+  - You need to write <footer.astro />.
 answer: 1
-explain: Files in components are imported for reuse; files in pages define routes.
+explain: The capital letter tells Astro the tag is a component, not an HTML element.
 ```

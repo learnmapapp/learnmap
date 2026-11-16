@@ -1,74 +1,109 @@
 ---
 title: Render a list
-icon: 🚦
+icon: "📋"
 branch: basics
-requires:
-  - expressions
-summary: Use map to render repeated markup from data.
+requires: [expressions]
+summary: Turn an array into markup with map, and handle the empty case.
 ---
+**Recipe: a menu from an array.**
 
-In your Astro project, save this as `src/pages/index.astro`. Use map to render repeated markup from data. Astro generates HTML for the result without requiring a client-side list renderer.
+*Ingredients:* an array of data in the frontmatter, and `.map()`.
+
+```astro title=src/pages/menu.astro
+---
+const dishes = [
+  { name: "Tomato soup", price: 6, vegan: true },
+  { name: "Lasagne", price: 14, vegan: false },
+  { name: "Apple pie", price: 5, vegan: true },
+];
+---
+<h1>Menu</h1>
+<ul>
+  {dishes.map((dish) => (
+    <li>
+      {dish.name}: €{dish.price}
+    </li>
+  ))}
+</ul>
+```
+
+**Method:**
+
+1. Open braces inside the `<ul>`, because you're about to write an expression.
+2. Call `dishes.map(...)`. For every dish, return a piece of markup: `<li>...</li>`.
+3. Wrap the returned markup in parentheses when it spans several lines.
+
+Astro turns the resulting array into three `<li>` elements. No special loop syntax to learn: it's the JavaScript you know.
+
+**Variations:**
+
+*Only some items:* filter first, then map.
+
+```astro
+{dishes.filter((d) => d.vegan).map((d) => <li>{d.name}</li>)}
+```
+
+*With a position number:* `map` passes the index as a second argument.
+
+```astro
+{dishes.map((d, i) => <li>{i + 1}. {d.name}</li>)}
+```
+
+*An empty list:* show a message instead of an empty `<ul>`. A [conditional](node:conditionals) handles it:
+
+```astro
+{dishes.length === 0 ? <p>Nothing on the menu today.</p> : <ul>...</ul>}
+```
+
+**Serving suggestion:** keep the frontmatter for preparing data (sorting, filtering, formatting prices) and the template for showing it. A long chain inside the braces is harder to read than a well-named variable:
 
 ```astro
 ---
-const topics = ["Astro", "TypeScript", "React"];
+const veganDishes = dishes.filter((d) => d.vegan);
 ---
-<ul>{topics.map(topic => <li>{topic}</li>)}</ul>
+<ul>{veganDishes.map((d) => <li>{d.name}</li>)}</ul>
 ```
 
-## Put it to work
-
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**No `key` needed.** If you know React, you might expect a warning about keys. Astro renders once to HTML, with nothing to update later, so it doesn't need them.
 
 ```compare javascript
-const topics = ["Astro", "Nuxt"];
-const list = document.createElement("ul");
-for (const topic of topics) {
-  const item = document.createElement("li");
-  item.textContent = topic;
-  list.append(item);
-}
-document.body.append(list);
+const html = dishes.map((d) => `<li>${d.name}</li>`).join("");
 ```
 
 ```compare typescript
-const topics: { id: string; title: string }[] = [
-  { id: "astro", title: "Astro" },
-  { id: "nuxt", title: "Nuxt" },
-];
-const titles = topics.map(topic => topic.title);
+// React: {dishes.map((d) => <li key={d.name}>{d.name}</li>)}
 ```
 
 ```compare python
-topics = ["Astro", "Nuxt"]
-for topic in topics:
-    print(topic)
-# This prints text; it does not create browser DOM elements.
+# Jinja: {% for d in dishes %}<li>{{ d.name }}</li>{% endfor %}
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about render a list.
-lang: astro
+goal: "Render each tag as an `<li>`: inside the `<ul>`, map `tags` to `<li>{tag}</li>`."
 code: |-
   ---
-  const topics = ["Astro", "TypeScript", "React"];
+  const tags = ["astro", "html", "css"];
   ---
-  <ul>{topics.map(topic => <p>{topic}</p>)}</ul>
+  <ul>
+  </ul>
 checks:
-  - match: <li>\{topic\}</li>
-    message: Use <li>{topic}</li> for this step.
-  - notMatch: <p>\{topic\}</p>
-    message: Replace <p>{topic}</p> in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '\{\s*tags\.map\(\s*\(?\s*tag\s*\)?\s*=>\s*\(?\s*<li>\{\s*tag\s*\}</li>\s*\)?\s*\)\s*\}'
+    message: 'Write {tags.map((tag) => <li>{tag}</li>)} inside the ul.'
+solution: |-
+  ---
+  const tags = ["astro", "html", "css"];
+  ---
+  <ul>
+    {tags.map((tag) => <li>{tag}</li>)}
+  </ul>
 ```
 
 ```quiz
-question: How does `topics.map(topic => <li>{topic}</li>)` affect a static page?
+question: "How do you show only the first three posts from a `posts` array?"
 options:
-  - It requires React hydration before any list item appears.
-  - It creates routes for every topic automatically.
-  - It generates a list item for each topic during rendering.
-answer: 2
-explain: Ordinary repeated markup can be rendered into HTML without an interactive framework.
+  - "{posts.map((p) => <li>{p.title}</li>).limit(3)}"
+  - "{posts.slice(0, 3).map((p) => <li>{p.title}</li>)}"
+  - "Astro has a special <for limit=3> tag."
+answer: 1
+explain: It's plain JavaScript; slice the array first, then map it to markup.
 ```

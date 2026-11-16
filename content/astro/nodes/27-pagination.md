@@ -1,60 +1,112 @@
 ---
-title: Paginated routes
-icon: 🔢
+title: Pagination
+icon: "📑"
 branch: routing
-requires:
-  - static-paths
-summary: paginate generates route entries plus page metadata.
+requires: [static-paths]
+summary: Split a long list across numbered pages with paginate, and link to the previous and next pages.
 ---
+**Q&A with Nova.**
 
-In your Astro project, save this as `src/pages/archive/[...page].astro`. paginate generates route entries plus page metadata. A rest page parameter also supports the first page without an explicit numeric segment.
+**"My blog index lists 140 posts on one page. How do I split it up?"**
 
-```astro
+Use the `paginate` function that Astro passes into `getStaticPaths`. It chops an array into pages and generates a route for each:
+
+```astro title=src/pages/blog/[page].astro
 ---
-import type { GetStaticPaths, Page } from "astro";
-export const getStaticPaths = (({ paginate }) => {
-  return paginate(["Astro", "Lua", "Nim", "Swift"], { pageSize: 2 });
-}) satisfies GetStaticPaths;
-interface Props { page: Page<string> }
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths({ paginate }) {
+  const posts = await getCollection("blog");
+  posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return paginate(posts, { pageSize: 10 });
+}
+
 const { page } = Astro.props;
 ---
-<ul>{page.data.map(title => <li>{title}</li>)}</ul>
-{page.url.next && <a href={page.url.next}>Next</a>}
+<h1>Blog, page {page.currentPage} of {page.lastPage}</h1>
+<ul>
+  {page.data.map((post) => <li>{post.data.title}</li>)}
+</ul>
+<nav>
+  {page.url.prev && <a href={page.url.prev}>Newer</a>}
+  {page.url.next && <a href={page.url.next}>Older</a>}
+</nav>
 ```
 
-## Put it to work
+**"Which URLs does that create?"**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+With 140 posts and ten per page: `/blog/1` through `/blog/14`.
+
+**"What's in `page`?"**
+
+| Property | Value on page 2 |
+| --- | --- |
+| `page.data` | posts 11 to 20 |
+| `page.currentPage` | `2` |
+| `page.lastPage` | `14` |
+| `page.total` | `140` |
+| `page.url.prev` | `/blog/1` |
+| `page.url.next` | `/blog/3` |
+
+On the first page `url.prev` is `undefined`, and so is `url.next` on the last page. That's why the template checks them before rendering links.
+
+**"I'd rather have `/blog` for the first page, not `/blog/1`."**
+
+Name the file with a rest parameter: `src/pages/blog/[...page].astro`. Then page one is `/blog`, and the rest are `/blog/2`, `/blog/3` and so on.
+
+**"Do I have to sort before paginating?"**
+
+Yes. `paginate` keeps the array's order, and `getCollection` doesn't promise one.
+
+**"Can I paginate per tag?"**
+
+Yes: call `paginate` once per tag, filtering the posts and passing `params: { tag }` in its options. Then flatten the results with `.flatMap`. That's a nice exercise for later.
+
+```compare javascript
+const pages = [];
+for (let i = 0; i < posts.length; i += 10) pages.push(posts.slice(i, i + 10));
+```
+
+```compare typescript
+// Server frameworks paginate per request (?page=2).
+// Astro builds each page ahead of time.
+```
+
+```compare python
+# Django: Paginator(posts, 10).page(2)
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about paginated routes.
-lang: astro
+goal: "Return paginated paths with 20 posts per page: call `paginate(posts, { pageSize: 20 })`."
 code: |-
   ---
-  import type { GetStaticPaths, Page } from "astro";
-  export const getStaticPaths = (({ paginate }) => {
-    return paginate(["Astro", "Lua", "Nim", "Swift"], { pageSize: 1 });
-  }) satisfies GetStaticPaths;
-  interface Props { page: Page<string> }
-  const { page } = Astro.props;
+  import { getCollection } from "astro:content";
+
+  export async function getStaticPaths({ paginate }) {
+    const posts = await getCollection("blog");
+    return [];
+  }
   ---
-  <ul>{page.data.map(title => <li>{title}</li>)}</ul>
-  {page.url.next && <a href={page.url.next}>Next</a>}
 checks:
-  - match: pageSize:\s+2
-    message: "Use pageSize: 2 for this step."
-  - notMatch: pageSize:\s+1
-    message: "Replace pageSize: 1 in the starting code."
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'return\s+paginate\(\s*posts\s*,\s*\{\s*pageSize:\s*20\s*\}\s*\)'
+    message: 'Write return paginate(posts, { pageSize: 20 });'
+solution: |-
+  ---
+  import { getCollection } from "astro:content";
+
+  export async function getStaticPaths({ paginate }) {
+    const posts = await getCollection("blog");
+    return paginate(posts, { pageSize: 20 });
+  }
+  ---
 ```
 
 ```quiz
-question: "With four entries and `pageSize: 2`, how many archive pages are needed?"
+question: "With 45 posts and `pageSize: 10`, what is `page.lastPage`?"
 options:
-  - "`2`"
-  - "`4`"
-  - "`1`"
-answer: 0
-explain: Pagination divides the entries into groups of two.
+  - "4"
+  - "5"
+  - "45"
+answer: 1
+explain: Four full pages plus one page with the last five posts.
 ```

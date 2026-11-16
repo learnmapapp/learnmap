@@ -1,56 +1,113 @@
 ---
-title: Validate content metadata
-icon: 🧩
+title: Collection schemas
+icon: "📐"
 branch: content
-requires:
-  - collections
-summary: A schema validates entry metadata and supplies useful inferred types.
+requires: [collections]
+summary: Describe each entry's frontmatter with Zod, so typos and missing fields stop the build.
 ---
+**Spot the mistakes.** Three posts, three frontmatter blocks. Which ones are broken?
 
-In your Astro project, save this as `src/content.config.ts`. A schema validates entry metadata and supplies useful inferred types. Astro 7 imports Zod through astro/zod; give every note a string title in its frontmatter.
+```markdown
+---
+title: First light
+date: 2026-03-02
+---
+```
 
-```typescript
+```markdown
+---
+titel: Jupiter's moons
+date: 2026-03-09
+---
+```
+
+```markdown
+---
+title: Dark skies
+date: next tuesday
+tags: astronomy
+---
+```
+
+The second misspells `title`. The third has a date nobody can parse, and a string where the site expects a list of tags. Without checks, these turn into a blank heading, an "Invalid Date" and a crash somewhere in your tag page. You'd find out from a reader.
+
+**The fix: a [[schema]].** Add one to the collection, written with Zod, a validation library Astro includes:
+
+```typescript title=src/content.config.ts
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
-const notes = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/data/notes" }),
-  schema: z.object({ title: z.string(), draft: z.boolean().default(false) }),
+
+const blog = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
 });
-export const collections = { notes };
+
+export const collections = { blog };
 ```
 
-## Put it to work
+Now the build stops with a message naming the file and the field: the second post is missing `title`, the third has an invalid `date`, and `tags` should be an array. Mistakes are caught on your machine.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Reading the schema:**
+
+| Line | Means |
+| --- | --- |
+| `z.string()` | required text |
+| `z.coerce.date()` | anything that converts to a `Date`, like `2026-03-02` |
+| `z.array(z.string())` | a list of strings |
+| `.default([])` | optional; use this value when it's missing |
+| `.optional()` | optional, `undefined` when missing |
+
+**The bonus: types.** Astro generates TypeScript types from the schema. `post.data.date` is a real `Date` (so `.getFullYear()` works), `post.data.tags` is a `string[]`, and your editor autocompletes all of it.
+
+```compare javascript
+// Without a schema, every page re-checks: if (!post.title) throw new
+// Error(...)
+```
+
+```compare typescript
+// Zod is popular outside Astro too; the same z.object works in any TS
+// project.
+```
+
+```compare python
+# Like a Pydantic model for each post's metadata.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about validate content metadata.
+goal: "Add an optional `author` field: a string that defaults to `\"Nova\"`."
 lang: typescript
 code: |-
-  import { defineCollection } from "astro:content";
-  import { glob } from "astro/loaders";
-  import { z } from "astro/zod";
-  const notes = defineCollection({
-    loader: glob({ pattern: "**/*.md", base: "./src/data/notes" }),
-    schema: z.object({ title: z.number(), draft: z.boolean().default(false) }),
+  const blog = defineCollection({
+    loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+    schema: z.object({
+      title: z.string(),
+    }),
   });
-  export const collections = { notes };
 checks:
-  - match: title:\s+z\.string\(\)
-    message: "Use title: z.string() for this step."
-  - notMatch: title:\s+z\.number\(\)
-    message: "Replace title: z.number() in the starting code."
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'author:\s*z\.string\(\)\.default\(\s*["'']Nova["'']\s*\)'
+    message: 'Add author: z.string().default("Nova"),'
+solution: |-
+  const blog = defineCollection({
+    loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+    schema: z.object({
+      title: z.string(),
+      author: z.string().default("Nova"),
+    }),
+  });
 ```
 
 ```quiz
-question: "What does a collection schema with `title: z.string()` establish?"
+question: "A post's frontmatter has `date: 2026-03-02`. With `date: z.coerce.date()`, what is `post.data.date`?"
 options:
-  - The loaded metadata has a string title.
-  - Every article contains at least three paragraphs.
-  - A route exists for every title.
-answer: 0
-explain: The schema checks the fields it declares, not page existence or all body content.
+  - "The string \"2026-03-02\""
+  - A JavaScript Date object
+  - A number of milliseconds
+answer: 1
+explain: coerce.date() converts the value into a Date, and the generated types say so.
 ```

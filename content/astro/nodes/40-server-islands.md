@@ -1,50 +1,101 @@
 ---
-title: Deferred server islands
-icon: 💬
+title: Server islands
+icon: "🛰️"
 branch: islands
-requires:
-  - components
-summary: Create Greeting.astro with server-rendered content and configure a compatible adapter.
+requires: [components]
+summary: server:defer renders a slow or personalized component separately, so the rest of the page can be cached and served fast.
 ---
+**A design walkthrough.** A product page that's the same for everyone, except one corner: "Hi Sam, 3 items in your cart."
 
-In your Astro project, save this as `src/pages/index.astro`. Create `Greeting.astro` with server-rendered content and configure a compatible adapter. `server:defer` loads that server-rendered fragment independently from the surrounding page.
+**Option A: render the whole page per request.** Correct, but now nothing can be cached. Every visitor waits for the cart lookup before seeing anything.
 
-A useful term here is [[server island]]: A server-rendered fragment deferred independently from the surrounding page.
+**Option B: a client island fetching the cart.** Works, but ships JavaScript and an API just to show a line of text.
 
-```astro
+**Option C: a server island.** Mark that one component with `server:defer`:
+
+```astro title=src/pages/products/kettle.astro
 ---
-import Greeting from "../components/Greeting.astro";
+import CartSummary from "../../components/CartSummary.astro";
 ---
-<Greeting server:defer><p slot="fallback">Loading greeting…</p></Greeting>
+<h1>Copper kettle</h1>
+<p>€49. Boils in two minutes.</p>
+
+<CartSummary server:defer>
+  <p slot="fallback">Loading your cart…</p>
+</CartSummary>
 ```
 
-## Put it to work
+```astro title=src/components/CartSummary.astro
+---
+const session = Astro.cookies.get("session")?.value;
+const cart = session ? await loadCart(session) : null;
+---
+{cart
+  ? <p>Hi {cart.name}, {cart.items} items in your cart.</p>
+  : <a href="/login">Log in</a>}
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**How it plays out:**
+
+1. The page, minus the cart, is served straight away. It can be static, or cached on a CDN for everyone.
+2. In the cart's place, the visitor briefly sees the fallback: "Loading your cart…".
+3. A tiny script asks the server to render just `CartSummary`, with this visitor's cookies.
+4. The returned HTML replaces the fallback. No framework is shipped, and the component is still a plain `.astro` file.
+
+**Rules of thumb:**
+
+- **Needs a server.** Server islands are rendered on demand, so the project needs an [[adapter]] (see [server rendering](node:server-rendering)). The surrounding page can still be prerendered.
+- **Props must be serializable**, because they're sent along with the request for the island. Keep them small and non-secret, like an id.
+- **Always give a fallback**, sized like the real content, so the page doesn't jump.
+
+**Server islands vs client islands:**
+
+| | `server:defer` | `client:*` |
+| --- | --- | --- |
+| Renders | on the server, later | in the browser |
+| Ships a UI framework | no | yes |
+| Good for | personalized or slow data | interactivity |
+
+```compare javascript
+// Like fetching an HTML fragment and setting innerHTML, done for you.
+```
+
+```compare typescript
+// Next.js: Partial Prerendering with <Suspense> around a dynamic
+// component.
+```
+
+```compare python
+# Like the htmx pattern hx-get="/fragment/cart" hx-trigger="load".
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about deferred server islands.
-lang: astro
+goal: "Defer the slow weather widget: add `server:defer` to the component, and a fallback paragraph `<p slot=\"fallback\">Checking the sky…</p>` inside it."
 code: |-
   ---
-  import Greeting from "../components/Greeting.astro";
+  import Weather from "../components/Weather.astro";
   ---
-  <Greeting client:load><p slot="fallback">Loading greeting…</p></Greeting>
+  <Weather city="Utrecht" />
 checks:
-  - match: server:defer
-    message: Use server:defer for this step.
-  - notMatch: client:load
-    message: Replace client:load in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<Weather\s+city="Utrecht"\s+server:defer\s*>'
+    message: 'Write <Weather city="Utrecht" server:defer> with an opening and closing tag.'
+  - match: '<p slot="fallback">Checking the sky…</p>\s*</Weather>'
+    message: 'Put <p slot="fallback">Checking the sky…</p> inside, then close with </Weather>.'
+solution: |-
+  ---
+  import Weather from "../components/Weather.astro";
+  ---
+  <Weather city="Utrecht" server:defer>
+    <p slot="fallback">Checking the sky…</p>
+  </Weather>
 ```
 
 ```quiz
-question: What does `server:defer` defer?
+question: "What does the visitor see in a server island's place while it's still being rendered?"
 options:
-  - Loading the entire page's CSS only after a click.
-  - Rendering a server fragment independently from its surrounding page.
-  - Hydrating an Astro component with React.
+  - Nothing.
+  - The content of its fallback slot.
+  - The island's static build output.
 answer: 1
-explain: A server island requires a compatible server-capable deployment.
+explain: The fallback is part of the main page and is swapped out when the island arrives.
 ```

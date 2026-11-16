@@ -1,56 +1,111 @@
 ---
 title: Page metadata
-icon: 🔁
+icon: "🔖"
 branch: routing
-requires:
-  - layouts
-summary: Give each public page a descriptive title and summary.
+requires: [layouts]
+summary: Give every page a title, description, canonical URL and social preview through layout props.
 ---
+**Checklist: what every page's `<head>` needs.** Here's what each tag is for, and where it shows up.
 
-In your Astro project, save this as `src/pages/index.astro`. Give each public page a descriptive title and summary. Metadata should reflect the rendered page rather than repeat unrelated keywords.
+- **`<title>`** appears in the browser tab and as the headline in search results.
+- **`<meta name="description">`** is often used as the snippet under the search result.
+- **`<link rel="canonical">`** names the one true URL, so `/about` and `/about/` don't count as duplicates.
+- **Open Graph tags (`og:title`, `og:description`, `og:image`)** build the preview card when someone shares the link in chat or social media.
+- **`<html lang="en">`** tells screen readers and translators the language.
 
-```astro
+**Where it goes: the layout.** Add props for the parts that change per page, with sensible defaults:
+
+```astro title=src/layouts/BaseLayout.astro
 ---
-const title = "Astro study notes";
-const description = "Practical notes from a daily learning habit.";
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description = "Notes about the night sky.",
+  image = "/og-default.png",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = new URL(image, Astro.site);
 ---
-<html lang="en"><head>
-  <title>{title}</title>
-  <meta name="description" content={description} />
-</head><body><h1>{title}</h1></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} · Star Notes</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+  </head>
+  <body><slot /></body>
+</html>
 ```
 
-## Put it to work
+**Every page fills in what it knows:**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```astro
+<BaseLayout title={post.data.title} description={post.data.summary}>
+```
+
+**Where `Astro.site` comes from.** Canonical and Open Graph URLs must be absolute, including the domain. Set it once in the config:
+
+```javascript title=astro.config.mjs
+export default defineConfig({ site: "https://starnotes.example" });
+```
+
+`new URL(path, Astro.site)` then builds `https://starnotes.example/blog/first-light`. The [sitemap](node:sitemap) and [RSS feed](node:rss) need `site` too.
+
+**Checking your work:** view the page source in the browser and read the `<head>`, or paste a URL into a social media preview tool after deploying.
+
+```compare javascript
+// document.title = "..." at runtime is too late for crawlers that
+// don't run JavaScript.
+```
+
+```compare typescript
+// Next.js: export const metadata = { title, description, openGraph: {
+// ... } }
+```
+
+```compare python
+# Jinja: {% block title %}{% endblock %} and {% block description %} in
+# base.html.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about page metadata.
-lang: astro
+goal: "Add a meta description to the head, using the `description` prop: `<meta name=\"description\" content={description} />`."
 code: |-
   ---
-  const title = "Astro study notes";
-  const description = "Practical notes from a daily learning habit.";
+  const { title, description } = Astro.props;
   ---
-  <html lang="en"><head>
+  <head>
     <title>{title}</title>
-    <meta name="keywords" content={description} />
-  </head><body><h1>{title}</h1></body></html>
+  </head>
 checks:
-  - match: name="description"
-    message: Use name="description" for this step.
-  - notMatch: name="keywords"
-    message: Replace name="keywords" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<meta\s+name="description"\s+content=\{\s*description\s*\}\s*/?>'
+    message: 'Add <meta name="description" content={description} />'
+solution: |-
+  ---
+  const { title, description } = Astro.props;
+  ---
+  <head>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
 ```
 
 ```quiz
-question: What should a page's title and description describe?
+question: "Why must the `og:image` URL include the full domain?"
 options:
-  - The content of that particular page.
-  - The same unrelated keywords on every route.
-  - Only the name of the build tool.
-answer: 0
-explain: Accurate metadata helps readers and other tools identify the current content.
+  - Search engines reject relative URLs in any tag.
+  - The preview is built by another service, outside your site, so a relative path means nothing there.
+  - It's an Astro requirement.
+answer: 1
+explain: Chat apps and social sites fetch the image themselves, so they need an absolute URL.
 ```

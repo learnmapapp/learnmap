@@ -1,44 +1,78 @@
 ---
-title: A useful 404 page
-icon: 💬
+title: A custom 404 page
+icon: "🧭"
 branch: routing
-requires:
-  - routes
-summary: A 404.astro page supplies helpful missing-route content.
+requires: [routes]
+summary: Replace the host's default "not found" page with your own src/pages/404.astro.
 ---
+**A field trip to nowhere.** Visit `/this-does-not-exist` on a fresh Astro site, and you get a bare, generic error page, either Astro's in the dev server or your host's after deploying. A visitor who mistyped a link sees no navigation and no way back.
 
-In your Astro project, save this as `src/pages/404.astro`. A `404.astro` page supplies helpful missing-route content. Ensure your hosting platform serves the generated 404 output for unknown URLs.
+**The fix is one file:**
 
-```astro
-<html lang="en"><head><title>Page not found</title></head>
-<body><h1>Page not found</h1><p>Try the <a href="/">home page</a>.</p></body></html>
+```astro title=src/pages/404.astro
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="Page not found">
+  <h1>Lost in space 🛰️</h1>
+  <p>We couldn't find that page. It may have moved, or the link has a typo.</p>
+  <ul>
+    <li><a href="/">Go to the home page</a></li>
+    <li><a href="/blog">Browse the blog</a></li>
+  </ul>
+</BaseLayout>
 ```
 
-## Put it to work
+**What happens:**
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+- `npm run build` writes it to `dist/404.html`.
+- Most static hosts, such as Netlify, Cloudflare Pages, Vercel and GitHub Pages, automatically serve `404.html` for any URL without a file, with the correct 404 status code.
+- In the dev server you can visit `/404` directly to look at it.
+
+**Tips for a helpful 404:**
+
+- **Use your layout**, so the header and navigation are still there.
+- **Offer a way forward:** the home page, the blog, a search box, or your most popular pages.
+- **Keep it static.** It should load even when other things are broken, so avoid depending on heavy islands or slow data.
+- **Don't redirect** to the home page automatically. That's confusing, and search engines treat it as a "soft 404". The status code should stay 404.
+
+**Server-rendered sites.** When pages are rendered on demand ([server rendering](node:server-rendering)), the same file is used whenever no route matches. You can also send visitors there from your own code by returning a 404 response, for example when a database lookup finds nothing.
+
+**A 500 page too.** `src/pages/500.astro` works the same way for server errors in on-demand rendering.
+
+```compare javascript
+// Express: app.use((req, res) =>
+// res.status(404).sendFile("404.html"));
+```
+
+```compare typescript
+// Next.js: app/not-found.tsx plays the same role.
+```
+
+```compare python
+# Flask: @app.errorhandler(404)
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about a useful 404 page.
-lang: astro
+goal: "Give the 404 page a way back: add a link to the home page, `<a href=\"/\">Home</a>`, after the paragraph."
 code: |-
-  <html lang="en"><head><title>Page not found</title></head>
-  <body><h1>Page not found</h1><p>Try the <a href="/missing/">home page</a>.</p></body></html>
+  <h1>Page not found</h1>
+  <p>Sorry, that page doesn't exist.</p>
 checks:
-  - match: href="/"
-    message: Use href="/" for this step.
-  - notMatch: href="/missing/"
-    message: Replace href="/missing/" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '</p>\s*\n\s*<a href="/">Home</a>'
+    message: 'Add <a href="/">Home</a> after the paragraph.'
+solution: |-
+  <h1>Page not found</h1>
+  <p>Sorry, that page doesn't exist.</p>
+  <a href="/">Home</a>
 ```
 
 ```quiz
-question: What should a deployed `404.astro` page help users do?
+question: "What file name gives a static Astro site its custom not-found page?"
 options:
-  - Run a required JavaScript timer before showing any message.
-  - Recover by navigating to a known page.
-  - Treat every missing route as a successful content page.
+  - "src/pages/notfound.astro"
+  - "src/pages/404.astro"
+  - "public/error.html"
 answer: 1
-explain: Also configure the host to serve the missing-page output for unknown URLs.
+explain: It's built as dist/404.html, which hosts serve for missing URLs.
 ```

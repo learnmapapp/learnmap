@@ -1,56 +1,104 @@
 ---
 title: Render an entry
-icon: 🛠️
+icon: "📖"
 branch: content
-requires:
-  - query
-summary: render converts an entry’s body into a component.
+requires: [query]
+summary: Turn an entry's Markdown body into HTML with render, and use its headings for a table of contents.
 ---
-
-In your Astro project, save this as `src/pages/index.astro`. render converts an entry’s body into a component. Check for absence before accessing metadata or rendering content.
+**Predict the output.** This page fetches one post and shows its data. What does the visitor see?
 
 ```astro
 ---
-import { getEntry, render } from "astro:content";
-const entry = await getEntry("notes", "welcome");
-if (!entry) throw new Error("Create src/data/notes/welcome.md first");
-const { Content } = await render(entry);
+import { getEntry } from "astro:content";
+const post = await getEntry("blog", "first-light");
 ---
-<h1>{entry.data.title}</h1>
-<Content />
+<h1>{post.data.title}</h1>
+<div>{post.body}</div>
 ```
 
-## Put it to work
+The title is fine. The body shows up as **raw Markdown**: literal `**Jupiter**` and `## What I saw`, all run together. `post.body` is the source text, not HTML.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**The fix: `render`.** It compiles the entry and hands back a `Content` component:
+
+```astro title=src/pages/first-light.astro
+---
+import { getEntry, render } from "astro:content";
+
+const post = await getEntry("blog", "first-light");
+if (!post) throw new Error("Post not found");
+
+const { Content, headings } = await render(post);
+---
+<article>
+  <h1>{post.data.title}</h1>
+  <Content />
+</article>
+```
+
+Now there's proper HTML with bold text, headings and lists.
+
+**Why is it a component?** It can contain components itself (MDX entries), and you place it wherever you like in your markup. Like any component, its name starts with a capital letter.
+
+**The bonus: `headings`.** `render` also returns every heading in the entry, each with a `depth`, `slug` and `text`. That's a table of contents in one map:
+
+```astro
+<nav>
+  <ul>
+    {headings.filter((h) => h.depth === 2).map((h) => (
+      <li><a href={`#${h.slug}`}>{h.text}</a></li>
+    ))}
+  </ul>
+</nav>
+```
+
+Each `slug` matches the `id` on the rendered heading, so the links jump to the right place.
+
+**Styling the result.** The HTML inside `<Content />` comes from Markdown, not from your template, so [scoped styles](node:scoped-css) don't reach it. Use `article :global(h2)`, or a global prose stylesheet, as in [global styles](node:global-css).
+
+```compare javascript
+// Like marked(post.body), but with Astro's Markdown pipeline,
+// components and caching.
+```
+
+```compare typescript
+// Next.js + MDX: const { default: Post } = await
+// import(`./posts/${slug}.mdx`)
+```
+
+```compare python
+# Jinja: {{ markdown(post.body) | safe }}
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about render an entry.
-lang: astro
+goal: "Render the body: import `render`, call it to get `Content`, and replace the raw `{post.body}` with `<Content />`."
 code: |-
   ---
-  import { getEntry, render } from "astro:content";
-  const entry = await getEntry("notes", "missing");
-  if (!entry) throw new Error("Create src/data/notes/welcome.md first");
-  const { Content } = await render(entry);
+  import { getEntry } from "astro:content";
+  const post = await getEntry("blog", "dark-skies");
   ---
-  <h1>{entry.data.title}</h1>
-  <Content />
+  <article>{post.body}</article>
 checks:
-  - match: getEntry\("notes",\s+"welcome"\)
-    message: Use getEntry("notes", "welcome") for this step.
-  - notMatch: getEntry\("notes",\s+"missing"\)
-    message: Replace getEntry("notes", "missing") in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'import\s*\{\s*getEntry\s*,\s*render\s*\}\s*from\s*"astro:content"'
+    message: 'Import render too: import { getEntry, render } from "astro:content";'
+  - match: 'const\s*\{\s*Content\s*\}\s*=\s*await\s+render\(\s*post\s*\)'
+    message: 'Add const { Content } = await render(post);'
+  - match: '<article>\s*<Content\s*/>\s*</article>'
+    message: 'Put <Content /> inside the article.'
+solution: |-
+  ---
+  import { getEntry, render } from "astro:content";
+  const post = await getEntry("blog", "dark-skies");
+  const { Content } = await render(post);
+  ---
+  <article><Content /></article>
 ```
 
 ```quiz
-question: What does `render(entry)` provide for an entry's body?
+question: "What is `post.body`?"
 options:
-  - A new route added automatically to pages.
-  - A client-side editor for the Markdown source.
-  - A `Content` component that can be rendered.
-answer: 2
-explain: Querying metadata and rendering an entry's body are distinct steps.
+  - The rendered HTML.
+  - The raw Markdown source of the entry.
+  - A component.
+answer: 1
+explain: body is the source text. render(post) gives you the Content component with the HTML.
 ```

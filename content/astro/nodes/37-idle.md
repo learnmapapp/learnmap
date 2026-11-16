@@ -1,48 +1,86 @@
 ---
-title: Hydrate during idle time
-icon: 🧪
+title: Hydrate when idle
+icon: "😴"
 branch: islands
-requires:
-  - hydration
-summary: client:idle defers hydration until an idle opportunity.
+requires: [hydration]
+summary: client:idle waits until the browser has finished the important work before loading an island.
 ---
+**A timeline.** What the browser does in the first second, with `client:load` versus `client:idle`:
 
-In your Astro project, save this as `src/pages/index.astro`. `client:idle` defers hydration until an idle opportunity. Use it for interaction that is useful but not immediately required.
+**With `client:load` on a chat widget:**
 
-```astro
+1. Downloads and parses the HTML. The page is readable.
+2. Immediately downloads React and the chat widget.
+3. Parses and runs that JavaScript, competing with images, fonts and the visitor's first scroll.
+4. The widget is live.
+
+**With `client:idle`:**
+
+1. Downloads and parses the HTML. The page is readable.
+2. Finishes loading the page and its images.
+3. When the main thread has nothing to do, downloads and hydrates the chat widget.
+4. The widget is live, a moment later, but it never got in the way.
+
+```astro title=src/layouts/BaseLayout.astro
 ---
-import Counter from "../components/Counter.jsx";
+import ChatWidget from "../components/ChatWidget.jsx";
 ---
-<Counter client:idle />
+<slot />
+<ChatWidget client:idle />
 ```
 
-## Put it to work
+Under the hood Astro uses the browser's `requestIdleCallback`, which waits until the browser isn't busy.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+**Which islands deserve `client:idle`?** Ask: *is it visible right away, and will someone use it within the first second?*
+
+- **No, it can wait:** a chat widget, a newsletter form low on the page, a cookie banner, a "like" button. Use `client:idle`.
+- **Yes, it's needed now:** the main navigation menu, a search box people click immediately. Use `client:load`.
+- **It's far down the page:** use [client:visible](node:visible) instead, which may never load it at all.
+
+**A ceiling on the wait.** On a busy page the browser might stay busy for a while. `timeout` sets a maximum wait in milliseconds:
+
+```astro
+<ChatWidget client:idle={{ timeout: 500 }} />
+```
+
+**What the visitor sees meanwhile:** the server-rendered HTML of the component. That's why it's worth making that first render look right, such as a chat bubble button, even before it works.
+
+```compare javascript
+requestIdleCallback(() => import("./chat.js").then((m) => m.start()));
+```
+
+```compare typescript
+// Next.js: dynamic import with ssr: true and a manual idle trigger; no
+// built-in equivalent.
+```
+
+```compare python
+# No server-side equivalent: it's about when the browser loads code.
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about hydrate during idle time.
-lang: astro
+goal: "The feedback form sits at the end of an article and isn't urgent. Change its directive from `client:load` to `client:idle`."
 code: |-
   ---
-  import Counter from "../components/Counter.jsx";
+  import Feedback from "../components/Feedback.jsx";
   ---
-  <Counter client:load />
+  <Feedback client:load />
 checks:
-  - match: client:idle
-    message: Use client:idle for this step.
-  - notMatch: client:load
-    message: Replace client:load in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '<Feedback\s+client:idle\s*/>'
+    message: 'Write <Feedback client:idle />'
+solution: |-
+  ---
+  import Feedback from "../components/Feedback.jsx";
+  ---
+  <Feedback client:idle />
 ```
 
 ```quiz
-question: When is `client:idle` appropriate?
+question: "What does a visitor see in place of a `client:idle` island before it hydrates?"
 options:
-  - For removing all JavaScript from a framework component.
-  - For interaction that can wait for an idle opportunity.
-  - For a control that must respond before any JavaScript loads.
+  - An empty gap.
+  - The component's server-rendered HTML, which isn't interactive yet.
+  - A loading spinner Astro adds.
 answer: 1
-explain: Deferring hydration changes timing, not whether interactive code is required.
+explain: The island is rendered to HTML at build time; hydration just makes it interactive.
 ```
