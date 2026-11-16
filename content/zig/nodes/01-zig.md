@@ -1,15 +1,16 @@
 ---
 title: Meet Zig
-icon: ⚡
+icon: "⚡"
 branch: core
 requires: []
-summary: Save hello.zig and run zig run hello.zig with Zig 0.15.2.
+summary: What Zig is for, and your first program.
 kind: hub
 ---
+Zig is a systems language: it compiles to fast native code, like C or Rust, and lets you decide exactly how memory is used. Its motto is *no hidden control flow and no hidden allocations*. If a line of Zig doesn't look like it calls a function or allocates memory, it doesn't.
 
-Save `hello.zig` and run `zig run hello.zig` with Zig 0.15.2. This course pins that version because standard-library interfaces evolve.
+Here's the classic first program. Create a file called `hello.zig` with this content:
 
-```zig
+```zig title=hello.zig
 const std = @import("std");
 
 pub fn main() !void {
@@ -17,15 +18,39 @@ pub fn main() !void {
 }
 ```
 
-## Put it to work
+Then, in a terminal in the same folder, run `zig run hello.zig`. Zig compiles the file and runs it straight away:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```repl shell
+> zig run hello.zig
+Hello, Zig!
+```
 
-This course targets **Zig 0.15.2**. Check your local tool version before following examples. See the [official reference](https://ziglang.org/documentation/0.15.2/) when an API differs. The lesson files are examples to run in a separate learning project, not commands to execute inside this site's source tree.
+Line by line:
+
+- `@import("std")` loads the standard library. Functions that start with `@` are **builtins**, provided by the compiler itself.
+- `pub fn main() !void` is the entry point. `!void` means "returns nothing, but might return an error". You'll see that `!` a lot.
+- `std.debug.print` takes a format string and a list of arguments. `.{}` is an empty list, because there's nothing to fill in yet.
+
+```compare python
+print("Hello, Python!")
+```
+
+```compare javascript
+console.log("Hello, JavaScript!");
+```
+
+```compare rust
+fn main() {
+    println!("Hello, Rust!");
+}
+```
+
+```tip
+These lessons use **Zig 0.15**. Zig hasn't reached 1.0 yet, so parts of the standard library still change between releases. If an example doesn't compile on your machine, check your version with `zig version`.
+```
 
 ```exercise
-goal: Make the program print `Hello, Zig!`.
-lang: zig
+goal: Make the program greet Zig instead of the world.
 code: |-
   const std = @import("std");
 
@@ -33,12 +58,18 @@ code: |-
       std.debug.print("Hello, world!\n", .{});
   }
 checks:
-  - match: Hello,\s+Zig!
-    message: Use Hello, Zig! for this step.
-  - notMatch: Hello,\s+world!
-    message: Replace Hello, world! in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - notMatch: 'Hello, world!'
+    message: Change the text inside the quotes.
+  - match: 'print\("Hello, Zig!\\n"'
+    message: The message should be exactly "Hello, Zig!\n".
+solution: |-
+  const std = @import("std");
+
+  pub fn main() !void {
+      std.debug.print("Hello, Zig!\n", .{});
+  }
+output: Hello, Zig!
+hint: Only the text between the double quotes needs to change. Keep the \n, which ends the line.
 ```
 
 ```quiz
@@ -48,5 +79,5 @@ options:
   - Compiles and runs the source program.
   - Formats the source without executing it.
 answer: 1
-explain: "`zig run` builds and executes the requested Zig source file."
+explain: "`zig run` compiles the file to a temporary program and runs it. Later you'll meet `zig build` for real projects."
 ```

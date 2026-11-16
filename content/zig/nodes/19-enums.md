@@ -1,52 +1,86 @@
 ---
-title: Enum states
-icon: 📋
+title: Enums
+icon: "🚥"
 branch: data
-requires:
-  - structs
-summary: An enum names a finite set of tags.
+requires: [structs]
+summary: A fixed list of named states, with methods of their own.
 ---
+A traffic light can be red, yellow or green, and nothing else. Storing that as a string (`"red"`) invites typos like `"rde"`. Storing it as a number (`0`, `1`, `2`) invites nobody remembering what `2` meant. An **enum** lists the allowed states by name:
 
-An enum names a finite set of tags. The .tag shorthand works when the surrounding context determines the enum type.
-
-```zig
+```zig title=light.zig
 const std = @import("std");
-const Status = enum { todo, doing, done };
-pub fn main() !void {
-    const status = Status.doing;
-    std.debug.assert(status != .done);
+
+const Light = enum {
+    red,
+    yellow,
+    green,
+
+    fn next(self: Light) Light {
+        return switch (self) {
+            .red => .green,
+            .green => .yellow,
+            .yellow => .red,
+        };
+    }
+};
+
+pub fn main() void {
+    var light: Light = .red;
+    for (0..4) |_| {
+        std.debug.print("{s} → ", .{@tagName(light)});
+        light = light.next();
+    }
+    std.debug.print("...\n", .{});
 }
 ```
 
-## Put it to work
+```repl shell
+> zig run light.zig
+red → green → yellow → red → ...
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Notice the short `.red` instead of `Light.red`. When Zig already knows the type, the leading dot is enough. That's called an **enum literal**.
+
+Like structs, enums can have methods. `next` uses a `switch`, which you'll meet properly in the [next lesson](node:switch). It's already worth noticing that it lists every state. If someone later adds `.blinking` to the enum, this function stops compiling until it's handled. The compiler finds every place that needs updating.
+
+`@tagName(light)` turns a value into its name as a string, which is handy for printing and debugging. And `for (0..4) |_|` uses `_` because the loop doesn't need the number.
+
+```compare python
+class Light(Enum):
+    RED = auto()
+    YELLOW = auto()
+    GREEN = auto()
+```
+
+```compare rust
+enum Light { Red, Yellow, Green }
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about enum states.
-lang: zig
+goal: Coffee comes in three sizes. Turn these loose constants into an enum called `Size`.
 code: |-
-  const std = @import("std");
-  const Status = enum { todo, doing, done };
-  pub fn main() !void {
-      const status = Status.todo;
-      std.debug.assert(status != .done);
-  }
+  const small = 0;
+  const medium = 1;
+  const large = 2;
 checks:
-  - match: Status\.doing
-    message: Use Status.doing for this step.
-  - notMatch: Status\.todo
-    message: Replace Status.todo in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'const\s+Size\s*=\s*enum\s*\{'
+    message: "Start with const Size = enum {"
+  - match: 'small,\s*medium,\s*large'
+    message: "List the three sizes, separated by commas: small, medium, large"
+solution: |-
+  const Size = enum {
+      small,
+      medium,
+      large,
+  };
 ```
 
 ```quiz
-question: What does `.doing` mean when a `Status` type is expected?
+question: "`var light: Light = .red;` Why can you write `.red` without `Light.`?"
 options:
-  - A pointer to a global `doing` variable.
-  - The `doing` tag of that enum.
-  - A runtime string lookup for `"doing"`.
+  - Enum values are global names.
+  - The type is already known, so a dot is enough.
+  - It's a different, untyped value that converts later.
 answer: 1
-explain: Context can determine the enum type for a tag literal.
+explain: The variable's type tells Zig which enum .red belongs to.
 ```

@@ -1,53 +1,79 @@
 ---
-title: Compile-time assets
-icon: 🔧
+title: Embedded files
+icon: "🧳"
 branch: tools
-requires:
-  - imports
-  - comptime
-summary: "`@embedFile` includes file bytes at compile time."
+requires: [imports, comptime]
+summary: Pack a file's contents straight into your program with @embedFile.
 ---
+Some files belong *inside* your program: an ASCII-art logo, default settings, a SQL schema, a help text. Shipping them separately means they can go missing. `@embedFile` reads a file **at compile time** and turns its contents into a string constant.
 
-`@embedFile` includes file bytes at compile time. This example embeds its own `zig_embed.zig` file; adjust the path if you save it under another name.
+Say you have a logo:
 
-```zig
+```text title=logo.txt
+ _____ _
+|__  /(_) __ _
+  / / | |/ _` |
+ / /_ | | (_| |
+/____||_|\__, |
+         |___/
+```
+
+```zig title=main.zig
 const std = @import("std");
 
-pub fn main() !void {
-    const source = @embedFile("zig_embed.zig");
-    std.debug.assert(source.len > 0);
+const logo = @embedFile("logo.txt");
+
+pub fn main() void {
+    std.debug.print("{s}\nVersion 1.0\n", .{logo});
 }
 ```
 
-## Put it to work
+When you build, the compiler reads `logo.txt` and stores its bytes in the executable. You can move the binary anywhere and the logo comes along; `logo.txt` itself isn't needed at runtime any more.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+Details worth knowing:
+
+- The path is **relative to the source file**, just like file imports, and can't go outside the package.
+- The result is a pointer to a byte array with a known length. It converts to `[]const u8`, so you can use it anywhere a string is expected.
+- Edit the file and the next build picks up the change automatically.
+- It works for any file, not only text. Images, fonts and test data are all fine.
+
+Because it's compile-time, you can even process the contents during compilation, combining it with [comptime](node:comptime). For example, you could parse a CSV of country codes into a lookup table, so it costs nothing at runtime.
+
+```compare rust
+const LOGO: &str = include_str!("logo.txt");
+```
+
+```compare python
+# Python reads data files at runtime instead:
+from importlib.resources import files
+logo = files("mypkg").joinpath("logo.txt").read_text()
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about compile-time assets.
-lang: zig
+goal: Instead of opening `help.txt` at runtime, embed it in the program.
 code: |-
-  const std = @import("std");
-
-  pub fn main() !void {
-      const source = @embedFile("zig_embed.zig");
-      std.debug.assert(source.len == 0);
+  fn helpText(allocator: std.mem.Allocator) ![]u8 {
+      return std.fs.cwd().readFileAlloc(allocator, "help.txt", 10_000);
   }
 checks:
-  - match: source\.len\s+>\s+0
-    message: Use source.len > 0 for this step.
-  - notMatch: source\.len\s+==\s+0
-    message: Replace source.len == 0 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'const\s+help\s*=\s*@embedFile\("help\.txt"\)'
+    message: "Declare const help = @embedFile(\"help.txt\"); at the top level."
+  - notMatch: 'readFileAlloc'
+    message: The file no longer needs to be read at runtime.
+solution: |-
+  const help = @embedFile("help.txt");
+
+  fn helpText() []const u8 {
+      return help;
+  }
 ```
 
 ```quiz
-question: When are the bytes requested by `@embedFile` read?
+question: "When does `@embedFile(\"logo.txt\")` read the file?"
 options:
-  - At every call to `main`.
-  - Only after the source file is deployed alongside the binary.
-  - During compilation.
-answer: 2
-explain: The resulting executable includes the embedded file data.
+  - Every time the program starts.
+  - Once, during compilation.
+  - The first time the constant is used.
+answer: 1
+explain: The bytes are copied into the executable while compiling, so the file isn't needed at runtime.
 ```

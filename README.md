@@ -102,7 +102,7 @@ Level *n* needs `25 · n · (n − 1)` XP in total. A streak counts the days in 
 5. **Remove it from "coming soon"**: once the folder exists, the catalog entry automatically turns into a playable card.
    Give the entry a `category` (Web, Systems, Scripting, …): on the home page, maps you've started are shown as large cards, and the rest go in an "Explore" grid you can filter by category or search.
 
-6. Run `npm test`. It checks every course for broken prerequisites, unknown branches, cycles, goals that point nowhere, glossary terms that don't exist, broken `node:` links, and exercises that are already solved by their starting code.
+6. Run `npm test`. It checks every course for broken prerequisites, unknown branches, cycles, goals that point nowhere, glossary terms that don't exist, broken `node:` links, exercises that are already solved by their starting code, and solutions that fail their own checks.
 
 ## Lesson format
 
@@ -146,6 +146,11 @@ checks:
     message: Booleans are lowercase.
 output: '{ enable = true; name = "nginx"; }'    # shown once solved
 hint: Optional hint.
+solution: |-          # a correct answer: never shown, but tests check it passes
+  {
+    enable = true;
+    name = "nginx";
+  }
 ```
 
 ```quiz

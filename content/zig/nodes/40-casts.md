@@ -1,54 +1,77 @@
 ---
 title: Checked conversions
-icon: 💬
+icon: "🔄"
 branch: comptime
-requires:
-  - integers
-summary: "@intCast converts to an inferred integer destination and requires the value to fit."
+requires: [integers]
+summary: Converting between number types, and how Zig keeps it from going wrong.
 ---
+Converting a big integer to a smaller type can lose data. Zig makes you choose what should happen when it doesn't fit. Here's the toolkit, from strictest to loosest:
 
-@intCast converts to an inferred integer destination and requires the value to fit. @truncate deliberately discards high bits and expresses a different operation.
+**`@intCast`**: "I'm sure it fits." In debug builds it's checked, and panics if you were wrong.
 
 ```zig
-const std = @import("std");
-
-pub fn main() !void {
-    const wide: u16 = 42;
-    const narrow: u8 = @intCast(wide);
-    std.debug.assert(narrow == 42);
-}
+const big: u32 = 200;
+const small: u8 = @intCast(big); // 200 fits in a u8
 ```
 
-## Put it to work
+**`std.math.cast`**: "It might not fit, tell me." It returns an [optional](node:optionals), so you have to handle the `null`:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```zig
+const maybe: ?u8 = std.math.cast(u8, big);
+const safe = std.math.cast(u8, user_input) orelse return error.TooLarge;
+```
+
+**`@truncate`**: "Keep the low bits, throw away the rest." Never fails, sometimes surprises:
+
+```zig
+const x: u16 = 0x1234;
+const low: u8 = @truncate(x); // 0x34
+```
+
+**`@as`**: not a conversion at all, just a type annotation. It only allows changes that are always safe, like `u8` to `u32`.
+
+```zig
+const total = @as(u64, count) * 1000; // do the maths in u64
+```
+
+You may have noticed that `@intCast` and `@truncate` don't name a target type. They take it from where the result goes: the type of the variable, the parameter, or the return type. So this doesn't compile, because Zig can't tell what you want:
+
+```zig
+const what = @intCast(big); // error: @intCast must have a known result type
+```
+
+Wrap it in `@as` to give it one: `@as(u8, @intCast(big))`.
+
+For other kinds of numbers there are `@floatFromInt`, `@intFromFloat`, `@intFromEnum` and `@enumFromInt`. The naming pattern is always `@` + target + `From` + source.
+
+```compare rust
+let small: u8 = big as u8;                 // silently truncates
+let checked: Option<u8> = big.try_into().ok();
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about checked conversions.
-lang: zig
+goal: The count comes from the user, so it might be too large for a u8. Return `error.TooMany` instead of crashing.
 code: |-
-  const std = @import("std");
-
-  pub fn main() !void {
-      const wide: u16 = 42;
-      const narrow: u8 = @truncate(wide);
-      std.debug.assert(narrow == 42);
+  fn toCount(n: u32) !u8 {
+      return @intCast(n);
   }
 checks:
-  - match: "@intCast\\(wide\\)"
-    message: Use @intCast(wide) for this step.
-  - notMatch: "@truncate\\(wide\\)"
-    message: Replace @truncate(wide) in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - notMatch: '@intCast'
+    message: "@intCast panics when the value doesn't fit."
+  - match: 'std\.math\.cast\(u8,\s*n\)\s+orelse\s+(return\s+)?error\.TooMany'
+    message: Use std.math.cast(u8, n) orelse error.TooMany.
+solution: |-
+  fn toCount(n: u32) !u8 {
+      return std.math.cast(u8, n) orelse error.TooMany;
+  }
 ```
 
 ```quiz
-question: How does `@intCast` differ from `@truncate`?
+question: "`const x: u16 = 300; const y: u8 = @truncate(x);` What is `y`?"
 options:
-  - "`@truncate` returns an error union while `@intCast` returns an optional."
-  - "`@intCast` requires representability; `@truncate` deliberately discards high bits."
-  - Both always discard high bits without a representability requirement.
+  - "255"
+  - "44"
+  - It panics.
 answer: 1
-explain: Choose the conversion that expresses the intended treatment of out-of-range values.
+explain: "@truncate keeps the lowest 8 bits. 300 − 256 = 44."
 ```

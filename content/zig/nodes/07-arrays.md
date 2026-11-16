@@ -1,71 +1,66 @@
 ---
 title: Fixed arrays
-icon: 📋
+icon: "🧱"
 branch: data
-requires:
-  - integers
-summary: An array’s length is part of its type.
+requires: [integers]
+summary: Arrays have a length that's part of their type.
 ---
+An array in Zig has a fixed length, and that length is part of its **type**. `[3]u8` and `[4]u8` are two different types, just like `u8` and `u16`.
 
-An array’s length is part of its type. The underscore in [_] asks the compiler to infer that length from the initializer.
-
-```zig
+```zig title=arrays.zig
 const std = @import("std");
 
-pub fn main() !void {
-    const values = [_]u8{ 2, 4, 6 };
-    std.debug.assert(values.len == 3);
-    std.debug.assert(values[0] == 2);
+pub fn main() void {
+    const primes = [5]u32{ 2, 3, 5, 7, 11 };
+    const days = [_][]const u8{ "Mon", "Tue", "Wed" }; // _ means "count them for me"
+
+    std.debug.print("first prime: {d}\n", .{primes[0]});
+    std.debug.print("{d} primes, {d} days\n", .{ primes.len, days.len });
 }
 ```
 
-## Put it to work
+Three handy things to know:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+1. **`[_]`** lets the compiler count the elements, so you don't have to.
+2. **`.len`** gives the length. It's known while compiling, so it costs nothing at runtime.
+3. **Indexes are checked.** `primes[5]` on a 5-element array is a compile error when the index is a constant. When it's computed at runtime, it panics in debug builds instead of quietly reading garbage memory.
 
-```compare python
-values = [2, 4, 6]
-print(values[0], len(values))
+You can fill an array with one repeated value using `**`:
+
+```zig
+const zeros = [_]u8{0} ** 8; // eight zeros
 ```
 
-```compare javascript
-const values = [2, 4, 6];
-console.log(values[0], values.length);
+To change an element, the array itself must be a `var`:
+
+```zig
+var board = [_]u8{0} ** 9;
+board[4] = 1; // put a piece in the middle
 ```
 
-```compare rust
-fn main() {
-    let values = vec![2, 4, 6];
-    println!("{} {}", values[0], values.len());
-}
+```tip
+Arrays are **values**. Assigning one to another variable copies all of its elements. When you'd rather pass a view of the data than copy it, you'll want a [slice](node:slices).
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about fixed arrays.
-lang: zig
+goal: Declare `scores` as an array of four `u16` values (10, 20, 30, 40), letting the compiler count them.
 code: |-
-  const std = @import("std");
-
-  pub fn main() !void {
-      const values = [_]u8{ 2, 4, 6 };
-      std.debug.assert(values.len == 3);
-      std.debug.assert(values[1] == 2);
-  }
+  const scores = [4]u16{ 10, 20, 30 };
 checks:
-  - match: values\[0\]\s+==\s+2
-    message: Use values[0] == 2 for this step.
-  - notMatch: values\[1\]\s+==\s+2
-    message: Replace values[1] == 2 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '\[_\]u16'
+    message: Use [_] so the compiler counts the elements.
+  - match: '10,\s*20,\s*30,\s*40'
+    message: The array should hold 10, 20, 30 and 40.
+solution: |-
+  const scores = [_]u16{ 10, 20, 30, 40 };
 ```
 
 ```quiz
-question: For `[_]u8{ 2, 4, 6 }`, what does `_` ask the compiler to infer?
+question: "`const a = [_]u8{ 1, 2, 3 };` What's the type of `a`?"
 options:
-  - A new unsigned element type.
-  - The array length.
-  - A heap allocator.
+  - "`[]u8`"
+  - "`[3]u8`"
+  - "`[_]u8`"
 answer: 1
-explain: The initializer determines the fixed array's length.
+explain: The compiler counts the three elements, so the type is [3]u8. The length is part of the type.
 ```

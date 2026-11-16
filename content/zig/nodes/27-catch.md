@@ -1,58 +1,85 @@
 ---
-title: Handle errors
-icon: 🔢
+title: Recover with catch
+icon: "🥅"
 branch: errors
-requires:
-  - try
-summary: catch handles an error union locally, with either a fallback or an error capture.
+requires: [try]
+summary: Handle an error on the spot, with a fallback, a switch, or a log line.
 ---
+`try` passes the problem on. `catch` deals with it here and now. Three styles, for three moods:
 
-catch handles an error union locally, with either a fallback or an error capture. Unlike try, it need not propagate the failure.
+**"Whatever, use a default."**
 
 ```zig
-const std = @import("std");
-fn positive(value: u8) error{Zero}!u8 {
-    if (value == 0) return error.Zero;
-    return value;
-}
-pub fn main() !void {
-    const value = positive(0) catch 10;
-    std.debug.assert(value == 10);
-}
+const port = std.fmt.parseInt(u16, input, 10) catch 8080;
 ```
 
-## Put it to work
+**"It depends on what went wrong."** Capture the error and switch on it:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```zig title=download.zig
+const bytes = download(url) catch |err| switch (err) {
+    error.Timeout => try downloadFromMirror(url),
+    error.NotFound => return error.MissingPackage,
+    else => return err,
+};
+```
+
+**"Note it, then carry on."** A block after `catch` can do anything, as long as it ends up producing a value (or leaving the function):
+
+```zig
+const avatar = loadAvatar(user) catch |err| blk: {
+    std.log.warn("no avatar for {s}: {}", .{ user.name, err });
+    break :blk default_avatar;
+};
+```
+
+That last one combines `catch` with a [labeled block](node:blocks), so the block can give back a fallback value.
+
+The value after `catch` must have the same type as a success would. `catch 8080` works because 8080 fits in a `u16`. Writing `catch "oops"` would be a type error.
+
+```warn
+Avoid `catch unreachable` unless an error truly can't happen. Like `.?` for optionals, it crashes in debug builds and is undefined behaviour in release builds. `catch {}` won't help either: it only compiles when the success type is `void`, and it silently drops the error.
+```
+
+```compare python
+try:
+    port = int(text)
+except ValueError:
+    port = 8080
+```
+
+```compare javascript
+let port;
+try { port = parsePort(text); } catch { port = 8080; }
+```
+
+```compare rust
+let port = text.parse::<u16>().unwrap_or(8080);
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about handle errors.
-lang: zig
+goal: An unreadable save file shouldn't stop the game. If `loadHighScore` fails, start from 0 instead of passing the error on.
 code: |-
-  const std = @import("std");
-  fn positive(value: u8) error{Zero}!u8 {
-      if (value == 0) return error.Zero;
-      return value;
-  }
-  pub fn main() !void {
-      const value = positive(0) catch 0;
-      std.debug.assert(value == 10);
+  fn startScore() !u32 {
+      return try loadHighScore();
   }
 checks:
-  - match: catch\s+10
-    message: Use catch 10 for this step.
-  - notMatch: catch\s+0
-    message: Replace catch 0 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - notMatch: 'try'
+    message: Don't pass the error on; handle it with catch.
+  - match: 'loadHighScore\(\)\s+catch\s+0'
+    message: Use loadHighScore() catch 0.
+solution: |-
+  fn startScore() u32 {
+      return loadHighScore() catch 0;
+  }
+hint: Once the error is handled, the function can't fail any more, so the ! in the return type can go too.
 ```
 
 ```quiz
-question: What does `operation() catch 10` do on failure?
+question: "`const n = parse(s) catch |err| switch (err) { ... };` What must every branch of the switch do?"
 options:
-  - Uses `10` as the local fallback.
-  - Returns the error from the current function.
-  - Treats `10` as an optional error code.
-answer: 0
-explain: "`catch` handles the failure locally instead of necessarily propagating it."
+  - Return an error.
+  - Produce a value of n's type, or leave the function.
+  - Print the error.
+answer: 1
+explain: The switch decides what n becomes, so each branch gives a value or exits (with return, or try).
 ```

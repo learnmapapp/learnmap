@@ -1,50 +1,82 @@
 ---
-title: Import namespaces
-icon: 🔁
+title: Imports
+icon: "📥"
 branch: tools
-requires:
-  - functions
-summary: "`@import` loads a module namespace."
+requires: [functions]
+summary: Every file is a struct, and @import gives you access to it.
 ---
+Time to split a program over two files. Put them in the same folder:
 
-`@import` loads a module namespace. Import local `.zig` files with relative paths and keep public APIs explicit.
+```zig title=geometry.zig
+pub const pi = 3.14159;
 
-```zig
-const std = @import("std");
-
-pub fn main() !void {
-    std.debug.assert(std.math.maxInt(u8) == 255);
+pub fn circleArea(r: f64) f64 {
+    return pi * r * r;
 }
 ```
 
-## Put it to work
+```zig title=main.zig
+const std = @import("std");
+const geometry = @import("geometry.zig");
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+pub fn main() void {
+    std.debug.print("{d:.1}\n", .{geometry.circleArea(2)});
+}
+```
+
+```repl shell
+> zig run main.zig
+12.6
+```
+
+Run `main.zig`, and Zig follows the imports to find the rest. No project file needed, and no list of source files to keep up to date.
+
+Here's the neat part: **every Zig file is a struct**. `@import("geometry.zig")` gives you that struct, and its `pub` declarations are its members. That's why you write `geometry.circleArea` with a dot, just like a method or field. It's also why `@import("std")` works the same way: `std` is a big struct of structs, and `std.debug.print` is a path through it.
+
+Some rules of thumb:
+
+- A path with `.zig` is a **file**, relative to the current file: `@import("util/strings.zig")`.
+- A name without `.zig` is a **module**: `std`, `builtin`, or a dependency set up in [build.zig](node:build).
+- The `const` name is up to you. `const geo = @import("geometry.zig");` works just as well.
+- Importing the same file twice gives the same struct. Nothing runs twice, and there's no include-guard dance like in C.
+
+You can also pull out a single name, which is common for things used a lot:
+
+```zig
+const print = std.debug.print;
+const circleArea = @import("geometry.zig").circleArea;
+```
+
+```compare python
+import geometry
+from geometry import circle_area
+```
+
+```compare javascript
+import * as geometry from "./geometry.js";
+import { circleArea } from "./geometry.js";
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about import namespaces.
-lang: zig
+goal: "`main.zig` uses functions from `money.zig` in the same folder. Import it as `money`."
 code: |-
   const std = @import("std");
-
-  pub fn main() !void {
-      std.debug.assert(std.math.maxInt(u16) == 255);
-  }
+  const money = @import("money");
 checks:
-  - match: maxInt\(u8\)\s+==\s+255
-    message: Use maxInt(u8) == 255 for this step.
-  - notMatch: maxInt\(u16\)\s+==\s+255
-    message: Replace maxInt(u16) == 255 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'const\s+money\s*=\s*@import\("money\.zig"\)'
+    message: Files are imported by their file name, including .zig.
+solution: |-
+  const std = @import("std");
+  const money = @import("money.zig");
+hint: Without .zig, Zig looks for a module with that name instead of a file.
 ```
 
 ```quiz
-question: What does `@import("std")` provide?
+question: "What does `@import(\"geometry.zig\")` return?"
 options:
-  - The standard-library module namespace.
-  - An automatically allocated instance of every library type.
-  - A shell command that installs Zig.
-answer: 0
-explain: Imports make module declarations available to code.
+  - A copy of the file's text.
+  - The file as a struct, with its pub declarations as members.
+  - Nothing; it just runs the file.
+answer: 1
+explain: Each file is a struct. You reach its public functions and constants through the name you bind it to.
 ```

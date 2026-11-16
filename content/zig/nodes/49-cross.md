@@ -1,41 +1,82 @@
 ---
-title: Cross compilation
-icon: 🧪
+title: Cross-compilation
+icon: "🌍"
 branch: tools
-requires:
-  - build
-summary: The -target option selects an output platform.
+requires: [build]
+summary: Build for Windows, Linux or a Raspberry Pi from whatever machine you're on.
 ---
+This is Zig's party trick. Sitting on a Mac, you can produce a Windows `.exe`, a Linux binary, and a Raspberry Pi binary, without installing anything else:
 
-The -target option selects an output platform. Producing a binary for another platform does not make it runnable on the host machine.
-
-```shell
-zig build-exe hello.zig -target x86_64-linux -O ReleaseSafe
+```repl shell
+> zig build -Dtarget=x86_64-windows
+> zig build -Dtarget=x86_64-linux
+> zig build -Dtarget=aarch64-linux
 ```
 
-## Put it to work
+That's it. No extra toolchains, no Docker, no virtual machines. A Zig download bundles what it needs for all major platforms, including C standard libraries.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+A **target** is written `cpu-os`, sometimes with an ABI on the end:
+
+| Target | Runs on |
+| --- | --- |
+| `x86_64-windows` | most Windows PCs |
+| `aarch64-macos` | Apple Silicon Macs |
+| `x86_64-linux-musl` | Linux, as a fully static binary |
+| `aarch64-linux` | Raspberry Pi 4/5, ARM servers |
+| `wasm32-wasi` | WebAssembly runtimes |
+
+`zig targets` lists everything, although the output is long.
+
+Without a build script, single files work too:
+
+```repl shell
+> zig build-exe hello.zig -target aarch64-linux
+```
+
+Want a build that always targets one platform, whatever the command line says? Resolve a fixed target in `build.zig`:
+
+```zig title=build.zig
+const pi_target = b.resolveTargetQuery(.{
+    .cpu_arch = .aarch64,
+    .os_tag = .linux,
+});
+```
+
+```tip
+Zig can cross-compile C and C++ too. `zig cc` is a drop-in C compiler, and some Go and Rust projects use it purely to make cross-compiling their C dependencies painless.
+```
+
+```compare rust
+// rustup target add x86_64-pc-windows-gnu
+// cargo build --target x86_64-pc-windows-gnu
+// (plus a cross linker for many targets)
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about cross compilation.
-lang: shell
-code: zig build-exe hello.zig -target aarch64-macos -O ReleaseSafe
+goal: The kiosk app should always build for 64-bit ARM Linux. Fill in the target query.
+code: |-
+  const kiosk_target = b.resolveTargetQuery(.{
+      .cpu_arch = .x86_64,
+      .os_tag = .windows,
+  });
 checks:
-  - match: x86_64\-linux
-    message: Use x86_64-linux for this step.
-  - notMatch: aarch64\-macos
-    message: Replace aarch64-macos in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '\.cpu_arch\s*=\s*\.aarch64'
+    message: 64-bit ARM is .aarch64.
+  - match: '\.os_tag\s*=\s*\.linux'
+    message: The operating system is .linux.
+solution: |-
+  const kiosk_target = b.resolveTargetQuery(.{
+      .cpu_arch = .aarch64,
+      .os_tag = .linux,
+  });
 ```
 
 ```quiz
-question: What does `-target x86_64-linux` select during compilation?
+question: What do you need to install to build a Windows binary on Linux with Zig?
 options:
-  - An emulator that runs the output automatically.
-  - The output binary's target platform.
-  - The host operating system's current desktop settings.
+  - A Windows SDK and a cross linker.
+  - Nothing beyond Zig itself.
+  - Wine, to run the Windows compiler.
 answer: 1
-explain: Cross compilation produces target code without making it runnable on the host.
+explain: Zig ships with cross-compilation support for all major targets built in.
 ```

@@ -1,52 +1,85 @@
 ---
-title: Struct fields
-icon: 🚦
+title: Structs and defaults
+icon: "🏗️"
 branch: data
-requires:
-  - strings
-summary: Structs combine named fields and defaults into a domain type.
+requires: [strings]
+summary: Group fields together, give some of them defaults, and create values with .{ }.
 ---
+Let's make a character for a small game.
 
-Structs combine named fields and defaults into a domain type. Field initialization makes which data is being supplied visible.
-
-```zig
+```zig title=hero.zig
 const std = @import("std");
-const Task = struct { title: []const u8, done: bool = false };
-pub fn main() !void {
-    const task = Task{ .title = "Practice" };
-    std.debug.assert(!task.done);
+
+const Hero = struct {
+    name: []const u8,
+    health: u8 = 100,
+    level: u32 = 1,
+};
+
+pub fn main() void {
+    var hero = Hero{ .name = "Ada" };
+    hero.level += 1;
+    std.debug.print("{s} is level {d} with {d} hp\n", .{ hero.name, hero.level, hero.health });
 }
 ```
 
-## Put it to work
+```repl shell
+> zig run hero.zig
+Ada is level 2 with 100 hp
+```
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+What's going on:
+
+- `const Hero = struct { ... }` creates a new type and gives it a name. Types in Zig are just values, so they're named with `const`, like everything else. Type names use `PascalCase`.
+- `health: u8 = 100` is a **default**. When you create a `Hero`, you can leave it out.
+- `Hero{ .name = "Ada" }` creates one. The dot in front of each field name is required.
+- Fields without a default must be given, or it won't compile. Nobody accidentally gets a nameless hero.
+
+When Zig already knows which type is expected, you can drop the type name and just write `.{ ... }`. This is called an **anonymous struct literal**, and you'll see it everywhere:
+
+```zig
+const villain: Hero = .{ .name = "Grace", .health = 250 };
+```
+
+That's also what the `.{ hero.name, hero.level }` after a format string is: a small anonymous struct holding the arguments.
+
+```compare python
+@dataclass
+class Hero:
+    name: str
+    health: int = 100
+    level: int = 1
+```
+
+```compare javascript
+const hero = { name: "Ada", health: 100, level: 1 };
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about struct fields.
-lang: zig
+goal: Heroes should start with 10 gold. Add a `gold` field of type `u32` with that default.
 code: |-
-  const std = @import("std");
-  const Task = struct { title: []const u8, done: bool = true };
-  pub fn main() !void {
-      const task = Task{ .title = "Practice" };
-      std.debug.assert(!task.done);
-  }
+  const Hero = struct {
+      name: []const u8,
+      health: u8 = 100,
+  };
 checks:
-  - match: done:\s+bool\s+=\s+false
-    message: "Use done: bool = false for this step."
-  - notMatch: done:\s+bool\s+=\s+true
-    message: "Replace done: bool = true in the starting code."
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'gold\s*:\s*u32\s*=\s*10\s*,'
+    message: "Add gold: u32 = 10, with a comma at the end."
+solution: |-
+  const Hero = struct {
+      name: []const u8,
+      health: u8 = 100,
+      gold: u32 = 10,
+  };
+hint: Fields are separated by commas, and Zig likes a trailing comma after the last one too.
 ```
 
 ```quiz
-question: "For a field declared `done: bool = false`, what happens if initialization omits it?"
+question: "With the `Hero` above, which line is a compile error?"
 options:
-  - The field is left `undefined`.
-  - The initializer always fails.
-  - The field uses `false`.
-answer: 2
-explain: A declared field default supplies an omitted initializer value.
+  - "`const a = Hero{ .name = \"Ada\" };`"
+  - "`const b = Hero{ .health = 50 };`"
+  - "`const c: Hero = .{ .name = \"Bo\", .level = 3 };`"
+answer: 1
+explain: name has no default, so every Hero must be given one.
 ```

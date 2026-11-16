@@ -154,6 +154,9 @@ describe('highlighter', () => {
   });
 });
 
+// Courses rewritten for newcomers: every exercise ships a solution that passes its checks.
+const rewrittenCourses = new Set(['zig']);
+
 describe.each(completedCatalogCourses)('completed catalog course %s', (id) => {
   const course = loadFromDisk(id);
 
@@ -175,7 +178,13 @@ describe.each(completedCatalogCourses)('completed catalog course %s', (id) => {
       expect(examples.length, node.id).toBeGreaterThan(0);
       expect(exercises, node.id).toHaveLength(1);
       expect(quizzes, node.id).toHaveLength(1);
-      expect(runChecks(exercises[0].spec, examples[0].code).ok, `${id}/${node.id}: worked example passes`).toBe(true);
+      const { spec } = exercises[0];
+      if (rewrittenCourses.has(id)) {
+        expect(spec.solution, `${id}/${node.id}: exercise has a solution`).not.toBe('');
+        expect(runChecks(spec, spec.solution).ok, `${id}/${node.id}: solution passes`).toBe(true);
+      } else {
+        expect(runChecks(spec, examples[0].code).ok, `${id}/${node.id}: worked example passes`).toBe(true);
+      }
       expect(Number.isInteger(quizzes[0].spec.answer), node.id).toBe(true);
       expect(quizzes[0].spec.answer, node.id).toBeGreaterThanOrEqual(0);
       expect(new Set(quizzes[0].spec.options).size, node.id).toBe(quizzes[0].spec.options.length);
@@ -237,6 +246,7 @@ describe.each(courseIds)('course %s', (id) => {
         if (s.kind === 'exercise') {
           expect(s.spec.checks.length, `${n.id} exercise has checks`).toBeGreaterThan(0);
           expect(runChecks(s.spec, s.spec.code).ok, `${n.id} exercise already solved`).toBe(false);
+          if (s.spec.solution) expect(runChecks(s.spec, s.spec.solution).ok, `${n.id} solution passes`).toBe(true);
         }
         if (s.kind === 'quiz') {
           expect(Number.isInteger(s.spec.answer), `${n.id}: answer index`).toBe(true);

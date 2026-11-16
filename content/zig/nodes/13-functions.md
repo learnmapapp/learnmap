@@ -1,67 +1,82 @@
 ---
-title: Typed functions
-icon: 🧪
+title: Functions
+icon: "🧩"
 branch: flow
-requires:
-  - integers
-summary: Functions declare parameter and return types.
+requires: [integers]
+summary: Parameter types, return types, and why parameters can't be changed.
 ---
-
-Functions declare parameter and return types. A return statement makes the result explicit; unused results must be intentionally handled.
+Here's a function, taken apart:
 
 ```zig
-const std = @import("std");
-fn square(value: u32) u32 { return value * value; }
-pub fn main() !void {
-    std.debug.assert(square(6) == 36);
+pub fn clamp(value: i32, low: i32, high: i32) i32 {
+    if (value < low) return low;
+    if (value > high) return high;
+    return value;
 }
 ```
 
-## Put it to work
+Reading left to right:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+- `pub` makes it visible to other files. Leave it out for helpers.
+- `fn clamp` is the name. Functions use `camelCase`.
+- `(value: i32, low: i32, high: i32)` lists the parameters, each with a name and a type.
+- `i32` after the parentheses is the return type. There's no arrow.
 
-```compare python
-def square(value: int) -> int:
-    return value * value
+Every parameter needs a type, and so does the return value. A function that returns nothing returns `void`.
 
-print(square(6))
+**Parameters are constants.** You can't assign to them inside the function. If you need a working copy, make one:
+
+```zig
+fn countDown(start: u32) void {
+    var n = start; // start itself can't change
+    while (n > 0) : (n -= 1) {}
+}
 ```
 
-```compare javascript
-function square(value) { return value * value; }
-console.log(square(6));
+That rule frees Zig to pass small values by copy and big ones by reference, whichever is faster, without you having to care.
+
+**Order doesn't matter.** Functions can call functions defined further down the file. There are no forward declarations and no header files.
+
+**Return values must be used.** Calling a function and ignoring a non-`void` result is a compile error. If you really don't need it, discard it explicitly:
+
+```zig
+_ = clamp(15, 0, 10);
+```
+
+```compare python
+def clamp(value: int, low: int, high: int) -> int:
+    return max(low, min(value, high))
 ```
 
 ```compare rust
-fn square(value: i32) -> i32 { value * value }
-fn main() { println!("{}", square(6)); }
+fn clamp(value: i32, low: i32, high: i32) -> i32 {
+    value.max(low).min(high)
+}
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about typed functions.
-lang: zig
+goal: Write `isEven`, which takes a `u32` and returns `true` when it's even.
 code: |-
-  const std = @import("std");
-  fn square(value: u32) u32 { return value + value; }
-  pub fn main() !void {
-      std.debug.assert(square(6) == 36);
+  fn isEven(n) {
   }
 checks:
-  - match: value\s+\*\s+value
-    message: Use value * value for this step.
-  - notMatch: value\s+\+\s+value
-    message: Replace value + value in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'fn\s+isEven\s*\(\s*n\s*:\s*u32\s*\)\s*bool'
+    message: "Give the parameter and the return value a type: fn isEven(n: u32) bool"
+  - match: 'return\s+n\s*%\s*2\s*==\s*0'
+    message: A number is even when n % 2 == 0.
+solution: |-
+  fn isEven(n: u32) bool {
+      return n % 2 == 0;
+  }
+hint: The return type goes after the closing parenthesis, without an arrow.
 ```
 
 ```quiz
-question: What must a function returning `u32` do on every normal return path?
+question: "Inside `fn grow(size: u32) u32`, what happens if you write `size += 1;`?"
 options:
-  - Return `null` when no result is written.
-  - Return a compatible `u32` value.
-  - End with an implicit final expression.
+  - It changes the caller's variable too.
+  - It's a compile error, because parameters are constant.
+  - It works, but only changes a local copy.
 answer: 1
-explain: Zig uses explicit return statements for normal value results.
+explain: Parameters can't be assigned. Copy the value into a var first if you need to change it.
 ```

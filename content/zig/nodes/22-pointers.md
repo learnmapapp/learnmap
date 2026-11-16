@@ -1,58 +1,84 @@
 ---
-title: Pointers to storage
-icon: 📦
+title: Single-item pointers
+icon: "👉"
 branch: data
-requires:
-  - bindings
-summary: "& takes an address and .* dereferences a pointer."
+requires: [bindings]
+summary: Take an address with &, follow it with .*, and let functions change your data.
 ---
+A variable is a box in memory. A **[[pointer]]** is a note with the box's address on it. Hand someone the note, and they can go and change what's in the box.
 
-& takes an address and .* dereferences a pointer. The pointer must not outlive the storage it references.
+Two operators do all the work:
 
-A useful term here is [[pointer]]: A typed address referring to storage whose lifetime must remain valid.
+| Write | Means | Example |
+| --- | --- | --- |
+| `&x` | the address of x | `const p = &score;` |
+| `p.*` | the value at that address | `p.* += 1;` |
 
-```zig
+The type of a pointer to a `u32` is `*u32`.
+
+```zig title=pointers.zig
 const std = @import("std");
 
-pub fn main() !void {
-    var count: u8 = 2;
-    const pointer = &count;
-    pointer.* += 1;
-    std.debug.assert(count == 3);
+fn levelUp(level: *u32) void {
+    level.* += 1;
+}
+
+pub fn main() void {
+    var level: u32 = 1;
+    levelUp(&level);
+    levelUp(&level);
+    std.debug.print("level {d}\n", .{level}); // level 3
 }
 ```
 
-## Put it to work
+Without the pointer, `levelUp` would get a copy of the number, and could only change the copy (well, it couldn't even do that, because parameters are constant).
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+A few reassuring facts if pointers make you nervous after C:
+
+- **No null.** A `*u32` always points at something. "Maybe a pointer" is spelled `?*u32`, an optional, and must be checked like any other.
+- **No pointer arithmetic** on `*T`. For runs of items, you use [slices](node:slices).
+- **Field access follows pointers automatically.** If `p` is a `*Hero`, `p.name` works; you don't need `p.*.name`.
+
+The one real danger is the same as everywhere: a pointer to a local variable is only valid until that function returns.
+
+```compare python
+# Python passes references to objects, but you can't
+# point at a plain int; you'd return the new value instead.
+level = level_up(level)
+```
+
+```compare rust
+fn level_up(level: &mut u32) {
+    *level += 1;
+}
+level_up(&mut level);
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about pointers to storage.
-lang: zig
+goal: "`swap` should exchange two values. Complete it using pointers: write `b`'s value into `a`, and the saved value into `b`."
 code: |-
-  const std = @import("std");
-
-  pub fn main() !void {
-      var count: u8 = 2;
-      const pointer = &count;
-      pointer.* -= 1;
-      std.debug.assert(count == 3);
+  fn swap(a: *i32, b: *i32) void {
+      const tmp = a.*;
   }
 checks:
-  - match: pointer\.\*\s+\+=\s+1
-    message: Use pointer.* += 1 for this step.
-  - notMatch: pointer\.\*\s+\-=\s+1
-    message: Replace pointer.* -= 1 in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'a\.\*\s*=\s*b\.\*'
+    message: "Copy b's value into a: a.* = b.*;"
+  - match: 'b\.\*\s*=\s*tmp'
+    message: "Put the saved value into b: b.* = tmp;"
+solution: |-
+  fn swap(a: *i32, b: *i32) void {
+      const tmp = a.*;
+      a.* = b.*;
+      b.* = tmp;
+  }
 ```
 
 ```quiz
-question: What does `pointer.*` mean?
+question: "`var x: u8 = 5; const p = &x;` What's the type of `p`?"
 options:
-  - Clone the pointed-to allocation.
-  - Dereference the pointer.
-  - Take the address of the pointer.
+  - "`u8`"
+  - "`*u8`"
+  - "`?*u8`"
 answer: 1
-explain: Dereferencing accesses the storage a pointer refers to.
+explain: "&x gives a pointer to x. Because x is a var, the pointer is *u8 and can be used to change it."
 ```

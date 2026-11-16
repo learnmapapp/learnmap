@@ -1,76 +1,88 @@
 ---
 title: const and var
-icon: 🏷️
+icon: "📌"
 branch: basics
-requires:
-  - zig
-summary: const prevents changing a binding; var supplies mutable storage.
+requires: [zig]
+summary: Name values with const, and use var only for things that change.
 ---
+Zig has two ways to name a value. `const` can never change; `var` can.
 
-const prevents changing a binding; var supplies mutable storage. Zig diagnoses local var declarations that are never mutated.
-
-```zig
+```zig title=bindings.zig
 const std = @import("std");
 
-pub fn main() !void {
-    const step: u8 = 2;
-    var score: u8 = 1;
-    score += step;
-    std.debug.assert(score == 3);
+pub fn main() void {
+    const name = "Ziggy";
+    var score: u32 = 0;
+    score += 10;
+    std.debug.print("{s} has {d} points\n", .{ name, score });
 }
 ```
 
-## Put it to work
+Two things in there are worth a closer look:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+- `var score: u32 = 0` gives the variable a **type**: `u32`, an unsigned 32-bit integer. For `const`, Zig can usually work out the type itself.
+- In the format string, `{s}` prints a string and `{d}` prints a number. The values come from the list `.{ name, score }`, in order.
 
-```compare python
-score = 1
-score += 2
-print(score)
+Zig is strict about tidiness. Both of these are compile **errors**, not warnings:
+
+```repl shell
+> zig run bindings.zig
+error: local variable is never mutated
+note: consider using 'const'
 ```
 
+That's what you get for a `var` that never changes. An unused local is also an error. If you really want to ignore a value, assign it to `_`:
+
+```zig
+_ = unused_value;
+```
+
+It feels fussy for a day or two. After that, it's nice to know that every `var` you read really does change.
+
 ```compare javascript
-let score = 1;
-score += 2;
-console.log(score);
+const name = "Ziggy";
+let score = 0;
+score += 10;
 ```
 
 ```compare rust
-fn main() {
-    let mut score = 1;
-    score += 2;
-    println!("{score}");
-}
+let name = "Ziggy";
+let mut score: u32 = 0;
+score += 10;
 ```
 
 ```exercise
-goal: Repair the starting example using what you learned about const and var.
-lang: zig
+goal: The compiler rejects this code. Fix the declaration that's never changed.
 code: |-
-  const std = @import("std");
-
-  pub fn main() !void {
-      const step: u8 = 2;
-      var score: u8 = 1;
-      score -= step;
-      std.debug.assert(score == 3);
+  pub fn main() void {
+      var max_players = 4;
+      var players: u32 = 1;
+      players += 1;
+      _ = max_players;
   }
 checks:
-  - match: score\s+\+=\s+step
-    message: Use score += step for this step.
-  - notMatch: score\s+\-=\s+step
-    message: Replace score -= step in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - notMatch: 'var\s+max_players'
+    message: max_players never changes, so it shouldn't be a var.
+  - match: 'const\s+max_players\s*=\s*4'
+    message: Declare max_players with const.
+  - match: 'var\s+players'
+    message: players does change, so keep it a var.
+solution: |-
+  pub fn main() void {
+      const max_players = 4;
+      var players: u32 = 1;
+      players += 1;
+      _ = max_players;
+  }
+hint: Which of the two values is updated later on?
 ```
 
 ```quiz
-question: Which binding can be reassigned?
+question: "You declare `var total: u32 = 0;` but never change it. What happens?"
 options:
-  - "`const score: u8 = 1;`"
-  - "`const score = @as(u8, 1);`"
-  - "`var score: u8 = 1;`"
-answer: 2
-explain: Use `var` for mutable storage and `const` when the binding does not change.
+  - It compiles, with a warning.
+  - It's a compile error suggesting const.
+  - Zig turns it into a const for you.
+answer: 1
+explain: Zig refuses to compile a var that's never mutated, and tells you to use const instead.
 ```

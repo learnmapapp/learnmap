@@ -1,61 +1,69 @@
 ---
-title: Error-only cleanup
-icon: 🚦
+title: errdefer cleanup
+icon: "🧯"
 branch: errors
-requires:
-  - defer
-  - try
-summary: errdefer runs only when the enclosing scope exits with an error.
+requires: [defer, try]
+summary: Cleanup that only runs if the function fails, for undoing half-finished work.
 ---
+Building a house goes in steps: foundation, walls, roof. If the roof order falls through, you don't want to leave a roofless shell standing. But if everything succeeds, you certainly don't want to knock the house down.
 
-`errdefer` runs only when the enclosing scope exits with an error. Use it to release partially constructed resources before ownership transfers on success.
+`defer` would always knock it down. **`errdefer`** only runs when the function **returns an error**:
 
-```zig
-const std = @import("std");
-fn createValue(fail: bool) error{Failed}!u8 {
-    var marker: u8 = 0;
-    errdefer marker = 1;
-    if (fail) return error.Failed;
-    return 4;
-}
-pub fn main() !void {
-    std.debug.assert(try createValue(false) == 4);
+```zig title=house.zig
+fn buildHouse(allocator: std.mem.Allocator) !*House {
+    const house = try allocator.create(House);
+    errdefer allocator.destroy(house); // only if a later step fails
+
+    house.walls = try buildWalls(allocator);
+    errdefer freeWalls(allocator, house.walls);
+
+    house.roof = try orderRoof(); // fails? walls freed, then the house
+    return house; // success: nothing undone, the caller owns it
 }
 ```
 
-## Put it to work
+On the success path, both `errdefer`s are skipped and the caller gets a finished house. If `orderRoof` fails, Zig runs the `errdefer`s registered *so far*, in reverse: walls first, then the house.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+This pattern shows up whenever a function **creates something and hands it to the caller**: constructors, `init` functions, loaders. For the parts the function only needs temporarily, keep using plain `defer`.
+
+Here's a quick way to choose:
+
+| The thing you made... | Use |
+| --- | --- |
+| is only needed inside this function | `defer` |
+| is returned to the caller on success | `errdefer` |
+
+You can even capture the error, which is handy for logging: `errdefer |err| std.log.err("build failed: {}", .{err});`
 
 ```exercise
-goal: Repair the starting example using what you learned about error-only cleanup.
-lang: zig
+goal: "`loadDeck` returns the cards to its caller, but `defer` frees them even on success. Free them only when a later step fails."
 code: |-
-  const std = @import("std");
-  fn createValue(fail: bool) error{Failed}!u8 {
-      var marker: u8 = 0;
-      errdefer marker = 1;
-      if (fail) return error.Failed;
-      return 0;
-  }
-  pub fn main() !void {
-      std.debug.assert(try createValue(false) == 4);
+  fn loadDeck(allocator: std.mem.Allocator) ![]Card {
+      const cards = try allocator.alloc(Card, 52);
+      defer allocator.free(cards);
+      try shuffle(cards);
+      return cards;
   }
 checks:
-  - match: return\s+4;
-    message: Use return 4; for this step.
-  - notMatch: return\s+0;
-    message: Replace return 0; in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: 'errdefer\s+allocator\.free\(cards\)'
+    message: Use errdefer, so the cards are only freed when the function fails.
+  - notMatch: '(^|[^r])defer\s+allocator\.free'
+    message: A plain defer would free the cards the caller is about to use.
+solution: |-
+  fn loadDeck(allocator: std.mem.Allocator) ![]Card {
+      const cards = try allocator.alloc(Card, 52);
+      errdefer allocator.free(cards);
+      try shuffle(cards);
+      return cards;
+  }
 ```
 
 ```quiz
-question: When does `errdefer` execute?
+question: A function allocates a buffer, uses it to build a string, and returns the string (not the buffer). How should it free the buffer?
 options:
-  - After every successful return.
-  - Only when a later garbage collector runs.
-  - When its scope exits with an error.
-answer: 2
-explain: Use error-only cleanup for resources that transfer ownership on success.
+  - "`defer`, since the buffer is only needed inside the function."
+  - "`errdefer`, since the function can fail."
+  - It shouldn't; the caller frees it.
+answer: 0
+explain: The buffer never leaves the function, so it must be freed on every path. That's defer.
 ```

@@ -12,11 +12,10 @@ guide:
   name: Zara
   avatar: ⚡
   intro:
-    - Welcome! I'm Zara. Let's build something with Zig.
-    - These fifty lessons use Zig 0.15.2. Start with the foundations or pick a goal to follow a
-      shorter route.
-    - Read a small example, repair a piece of code, and check what you learned. Exercises check text
-      here; use the local tools to run the examples.
+    - Hi, I'm Zara! Zig is a small, fast language for programs where you want to see exactly what
+      the machine is doing. No hidden memory allocations, no garbage collector, no surprises.
+    - Every lesson has a short example, a little exercise you solve right here in the browser, and
+      a quick check. If you have Zig installed, you can run the examples on your own machine too.
   askGoal: What would you like to build first?
 branches:
   - id: core
@@ -47,20 +46,20 @@ goals:
   - id: switch
     node: switch
     title: Write explicit control flow
-    description: Combine loops, optionals, and tagged states.
-    icon: 🏷️
+    description: Branch on states with if, while, optionals and switch.
+    icon: 🔀
   - id: errdefer
     node: errdefer
-    title: Handle fallible operations
-    description: Use error unions and scoped cleanup.
-    icon: 🔢
+    title: Handle errors
+    description: Return, pass on and recover from errors, and clean up after them.
+    icon: 🧯
   - id: arraylist
     node: arraylist
-    title: Manage dynamic data
-    description: Choose allocators and release owned memory.
-    icon: 💬
+    title: Manage memory
+    description: Allocate memory yourself, grow lists, and free what you own.
+    icon: 🧠
   - id: capstone
     node: capstone
     title: Build a task store
-    description: Combine allocation, domain types, and tests.
-    icon: 🚦
+    description: Combine structs, lists, errors and tests in one small program.
+    icon: 🏁

@@ -1,54 +1,87 @@
 ---
 title: UTF-8 byte strings
-icon: 🧩
+icon: "🔤"
 branch: data
-requires:
-  - slices
-summary: Strings commonly use []const u8.
+requires: [slices]
+summary: A Zig string is just a slice of bytes, and that has consequences.
 ---
+Zig has no special string type. A string is a slice of bytes: `[]const u8`. The text is stored as UTF-8, so English letters take one byte each, and characters like `é` or `🦎` take more.
 
-Strings commonly use []const `u8`. Compare their contents with `std.mem.eql`; a byte length is not necessarily a count of Unicode characters.
+That has a few consequences that surprise newcomers:
 
-```zig
+```zig title=strings.zig
 const std = @import("std");
 
-pub fn main() !void {
-    const text: []const u8 = "hello";
-    std.debug.assert(text.len == 5);
-    std.debug.assert(std.mem.eql(u8, text, "hello"));
+pub fn main() void {
+    const word = "café";
+    std.debug.print("{d} bytes\n", .{word.len}); // 5, not 4!
+    std.debug.print("first byte: {c}\n", .{word[0]}); // c
+
+    const a = "zig";
+    const b = "zig";
+    std.debug.print("equal: {}\n", .{std.mem.eql(u8, a, b)});
 }
 ```
 
-## Put it to work
+1. **`.len` counts bytes, not characters.** `é` is two bytes in UTF-8.
+2. **Indexing gives you a byte**, a `u8`. `{c}` prints it as a character.
+3. **`==` doesn't compare text.** It isn't allowed on slices at all. Use `std.mem.eql(u8, a, b)`, where `u8` says what kind of elements to compare.
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+A few more tools from `std.mem` that you'll use all the time:
+
+```zig
+std.mem.startsWith(u8, "zig build", "zig"); // true
+std.mem.indexOf(u8, "hello", "ll"); // 2 (or null if not found)
+std.mem.trim(u8, "  hi  ", " "); // "hi"
+```
+
+To print a string, use `{s}`. Without it, Zig doesn't know whether you mean text or a list of numbers.
+
+```compare python
+word = "café"
+len(word)          # 4 characters
+word == "café"     # True
+```
+
+```compare javascript
+const word = "café";
+word.length;       // 4 UTF-16 units
+word === "café";   // true
+```
+
+```compare rust
+let word = "café";
+word.len();        // 5 bytes, like Zig
+word == "café";    // true
+```
 
 ```exercise
-goal: Repair the starting example using what you learned about utf-8 byte strings.
-lang: zig
+goal: Check whether the command is "quit". `==` doesn't work on strings in Zig.
 code: |-
   const std = @import("std");
 
-  pub fn main() !void {
-      const text: []const u8 = "hello";
-      std.debug.assert(text.len == 5);
-      std.debug.assert(std.mem.eql(u8, text, "bye"));
+  fn isQuit(command: []const u8) bool {
+      return command == "quit";
   }
 checks:
-  - match: text,\s+"hello"
-    message: Use text, "hello" for this step.
-  - notMatch: text,\s+"bye"
-    message: Replace text, "bye" in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - notMatch: 'command\s*=='
+    message: Slices can't be compared with ==.
+  - match: 'std\.mem\.eql\(u8,\s*command,\s*"quit"\)'
+    message: Use std.mem.eql(u8, command, "quit").
+solution: |-
+  const std = @import("std");
+
+  fn isQuit(command: []const u8) bool {
+      return std.mem.eql(u8, command, "quit");
+  }
 ```
 
 ```quiz
-question: How should you compare the contents of two byte-string slices?
+question: What does `"naïve".len` return?
 options:
-  - "`std.mem.eql(u8, left, right)`"
-  - "`left == right`"
-  - "`left.len == right.len` alone."
-answer: 0
-explain: Equal lengths do not establish equal contents; `std.mem.eql` compares elements.
+  - "5"
+  - "6"
+  - It doesn't compile.
+answer: 1
+explain: "ï is two bytes in UTF-8, so five characters take six bytes. .len counts bytes."
 ```

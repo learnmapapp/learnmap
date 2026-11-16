@@ -6,7 +6,7 @@ import { arr, num, obj, optStr, parseYaml, str } from './yamlish';
  *
  *   ```repl            > input lines, then output; "error: ..." shows a red error
  *   ```compare python  shown only when the learner picked Python
- *   ```exercise        YAML: goal, code, checks, output, hint
+ *   ```exercise        YAML: goal, code, checks, output, hint, solution
  *   ```quiz            YAML: question, options, answer, explain
  *   ```tip / ```warn   a highlighted note (markdown inside)
  *   ```nix title=x.nix ordinary code with an optional file title
@@ -35,6 +35,8 @@ export interface ExerciseSpec {
   output: string;
   hint: string;
   lang: string;
+  /** A correct answer. Not shown to learners; tests use it to prove the exercise can be solved. */
+  solution: string;
 }
 
 export interface QuizSpec {
@@ -138,6 +140,7 @@ export function parseExercise(body: string, lang: string): ExerciseSpec {
     checks,
     output: str(d.output).replace(/\n$/, ''),
     hint: str(d.hint),
+    solution: str(d.solution).replace(/\n$/, ''),
     lang: str(d.lang, lang),
   };
 }

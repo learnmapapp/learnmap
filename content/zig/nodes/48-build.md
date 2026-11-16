@@ -1,45 +1,99 @@
 ---
-title: Compile an executable
-icon: 🌐
+title: build.zig
+icon: "🏗️"
 branch: tools
-requires:
-  - imports
-  - tests
-summary: build-exe creates an executable.
+requires: [imports, tests]
+summary: Your build script is a Zig program. Here's what's in the one zig init makes.
 ---
+`zig run file.zig` is fine for one file. Real projects use **`build.zig`**: a build script written in Zig itself. No Makefile, no CMake, no YAML.
 
-build-exe creates an executable. ReleaseSafe enables optimization while retaining runtime safety checks; ReleaseFast makes a different safety tradeoff.
+Start a project with:
 
-```shell
-zig build-exe hello.zig -O ReleaseSafe
-./hello
+```repl shell
+> mkdir todo && cd todo && zig init
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
 ```
 
-## Put it to work
+The generated `build.zig` has lots of helpful comments. Stripped down to its core, it looks like this:
 
-Compare the worked example with the starting code below. Identify the changed operation, predict its effect, and repair it. Then try a second input locally to check your understanding.
+```zig title=build.zig
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    const exe = b.addExecutable(.{
+        .name = "todo",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/main.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+    b.installArtifact(exe);
+
+    const run = b.addRunArtifact(exe);
+    const run_step = b.step("run", "Run the app");
+    run_step.dependOn(&run.step);
+}
+```
+
+Read it as a recipe being written down, not cooked: `build` describes a graph of steps, and then the build system runs the parts you ask for.
+
+1. `target` and `optimize` read `-Dtarget=...` and `-Doptimize=...` from the command line.
+2. `addExecutable` describes a program. Its **root module** is the file with `main`, and imports are followed from there.
+3. `installArtifact` puts the binary in `zig-out/bin/` when you run `zig build`.
+4. `b.step("run", ...)` adds a named step, so `zig build run` works.
+
+The everyday commands:
+
+| Command | Does |
+| --- | --- |
+| `zig build` | compile and install to `zig-out/` |
+| `zig build run` | build, then run |
+| `zig build test` | run the tests (`zig init` sets this step up) |
+| `zig build -Doptimize=ReleaseFast` | an optimised build |
+| `zig build --help` | list every step and option |
+
+`build.zig.zon` is the package manifest: name, version and dependencies. (`.zon` is "Zig Object Notation", basically a Zig struct literal.)
 
 ```exercise
-goal: Repair the starting example using what you learned about compile an executable.
-lang: shell
+goal: Rename the program to `notes`, and change its entry point to `src/app.zig`.
 code: |-
-  zig build-exe hello.zig -O ReleaseFast
-  ./hello
+  const exe = b.addExecutable(.{
+      .name = "todo",
+      .root_module = b.createModule(.{
+          .root_source_file = b.path("src/main.zig"),
+          .target = target,
+          .optimize = optimize,
+      }),
+  });
 checks:
-  - match: \-O\s+ReleaseSafe
-    message: Use -O ReleaseSafe for this step.
-  - notMatch: \-O\s+ReleaseFast
-    message: Replace -O ReleaseFast in the starting code.
-hint: Compare the worked example with the starting code below. Identify the changed operation,
-  predict its effect, and repair it. Then try a second input locally to check your understanding.
+  - match: '\.name\s*=\s*"notes"'
+    message: Set .name to "notes".
+  - match: 'b\.path\("src/app\.zig"\)'
+    message: Point root_source_file at src/app.zig.
+solution: |-
+  const exe = b.addExecutable(.{
+      .name = "notes",
+      .root_module = b.createModule(.{
+          .root_source_file = b.path("src/app.zig"),
+          .target = target,
+          .optimize = optimize,
+      }),
+  });
 ```
 
 ```quiz
-question: What is the defining tradeoff of `ReleaseSafe`?
+question: "What makes `zig build run` work?"
 options:
-  - Optimization with runtime safety checks retained.
-  - Optimization with all runtime safety checks removed.
-  - No optimization and no safety checks.
-answer: 0
-explain: The release modes differ in their optimization and safety choices.
+  - The run command is built into Zig for every project.
+  - build.zig creates a step named "run" that depends on running the executable.
+  - It runs whichever file contains main.
+answer: 1
+explain: Named steps come from b.step in build.zig. zig init simply generates the run step for you.
 ```
