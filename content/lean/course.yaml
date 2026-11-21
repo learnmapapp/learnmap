@@ -1,0 +1,58 @@
+name: Lean
+tagline: Write functional programs, then prove they're correct.
+logo: "📐"
+color: "#6b5bd6"
+syntax: lean
+extension: lean
+pluginUrl: https://jetplugins.dev
+comparisons: [python, typescript, kotlin, rust]
+
+guide:
+  name: Professor Proof
+  avatar: "🦉"
+  intro:
+    - "Hello, I'm Professor Proof! Lean is two things at once: a functional programming language, and a tool for writing proofs that a computer checks line by line."
+    - "We'll start with ordinary programs: functions, data types and IO. Then we'll use the same language to prove facts about those programs, so you know they're right instead of hoping."
+    - "Every lesson has a short example, a small exercise you solve right here, and a quick check. The examples use Lean 4."
+  askGoal: "Where would you like to go?"
+
+branches:
+  - { id: core, title: Lean, color: "#6b5bd6" }
+  - { id: basics, title: Basics, color: "#e0b84f" }
+  - { id: data, title: Data types, color: "#6fc2a8" }
+  - { id: programs, title: Programs, color: "#e98a6b" }
+  - { id: proofs, title: Proofs, color: "#9b8cf0" }
+  - { id: tactics, title: Tactics, color: "#5fa8d3" }
+  - { id: tools, title: Tools, color: "#c9a27e" }
+
+goals:
+  - id: basics
+    title: Write my first functions
+    node: pipelines
+    icon: "👋"
+    description: Definitions, types, functions and the #eval command.
+  - id: data
+    title: Model data with types
+    node: type-classes
+    icon: "🧱"
+    description: Structures, inductive types, lists and pattern matching.
+  - id: programs
+    title: Write real programs
+    node: monads
+    icon: "⚙️"
+    description: IO, do notation, loops and error handling.
+  - id: proofs
+    title: Prove my first theorems
+    node: forall-exists
+    icon: "✍️"
+    description: Propositions, proofs as values, and logic.
+  - id: tactics
+    title: Prove a program correct
+    node: capstone
+    icon: "🏆"
+    description: Tactics, induction, and a proof about your own code.
+  - id: math
+    title: Do maths with Mathlib
+    node: mathlib
+    icon: "🧮"
+    description: Lake projects and the community maths library.

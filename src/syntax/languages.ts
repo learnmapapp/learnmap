@@ -117,6 +117,20 @@ export const SYNTAX: Record<string, SyntaxDef> = {
     blockComment: ['/*', '*/'],
     strings: ['"', '`', "'"],
   },
+  lean: {
+    keywords: words(
+      'def theorem lemma example fun match with if then else let in do return structure inductive class instance where deriving namespace end open import variable section by have show from calc at mut for unless abbrev partial termination_by decreasing_by private protected noncomputable universe try catch throw',
+    ),
+    constants: words('true false True False none some'),
+    builtins: words(
+      'intro intros exact apply rfl simp rw cases induction omega constructor decide assumption contradiction exfalso left right use unfold trivial sorry IO Nat Int String Bool List Array Option Prop Type',
+    ),
+    lineComment: ['--'],
+    blockComment: ['/-', '-/'],
+    strings: ['"'],
+    identExtra: "'!?",
+    extra: [{ pattern: /#[a-z]+/y, type: 'attr' }],
+  },
   shell: {
     keywords: words('if then else fi for do done case esac in export'),
     builtins: words('nix cargo mix iex echo cd sudo git'),

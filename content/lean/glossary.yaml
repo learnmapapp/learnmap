@@ -1,0 +1,69 @@
+definition:
+  definition: A named value or function, written with def. Lean checks its type when you write it.
+  node: definitions
+type:
+  definition: A description of what kind of value something is, such as Nat, String or List Nat.
+  node: basic-types
+currying:
+  definition: Treating a function of two arguments as a function that takes one argument and returns another function.
+  node: currying
+structure:
+  definition: A type that groups named fields, like a record or a struct.
+  node: structures
+inductive type:
+  definition: A type defined by listing the ways to build its values, called constructors.
+  node: inductive
+constructor:
+  definition: One of the ways to build a value of an inductive type, like none and some for Option.
+  node: inductive
+pattern matching:
+  definition: Taking a value apart by checking which constructor built it, with match.
+  node: pattern-matching
+type class:
+  definition: An interface that many types can implement, such as ToString or Add.
+  node: type-classes
+instance:
+  definition: An implementation of a type class for one particular type.
+  node: instances
+namespace:
+  definition: A named group of definitions, like Point.add, so names don't clash.
+  node: namespaces
+termination:
+  definition: The guarantee that a recursive function always finishes. Lean checks it before accepting a definition.
+  node: termination
+monad:
+  definition: A type such as IO, Option or Except that supports do notation, chaining steps that may have effects.
+  node: monads
+lake:
+  definition: Lean's build tool and package manager.
+  node: lake
+proposition:
+  definition: A statement that might be true or false, such as 2 + 2 = 4. Its type is Prop.
+  node: propositions
+Prop:
+  definition: The type of propositions. A value of a proposition's type is a proof of it.
+  node: propositions
+theorem:
+  definition: A named proof. Lean only accepts it if the proof really proves the statement.
+  node: theorems
+proof:
+  definition: A value whose type is a proposition. Having one means the proposition is true.
+  node: theorems
+hypothesis:
+  definition: An assumption you're allowed to use in a proof, usually a parameter like h.
+  node: implication
+tactic:
+  definition: A command inside a by block that changes the current goal, step by step, until it's proved.
+  node: tactics
+goal:
+  definition: What's left to prove at this point in a tactic proof, shown in the infoview.
+  node: tactics
+induction:
+  definition: Proving something for every natural number (or list) by proving the base case and the step from n to n + 1.
+  node: induction
+dependent type:
+  definition: A type that depends on a value, like Vec String 3, a list of exactly three strings.
+  node: dependent-types
+Mathlib:
+  definition: The large community library of formalised mathematics for Lean.
+  node: mathlib

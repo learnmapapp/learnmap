@@ -1,0 +1,51 @@
+package:
+  definition: A folder of .go files that are compiled together. Every file starts with package name.
+  node: packages
+module:
+  definition: A collection of packages with a go.mod file, which names the module and lists its dependencies.
+  node: modules
+exported:
+  definition: Visible to other packages. In Go, a name is exported when it starts with a capital letter.
+  node: packages
+zero value:
+  definition: The value a variable has before you set it, such as 0, "", false or nil. Go never leaves variables uninitialised.
+  node: zero-values
+rune:
+  definition: A single Unicode character, stored as an int32. Strings are made of bytes; ranging over them gives runes.
+  node: strings
+slice:
+  definition: A growable view into an array, written []T. The everyday list type in Go.
+  node: slices
+map:
+  definition: A hash table from keys to values, written map[K]V.
+  node: maps
+struct:
+  definition: A type that groups named fields together.
+  node: structs
+method:
+  definition: A function attached to a type through a receiver, called with value.Method().
+  node: methods
+receiver:
+  definition: The value a method is called on, written in brackets before the method name, like (p Point).
+  node: methods
+pointer:
+  definition: "The address of a value, written *T. &x takes the address, *p follows it."
+  node: pointers
+interface:
+  definition: A set of method signatures. Any type with those methods satisfies the interface, without declaring it.
+  node: interfaces
+type parameter:
+  definition: "A placeholder for a type in a generic function or type, written in square brackets: func Map[T any]."
+  node: generics
+error:
+  definition: A built-in interface with one method, Error() string. Functions return it as their last result.
+  node: errors
+defer:
+  definition: Schedules a call to run when the surrounding function returns. Used for cleanup.
+  node: defer
+goroutine:
+  definition: A function running concurrently with the rest of the program, started with the go keyword. Very cheap.
+  node: goroutines
+channel:
+  definition: A typed pipe that goroutines use to send values to each other, written chan T.
+  node: channels

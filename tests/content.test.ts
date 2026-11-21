@@ -45,7 +45,7 @@ function loadFromDisk(id: string): Course {
 }
 
 const courseIds = readdirSync(CONTENT).filter((f) => existsSync(join(CONTENT, f, 'course.yaml')));
-const completedCatalogCourses = ['mojo', 'zig', 'swift', 'lua', 'nim', 'astro', 'nuxt'];
+const completedCatalogCourses = ['mojo', 'zig', 'swift', 'lua', 'nim', 'astro', 'nuxt', 'go', 'lean'];
 
 describe('markdown', () => {
   it('parses repl blocks with errors', () => {
@@ -127,6 +127,8 @@ describe('highlighter', () => {
     ['swift', 'guard let value = input else { return } // note', 'guard'],
     ['zig', 'const std = @import("std"); // note', 'const'],
     ['mojo', 'def advance(mut value: Int):\n    value += 1 # note', 'mut'],
+    ['go', 'func main() { // note', 'func'],
+    ['lean', '#eval double 21 -- note\ndef double (n : Nat) : Nat := n * 2', 'def'],
   ])('highlights %s declarations without changing source', (lang, code, keyword) => {
     const tokens = tokenize(code, lang);
     expect(tokens.map((token) => token.text).join('')).toBe(code);
@@ -155,7 +157,7 @@ describe('highlighter', () => {
 });
 
 // Courses rewritten for newcomers: every exercise ships a solution that passes its checks.
-const rewrittenCourses = new Set(['zig', 'swift', 'lua', 'mojo', 'nim', 'astro', 'nuxt', 'python']);
+const rewrittenCourses = new Set(['zig', 'swift', 'lua', 'mojo', 'nim', 'astro', 'nuxt', 'python', 'go', 'lean']);
 
 describe.each(completedCatalogCourses)('completed catalog course %s', (id) => {
   const course = loadFromDisk(id);

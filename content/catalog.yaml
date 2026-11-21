@@ -5,10 +5,12 @@
 languages:
   - { id: nix, name: Nix, logo: "❄️", color: "#7ebae4", category: Tools, blurb: "Declarative builds and systems." }
   - { id: rust, name: Rust, logo: "🦀", color: "#de7a4b", category: Systems, blurb: "Fast, safe systems programming." }
+  - { id: go, name: Go, logo: "🐹", color: "#00add8", category: Systems, blurb: "Simple, fast, and built for concurrency." }
   - { id: python, name: Python, logo: "🐍", color: "#4b8bbe", category: Scripting, blurb: "Readable code, useful scripts, and a rich standard library." }
   - { id: typescript, name: TypeScript, logo: "🔷", color: "#3178c6", category: Web, blurb: "JavaScript with types that explain and protect your code." }
   - { id: react, name: React, logo: "⚛️", color: "#61dafb", category: Web, blurb: "Build interactive interfaces from components and state." }
   - { id: elixir, name: Elixir, logo: "💧", color: "#a77bd1", category: Functional, blurb: "Friendly functional code on the BEAM." }
+  - { id: lean, name: Lean, logo: "📐", color: "#6b5bd6", category: Functional, blurb: "Functional programming and machine-checked proofs." }
   - { id: mojo, name: Mojo, logo: "🔥", color: "#ff6a3d", category: Systems, blurb: "Python syntax with systems-level speed." }
   - { id: zig, name: Zig, logo: "⚡", color: "#f7a41d", category: Systems, blurb: "Simple, explicit, no hidden control flow." }
   - { id: swift, name: Swift, logo: "🐦", color: "#f05138", category: Systems, blurb: "Safe and expressive, from Apple." }

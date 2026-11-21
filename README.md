@@ -33,7 +33,7 @@ src/
 
 Courses are discovered automatically: any `content/<id>/course.yaml` becomes a playable map. Lessons are loaded lazily, per course.
 
-All 13 catalog courses are playable: Nix (52 lessons), Rust (52), Elixir (53), and Python, TypeScript, React, Mojo, Zig, Swift, Lua, Nim, Astro, and Nuxt (50 each). Every new map includes prerequisite routes, suggested goals, exercises, quizzes, glossary links, and language comparisons.
+All 15 catalog courses are playable: Rust (100 lessons), Nix (52), Elixir (53), and Python, TypeScript, React, Go, Lean, Mojo, Zig, Swift, Lua, Nim, Astro, and Nuxt (50 each). The Go course targets Go 1.25 or newer, and the Lean course targets Lean 4, covering both programming and theorem proving. Every new map includes prerequisite routes, suggested goals, exercises, quizzes, glossary links, and language comparisons.
 
 The systems and framework examples target Mojo 1.2.0, Zig 0.15.2, Swift 6, Lua 5.4, Nim 2.2+, Astro 7, and Nuxt 4 with Vue 3. Run examples in a separate practice project using the version and file paths stated in each course. In-page exercises check source text; they do not run a compiler or framework server.
 

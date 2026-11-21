@@ -1,0 +1,58 @@
+name: Go
+tagline: Small language, fast builds, easy concurrency.
+logo: "🐹"
+color: "#00add8"
+syntax: go
+extension: go
+pluginUrl: https://jetplugins.dev
+comparisons: [python, javascript, java, kotlin, rust]
+
+guide:
+  name: Gopher Gus
+  avatar: "🐹"
+  intro:
+    - "Hi, I'm Gus! Go was designed at Google to be boring in the best way: few features, clear code, and programs that build in a second."
+    - "It's great for servers, command-line tools and anything that does many things at once. You'll be reading other people's Go code comfortably within days."
+    - "Every lesson has a short example, a small exercise you solve right here, and a quick check. The examples target Go 1.25 or newer."
+  askGoal: "What would you like to build first?"
+
+branches:
+  - { id: core, title: Go, color: "#00add8" }
+  - { id: basics, title: Basics, color: "#e0b84f" }
+  - { id: data, title: Data, color: "#6fc2a8" }
+  - { id: interfaces, title: Interfaces and generics, color: "#a7c957" }
+  - { id: errors, title: Errors, color: "#e98a6b" }
+  - { id: concurrency, title: Concurrency, color: "#9b8cf0" }
+  - { id: tools, title: Tools and the web, color: "#c9a27e" }
+
+goals:
+  - id: basics
+    title: Write my first program
+    node: switch
+    icon: "👋"
+    description: Variables, functions, loops and decisions.
+  - id: data
+    title: Work with data
+    node: range
+    icon: "🗃️"
+    description: Slices, maps and structs, the everyday building blocks.
+  - id: interfaces
+    title: Design with interfaces
+    node: generics
+    icon: "🧩"
+    description: Methods, interfaces and generic functions.
+  - id: errors
+    title: Handle errors properly
+    node: custom-errors
+    icon: "🛟"
+    description: Errors are values. Check them, wrap them, inspect them.
+  - id: concurrency
+    title: Do many things at once
+    node: worker-pools
+    icon: "🧵"
+    description: Goroutines, channels and the patterns built from them.
+  - id: web
+    title: Build a web API
+    node: http-server
+    icon: "🌐"
+    description: Modules, tests, JSON and an HTTP server.
