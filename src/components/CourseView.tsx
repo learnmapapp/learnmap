@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Course } from '../types';
 import { layout, route, routeLayout } from '../graph';
-import { navigate } from '../router';
+import { href, navigate, shareUrl } from '../router';
 import { useCourseProgress, usePrefs } from '../progress';
 import { isEmbedded } from '../host';
 import { AD_MODE } from '../site';
@@ -15,12 +15,13 @@ import { record } from '../stats';
 import { ScoreChip } from './Rewards';
 import { ThemeButton } from './ThemeSwitch';
 
-export function CourseView({ course, nodeId }: { course: Course; nodeId: string | null }) {
+export function CourseView({ course, nodeId, routeTo }: { course: Course; nodeId: string | null; routeTo: string | null }) {
   const { progress, complete, uncomplete, setTarget, setIntroSeen, reset } = useCourseProgress(course.id);
   const { prefs, update: updatePrefs } = usePrefs();
   const [showSearch, setShowSearch] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [guideOpen, setGuideOpen] = useState(!progress.introSeen && nodeId === null);
+  const [guideOpen, setGuideOpen] = useState(!progress.introSeen && nodeId === null && routeTo === null);
+  const [copied, setCopied] = useState(false);
 
   const fullMap = useMemo(() => layout(course), [course]);
   const done = useMemo(() => new Set(progress.done), [progress.done]);
@@ -51,6 +52,27 @@ export function CourseView({ course, nodeId }: { course: Course; nodeId: string 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  // A shared route link (#/course?to=lesson) starts that route, then the URL is tidied up.
+  useEffect(() => {
+    if (routeTo === null) return;
+    if (course.nodeById.has(routeTo)) {
+      setTarget(routeTo);
+      setGuideOpen(false);
+    }
+    navigate(course.id, nodeId, true);
+  }, [course, nodeId, routeTo, setTarget]);
+
+  const copyRouteLink = async () => {
+    if (!target) return;
+    try {
+      await navigator.clipboard.writeText(shareUrl(href(course.id, null, target.id)));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* clipboard may be blocked; ignore */
+    }
+  };
 
   const select = useCallback((id: string) => navigate(course.id, id), [course.id]);
   const close = useCallback(() => navigate(course.id, null), [course.id]);
@@ -107,6 +129,9 @@ export function CourseView({ course, nodeId }: { course: Course; nodeId: string 
                   {explored} of {total} explored
                 </small>
               </div>
+              <button className="icon-btn small" title="Copy link to this route" onClick={copyRouteLink}>
+                <Icon name={copied ? 'check' : 'link'} size={16} />
+              </button>
               <button className="icon-btn small" title="Leave route, show whole map" onClick={() => setTarget(null)}>
                 <Icon name="close" size={16} />
               </button>

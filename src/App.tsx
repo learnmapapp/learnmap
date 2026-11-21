@@ -21,7 +21,7 @@ export function App() {
 }
 
 function Screen() {
-  const { course: courseId, node } = useRoute();
+  const { course: courseId, node, to } = useRoute();
   const page: Page | null = !courseId ? 'learn' : isPage(courseId) ? courseId : null;
   const meta = courseId && !page ? findCourse(courseId) : undefined;
   const [course, setCourse] = useState<Course | null>(null);
@@ -46,5 +46,5 @@ function Screen() {
       </main>
     );
   if (!course || course.id !== meta.id) return <div className="loading">{meta.logo}</div>;
-  return <CourseView key={course.id} course={course} nodeId={node} />;
+  return <CourseView key={course.id} course={course} nodeId={node} routeTo={to} />;
 }
