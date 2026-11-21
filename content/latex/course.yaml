@@ -1,0 +1,72 @@
+name: LaTeX
+tagline: Beautiful documents, papers, slides and diagrams, written as plain text.
+logo: "📄"
+color: "#3d8b5f"
+syntax: latex
+extension: tex
+pluginUrl: https://jetplugins.dev
+comparisons: [python, javascript]
+
+guide:
+  name: Quill
+  avatar: "🪶"
+  intro:
+    - "Hello, I'm Quill! LaTeX turns plain text into beautifully typeset documents. Scientists, mathematicians and publishers have used it for decades."
+    - "You write what your document means, like 'this is a section' or 'this is an equation', and LaTeX takes care of how it looks."
+    - "We'll start with your first document, then move on to maths, figures, references, slides, drawing with TikZ, and the low-level tricks behind custom layouts."
+    - "Every lesson has a short example, a small exercise you solve right here, and a quick check."
+  askGoal: "Where would you like to go?"
+
+branches:
+  - { id: core, title: LaTeX, color: "#3d8b5f" }
+  - { id: basics, title: Basics, color: "#e0b84f" }
+  - { id: structure, title: Document structure, color: "#6fc2a8" }
+  - { id: math, title: Maths, color: "#5fa8d3" }
+  - { id: floats, title: Figures and tables, color: "#e98a6b" }
+  - { id: references, title: References, color: "#9b8cf0" }
+  - { id: packages, title: Popular packages, color: "#d97fb4" }
+  - { id: tikz, title: TikZ and plots, color: "#4fb3a2" }
+  - { id: macros, title: Macros and low-level TeX, color: "#c9a27e" }
+  - { id: tools, title: Slides and tools, color: "#8aa0b8" }
+
+goals:
+  - id: basics
+    title: Write my first document
+    node: sections
+    icon: "👋"
+    description: Commands, environments, text styles, lists and sections.
+  - id: math
+    title: Typeset maths
+    node: theorems
+    icon: "∑"
+    description: Equations, alignment, matrices, symbols and theorems.
+  - id: figures
+    title: Add figures and tables
+    node: subfigures
+    icon: "🖼️"
+    description: Images, captions, professional tables and placement.
+  - id: paper
+    title: Write a paper with references
+    node: paper
+    icon: "🎓"
+    description: Structure, bib files, citations, cross-references and links.
+  - id: tikz
+    title: Draw diagrams with TikZ
+    node: tikz-overlay
+    icon: "✏️"
+    description: Paths, nodes, styles, positioning, loops and decorations.
+  - id: plots
+    title: Plot data
+    node: pgfplots-data
+    icon: "📈"
+    description: Function plots and data plots with pgfplots.
+  - id: slides
+    title: Make slides
+    node: beamer-themes
+    icon: "📽️"
+    description: Beamer frames, overlays and themes.
+  - id: collage
+    title: Lay out pages by hand
+    node: photo-collage
+    icon: "🧩"
+    description: Boxes, lengths, TeX arithmetic, picture mode and raw PDF.

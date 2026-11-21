@@ -45,7 +45,9 @@ function loadFromDisk(id: string): Course {
 }
 
 const courseIds = readdirSync(CONTENT).filter((f) => existsSync(join(CONTENT, f, 'course.yaml')));
-const completedCatalogCourses = ['mojo', 'zig', 'swift', 'lua', 'nim', 'astro', 'nuxt', 'go', 'lean'];
+const completedCatalogCourses = ['mojo', 'zig', 'swift', 'lua', 'nim', 'astro', 'nuxt', 'go', 'lean', 'latex'];
+const lessonCounts: Record<string, number> = { latex: 91 };
+const expectedLessons = (id: string): number => lessonCounts[id] ?? 50;
 
 describe('markdown', () => {
   it('parses repl blocks with errors', () => {
@@ -129,6 +131,8 @@ describe('highlighter', () => {
     ['mojo', 'def advance(mut value: Int):\n    value += 1 # note', 'mut'],
     ['go', 'func main() { // note', 'func'],
     ['lean', '#eval double 21 -- note\ndef double (n : Nat) : Nat := n * 2', 'def'],
+    ['latex', '\\section{Intro} % note', '\\section'],
+    ['bibtex', '% note\n@book{knuth1984, title = "The TeXbook"}', '@book'],
   ])('highlights %s declarations without changing source', (lang, code, keyword) => {
     const tokens = tokenize(code, lang);
     expect(tokens.map((token) => token.text).join('')).toBe(code);
@@ -157,7 +161,7 @@ describe('highlighter', () => {
 });
 
 // Courses rewritten for newcomers: every exercise ships a solution that passes its checks.
-const rewrittenCourses = new Set(['zig', 'swift', 'lua', 'mojo', 'nim', 'astro', 'nuxt', 'python', 'go', 'lean']);
+const rewrittenCourses = new Set(['zig', 'swift', 'lua', 'mojo', 'nim', 'astro', 'nuxt', 'python', 'go', 'lean', 'latex']);
 
 describe.each(completedCatalogCourses)('completed catalog course %s', (id) => {
   const course = loadFromDisk(id);
@@ -167,11 +171,11 @@ describe.each(completedCatalogCourses)('completed catalog course %s', (id) => {
     expect(comingSoon.some((entry) => entry.id === id)).toBe(false);
     const meta = courses.find((entry) => entry.id === id);
     if (!meta) throw new Error(`Missing course ${id}`);
-    expect((await loadCourse(meta)).nodes).toHaveLength(50);
+    expect((await loadCourse(meta)).nodes).toHaveLength(expectedLessons(id));
   });
 
-  it('provides fifty complete lessons with solvable exercises', () => {
-    expect(course.nodes).toHaveLength(50);
+  it('provides its complete lessons with solvable exercises', () => {
+    expect(course.nodes).toHaveLength(expectedLessons(id));
     for (const node of course.nodes) {
       const segments = parseLesson(node.body, course.syntax);
       const examples = segments.filter((segment) => segment.kind === 'code');

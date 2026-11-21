@@ -131,6 +131,29 @@ export const SYNTAX: Record<string, SyntaxDef> = {
     identExtra: "'!?",
     extra: [{ pattern: /#[a-z]+/y, type: 'attr' }],
   },
+  latex: {
+    keywords: [],
+    lineComment: ['%'],
+    extra: [
+      // \commands (including \\ and \{) are the keywords of LaTeX.
+      { pattern: /\\(?:[A-Za-z@]+\*?|.)/y, type: 'keyword' },
+      // Environment names in \begin{...} and \end{...}.
+      { pattern: /(?<=\\(?:begin|end)\{)[A-Za-z*]+(?=\})/y, type: 'type' },
+      { pattern: /\$\$?/y, type: 'operator' },
+      { pattern: /[{}[\]]/y, type: 'punct' },
+      // Ordinary words are text, not identifiers.
+      { pattern: /[A-Za-z]+/y, type: 'plain' },
+    ],
+  },
+  bibtex: {
+    keywords: [],
+    lineComment: ['%'],
+    strings: ['"'],
+    extra: [
+      { pattern: /@[A-Za-z]+/y, type: 'keyword' },
+      { pattern: /[A-Za-z]+(?=\s*=)/y, type: 'attr' },
+    ],
+  },
   shell: {
     keywords: words('if then else fi for do done case esac in export'),
     builtins: words('nix cargo mix iex echo cd sudo git'),

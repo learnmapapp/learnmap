@@ -1,0 +1,80 @@
+command:
+  term: Command
+  definition: "A word starting with a backslash, like \\section or \\textbf. Commands produce text, change formatting, or do work behind the scenes."
+  node: commands
+argument:
+  term: Argument
+  definition: "Input to a command, written in braces: \\textbf{this}. Optional arguments go in square brackets: \\section[short]{long}."
+  node: commands
+environment:
+  term: Environment
+  definition: "A region between \\begin{name} and \\end{name}, like itemize or equation. It changes how its contents are treated."
+  node: environments
+preamble:
+  term: Preamble
+  definition: "Everything between \\documentclass and \\begin{document}. Packages and settings go here."
+  node: first-document
+document class:
+  term: Document class
+  definition: "The first line of a document, like \\documentclass{article}. It sets the overall kind of document and its default layout."
+  node: document-classes
+package:
+  term: Package
+  definition: "A file of extra commands loaded with \\usepackage. Thousands are available, for maths, graphics, tables and more."
+  node: packages
+engine:
+  term: Engine
+  definition: "The program that typesets your file: pdfLaTeX, XeLaTeX or LuaLaTeX. The last two support system fonts and Unicode directly."
+  node: setup
+math mode:
+  term: Math mode
+  definition: "Where LaTeX typesets maths, between $...$ inline or in display environments like equation."
+  node: math-mode
+float:
+  term: Float
+  definition: "A figure or table that LaTeX may move to a better spot, such as the top of a page, instead of leaving it exactly where it was written."
+  node: figures
+label:
+  term: Label
+  definition: "A name attached with \\label{...}, so you can refer to a section, figure or equation with \\ref{...}. LaTeX fills in the number."
+  node: cross-references
+bib file:
+  term: Bib file
+  definition: "A plain-text database of references, ending in .bib. Each entry has a type, a citation key and fields like author and title."
+  node: bib-files
+citation key:
+  term: Citation key
+  definition: "The short name of a bib entry, like knuth1984, used in \\cite{knuth1984}."
+  node: bib-files
+biber:
+  term: Biber
+  definition: "The program biblatex uses to read your bib file, sort the entries and prepare the bibliography."
+  node: bibliography
+TikZ:
+  term: TikZ
+  definition: "The most popular LaTeX package for drawing diagrams, written as code with paths, nodes and styles."
+  node: tikz
+node:
+  term: Node
+  definition: "In TikZ, a piece of text placed in a drawing, optionally with a shape around it. Nodes can be named and connected."
+  node: tikz-nodes
+macro:
+  term: Macro
+  definition: "A command you define yourself, usually with \\newcommand. When used, TeX replaces it with its definition."
+  node: newcommand
+length:
+  term: Length
+  definition: "A distance with a unit, like 2cm, 12pt or 1bp. Lengths can be stored, measured and calculated with."
+  node: lengths
+box:
+  term: Box
+  definition: "TeX's building block: a rectangle with a width, height and depth. Every letter, line and page is a box."
+  node: boxes
+primitive:
+  term: Primitive
+  definition: "A built-in command of the TeX engine itself, like \\hbox or \\ifdim, as opposed to commands defined by LaTeX or packages."
+  node: tex-conditionals
+magic comment:
+  term: Magic comment
+  definition: "A comment like % !TeX program = pdflatex at the top of a file. Editors read it to pick the engine; LaTeX itself ignores it."
+  node: pdf-primitives
