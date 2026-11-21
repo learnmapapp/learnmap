@@ -62,3 +62,8 @@ goals:
     node: crates
     icon: "🚢"
     description: Modules, tests, dependencies and the tools around them.
+  - id: cli
+    title: Build a command-line tool
+    node: cli-args
+    icon: "⌨️"
+    description: Arguments, files, JSON and friendly errors.

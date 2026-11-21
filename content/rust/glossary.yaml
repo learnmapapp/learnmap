@@ -78,3 +78,21 @@ module:
 panic:
   definition: Stopping the program because of a bug or an unrecoverable state.
   node: panic
+interior mutability:
+  definition: Changing data through a shared reference, with the borrow rules checked at run time instead. RefCell, Cell, Mutex and atomics all offer it.
+  node: refcell
+smart pointer:
+  definition: "A type that owns data and acts like a reference to it, such as Box, Rc, String or Vec."
+  node: deref
+deref coercion:
+  definition: "Rust following Deref automatically to make reference types match, so &String can be passed where &str is expected."
+  node: deref
+associated type:
+  definition: "A placeholder type inside a trait that each implementation fills in, like Item in Iterator."
+  node: associated-types
+atomic:
+  definition: A value the CPU changes in one indivisible step, so threads can share it without a lock.
+  node: atomics
+workspace:
+  definition: Several crates in one repository, sharing one Cargo.lock and one target folder.
+  node: workspaces
