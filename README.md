@@ -226,3 +226,7 @@ Plugin links never show inside the IntelliJ plugins (`?embed=1`), since the lear
 ## Credits
 
 Inspired by Vimjoyer's [Nixmap](https://vimjoyer.com/nixmap/), a playful, choose-your-own-adventure guide to Nix. The landing page has an About section that credits it too.
+
+## License
+
+MIT. See [LICENSE](LICENSE). This covers the code and the course content.
